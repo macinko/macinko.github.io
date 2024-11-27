@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>赛博空间</title>
+  <icon>https://macin.top/img/ast.webp</icon>
+  <subtitle>Cyber</subtitle>
+  <link href="https://macin.top/atom.xml" rel="self"/>
+  
+  <link href="https://macin.top/"/>
+  <updated>2024-11-27T12:35:02.147Z</updated>
+  <id>https://macin.top/</id>
+  
+  <author>
+    <name>马斯克</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用kali的arpspoof实现断网和中间人攻击</title>
+    <link href="https://macin.top/posts/ec81f3d6/"/>
+    <id>https://macin.top/posts/ec81f3d6/</id>
+    <published>2024-11-23T12:50:49.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负"><a href="#注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负" class="headerlink" title="注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负"></a>注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负</h2><h2 id="一、ARP协议介绍"><a href="#一、ARP协议介绍" class="headerlink" title="一、ARP协议介绍"></a>一、ARP协议介绍</h2><blockquote><p>地址解析协议，即ARP（Address Resolution Protocol），是根据IP地址获取物理地址的一个TCP&#x2F;IP协议。</p></blockquote><h2 id="二、ARP欺骗的条件和局限性"><a href="#二、ARP欺骗的条件和局限性" class="headerlink" title="二、ARP欺骗的条件和局限性"></a>二、ARP欺骗的条件和局限性</h2><p>1.局限性：</p><blockquote><p>只能攻击同一局域网下的主机</p></blockquote><p>2.攻击条件：</p><blockquote><p>攻击方要知道被攻击方的IP地址，以及被攻击方的网关地址攻击方和被攻击方处于同一局域网下</p></blockquote><h2 id="三、ARP欺骗原理"><a href="#三、ARP欺骗原理" class="headerlink" title="三、ARP欺骗原理"></a>三、ARP欺骗原理</h2><blockquote><p>ARP欺骗有两种攻击利用方式：<code>ARP欺骗断网攻击</code>和<code>ARP中间人攻击</code></p></blockquote><h3 id="3-1-ARP欺骗断网攻击"><a href="#3-1-ARP欺骗断网攻击" class="headerlink" title="3.1 ARP欺骗断网攻击"></a>3.1 ARP欺骗断网攻击</h3><p>1.概念</p><blockquote><p>ARP欺骗（英语：ARP spoofing），又称ARP毒化（ARP poisoning，网上上多译为ARP病毒）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术，通过欺骗局域网内访问者PC的网关MAC地址，使访问者PC错以为攻击者更改后的MAC地址是网关的MAC，导致网络不通。此种攻击可让攻击者获取局域网上的数据包甚至可篡改数据包，且可让网上特定计算机或所有计算机无法正常连线。</p></blockquote><p>2.主机型欺骗：</p><blockquote><p>攻击者欺骗受害主机，发送数据告诉受害主机说我是网关，然后受害主机会将攻击主机当作网关进行数据传输，这样就会导致受害主机无法正常上网。</p></blockquote><p>3.网关型欺骗：</p><blockquote><p>攻击者欺骗网关，发送数据告诉受网关，我是受害主机，网关将攻击主机当作受该机器进行数据传输，这样就会导致受害主机请求的数据发到攻击者主机。。</p></blockquote><h3 id="3-2-ARP中间人攻击"><a href="#3-2-ARP中间人攻击" class="headerlink" title="3.2 ARP中间人攻击"></a>3.2 ARP中间人攻击</h3><blockquote><p>攻击主机欺骗受害主机，发送数据告诉受害主机说我是网关，然后受害主机会将攻击主机当作网关进行数据传输。同时发送数据告诉网关说我是受害主机，网关会将攻击主机当作受害主机进行数据传输，这样受害主机和网关之间的数据交互都会经过攻击主机，受害主机不会断网不会察觉，所以可以查看到各种通信数据。</p></blockquote><h2 id="四、测试环境介绍"><a href="#四、测试环境介绍" class="headerlink" title="四、测试环境介绍"></a>四、测试环境介绍</h2><blockquote><p>攻击主机系统：<code>kali linux</code>：ip：<code>192.168.61.135</code><br>受害主机系统：<code>win10</code>：ip：<code>192.168.61.137</code></p></blockquote><h2 id="五、arpspoof介绍"><a href="#五、arpspoof介绍" class="headerlink" title="五、arpspoof介绍"></a>五、arpspoof介绍</h2><p>1.攻击工具：</p><blockquote><p>kali 中的arpspoof</p></blockquote><p>2.准备工具：</p><blockquote><p>打开kali,如果没安装arpspoof可以apt install 一下</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install arpspoof</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/1.webp" alt="在这里插入图片描述"></p><p>3.工具介绍：</p><blockquote><p>arpspoof有四个参数：<br><code>-i</code> 表示网卡接口<br><code>-c</code> 表示主机信息，如果你的主机有多个IP，我的主机那个网卡上就一个IP<br><code>-t</code> 目标IP地址<br><code>-r</code> 目标网关地址</p></blockquote><h2 id="六、实战演示：ARP欺骗断网攻击"><a href="#六、实战演示：ARP欺骗断网攻击" class="headerlink" title="六、实战演示：ARP欺骗断网攻击"></a>六、实战演示：ARP欺骗断网攻击</h2><h3 id="6-1-获取受害机器IP-fping"><a href="#6-1-获取受害机器IP-fping" class="headerlink" title="6.1 获取受害机器IP-fping"></a>6.1 获取受害机器IP-fping</h3><blockquote><p>通过fping命令，查看当前局域网还存在那些主机，以确定要攻击的主机的ip地址</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fping -g 192.168.61.0/24</span><br></pre></td></tr></table></figure><blockquote><p>发现三台：一台是我的kali攻击机，一台是win10受害机，一台是网关</p></blockquote><p><img src="/img/arpspoof/2.webp" alt="在这里插入图片描述"></p><h3 id="6-2-获取受害机器IP-nmap"><a href="#6-2-获取受害机器IP-nmap" class="headerlink" title="6.2 获取受害机器IP-nmap"></a>6.2 获取受害机器IP-nmap</h3><blockquote><p>推荐使用nmap<br>发现只有一台机器可以当受害机器，192.168.61.138：也就是我的靶机win10</p></blockquote><p><img src="/img/arpspoof/3.webp" alt="在这里插入图片描述"></p><blockquote><p>192.168.61.1 vm8网卡<br>192.168.61.2 网关<br>192.168.61.138 靶机<br>192.168.61.254 DHCP服务器<br>192.168.61.135 kali本机</p></blockquote><h3 id="6-3-攻击前目标机器可正常上网"><a href="#6-3-攻击前目标机器可正常上网" class="headerlink" title="6.3 攻击前目标机器可正常上网"></a>6.3 攻击前目标机器可正常上网</h3><p><img src="/img/arpspoof/4.webp" alt="在这里插入图片描述"></p><h3 id="6-4-发起攻击"><a href="#6-4-发起攻击" class="headerlink" title="6.4 发起攻击"></a>6.4 发起攻击</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t 192.168.61.138 192.168.61.2</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/5.webp" alt="在这里插入图片描述"></p><h3 id="6-5-攻击期间目标机器可正常上网"><a href="#6-5-攻击期间目标机器可正常上网" class="headerlink" title="6.5 攻击期间目标机器可正常上网"></a>6.5 攻击期间目标机器可正常上网</h3><p><img src="/img/arpspoof/6.webp" alt="在这里插入图片描述"><br><img src="/img/arpspoof/7.webp" alt="在这里插入图片描述"></p><h2 id="七、实战演示：ARP中间人攻击（可截获图片和数据）"><a href="#七、实战演示：ARP中间人攻击（可截获图片和数据）" class="headerlink" title="七、实战演示：ARP中间人攻击（可截获图片和数据）"></a>七、实战演示：ARP中间人攻击（可截获图片和数据）</h2><h3 id="7-1-概述"><a href="#7-1-概述" class="headerlink" title="7.1 概述"></a>7.1 概述</h3><blockquote><p>这种情况就不能使受害主机断网，受害主机的IP流量经过攻击主机的时候，攻击主机应该对受害主机的IP流量进行转发。</p></blockquote><h3 id="7-2-Linux限制：开启路由转发"><a href="#7-2-Linux限制：开启路由转发" class="headerlink" title="7.2 Linux限制：开启路由转发"></a>7.2 Linux限制：开启路由转发</h3><blockquote><p>linux系统出于安全考虑禁止了IP转发功能，所以需要手动打开，在&#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;ip_forward里面数值是0，改为1就允许了IP转发<br>使用echo 1 &gt; &#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;ip_forward实现该操作</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/8.webp" alt="在这里插入图片描述"></p><h3 id="7-3-实验"><a href="#7-3-实验" class="headerlink" title="7.3 实验"></a>7.3 实验</h3><h4 id="7-3-1-中间人攻击前目标机器可正常上网"><a href="#7-3-1-中间人攻击前目标机器可正常上网" class="headerlink" title="7.3.1 中间人攻击前目标机器可正常上网"></a>7.3.1 中间人攻击前目标机器可正常上网</h4><blockquote><p>此时机器可正常上网</p></blockquote><p><img src="/img/arpspoof/9.webp" alt="在这里插入图片描述"></p><blockquote><p>再查看物理地址，没有受到ARP欺骗攻击</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp -a</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/10.webp" alt="在这里插入图片描述"></p><blockquote><p>路由追踪看一下跳跃节点，直接到达网关192.168.61.2</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tracert www.baidu.com</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/11.webp" alt="在这里插入图片描述"></p><h4 id="7-3-2-发起中间人攻击"><a href="#7-3-2-发起中间人攻击" class="headerlink" title="7.3.2 发起中间人攻击"></a>7.3.2 发起中间人攻击</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t 192.168.61.138 192.168.61.2</span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/12.webp" alt="在这里插入图片描述"></p><h4 id="7-3-3-中间人攻击期间目标机器可正常上网"><a href="#7-3-3-中间人攻击期间目标机器可正常上网" class="headerlink" title="7.3.3 中间人攻击期间目标机器可正常上网"></a>7.3.3 中间人攻击期间目标机器可正常上网</h4><blockquote><p>受害主机能正常上网</p></blockquote><p><img src="/img/arpspoof/13.webp" alt="在这里插入图片描述"></p><p><img src="/img/arpspoof/14.webp" alt="在这里插入图片描述"></p><blockquote><p>再次查看物理地址，MAC发生改变受到ARP欺骗攻击</p></blockquote><p><img src="/img/arpspoof/15.webp" alt="在这里插入图片描述"></p><blockquote><p>再次路由追踪看一下跳跃节点，发现到达一个中间节点之后才到达网关192.168.61.2</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tracert www.baidu.com</span><br></pre></td></tr></table></figure><blockquote><p>发现一个节点，但未捕获到IP，且这个节点在本机和网关之间</p></blockquote><p><img src="/img/arpspoof/16.webp" alt="在这里插入图片描述"></p><h4 id="7-3-4-driftnet工具捕获目标浏览的图片"><a href="#7-3-4-driftnet工具捕获目标浏览的图片" class="headerlink" title="7.3.4 driftnet工具捕获目标浏览的图片"></a>7.3.4 driftnet工具捕获目标浏览的图片</h4><blockquote><p>如果没有就进行安装：</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install driftnet</span><br></pre></td></tr></table></figure><blockquote><p>出现一些有的没的错误，尝试一下换源<br>虚拟机中利用driftnet工具，可以捕获物理机正在浏览的图片。在kali中打开driftnet，即可得到受害机目前正在浏览的图片。<br>注意：这里只能看到HTTP页面的图片，无法查看HTTPS页面</p></blockquote><p><img src="/img/arpspoof/17.webp" alt="在这里插入图片描述"></p><h4 id="7-3-5-ettercap截取账号密码："><a href="#7-3-5-ettercap截取账号密码：" class="headerlink" title="7.3.5 ettercap截取账号密码："></a>7.3.5 ettercap截取账号密码：</h4><blockquote><p>借助于EtterCap嗅探软件，渗透测试人员可以检测网络内明文数据通讯的安全性，及时采取措施，避免敏感的用户名&#x2F;密码等数据以明文的方式进行传输。<br>在命令行输入：<br>ettercap -Tq -i eth0<br>-T 是 –text，文本模式；<br>-q 是 –quiet，安静，不显示包的内容。</p></blockquote><p><img src="/img/arpspoof/18.webp" alt="在这里插入图片描述"></p><h2 id="八、ARP攻击防范方式："><a href="#八、ARP攻击防范方式：" class="headerlink" title="八、ARP攻击防范方式："></a>八、ARP攻击防范方式：</h2><h3 id="8-1-防御方式"><a href="#8-1-防御方式" class="headerlink" title="8.1 防御方式"></a>8.1 防御方式</h3><h4 id="8-1-1-静态ARP绑定"><a href="#8-1-1-静态ARP绑定" class="headerlink" title="8.1.1 静态ARP绑定"></a>8.1.1 静态ARP绑定</h4><p>不同系统可能不一样，Windows如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">netsh  -c  <span class="string">&quot;i  i&quot;</span> add neighbors  4  <span class="string">&quot;192.168.61.2&quot;</span> <span class="string">&quot;00-50-56-fe-9c-79&quot;</span></span><br><span class="line">1</span><br></pre></td></tr></table></figure><h4 id="8-1-2-使用防火墙"><a href="#8-1-2-使用防火墙" class="headerlink" title="8.1.2 使用防火墙"></a>8.1.2 使用防火墙</h4><blockquote><p>1.使用ARP防火墙<br>2.使用可防御ARP攻击的核心交换机，绑定端口-MAC-IP</p></blockquote><h3 id="8-2-防御实战"><a href="#8-2-防御实战" class="headerlink" title="8.2 防御实战"></a>8.2 防御实战</h3><blockquote><p>这是我们确认的网关192.168.61.2的MAC：00-50-56-fe-9c-79<br>现在正在受到ARP攻击</p></blockquote><p><img src="/img/arpspoof/19.webp" alt="在这里插入图片描述"></p><blockquote><p>我们绑定静态arp<br>查看网卡：</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh i  i show <span class="keyword">in</span></span><br></pre></td></tr></table></figure><p>绑定静态arp</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh  -c  <span class="string">&quot;i  i&quot;</span> add neighbors  4  <span class="string">&quot;192.168.61.2&quot;</span> <span class="string">&quot;00-50-56-fe-9c-79&quot;</span></span><br></pre></td></tr></table></figure><p><img src="/img/arpspoof/20.webp" alt="在这里插入图片描述"></p><blockquote><p>查看arp缓存表：绑定成功</p></blockquote><p><img src="/img/arpspoof/21.webp" alt="在这里插入图片描述"></p><blockquote><p>路由追踪直接跳到了192.168.61.2网关</p></blockquote><p><img src="/img/arpspoof/22.webp" alt="在这里插入图片描述"></p><blockquote><p>删除静态绑定</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh -c <span class="string">&quot;i  i&quot;</span> delete neighbors 4</span><br></pre></td></tr></table></figure><blockquote><p>又跳到了欺骗状态，动态MAC</p></blockquote><p><img src="/img/arpspoof/23.webp" alt="在这里插入图片描述"></p><h2 id="注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负-1"><a href="#注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负-1" class="headerlink" title="注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负"></a>注意：本文仅用于学习使用，切勿用于真实环境，否则，后果自负</h2>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>支持在kali开启监听模式的USB无线网卡</title>
+    <link href="https://macin.top/posts/9e240c0c/"/>
+    <id>https://macin.top/posts/9e240c0c/</id>
+    <published>2024-11-23T12:29:58.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="抓包网卡收录"><a href="#抓包网卡收录" class="headerlink" title="抓包网卡收录"></a>抓包网卡收录</h1><p>Github上有一个叫USB-WiFi项目，里面统计了一些支持在Linux下开启监听模式的USB无线网卡。</p><blockquote><p>参考资料：<a href="https://github.com/morrownr/USB-WiFi/blob/main/home/USB_WiFi_Chipsets.md">https://github.com/morrownr/USB-WiFi/blob/main/home/USB_WiFi_Chipsets.md</a></p></blockquote><h2 id="USB-WiFi-chipset-information-for-Linux"><a href="#USB-WiFi-chipset-information-for-Linux" class="headerlink" title="USB WiFi chipset information for Linux"></a>USB WiFi chipset information for Linux</h2><p>Updated as of 2024-11-20. Expect further updates soon based on dramatic improvements to the rtw88 in-kernel series of drivers.</p><p>This document is a summary that includes information about many modern USB WiFi chipsets. If you see errors in this infomration, please post in Issues.</p><p>Not all USB WiFi adapters are created equally. While the chipset and driver dictate which WiFi features are supported (e.g. which frequency bands), the vendor of the adapter is free to decide on the performance of the antenna(s), the quality of the amp and whether the device requires mode switching and so on.</p><table><thead><tr><th>Chipset</th><th>Interface</th><th>Standard</th><th>Maximum Channel Width</th><th>Linux In-Kernel Driver</th><th>AP Mode</th><th>Monitor Mode</th><th>Recommended For Linux</th></tr></thead><tbody><tr><td>Mediatek MT7927</td><td>USB3</td><td>WiFi 7</td><td>320</td><td>pending</td><td></td><td></td><td></td></tr><tr><td>Mediatek MT7925</td><td>USB3</td><td>WiFi 7</td><td>160</td><td>✔️ 6.7+</td><td>✔️</td><td>✔️</td><td>Yes [4]</td></tr><tr><td>Mediatek MT7922u</td><td>USB3</td><td>WiFi 6E</td><td>160</td><td>pending</td><td></td><td></td><td></td></tr><tr><td>Realtek RTL8852cu</td><td>?</td><td>WiFi 6E</td><td>160</td><td>❌ [6]</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8832cu</td><td>USB3</td><td>WiFi 6E</td><td>160</td><td>❌</td><td></td><td></td><td>No</td></tr><tr><td>Mediatek MT7921au</td><td>USB3</td><td>WiFi 6E</td><td>80</td><td>✔️ 5.18+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Realtek RTL8852bu</td><td>?</td><td>WiFi 6</td><td>80</td><td>❌ [6]</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8832bu</td><td>USB3</td><td>WiFi 6</td><td>80</td><td>❌</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8852au</td><td>?</td><td>WiFi 6</td><td>80</td><td>❌ - avoid [2]</td><td>bad driver</td><td>bad driver</td><td>No</td></tr><tr><td>Realtek RTL8832au</td><td>USB3</td><td>WiFi 6</td><td>80</td><td>❌ - avoid</td><td>bad driver</td><td>bad driver</td><td>No</td></tr><tr><td>Realtek RTL8814au</td><td>USB3</td><td>WiFi 5</td><td>80</td><td>❌ - avoid</td><td>old driver</td><td>old driver</td><td>No</td></tr><tr><td>Mediatek MT7662u</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 5.9+ [6]</td><td>✔️</td><td>✔️</td><td>No</td></tr><tr><td>Mediatek MT7612u</td><td>USB3</td><td>WiFi 5</td><td>80</td><td>✔️ 4.19+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Realtek RTL8822bu</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3][6]</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8812bu</td><td>USB3</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3]</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Realtek RTL8822cu</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3][6]</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8812cu</td><td>USB3</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3]</td><td></td><td></td><td>No</td></tr><tr><td>Realtek RTL8812au</td><td>USB3</td><td>WiFi 5</td><td>80</td><td>✔️ 6.13+ [5]</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Mediatek MT7610u</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 4.19+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Realtek RTL8821cu</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3][6]</td><td>✔️</td><td>✔️</td><td>No</td></tr><tr><td>Realtek RTL8811cu</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.2+ [3]</td><td>✔️</td><td>✔️</td><td>No</td></tr><tr><td>Realtek RTL8821au</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.13+ [5]</td><td>✔️</td><td>✔️</td><td>No</td></tr><tr><td>Realtek RTL8811au</td><td>USB2</td><td>WiFi 5</td><td>80</td><td>✔️ 6.13+ [5]</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Ralink RT3573</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 3.12+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Ralink RT5572</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 3.10+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Ralink RT3572</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 2.6.31+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Ralink RT5372</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 3.0+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Realtek RTL8192cu</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 2.6.33+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Mediatek MT7601u</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 4.2+</td><td>❌</td><td>limited</td><td>Yes</td></tr><tr><td>Ralink RT5370</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 3.0+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Atheros AR9271</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 2.6.35+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr><tr><td>Ralink RT3070</td><td>USB2</td><td>WiFi 4</td><td>40</td><td>✔️ 2.6.31+</td><td>✔️</td><td>✔️</td><td>Yes</td></tr></tbody></table><h2 id="Mediatek-MT7921AU-and-MT7922AU-in-kernel-driver-is-mt7921u-WiFi-6E"><a href="#Mediatek-MT7921AU-and-MT7922AU-in-kernel-driver-is-mt7921u-WiFi-6E" class="headerlink" title="Mediatek MT7921AU and MT7922AU (in-kernel driver is mt7921u) (WiFi 6E)"></a>Mediatek MT7921AU and MT7922AU (in-kernel driver is mt7921u) (WiFi 6E)</h2><p>Adapters based on the mt7921au chipset have been available since July of 2022.</p><p>[1] USB support added with the mt7921u driver in kernel 5.18. Internal cards are supported by the mt7921e driver which has been in the kernel since 5.12.</p><p>[2] AP mode support added to the mt7921u driver in kernel 5.19. Firmware update is required also.</p><hr><h2 id="Realtek-RTW88-in-kernel-driver-WiFi-5"><a href="#Realtek-RTW88-in-kernel-driver-WiFi-5" class="headerlink" title="Realtek RTW88 (in-kernel driver) (WiFi 5)"></a>Realtek RTW88 (in-kernel driver) (WiFi 5)</h2><p>[3] In-kernel support for the following chipsets is now in kernel 6.2 and later, however, it is strongly recommended that you use kernel 6.12 or later due to dramatic improvement to the drivers that have taken place during 2014:</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rtl8822bu</span><br><span class="line">rtl8812bu (recommended)</span><br><span class="line">rtl8821cu</span><br><span class="line">rtl8811cu</span><br><span class="line">rtl8822cu</span><br><span class="line">rtl8812cu</span><br></pre></td></tr></table></figure><hr><p>[4] The driver for USB and PCIe went into Linux kernel 6.7. USB adapters should be available sometime this year.</p><p><a href="https://lwn.net/Articles/939966/">https://lwn.net/Articles/939966/</a></p><hr><p>[5] The new in-kernel drivers for the rtl8812au and rtl8821&#x2F;11au chips are NEW as of kernel 6.13.</p><hr><p>[6] Chipset has bluetooth turned on. Recommend Linux users avoid chipsets with bluetooth turned on.</p><h1 id="抓包软件使用"><a href="#抓包软件使用" class="headerlink" title="抓包软件使用"></a>抓包软件使用</h1><p>WinSniffer程序已进行了更新（v1.2），目前可以设置并捕获6G报文。</p><ul><li><strong>下载链接1（123云盘）：</strong><a href="https://www.123pan.com/s/rzBKVv-CvUP3.html">https://www.123pan.com/s/rzBKVv-CvUP3.html</a> 提取码：wdzx</li><li><strong>下载链接2（百度云盘）：</strong><a href="https://pan.baidu.com/s/1jvwskVyWh0UOszbhwvqIOA?pwd=wdzx">https://pan.baidu.com/s/1jvwskVyWh0UOszbhwvqIOA?pwd=wdzx</a> 提取码：wdzx</li></ul><h1 id="VMware虚拟机安装"><a href="#VMware虚拟机安装" class="headerlink" title="VMware虚拟机安装"></a>VMware虚拟机安装</h1><p>WinSniffer原理是将网卡连接到Linux虚拟机中，在Linux环境下开启网卡监听模式进行嗅探，再在Windows下使用Wireshark的远程抓包功能进行实时抓包。所以首先需要安装VMware虚拟机，版本建议在15.5或以上（如已安装可跳过此步）</p>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>利用fluxion进行WIFI钓鱼攻击</title>
+    <link href="https://macin.top/posts/418ef844/"/>
+    <id>https://macin.top/posts/418ef844/</id>
+    <published>2024-11-20T14:34:00.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. <strong>前言</strong></h4><blockquote><p><a href="https://github.com/FluxionNetwork/fluxion">Fluxion</a> 是一种安全审计和社会工程研究工具。它是 vk496 对 linset 的重制版，（希望）错误更少，功能更多。该脚本尝试通过社会工程（网络钓鱼）攻击从目标接入点检索 WPA&#x2F;WPA2 密钥。</p></blockquote><p>其原理是通过阻塞原始网络并创建一个虚假的钓鱼 WiFi，诱骗用户主动输入WiFi密码。相对于暴力破解可以更快速的获取 WiFi 密码</p><h4 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2. 准备工作"></a>2. 准备工作</h4><ul><li>Kali 免驱无线网卡</li><li>Kali 虚拟机或实体机</li></ul><blockquote><p>Kali 免驱网卡可以直接在网上购买，注意问清楚商家 Kali 系统是否免驱，除了需要支持监听和注入功能，还需要支持 AP 功能（用于创建钓鱼 WiFi）。</p></blockquote><p><strong>Fluxion 支持的无线网卡：</strong></p><p><img src="/img/fluxion/1.webp" alt="img"></p><blockquote><p>Ralink RT3070L 也是支持的，它是 3070 的升级版本，理论上支持更高的传输速率。</p></blockquote><p>Kali Linux 下载地址：<a href="https://www.kali.org/get-kali/">https://www.kali.org/get-kali/</a></p><p><img src="/img/fluxion/2.webp" alt="img"></p><h4 id="3-安装-Fluxion"><a href="#3-安装-Fluxion" class="headerlink" title="3. 安装 Fluxion"></a>3. 安装 Fluxion</h4><p>切换到 root 用户</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br></pre></td></tr></table></figure><p>使用 git 命令克隆 Fluxion 项目到本地</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://www.github.com/FluxionNetwork/fluxion.git</span><br></pre></td></tr></table></figure><p>克隆完成后进入项目文件夹</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd fluxion</span><br></pre></td></tr></table></figure><p>运行 Fluxion</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./fluxion.sh</span><br></pre></td></tr></table></figure><p>Fluxion 会自动检查缺失的依赖，如果有缺失的依赖，使用下面的命令自动安装</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./fluxion.sh -i</span><br></pre></td></tr></table></figure><h4 id="4-抓取握手包"><a href="#4-抓取握手包" class="headerlink" title="4. 抓取握手包"></a>4. 抓取握手包</h4><p>输入 <code>18</code> 选择中文</p><p>输入 <code>2</code> 检索 WPA&#x2F;WPA2 加密散列</p><p>输入 <code>1</code> 选择无线网卡（一般情况都是显示 wlan0）</p><p>输入 <code>3</code> 扫描所有信道（2.4GHz &amp; 5GHz）</p><blockquote><p>如果网卡不支持 5G 频段，扫描后的结果不包含 5G 频段的 WiFi</p></blockquote><p>扫描到目标 WiFi 后，按 <code>Ctrl + C</code> 停止扫描</p><p><img src="/img/fluxion/3.webp" alt="img"></p><p>输入目标 WiFi 前面的序号（序号前面的 <strong>0</strong> 不需要输入）</p><p><img src="/img/fluxion/4.webp" alt="img"></p><p>输入 <code>2</code> 选择“跳过”</p><p>输入 <code>2</code> 选择 aireplay-ng 解除认证方式</p><p>之后全部选择推荐的选项</p><p><img src="/img/fluxion/5.webp" alt="img"></p><p>之后会自动抓取握手包，如果有连接到WiFi的设备，aireplay-ng 会把它踢下线，一般设备都会自动重连 WiFi，这个时候就抓取到握手包了。成功抓到握手包之后，左下角命令行会闪烁，同时显示“成功”，然后关掉这个命令行窗口就可以了</p><p><img src="/img/fluxion/6.webp" alt="230928155847.jpg"></p><h4 id="5-创建钓鱼-WiFi"><a href="#5-创建钓鱼-WiFi" class="headerlink" title="5. 创建钓鱼 WiFi"></a>5. 创建钓鱼 WiFi</h4><p>输入 <code>1</code> 选择“专属门户”</p><p>输入 <code>Y</code> 开始创建钓鱼 AP</p><p>输入 <code>2</code> 选择“跳过”</p><p>输入 <code>2</code> 选择无线网卡（一般情况都是显示 wlan0）</p><p>输入 <code>1</code> 选择 mdk4 解除认证方式</p><p>输入 <code>1</code> 选择推荐的选项</p><p>输入 <code>1</code> 选择 cowpatty 验证密码方式</p><p>输入 <code>1</code> 使用抓取到的 hash 文件</p><p>输入 <code>2</code> 选择推荐的选项</p><p>输入 <code>1</code> 创建 SSL 证书</p><p>输入 <code>1</code> 选择推荐的选项</p><p>输入 <code>3</code> 选择中文版本的通用认证网页</p><p><img src="/img/fluxion/7.webp" alt="231011224528.jpg"></p><blockquote><p>推荐根据 <a href="https://github.com/FluxionNetwork/fluxion/wiki/Preparing-portals-for-fluxion">官方文档</a> 自己编写认证网页上传，因为通用的认证网页界面实在是太丑了…</p></blockquote><p>之后就是等待鱼儿上钩了，钓鱼成功后右上角的窗口会显示密码保存的路径（复制这个路径，待会要用到）</p><p><img src="/img/fluxion/8.webp" alt="230929012505.jpg"></p><p>当有人连接了钓鱼 WiFi，就会跳转到下面的这个认证页面，程序会比对输入密码的哈希值，输入正确的密码会自动关闭钓鱼 WiFi，并将密码保存到日志中，否则会提示密码错误</p><p><img src="/img/fluxion/9.webp" alt="231011230201.jpg"></p><h4 id="6-查看密码"><a href="#6-查看密码" class="headerlink" title="6. 查看密码"></a>6. 查看密码</h4><p>按 <code>Ctrl + C</code> 退出 Fluxion，之后输入下面的命令查看密码</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cat /root/fluxion/attacks/Captive\ Portal/netlog/test-5A:A0:DA:E3:BE:2F.log</span><br></pre></td></tr></table></figure><p>后面的路径就是上一步复制的，注意空格前面需要使用 <code>\</code> 转译</p><p><img src="/img/fluxion/10.webp" alt="230929014449.jpg"></p><h4 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h4><p>Fluxion 只适合距离路由器距离较近，WiFi 信号较强，并且拥有大功率无线网卡的场景，否则创建的钓鱼 WiFi 永远排在真实 WiFi 的下面，用户可能永远都不会连接这个钓鱼 WiFi，因为信号实在是太差了。</p>]]></content>
+    
+    
+    <summary type="html">kali,fluxion,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+    <category term="fluxion" scheme="https://macin.top/tags/fluxion/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>WeChat Bot一个基于WeChaty结合ChatGPT/Kimi/讯飞/COZE等AI服务实现的微信机器人</title>
+    <link href="https://macin.top/posts/ba643697/"/>
+    <id>https://macin.top/posts/ba643697/</id>
+    <published>2024-11-19T12:46:09.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="参考项目"><a href="#参考项目" class="headerlink" title="参考项目"></a>参考项目</h1><p><a href="https://github.com/LinHanlove/wechat-bot">LinHanlove&#x2F;wechat-bot: 一个基于WeChaty结合OpenAi ChatGPT &#x2F; Kimi &#x2F; 讯飞等Ai服务实现的微信机器人，可以帮你自动回复微信消息，或者管理微信群&#x2F;好友，检测僵尸粉等…</a></p><p><a href="https://github.com/wangrongding/wechat-bot">wangrongding&#x2F;wechat-bot: 🤖一个基于 WeChaty 结合 OpenAi ChatGPT &#x2F; Kimi &#x2F; 讯飞等Ai服务实现的微信机器人 ，可以用来帮助你自动回复微信消息，或者管理微信群&#x2F;好友，检测僵尸粉等…</a></p><h1 id="WeChat-Bot"><a href="#WeChat-Bot" class="headerlink" title="WeChat Bot"></a>WeChat Bot</h1><p>一个 基于 <code>chatgpt</code> + <code>wechaty</code> 的微信机器人</p><p>可以用来帮助你自动回复微信消息，或者管理微信群&#x2F;好友.</p><h2 id="使用前需要配置的-AI-服务（目前支持-4-种，可任选其一）"><a href="#使用前需要配置的-AI-服务（目前支持-4-种，可任选其一）" class="headerlink" title="使用前需要配置的 AI 服务（目前支持 4 种，可任选其一）"></a>使用前需要配置的 AI 服务（目前支持 4 种，可任选其一）</h2><ul><li><p>deepseek获取自己的 <code>api key</code>，地址戳这里 👉🏻 ：<a href="https://platform.deepseek.com/usage">deepseek开放平台</a><br>将获取到的<code>api key</code>填入 <code>.evn</code> 文件中的 <code>DEEPSEEK_FREE_TOKEN</code> 中。</p></li><li><p>科大讯飞</p><p>新增科大讯飞，去这里申请一个 key：<a href="https://console.xfyun.cn/services/bm35">科大讯飞</a>，每个模型都有 200 万的免费 token ，感觉很难用完。<br>注意： 讯飞的配置文件几个 key，别填反了，很多人找到我说为什么不回复，都是填反了。<br>而且还有一个好处就是，接口不会像 Kimi 一样限制请求频次，相对来说稳定很多。</p></li><li><p>Kimi （请求限制较严重）</p><p>可以去 ： <a href="https://platform.moonshot.cn/console/api-keys">kimi apikey</a> 获取你的 key<br>最近比较忙，大家感兴趣可以提交 PR，我会尽快合并。目前 Kimi 刚刚集成，还可以实现上传文件等功能，然后有其它较好的服务也可以提交 PR 。</p></li><li><p>ChatGPT</p><p>先获取自己的 <code>api key</code>，地址戳这里 👉🏻 ：<a href="https://beta.openai.com/account/api-keys">创建你的 api key</a></p><p><strong>注意：这个是需要去付费购买的，很多人过来问为什么请求不通，请确保终端走了代理，并且付费购买了它的服务</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 执行下面命令，拷贝一份 .env.example 文件为 .env</span><br><span class="line">cp .env.example .env</span><br><span class="line"># 填写完善 .env 文件中的内容</span><br><span class="line">OPENAI_API_KEY=&#x27;你的key&#x27;</span><br></pre></td></tr></table></figure></li><li><p>其他<br>（待实践）理论上使用openAI格式的api，都可以使用，在env文件中修改对应的api_key、model、proxy_url即可。</p></li></ul><h2 id="开发-使用"><a href="#开发-使用" class="headerlink" title="开发&#x2F;使用"></a>开发&#x2F;使用</h2><p>检查好自己的开发环境，确保已经安装了 <code>nodejs</code> , 版本需要满足 Node.js &gt;&#x3D; v18.0 ，版本太低会导致运行报错,最好使用 LTS 版本。</p><p>安装依赖</p><blockquote><p>安装依赖时，大陆的朋友推荐切到 taobao 镜像源后再安装，命令：<br>npm config set registry <a href="https://registry.npmmirror.com/">https://registry.npmmirror.com</a><br>想要灵活切换，推荐使用我的工具 👉🏻 <a href="https://github.com/wangrongding/prm-cli">prm-cli</a> 快速切换。</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装依赖</span></span><br><span class="line">npm i</span><br><span class="line"><span class="comment"># 推荐用 yarn 吧，npm 安装有时会遇到 wechaty 内部依赖安装失败的问题</span></span><br><span class="line">yarn</span><br></pre></td></tr></table></figure><p>运行服务</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">npm run dev <span class="comment"># 或者 npm run start</span></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">yarn dev <span class="comment"># 或者 yarn start</span></span><br></pre></td></tr></table></figure><p>然后就可以扫码登录了，然后根据你的需求，自己修改相关逻辑文件。</p><p>为了兼容 docker 部署，避免不必要的选择交互，新增指定服务运行</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行指定服务 （ 目前支持 ChatGPT | Kimi | coze ）</span></span><br><span class="line">npm run start -- --serve Kimi</span><br><span class="line"><span class="comment"># 交互选择服务，仍然保持原有的逻辑</span></span><br><span class="line">npm run start</span><br></pre></td></tr></table></figure><p>测试</p><p>安装完依赖后，运行 <code>npm run dev</code> 前，可以先测试下 openai 的接口是否可用，运行 <code>npm run test</code> 即可。</p><p>遇到 timeout 问题需要自行解决。（一般就是代理未成功，或者你的梯子限制了调 openai api 的服务）</p><h2 id="你要修改的"><a href="#你要修改的" class="headerlink" title="你要修改的"></a>你要修改的</h2><p>很多人说运行后不会自动收发信息，不是的哈，为了防止给每一条收到的消息都自动回复（太恐怖了），所以加了限制条件。</p><p>你要把下面提到的地方自定义修改下。</p><ul><li>群聊，记得把机器人名称改成你自己微信号的名称，然后添加对应群聊的名称到白名单中，这样就可以自动回复群聊消息了。</li><li>私聊，记得把需要自动回复的好友名称添加到白名单中，这样就可以自动回复私聊消息了。</li></ul><p>在.env文件中修改你的配置即可，示例如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 白名单配置</span><br><span class="line">#定义机器人的名称，这里是为了防止群聊消息太多，所以只有艾特机器人才会回复，</span><br><span class="line">#这里不要把@去掉，在@后面加上你启动机器人账号的微信名称</span><br><span class="line">BOT_NAME=@可乐</span><br><span class="line">#联系人白名单</span><br><span class="line">ALIAS_WHITELIST=微信名1,备注名2</span><br><span class="line">#群聊白名单</span><br><span class="line">ROOM_WHITELIST=XX群1,群2</span><br></pre></td></tr></table></figure><p>可以看到，自动回复都是基于 <code>chatgpt</code> 的，记得要开代理，或者填写代理地址。</p>]]></content>
+    
+    
+    <summary type="html">chatgpt,ai</summary>
+    
+    
+    
+    <category term="ai" scheme="https://macin.top/categories/ai/"/>
+    
+    <category term="chatgpt" scheme="https://macin.top/categories/ai/chatgpt/"/>
+    
+    
+    <category term="chatgpt" scheme="https://macin.top/tags/chatgpt/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>xshell用钥匙登录连接甲骨文服务器</title>
+    <link href="https://macin.top/posts/3c3a9fed/"/>
+    <id>https://macin.top/posts/3c3a9fed/</id>
+    <published>2024-11-19T12:16:35.000Z</published>
+    <updated>2024-11-27T12:35:02.143Z</updated>
+    
+    <content type="html"><![CDATA[<p>Xshell-7破解版软件下载</p><p><a href="https://wwsf.lanzn.com/igVz12fjmyjc">https://wwsf.lanzn.com/igVz12fjmyjc</a> 密码:bgad</p><h1 id="用户身份验证，去掉password，勾选public-key"><a href="#用户身份验证，去掉password，勾选public-key" class="headerlink" title="用户身份验证，去掉password，勾选public key"></a>用户身份验证，去掉password，勾选public key</h1><p><img src="/img/xshell/4.webp" alt="img"></p><h1 id="连接，主机：输入甲骨文公网ip地址"><a href="#连接，主机：输入甲骨文公网ip地址" class="headerlink" title="连接，主机：输入甲骨文公网ip地址"></a>连接，主机：输入甲骨文公网ip地址</h1><p><img src="/img/xshell/5.webp" alt="img"></p><h1 id="输入用户名：ubuntu-或-opc（centos系统）"><a href="#输入用户名：ubuntu-或-opc（centos系统）" class="headerlink" title="输入用户名：ubuntu 或 opc（centos系统）"></a>输入用户名：ubuntu 或 opc（centos系统）</h1><p><img src="/img/xshell/6.webp" alt="img"></p>]]></content>
+    
+    
+    <summary type="html">xshell</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="xshell" scheme="https://macin.top/categories/tools/xshell/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="windows" scheme="https://macin.top/tags/windows/"/>
+    
+    <category term="xshell" scheme="https://macin.top/tags/xshell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>xshell保持终端连接状态（活动、不断开）</title>
+    <link href="https://macin.top/posts/7c5c77c4/"/>
+    <id>https://macin.top/posts/7c5c77c4/</id>
+    <published>2024-11-19T11:45:22.000Z</published>
+    <updated>2024-11-27T12:35:02.143Z</updated>
+    
+    <content type="html"><![CDATA[<p>Xshell-7破解版软件下载</p><p><a href="https://wwsf.lanzn.com/igVz12fjmyjc">https://wwsf.lanzn.com/igVz12fjmyjc</a> 密码:bgad</p><p>基于安全原因，终端访问是受限的，我们希望终端长时间保持连接状态，此时可以利用 xshell 的功能：</p><p><img src="/img/xshell/3.webp" alt="在这里插入图片描述"></p><p>选择会话 “属性-&gt;连接-&gt;保持活动状态” 中设置每隔60秒发送一个\n。</p><p>当然，你可以自由选择空闲间隔时长以及发送的命令。</p><p>这样，终端始终处于活动状态，就不会中断啦。</p>]]></content>
+    
+    
+    <summary type="html">xshell</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="xshell" scheme="https://macin.top/categories/tools/xshell/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="windows" scheme="https://macin.top/tags/windows/"/>
+    
+    <category term="xshell" scheme="https://macin.top/tags/xshell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS任意版本app下载，解决app store已下架或最低系统限制的问题</title>
+    <link href="https://macin.top/posts/65e8e866/"/>
+    <id>https://macin.top/posts/65e8e866/</id>
+    <published>2024-11-17T08:02:54.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="软件介绍"><a href="#软件介绍" class="headerlink" title="软件介绍"></a>软件介绍</h3><ol><li>下载iOS旧版应用，简化繁琐抓包流程。</li><li>一键生成去更新IPA（手机安装后，去除App Store的更新检测）</li></ol><h3 id="支持系统"><a href="#支持系统" class="headerlink" title="支持系统"></a>支持系统</h3><p>windows 10&#x2F;windows 8&#x2F;windows 7（由于使用了Fiddler库，所以需要.Net环境）</p><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><h4 id="一、直接搜索方式"><a href="#一、直接搜索方式" class="headerlink" title="一、直接搜索方式"></a>一、直接搜索方式</h4><ol><li>搜索APP，双击选择。</li><li>双击选择要下载的版本。</li><li>在iTunes中下载即可。</li></ol><h4 id="二、复制APP链接方式"><a href="#二、复制APP链接方式" class="headerlink" title="二、复制APP链接方式"></a>二、复制APP链接方式</h4><ol><li>在iTunes下载按钮右侧下拉菜单中，选择【复制链接】。</li><li>双击选择要下载的版本。</li><li>在iTunes中下载即可。</li></ol><h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><h4 id="问：iTunes-账号无法登录成功"><a href="#问：iTunes-账号无法登录成功" class="headerlink" title="问：iTunes 账号无法登录成功"></a>问：iTunes 账号无法登录成功</h4><ol><li>请先关闭本工具，再进行 iTunes 登录操作。</li><li>登录成功后，再打开本工具即可。</li></ol><h4 id="问：iTunes对电脑进行授权时，授权不了，反复授权"><a href="#问：iTunes对电脑进行授权时，授权不了，反复授权" class="headerlink" title="问：iTunes对电脑进行授权时，授权不了，反复授权"></a>问：iTunes对电脑进行授权时，授权不了，反复授权</h4><ol><li>关闭本工具，再进行授权即可。</li></ol><h4 id="问：搜不到APP历史版本号？（以下方法100-可解决）"><a href="#问：搜不到APP历史版本号？（以下方法100-可解决）" class="headerlink" title="问：搜不到APP历史版本号？（以下方法100%可解决）"></a>问：搜不到APP历史版本号？（以下方法100%可解决）</h4><ol><li>先不要拦截，在iTunes商店中下载此软件，等待下载完成。</li><li>在本工具中【安装管理】下找到对应IPA安装包，右键选择【查找版本ID】。</li><li>即可列出软件所有历史版本ID，版本号按新版到旧版排序。<br>PS：暂时没有通过版本ID，查版本号的接口，所以抓下来，看吧。</li></ol><h4 id="问：iTunes-一直显示正在下载…"><a href="#问：iTunes-一直显示正在下载…" class="headerlink" title="问：iTunes 一直显示正在下载…"></a>问：iTunes 一直显示正在下载…</h4><ol><li>iTunes 先取消下载。</li><li>本工具【停止拦截】，再点击iTunes【继续下载】。</li></ol><h4 id="问：下载完APP，安装到手机，打开闪退。"><a href="#问：下载完APP，安装到手机，打开闪退。" class="headerlink" title="问：下载完APP，安装到手机，打开闪退。"></a>问：下载完APP，安装到手机，打开闪退。</h4><ol><li>先在手机中卸载该APP。</li><li>使用下载此App的账号，登录 App Store，在 App Store 中随便下载一个应用，不要卸载。</li><li>使用同步助手，重新安装。（如果仍闪退，尝试覆盖安装）</li></ol><h4 id="问：导入伪旧版App后，iTunes未检测到更新。"><a href="#问：导入伪旧版App后，iTunes未检测到更新。" class="headerlink" title="问：导入伪旧版App后，iTunes未检测到更新。"></a>问：导入伪旧版App后，iTunes未检测到更新。</h4><ol><li>iTunes 更新列表页面下，按F5即可。</li><li>如上述方法未解决，删除当列表所有文件，保留文件，再点击右下角检测更新按钮。</li></ol><h4 id="问：“已停止供货”的APP-怎么抓取？（已失效）"><a href="#问：“已停止供货”的APP-怎么抓取？（已失效）" class="headerlink" title="问：“已停止供货”的APP 怎么抓取？（已失效）"></a>问：“已停止供货”的APP 怎么抓取？（已失效）</h4><ol><li>取消拦截，下载该软件最新版。</li><li>本助手里切换到【安装管理】，右键APP，选择【伪装旧版APP】。</li><li>双击【*_伪装版.ipa】（或右键，在文件夹中打开），将APP拖动到iTunes资料库，替换，检查更新，该软件变为更新状态。</li><li>【开始拦截】，iTunes中更新该软件，即可正常下载该版本。</li></ol><h3 id="视频教程"><a href="#视频教程" class="headerlink" title="视频教程"></a>视频教程</h3><p><a href="https://www.bilibili.com/video/BV1VQ4y1M77t">https://www.bilibili.com/video/BV1VQ4y1M77t</a></p><h3 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h3><p>iOS任意版本号APP下载v5.1<br>百度云：<a href="https://pan.baidu.com/s/1uIOP8n436qS72mOWaBTlLg">https://pan.baidu.com/s/1uIOP8n436qS72mOWaBTlLg</a><br>提取码：bGMg</p><p>蓝奏：<a href="https://wwx.lanzoui.com/iBE4Emzgbkj">https://wwx.lanzoui.com/iBE4Emzgbkj</a></p><p>iTunes v12.6.5.3（最后一个带AppStore的版本）<br>官方直链：<br>64位：<a href="https://secure-appldnld.apple.com/itunes12/091-87819-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A6/iTunes64Setup.exe">https://secure-appldnld.apple.com/itunes12/091-87819-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A6/iTunes64Setup.exe</a><br>32位：<a href="https://secure-appldnld.apple.com/itunes12/091-87820-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A5/iTunesSetup.exe">https://secure-appldnld.apple.com/itunes12/091-87820-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A5/iTunesSetup.exe</a></p><p>百度云：<a href="https://pan.baidu.com/s/13mI8nWiDe-4kttloNTjRWw">https://pan.baidu.com/s/13mI8nWiDe-4kttloNTjRWw</a><br>提取码：hpfj</p><h3 id="另一种方法用降级工具DowngradeApp"><a href="#另一种方法用降级工具DowngradeApp" class="headerlink" title="另一种方法用降级工具DowngradeApp"></a>另一种方法用降级工具DowngradeApp</h3><p>我用夸克网盘分享了「降级工具DowngradeApp_1.1-9【建议用这替代】.ipa」，点击链接即可保存。打开「夸克APP」，无需下载在线播放视频，畅享原画5倍速，支持电视投屏。<br>链接：<a href="https://pan.quark.cn/s/e2d4bec97a23">https://pan.quark.cn/s/e2d4bec97a23</a><br>提取码：zYrT</p>]]></content>
+    
+    
+    <summary type="html">ios,os</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ios" scheme="https://macin.top/categories/os/ios/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ios" scheme="https://macin.top/tags/ios/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在vercel部署onemanager索引onedrive网盘</title>
+    <link href="https://macin.top/posts/15554115/"/>
+    <id>https://macin.top/posts/15554115/</id>
+    <published>2024-09-30T13:15:55.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<p>每次分享东西要么用微信要么用U盘，前者速度慢还有各种限制，后者只能面对面，干脆利用OneManager+onedrive+vercel搭建一个属于自己的网盘，做到大容量、能分享、速度也不慢。为了坚持白嫖原则，做到一分钱不花，域名、服务器、硬盘、网络这些统统都不用，实现真正的0成本。</p><p><strong>前提条件</strong></p><p><strong>一个OneDrive账号</strong></p><p>自行注册，建议注册e5开发者（容量也有5t，但需要保活，不然三个月就删号了），且需要确保可以调用api。</p><p><strong>一个vercel账号</strong></p><p>前往vercel官网自行注册，注册时选择hobby即可免费使用。</p><p><strong>一个域名</strong></p><p>域名免费的有freenom可以免费注册顶级域名（容易被回收）;也有eu.org这种可以给免费的二级域名（不好注册经常不给通过）。</p><p><strong>一、部署OneManager</strong></p><p>提前获取vercel token，浏览器打开<a href="https://vercel.com/account/tokens">https://vercel.com/account/tokens</a></p><p><img src="/img/onemanager/1.webp" alt="图片"></p><p>token name填写名字，scope权限选择full account，expiration选择no expiration即可（永不过期），点击create创建，复制得到的token。</p><p><img src="/img/onemanager/2.webp" alt="图片"></p><p>打开<a href="https://scfonedrive.github.io/Vercel/Deploy.html">https://scfonedrive.github.io/Vercel/Deploy.html</a></p><p>先下载文件:<br><a href="https://github.com/qkqpttgf/OneManager-php/archive/refs/heads/master.zip">https://github.com/qkqpttgf/OneManager-php/archive/refs/heads/master.zip</a></p><blockquote><p>解决vercel的php版本问题导致页面空白的问题：</p><p>用旧版zip文件</p><p>下载:<a href="https://wwsf.lanzn.com/iUZbZ2c725xc">https://wwsf.lanzn.com/iUZbZ2c725xc</a> 密码:add9</p><p>“runtime”: “vercel-php@ 输入 0.6.2</p></blockquote><p>上传刚刚下载的文件</p><p><img src="/img/onemanager/3.webp" alt="图片"></p><p>填写刚刚获得的密钥token，名字name可以随便取，点击deploy部署。</p><p><img src="/img/onemanager/4.webp" alt="图片"></p><p>等待十几秒出现success表示部署成功。</p><p><img src="/img/onemanager/5.webp" alt="图片"></p><p>因为某些原因vercel.app这个域名不能访问，所以还需要添加一个域名。访问vercel主页，先在overview选择刚刚建立的项目，然后转到settings-domains，输入要添加的域名，点击add添加。</p><p><img src="/img/onemanager/6.webp" alt="图片"></p><p>然后给域名添加一个cname解析</p><p><img src="/img/onemanager/7.webp" alt="图片"></p><p><img src="/img/onemanager/8.webp" alt="图片"></p><p>等待一段时间域名解析生效即可用刚刚添加的域名访问</p><p><img src="/img/onemanager/9.webp" alt="图片"></p><p><strong>二、配置OneManager</strong></p><p>浏览器打开https:&#x2F;&#x2F;你的域名进入到安装程序，点击开始安装程序。</p><p><img src="/img/onemanager/10.webp" alt="图片"></p><p>添加刚开始建立的token（如果忘记了再新建一个即可），设置密码，确定。</p><p><img src="/img/onemanager/11.webp" alt="图片"></p><p>刷新一下网页，左上角点击登录，输入刚刚设置的密码，然后点击管理-设置，选择OneDrive，添加盘</p><p><em>OneManager还可以挂载阿里<a href="https://www.smzdm.com/ju/s28z0v2/">云盘</a>等其他厂商的网盘，但是目前容量大的网盘也只有OneDrive。</em></p><p><img src="/img/onemanager/12.webp" alt="图片"></p><p>设置标签、名称，根据自己OneDrive选择版本，如果是e5开发者建议勾选用自己的应用id与机密，然后确认。</p><p><img src="/img/onemanager/13.webp" alt="图片"></p><p>跳转到OneDrive登录界面，输入账户密码登录，选择接受许可</p><p><img src="/img/onemanager/14.webp" alt="图片"></p><p>等待一段时间，完成后会自动跳转，选择驱动器默认第一个use OneDrive。</p><p><img src="/img/onemanager/15.webp" alt="图片"></p><p>再次等待几秒即可完成安装</p><p><img src="/img/onemanager/16.webp" alt="图片"></p><p>这时候打开https:&#x2F;&#x2F;自己的域名，就可以正常使用了。</p><p><img src="/img/onemanager/17.webp" alt="图片"></p><p>提醒：如果看不到文件请刷新缓存：管理-刷新当前目录即可。</p><p><img src="/img/onemanager/18.webp" alt="图片"></p><p>至此OneManager就已经部署完成了，点击文件就可以查看下载，后续的美化、启用游客上传、加密等功能</p><p><em>OneManager对比alist来说可以任意部署，自己不用出任何设备，虽然界面、功能性不如alist，但是任意部署、不花钱还要啥自行车，更重要的是不用自己出设备，放公网也不怕被攻击。</em></p><p><em>备注：OneManager只是索引，所有的文件上传下载流量均是OneDrive服务器直接连接，程序本身只消耗微乎其微的流量，这个也可以部署在本地，如果觉得OneDrive太慢请检查自身网络或者更换阿里云盘。</em></p><p>也可用docker部署</p><p><a href="https://hub.docker.com/r/zhullyb/onemanager-php">zhullyb&#x2F;onemanager-php - Docker Image | Docker Hub</a></p>]]></content>
+    
+    
+    <summary type="html">onedrive</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="onedrive" scheme="https://macin.top/categories/tools/onedrive/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="onedrive" scheme="https://macin.top/tags/onedrive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS巨魔轻松签+完全体教程</title>
+    <link href="https://macin.top/posts/692b3ea6/"/>
+    <id>https://macin.top/posts/692b3ea6/</id>
+    <published>2024-09-30T12:19:30.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>轻松签+是什么</strong></p><p>轻松签，原本是一个给未越狱iPhone提供签名的工具。因为巨魔是开源的，轻松签的作者，就将巨魔的永久签集成到了轻松签的APP里——也就是轻松签+。</p><p>这也就意味着，轻松签+可以实现巨魔商店的侧载功能，而且是中文界面，符合国人的使用习惯。</p><p><img src="/img/esign/1.webp" alt="img"></p><p>不仅如此，因为轻松签是靠“签名”起家的，它也同时可以对IPA进行定制——比如提取IPA，双开，改图标，注入插件，去除最低系统限制等一系列功能。</p><p>但是，轻松签+在默认状态下是阉割版，而不是完整版。那么如何解锁轻松签+的完全体，以及使用它的核心功能呢？网上讲这个问题的人非常少，因此就出篇教程来补充一下。</p><p>注意，本篇教程，仅仅适用已经有巨魔的用户！也就是iOS14——iOS16.6.1老系统。</p><p>如果你不懂怎么安装巨魔，请看我的往期教程。</p><p><strong>解锁轻松签+完全体</strong></p><p><strong>1，巨魔安装轻松签+</strong></p><p>在一切开始之前，你需要下载轻松签+，Fliza 这两个APP，才能解锁轻松签+的完全体。</p><p><img src="/img/esign/2.webp" alt="img"></p><p>你将获取最新的轻松签+安装包，以及配套工具Fliza，一个测试用的APP。</p><p>下载好了文件之后，将轻松签+，Fliza的IPA安装包，通过共享，发送到巨魔商店安装。</p><p><strong>2，解锁轻松签+完全体</strong></p><p>需要注意，轻松签+默认状态下是阉割版，必须做以下两步，才能解锁完全体。</p><p><strong>轻松签+设置：</strong></p><p>打开轻松签+，点击设置-永久安装配置，下拉找到“安装esign helper，选择一个无用的系统应用进行替代，这里我选择的是“邮件”。</p><p><img src="/img/esign/3.webp" alt="img"></p><p>之后，“邮件”就会变成轻松签+助手。如果没做这一步，通过轻松签+安装的APP，会出现图标空白的情况。</p><p><strong>Fliza设置：</strong></p><p>根据路径：&#x2F;var&#x2F;containers&#x2F;bundle&#x2F;application&#x2F;轻松签+&#x2F;esign.app，找到“esignhelper”文件。</p><p><img src="/img/esign/4.webp" alt="img"></p><p>点击感叹号，在“所有权”选项里，把“所有者”、“组”这两个选项的权限，都设置为“0.root”，设置完后如图所示。</p><p>好了，这时候，你就解锁了轻松签+的完全体，拥有永久安装，修改签名的权限。</p><p><strong>轻松签+的4大用法</strong></p><p>很多人不知道轻松签+具体有什么用——因为要说应用侧载，那巨魔商店已经可以实现了。其实，轻松签+完全体非常强大，可以替代很多巨魔工具，只是它为人低调而已。</p><p>下面介绍4个好用的功能，看完就基本懂了。</p><p><strong>1，改图标</strong></p><p>在应用-已安装列表中，找到巨魔录音机，点击修改，点击修改桌面图标，随意选择一个图片，保存修改。回到桌面一看，你会发现APP图标已经被修改了——是不是很神奇？</p><p><img src="/img/esign/5.webp" alt="img"></p><p><strong>2，双开</strong></p><p>在设置-导入文件中，导入IPA，它就会被轻松签+获取到IPA。然后在应用-未签名中，点击刚才导入的IPA，选择“签名”，然后修改第二项的名字，在后面加个“1”或者其他数字，点击签名，成功后再点击永久安装，就可以实现双开。</p><p><img src="/img/esign/6.webp" alt="img"></p><p><strong>3，修改库</strong></p><p>在应用-已安装列表中，点击APP，点击“修改”。你可以看到“移除已有库”、“添加第三方库”这两个选项，这里可以管理APP的插件，而且是全类型都支持。在往下拉，还能修改版本限制、移除设备限制等等。</p><p><img src="/img/esign/7.webp" alt="img"></p><p><strong>4，提取IPA</strong></p><p>在应用-已安装列表，点击APP。你会发现，轻松签+可以解密再导出IPA，如果是系统权限的APP则可以直接导出IPA，比起Appdump 2，它更全能，且更方便。</p><p><img src="/img/esign/8.webp" alt="img"></p><p><strong>结论</strong></p><p>巨魔版本的轻松签+，至少能取代3个以上的巨魔工具。只要你经常安装IPA，那它基本上是必备的。而且，比起海外应用，轻松签+是全中文界面，方便大家理解。</p><h1 id="TrollFools2-7-huami-版"><a href="#TrollFools2-7-huami-版" class="headerlink" title="TrollFools2.7 huami 版"></a>TrollFools2.7 huami 版</h1><p>GitHub 地址 ： <a href="https://github.com/huami1314/TrollFools/releases">https://github.com/huami1314/TrollFools/releases</a><br>TrollFools2.7:<br><a href="https://www.123pan.com/s/oJCLVv-83Jvd?%E6%8F%90%E5%8F%96%E7%A0%81:Cxhy">https://www.123pan.com/s/oJCLVv-83Jvd?提取码:Cxhy</a><br>🎉iOS17.0巨魔资源推荐：<br><a href="https://www.123pan.com/s/oJCLVv-RzBvd.html">https://www.123pan.com/s/oJCLVv-RzBvd.html</a></p><p>巨魔IPA资源：<br><a href="https://pan.quark.cn/s/1d1961f8c778">https://pan.quark.cn/s/1d1961f8c778</a><br>iOS超全资源库：<br><a href="https://drive.uc.cn/s/5f684148dc034">https://drive.uc.cn/s/5f684148dc034</a><br>系统助手：<br><a href="https://joia.cn/system">https://joia.cn/system</a><br>十三资源库：<br><a href="https://tool.joia.cn/">https://tool.joia.cn</a><br>可以查询你的设备是否支持越狱或者巨魔等工具</p>]]></content>
+    
+    
+    <summary type="html">ios</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ios" scheme="https://macin.top/categories/os/ios/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ios" scheme="https://macin.top/tags/ios/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>宝塔面板开心版|企业版|破解版搭建</title>
+    <link href="https://macin.top/posts/7ae5b50f/"/>
+    <id>https://macin.top/posts/7ae5b50f/</id>
+    <published>2024-09-09T15:00:06.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<ul><li>宝塔面板开心版|企业版|破解版搭建，安全高效的服务器运维面板，去除登录验证，保护个人私隐</li></ul><p>准备工作</p><ul><li><p>下载并安装SSH连接工具Finalshell：【<a href="https://www.hostbuf.com/t/988.html">点击进入</a>】</p></li><li><p>准备一个域名并托管到Cloudflare：【<a href="https://dash.cloudflare.com/login">点击进入</a>】</p></li></ul><p>1、关闭防火墙</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw disableCopy</span><br></pre></td></tr></table></figure><p>2、更新系统</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update -y &amp;&amp; apt upgrade -yCopy</span><br></pre></td></tr></table></figure><p>3、宝塔官网：【<a href="https://www.bt.cn/">点击进入</a>】</p><ul><li>开源脚本：【<a href="https://github.com/8838/btpanel-v7.7.0">点击进入</a>】</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSO https://raw.githubusercontent.com/8838/btpanel-v7.7.0/main/install/install_panel.sh &amp;&amp; bash install_panel.shCopy</span><br></pre></td></tr></table></figure><ul><li>一键关闭登录验证</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O optimize.sh http://f.cccyun.cc/bt/optimize.sh &amp;&amp; bash optimize.shCopy</span><br></pre></td></tr></table></figure><ul><li>启动开心版</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSO https://raw.githubusercontent.com/ztkink/bthappy/main/one_key_happy.sh &amp;&amp; bash one_key_happy.sh</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">baota</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="bt" scheme="https://macin.top/categories/web/bt/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="bt" scheme="https://macin.top/tags/bt/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>istore安装aria2配置连接ariang</title>
+    <link href="https://macin.top/posts/c7c1e77/"/>
+    <id>https://macin.top/posts/c7c1e77/</id>
+    <published>2024-09-08T01:55:33.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>aria2项目地址：</p><p><a href="https://github.com/aria2/aria2">aria2&#x2F;aria2: aria2 is a lightweight multi-protocol &amp; multi-source, cross platform download utility operated in command-line. It supports HTTP&#x2F;HTTPS, FTP, SFTP, BitTorrent and Metalink. (github.com)</a></p><p>aria2官网：</p><p><a href="https://aria2.github.io/">aria2</a></p><p>ariang项目地址：</p><p><a href="https://github.com/mayswind/AriaNg?tab=readme-ov-file">mayswind&#x2F;AriaNg: AriaNg, a modern web frontend making aria2 easier to use. (github.com)</a></p><p>ariang中文介绍页：</p><p><a href="https://ariang.mayswind.net/zh_Hans/">AriaNg (mayswind.net)</a></p></blockquote><h1 id="aria2运行状态"><a href="#aria2运行状态" class="headerlink" title="aria2运行状态"></a>aria2运行状态</h1><p><img src="/img/aria/1.webp" alt="image-20240908095738153"></p><ol><li>查看是否<strong>正在运行</strong></li><li>打开<strong>启用</strong>按钮</li><li>以此用户权限运行选<strong>root</strong></li><li>下载目录设置好</li></ol><h1 id="RPC选项"><a href="#RPC选项" class="headerlink" title="RPC选项"></a>RPC选项</h1><p><img src="/img/aria/4.webp" alt="image-20240908100933969"></p><ol><li>留意端口号：6800（默认）</li><li>RPC认证方式：令牌</li><li>随机生成RPC令牌</li></ol><h1 id="快速配置aria2"><a href="#快速配置aria2" class="headerlink" title="快速配置aria2"></a>快速配置aria2</h1><p><img src="/img/aria/2.webp" alt="image-20240908095904729"></p><p><img src="/img/aria/3.webp" alt="image-20240908100004678"></p><ol><li>下载目录设置好（选软路由外置TF卡或者挂载硬盘的地址）</li><li>填入RPC令牌</li><li>可以添加第三方BT Tracker:</li></ol><p><a href="https://trackerslist.com/#/zh?id=aria2">Aria2: (trackerslist.com)</a></p><p><a href="https://github.com/ngosang/trackerslist?tab=readme-ov-file">ngosang&#x2F;trackerslist: Updated list of public BitTorrent trackers (github.com)</a></p><h1 id="ariang设置"><a href="#ariang设置" class="headerlink" title="ariang设置"></a>ariang设置</h1><h2 id="局域网（ip访问）"><a href="#局域网（ip访问）" class="headerlink" title="局域网（ip访问）"></a>局域网（ip访问）</h2><p>aria2 rpc 地址：<a href="http://192.168.x.x:6800/jsonrpc">http://192.168.X.X:6800/jsonrpc</a></p><p><img src="/img/aria/5.webp" alt="image-20240908102056801"></p><p><img src="/img/aria/6.webp" alt="image-20240908102133218"></p><h2 id="广域网（域名https访问）"><a href="#广域网（域名https访问）" class="headerlink" title="广域网（域名https访问）"></a>广域网（域名https访问）</h2><p>aria2 rpc 地址：https:&#x2F;&#x2F;域名:端口&#x2F;jsonrpc</p><p><img src="/img/aria/7.webp" alt="image-20240908102413270"></p><p><img src="/img/aria/8.webp" alt="image-20240908102442892"></p><ol><li>购买域名</li><li>托管DNS（Cloudflare，腾讯云，阿里云等）</li><li>家宽要做好动态域名解析DDNS</li><li>反向代理，给域名申请SSL证书（Lucky大吉，Ngnix Proxy Manager，zoraxy，宝塔面板等）</li><li>正向代理默认端口6800，反向代理要注意自定的域名和端口</li></ol><h1 id="alist连接aria2（只能用ip访问）"><a href="#alist连接aria2（只能用ip访问）" class="headerlink" title="alist连接aria2（只能用ip访问）"></a>alist连接aria2（只能用ip访问）</h1><p><img src="/img/aria/9.webp" alt="image-20240908110630315"></p><ol><li>aria2 rpc 地址：<a href="http://192.168.x.x:6800/jsonrpc">http://192.168.X.X:6800/jsonrpc</a></li><li>aria2 密钥</li></ol>]]></content>
+    
+    
+    <summary type="html">aria</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="aria" scheme="https://macin.top/categories/web/aria/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="aria" scheme="https://macin.top/tags/aria/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker搭建alist通过smb挂载nas</title>
+    <link href="https://macin.top/posts/7fc8ee4/"/>
+    <id>https://macin.top/posts/7fc8ee4/</id>
+    <published>2024-08-24T23:57:12.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<p>项目地址：<a href="https://github.com/alist-org/alist">alist-org&#x2F;alist: 🗂️A file list&#x2F;WebDAV program that supports multiple storages, powered by Gin and Solidjs. &#x2F; 一个支持多存储的文件列表&#x2F;WebDAV程序，使用 Gin 和 Solidjs。 (github.com)</a></p><p>官网地址：<a href="https://alist.nn.ci/zh/guide/">Introduction | AList文档 (nn.ci)</a></p><h1 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull xhofe/alist:latest</span><br></pre></td></tr></table></figure><h1 id="创建容器启动"><a href="#创建容器启动" class="headerlink" title="创建容器启动"></a>创建容器启动</h1><h2 id="docker命令"><a href="#docker命令" class="headerlink" title="docker命令"></a>docker命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --restart=unless-stopped -v /etc/alist:/opt/alist/data -p 5244:5244 -e PUID=0 -e PGID=0 -e UMASK=022 --name=<span class="string">&quot;alist&quot;</span> xhofe/alist:latest</span><br></pre></td></tr></table></figure><h2 id="或者docker-compose"><a href="#或者docker-compose" class="headerlink" title="或者docker-compose"></a>或者docker-compose</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">alist:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">&#x27;xhofe/alist:latest&#x27;</span></span><br><span class="line">        <span class="attr">container_name:</span> <span class="string">alist</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&#x27;/etc/alist:/opt/alist/data&#x27;</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">&#x27;5244:5244&#x27;</span></span><br><span class="line">        <span class="attr">environment:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">PUID=0</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">PGID=0</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">UMASK=022</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><h1 id="添加存储（SMB为例）"><a href="#添加存储（SMB为例）" class="headerlink" title="添加存储（SMB为例）"></a>添加存储（SMB为例）</h1><p>使用说明：<a href="https://github.com/alist-org/alist/discussions/2215#discussioncomment-4104018">请问smb具体如何使用？ · alist-org&#x2F;alist · Discussion #2215 (github.com)</a></p><h2 id="官方示例图"><a href="#官方示例图" class="headerlink" title="官方示例图"></a>官方示例图</h2><p><img src="/img/alist/1.webp" alt="1"></p><p><img src="/img/alist/2.webp" alt="2"></p><h3 id="关于挂载SMB一级根"><a href="#关于挂载SMB一级根" class="headerlink" title="关于挂载SMB一级根"></a>关于挂载SMB一级根</h3><p><img src="/img/alist/3.webp" alt="3"></p><p><img src="/img/alist/4.webp" alt="4"></p><h2 id="自用示例图"><a href="#自用示例图" class="headerlink" title="自用示例图"></a>自用示例图</h2><p><img src="/img/alist/a.webp" alt="a"></p><p><img src="/img/alist/b.webp" alt="b"></p>]]></content>
+    
+    
+    <summary type="html">alist</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="alist" scheme="https://macin.top/categories/web/alist/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="alist" scheme="https://macin.top/tags/alist/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>甲骨文服务器 OracleCloud 开新机后必做的几件事情</title>
+    <link href="https://macin.top/posts/3b69d7e6/"/>
+    <id>https://macin.top/posts/3b69d7e6/</id>
+    <published>2024-08-23T10:12:41.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-检查IP，开放端口"><a href="#1-检查IP，开放端口" class="headerlink" title="1. 检查IP，开放端口"></a>1. 检查IP，开放端口</h1><h3 id="检测IP是否可用"><a href="#检测IP是否可用" class="headerlink" title="检测IP是否可用"></a>检测IP是否可用</h3><p>如果连接不上机器，需在甲骨文管理后台刷IP直至获取到一个可用IP！</p><h3 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h3><p><strong>安装网络工具</strong><br><code>apt install net-tools</code></p><p><strong>安装iptables</strong><br><code>sudo apt-get install iptables</code></p><p><strong>安装iptables-persistent</strong><br><code>sudo apt-get install iptables-persistent</code></p><blockquote><p>会要求您保存当前&#x2F;现有的 iptables 规则，分IP4和IP6，可以默认 YES<br>一般情况下，ubuntu安装好的时候，iptables会被安装上，如果没有的话那就安装上吧</p></blockquote><p><strong>添加规则</strong><br><code>iptables -I INPUT -p tcp --dport 80 -j ACCEPT</code></p><p><strong>持久化保存规则</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo netfilter-persistent save</span><br><span class="line">sudo netfilter-persistent reload</span><br></pre></td></tr></table></figure><p>完成上述操作就可以永久打开我们需要的端口了</p><h3 id="查看-与-关闭端口"><a href="#查看-与-关闭端口" class="headerlink" title="查看 与 关闭端口"></a>查看 与 关闭端口</h3><p>通过 <code>iptables -L -n --line-number</code> 可以显示规则和相对应的编号<br><code>iptables -D INPUT 1</code> 删除INPUT链编号为1的规则。</p><h3 id="查看-防火墙状态"><a href="#查看-防火墙状态" class="headerlink" title="查看 防火墙状态"></a>查看 防火墙状态</h3><p>可以使用 <code>sudo netstat -lnp</code> 和 <code>lsof -i:port</code> 工具来识别打开端口后面的进程&#x2F;二进制文件。</p><p><strong>防火墙 开放 端口</strong><br><code>sudo ufw allow 8080</code></p><p><strong>防火墙 关闭 端口</strong><br><code>sudo fuser -k 8080/tcp</code></p><blockquote><p>常用命令</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0.查看已经开启的状态sudo service ufw status</span><br><span class="line">1.查看已经开启的端口sudo ufw status</span><br><span class="line">2.打开端口sudo ufw allow 8080</span><br><span class="line">3.开启防火墙sudo ufw <span class="built_in">enable</span></span><br><span class="line">4.重启防火墙sudo ufw reload</span><br><span class="line">5.再次查看一下端口是否已开放sudo ufw status</span><br></pre></td></tr></table></figure><h1 id="2-开启root"><a href="#2-开启root" class="headerlink" title="2. 开启root"></a>2. 开启root</h1><p>通常在新机器开机后是试用私钥连接SSH，为了方便使用我们开启root登录，有三种方式：</p><h2 id="1-利用-cloud-init脚本来开启root账号密码登录"><a href="#1-利用-cloud-init脚本来开启root账号密码登录" class="headerlink" title="1.利用 cloud-init脚本来开启root账号密码登录"></a>1.利用 cloud-init脚本来开启root账号密码登录</h2><p>脚本如下:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> root:meeetk |sudo chpasswd root</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/^#\?PermitRootLogin.*/PermitRootLogin yes/g&#x27;</span> /etc/ssh/sshd_config;</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g&#x27;</span> /etc/ssh/sshd_config;</span><br><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure><p>默认密码是: meeetk<br>登录后一定要修改密码！命令：passwd</p><h2 id="2-使用密钥登录系统以后"><a href="#2-使用密钥登录系统以后" class="headerlink" title="2.使用密钥登录系统以后"></a>2.使用密钥登录系统以后</h2><p>执行如下命令</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br><span class="line">passwd</span><br></pre></td></tr></table></figure><p>按提示刷入密码，重复输入密码。<br>接着输入</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> root:329105sz |sudo chpasswd root</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/^#\?PermitRootLogin.*/PermitRootLogin yes/g&#x27;</span> /etc/ssh/sshd_config;</span><br><span class="line">sudo sed -i <span class="string">&#x27;s/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g&#x27;</span> /etc/ssh/sshd_config;</span><br><span class="line">service sshd restart</span><br></pre></td></tr></table></figure><p>重启sshd服务</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure><h2 id="3、使用密钥登录系统以后"><a href="#3、使用密钥登录系统以后" class="headerlink" title="3、使用密钥登录系统以后"></a>3、使用密钥登录系统以后</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -i</span><br><span class="line">vi /root/.ssh/authorized_keys</span><br></pre></td></tr></table></figure><p>把ssh-rsa之前的内容都删除掉.<br><code>vi /etc/ssh/sshd_config</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">找到PermitRootLogin, 把前面的<span class="comment">#去掉</span></span><br><span class="line">更改为 PermitRootLogin <span class="built_in">yes</span></span><br><span class="line">找到PasswordAuthentication</span><br><span class="line">更改为 PasswordAuthentication <span class="built_in">yes</span></span><br><span class="line">退出编辑</span><br><span class="line">passwd 更改密码`</span><br><span class="line">`reboot 重启vps</span><br></pre></td></tr></table></figure><p>所用到的命令;</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi文本编辑器</span><br><span class="line"><span class="built_in">cd</span>进入目录</span><br><span class="line"><span class="built_in">pwd</span>查看当前位置</span><br><span class="line"><span class="built_in">ls</span>查看当前文件夹文件</span><br><span class="line"><span class="built_in">ls</span> -a查看当前文件夹所有文件</span><br><span class="line">vi编辑器命令</span><br><span class="line">i进入编辑模式</span><br><span class="line">esc回到命令模式</span><br><span class="line">:wq保存并退出</span><br></pre></td></tr></table></figure><p>最后记得重启服务器<br><code>reboot 重启vps</code><br>然后就可以用root登录SSH了！</p><h1 id="3-升级软件包，安装BBR加速，虚拟内存"><a href="#3-升级软件包，安装BBR加速，虚拟内存" class="headerlink" title="3. 升级软件包，安装BBR加速，虚拟内存"></a>3. 升级软件包，安装BBR加速，虚拟内存</h1><h2 id="1，升级软件包"><a href="#1，升级软件包" class="headerlink" title="1，升级软件包"></a>1，升级软件包</h2><p>简要说明：<br>apt update：只检查，不更新（已安装的软件包是否有可用的更新，给出汇总报告）<br><code>用法：sudo apt update</code></p><p>apt upgrade：更新已安装的软件包</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用法：sudo apt upgrade 软件包名</span><br></pre></td></tr></table></figure><h2 id="2，安装BBR加速"><a href="#2，安装BBR加速" class="headerlink" title="2，安装BBR加速"></a>2，安装BBR加速</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate <span class="string">&quot;https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh&quot;</span> &amp;&amp; <span class="built_in">chmod</span> +x tcp.sh &amp;&amp; ./tcp.sh</span><br></pre></td></tr></table></figure><p>选择安装 bbrplus，过程中需要选择两次 <code>NO</code>，最后选择<code>Y</code>重启服务器<br>重启完毕后再次运行安装脚本，选择<code>启动bbrplus</code><br>完毕！</p><h2 id="3，虚拟内存"><a href="#3，虚拟内存" class="headerlink" title="3，虚拟内存"></a>3，虚拟内存</h2><p>小型鸡专用</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.moerats.com/usr/shell/swap.sh &amp;&amp; bash swap.sh</span><br></pre></td></tr></table></figure><h1 id="4-安装-哪吒面板"><a href="#4-安装-哪吒面板" class="headerlink" title="4. 安装 哪吒面板"></a>4. 安装 哪吒面板</h1><p>被控机的安装<br>登陆面板机后台，添加一个主机，会生成秘钥，然后在被控机上输入代码（其实和安装主控的代码是一样的）<br>国外机<code>curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -o nezha.sh &amp;&amp; chmod +x nezha.sh &amp;&amp; ./nezha.sh</code><br>国内机<code>curl -L https://raw.sevencdn.com/naiba/nezha/master/script/install.sh -o nezha.sh &amp;&amp; chmod +x nezha.sh &amp;&amp; ./nezha.sh</code><br>选择8，然后第一个输入你刚才不带套的那个域名，端口默认，秘钥就是刚才添加主机时的那个秘钥。<br>【或者在面板机后台直接复制一键安装脚本，在被控机运行即可】</p>]]></content>
+    
+    
+    <summary type="html">ubuntu,centos</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>3x-ui最新伊朗xray面板安装</title>
+    <link href="https://macin.top/posts/bfdce853/"/>
+    <id>https://macin.top/posts/bfdce853/</id>
+    <published>2024-08-22T01:00:58.000Z</published>
+    <updated>2024-11-27T12:35:02.135Z</updated>
+    
+    <content type="html"><![CDATA[<p>伊朗版3x-ui面板，一键搭建xray面板实现科学上网，基本实现一键脚本安装，特别方便！x-ui面板搭建教程|v2ray节点配置，一键安装</p><h1 id="1、购买服务器并解析域名"><a href="#1、购买服务器并解析域名" class="headerlink" title="1、购买服务器并解析域名"></a>1、购买服务器并解析域名</h1><h1 id="2、一键安装依赖包（适合Ubuntu-Debian系统，不一定需要）"><a href="#2、一键安装依赖包（适合Ubuntu-Debian系统，不一定需要）" class="headerlink" title="2、一键安装依赖包（适合Ubuntu&#x2F;Debian系统，不一定需要）"></a>2、一键安装依赖包（适合Ubuntu&#x2F;Debian系统，不一定需要）</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update -y&amp;&amp;apt install -y curl&amp;&amp;apt install -y socatCopy</span><br></pre></td></tr></table></figure><h1 id="3、安装伊朗版xray面板：【点击进入】注意：建议用Debian或者Ubuntu系统"><a href="#3、安装伊朗版xray面板：【点击进入】注意：建议用Debian或者Ubuntu系统" class="headerlink" title="3、安装伊朗版xray面板：【点击进入】注意：建议用Debian或者Ubuntu系统"></a>3、安装伊朗版xray面板：【<a href="https://github.com/MHSanaei/3x-ui">点击进入</a>】注意：建议用Debian或者Ubuntu系统</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)Copy</span><br></pre></td></tr></table></figure><ul><li><p>放行端口：选择21，然后输入你想放行的端口（端口要先放行，不然下面申请证书会报错）</p></li><li><p>安装证书：选择15，输入你解析好的域名</p></li><li><p>启用BBR加速：选择19（如果想单独安装，用下面的命令）</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N --no-check-certificate <span class="string">&quot;https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh&quot;</span> &amp;&amp; <span class="built_in">chmod</span> +x tcp.sh &amp;&amp; ./tcp.sh</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">xray</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="xray" scheme="https://macin.top/categories/proxy/xray/"/>
+    
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="xray" scheme="https://macin.top/tags/xray/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>lucky大吉：集DDNS，端口转发，反向代理和申请SSL证书等功能的神器</title>
+    <link href="https://macin.top/posts/7ce10649/"/>
+    <id>https://macin.top/posts/7ce10649/</id>
+    <published>2024-08-19T08:36:53.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<p>项目地址：<a href="https://github.com/gdy666/lucky">gdy666&#x2F;lucky: 软硬路由公网神器,ipv6&#x2F;ipv4 端口转发,反向代理,DDNS,WOL,ipv4 stun内网穿透,cron,acme,阿里云盘,ftp,webdav,filebrowser (github.com)</a></p><p>对NAS用户来说，内网访问是基础功能，而能够玩转公网(外网)访问，才能使NAS真正成为个人专属家庭服务器。所以今天这篇文章，就跟大家聊聊如何实现<strong>安全，快速，便捷</strong>的家庭NAS公网访问</p><p><strong>想从外网（公网）访问家中的NAS，首先最好还是拥有公网IPv4。如果运营商实在不给公网IPv4的话，可以考虑IPv6</strong></p><p><strong>所以这篇教程是基于有公网IP的情况下进行的。</strong></p><h3 id="不安全的外网访问方式——正向代理-HTTP"><a href="#不安全的外网访问方式——正向代理-HTTP" class="headerlink" title="不安全的外网访问方式——正向代理+HTTP"></a><strong>不安全的外网访问方式——正向代理+HTTP</strong></h3><p>很多新手NAS玩家在获得公网IP之后，会使用http+正向代理，也就是在路由器中直接将NAS某项服务的内网端口映射到外网，然后通过”<a href="http://ip/">http://ip</a> 地址或域名+外网端口号”访问，就像下面这样： </p><p><img src="/img/lucky/1.webp" alt="img"></p><p>比如我想从公司(外网)访问家里NAS中的Home Assistant，只要输入http:&#x2F;&#x2F;域名:18123即可。虽然看起来貌似设置很简单，但是这种方式存在几个非常严重的问题，在当下糟糕的网络安全环境中，基本等同于裸奔，十分危险：</p><ul><li>Http协议使用明文传输，<strong>完全没有保密性</strong>可言</li><li>浏览器会报<strong>危险页面</strong>，比如Chrome会将所有HTTP协议网站自动标识为不安全网站</li><li>无法验证身份，对服务器端(也就是NAS)<strong>缺乏保护</strong></li><li>NAS中每<strong>一个服务都需要单独端口号</strong>，数量多了以后根本记不住，并且被扫描的概率太大</li></ul><p><img src="/img/lucky/2.webp" alt="img"></p><h3 id="安全的外网访问方式——反向代理-HTTPS"><a href="#安全的外网访问方式——反向代理-HTTPS" class="headerlink" title="安全的外网访问方式——反向代理+HTTPS"></a><strong>安全的外网访问方式——反向代理+HTTPS</strong></h3><p><strong>而反向代理+Https则完全规避了以上所有缺点。</strong>既能保护NAS主机，又可以通过Https建立安全的加密访问通道。对于一般用户来说，没必要了解正反代理之间差异的技术性问题，只要知道反代+Https是目前相对比较安全的公网访问方案就可以了(网络安全没有绝对)。</p><p><img src="/img/lucky/3.webp" alt="img"></p><p>我把<strong>两种方案的区别做成表格放在下面：</strong></p><p><img src="/img/lucky/4.webp" alt="img"></p><p>传统的反代+Https方案部署需要用到DDNS-GO和NPM(Nginx Proxy Manager)，稍微有点复杂，所以很多新入坑NAS的小伙伴也就放弃了，宁可冒险使用HTTP裸奔。但今天给大家带来一款非常出色的国产开源软件Lucky，能够将整个部署过程完全傻瓜化，即便是小白也能跟着轻松完成。在此也特意感谢Lucky的作者GDY大神。</p><p><img src="/img/lucky/5.webp" alt="img"></p><p>这款软件支持包括Windows、Linux、Openwrt甚至小米路由器内安装。<strong>今天的教程将在Docker中部署，仍然使用绿联DX4600举例，其他品牌NAS部署方法基本一致。</strong>整个流程分为5步，分别是购买域名，安装Lucky，设置DDNS，设置SSL证书和设置HTTPS反向代理。接下来就正式开始~~</p><h3 id="Step-1、域名购买"><a href="#Step-1、域名购买" class="headerlink" title="Step 1、域名购买"></a><strong>Step 1、域名购买</strong></h3><p>想通过外网访问，首先当然需要一个域名，可以在服务商处购买，这里我以阿里云为例，其他如腾讯云，华为云等域名购买和设置方法大同小异。成功购买域名并通过实名认证后，列表中就会出现域名，点击后面的“解析”。</p><p><img src="/img/lucky/6.webp" alt="img"></p><p>在解析设置页面中，点击“添加记录”，记录类型选择A，主机记录填入@，解析请求来源默认，记录值填写当前家里的公网IP地址，TTL默认10分钟即可。</p><p><img src="/img/lucky/7.webp" alt="img"></p><p>如果不知道家里公网IP地址，可以直接打开百度并搜索IP两个字母获取。</p><p><img src="/img/lucky/8.webp" alt="img"></p><p>接下来再重复一次上面的操作，只不过这次在主机记录中填入*(第一次是@)，其他选项均保持不变。这样，我们就有了两条域名解析记录。第一条是专门解析主域名的，第二条则是解析二级域名的，以*来代替所有前缀。看到状态为“启用”就说明配置正确。</p><p><img src="/img/lucky/9.webp" alt="img"></p><p>接着点击右上角的头像，并在弹出菜单中点击Access Key管理。</p><p><img src="/img/lucky/10.webp" alt="img"></p><p>创建AccessKey，<strong>一定要把自己的AccessKey复制到电脑的文档中保管，因为只能获取一次，后面不会再次提供。</strong>到这里为止，域名的部分就都搞好了，非常简单。</p><p><img src="/img/lucky/11.webp" alt="img"></p><h3 id="Step-2、在Docker中安装Lucky"><a href="#Step-2、在Docker中安装Lucky" class="headerlink" title="Step 2、在Docker中安装Lucky"></a><strong>Step 2、在Docker中安装Lucky</strong></h3><p>转到NAS端，在镜像管理中搜索gdy666&#x2F;lucky并下载：</p><p><img src="/img/lucky/12.webp" alt="img"></p><p>下载完成后在本地镜像中找到，创建容器：</p><p><img src="/img/lucky/13.webp" alt="img"></p><p>取一个自己喜欢的名字，然后点击下一步：</p><p><img src="/img/lucky/14.webp" alt="img"></p><p>重启策略选择“容器退出时总是重启容器”，然后不要点击下一步，而是转到上方的网络选项卡。</p><p><img src="/img/lucky/15.webp" alt="img"></p><p>由于需要将Lucky作为反代服务器使用，因此<strong>网络模式必须选择host，不能使用常用的Bridge！</strong></p><p><img src="/img/lucky/16.webp" alt="img"></p><p>转到储存空间选项卡，将Lucky安装位置设置在Docker&#x2F;goodluck，装载路径中填写&#x2F;goodluck，并给予完全的读写权限：</p><p><img src="/img/lucky/17.webp" alt="img"></p><p>端口设置保持默认的16601即可，其他选项也保持默认。直接点击下一步并启动运行：</p><p><img src="/img/lucky/18.webp" alt="img"></p><p>打开电脑浏览器，在地址栏中输入IP+16601，进入Lucky管理后台：</p><p><img src="/img/lucky/19.webp" alt="img"></p><p>缺省用户名和密码均为666，填入后登录，并点击左侧的“设置”选项卡，重新设置一套新的管理账号和密码，确保安全：</p><p><img src="/img/lucky/20.webp" alt="img"></p><h3 id="Step-3、设置DDNS-动态域名解析"><a href="#Step-3、设置DDNS-动态域名解析" class="headerlink" title="Step 3、设置DDNS(动态域名解析)"></a><strong>Step 3、设置DDNS(动态域名解析)</strong></h3><p>接下来在左侧找到“动态域名”选项卡，并点击“添加DDNS任务”。</p><p><img src="/img/lucky/21.webp" alt="img"></p><p>DDNS任务名称随便填自己喜欢的，操作模式选择“简易模式”，DNS服务商选择自己域名的服务商(我这里是阿里云)，并将前面保存下来的AccessKey ID和 Secret填入，然后按照自己家的公网IP类型选择v4或v6，获取方式选择通过接口获取，最后域名列表填写两行，第一行是主域名，第二行是*.主域名，代表二级域名。其他全部默认，完毕后点击添加：</p><p><img src="/img/lucky/22.webp" alt="img"></p><p>稍等片刻，看到同步结果为“域名IP和公网IP一致”，就说明DDNS设置成功了。多说一句，这里设置的DDNS其实和使用其他单独的DDNS应用(比如DDNS-GO)效果是一样的。</p><p><img src="/img/lucky/23.webp" alt="img"></p><h3 id="Step-4、申请SSL证书"><a href="#Step-4、申请SSL证书" class="headerlink" title="Step 4、申请SSL证书"></a><strong>Step 4、申请SSL证书</strong></h3><p>接下来我们需要为自己的域名申请SSL证书。转到“安全管理”选项卡，并点击“添加证书”。</p><p><img src="/img/lucky/24.webp" alt="img"></p><p>备注随便填，添加方式选择ACME，证书颁发机构选择Let’s Encrypt，DNS服务商选择自己的服务商。</p><p><img src="/img/lucky/25.webp" alt="img"></p><p>和刚才一样，填入AccessKey的ID，Secret，主域名和二级域名。电子邮箱可以使用系统提供的临时邮箱，或者自己的邮箱都可以。算法选择默认的RSA2048。</p><p><img src="/img/lucky/26.webp" alt="img"></p><p>如果你的公网IP是IPv4，就开启DNS查询强制IPv4，同时启用DNS查询仅使用TCP通道。其他所有选项全部保持默认，并点击添加完成。</p><p><img src="/img/lucky/27.webp" alt="img"></p><p>证书申请需要稍等一段时间，大概几分钟。成功后就会出现ACME信息，颁发时间和道到期时间。每张免费SSL证书的有效期为三个月，但Lucky在证书到期日会自动续签，不需要人工干预。</p><p><img src="/img/lucky/28.webp" alt="img"></p><h3 id="Step-5、设置反向代理及HTTPS访问"><a href="#Step-5、设置反向代理及HTTPS访问" class="headerlink" title="Step 5、设置反向代理及HTTPS访问"></a><strong>Step 5、设置反向代理及HTTPS访问</strong></h3><p>转到Web服务菜单，点击“添加Web规则”。</p><p><img src="/img/lucky/29.webp" alt="img"></p><p>Web服务规则名称随便填，规则开关开启，操作模式选简易模式，监听类型按照你的公网IP类型选择。监听端口这里给出的默认是16666，如果不喜欢，可以自己随便改，只要和局域网中其他服务端口不冲突就行，防火墙自动放行开启。<strong>特别注意，这里一定要开启TLS，否则无法使用HTTPS。</strong></p><p><img src="/img/lucky/30.webp" alt="img"></p><p>接下来先不要着急添加规则，而是点击“添加Web服务子规则”。实际上，这个所谓的“子规则”，就是你从外网访问的某项服务，比如Home Assistant，或者NAS管理页面。名称还是随便写，规则开关开启。Web服务类型选择“反向代理”。</p><p>前端域名&#x2F;地址需要填写你想要从外网访问该服务的二级域名，比如我这个子规则是分配给NAS管理页面的，那我就写nas.xxx.xx或者ugreen.xxx.xx，前缀可以按照自己的喜好编写。</p><p>而后端地址则需要写你访问该服务的内网IP+端口号，前面不要忘记加http:&#x2F;&#x2F;，其他选项全部保持默认。</p><p><img src="/img/lucky/31.webp" alt="img"></p><p>这里有一个需要注意的地方就是BasicAuth认证，也就是基础加密功能。在开启之后，从外网访问时，需要先输入账号和密码，等于是多加了一道保险。对于本身就有密码登录界面的服务来说，是否开启可以根据个人需求。但对于本身没有密码登录界面的服务，比如YACD小猫咪，开启BasicAuth认证还是有必要的。</p><p><img src="/img/lucky/32.webp" alt="img"></p><p>如果还有其他服务需要外网访问的话，那么还是按照上面的方法，添加新的Web服务子规则，需要多少服务，开几条子规则即可，但是注意二级域名前缀不要冲突。比如我这里就开启了5条：</p><p><img src="/img/lucky/33.webp" alt="img"></p><p><strong>全部设置好以后，我们还需要把反向代理的端口通过路由器映射出去，才能够正常从外网访问。</strong>和正向代理不同，现在我们只需要映射一个反代端口就可以，不用把每个服务单独的内网端口再映射出去，注意内网端口和外网端口号要保持一致。</p><p><img src="/img/lucky/34.webp" alt="img"></p><p>端口放出去之后，如果所有设置都正常，就已经可以从外网访问了。比如我现在输入 <a href="https://nas.xxx.xx:8888/">https://nas.xxx.xx:8888</a> ，就可以访问到NAS的设置页面。而且可以看到，域名的前面是有一把锁的，也就是说已经开启了SSL安全访问。</p><p><img src="/img/lucky/35.webp" alt="img"></p><p>不过这里还有个小问题，就是在输入网址的时候，还是需要带上Https:&#x2F;&#x2F;，否则在某些浏览器中会自动被识别为http，造成无法访问。为了解决这个问题，我们需要在仅输入域名时让浏览器也能够自动跳转到https。</p><p>回到Lucky，在Web服务中添加一条全新的Web服务规则(注意不是子规则)。名称随便，操作模式选定制模式，监听端口和前面的反代端口保持一致，TLS一定要禁用！然后点击“默认子规则”</p><p><img src="/img/lucky/36.webp" alt="img"></p><p>打开默认子规则界面后，Web服务类型选择重定向，然后在默认目标地址中输入：</p><p><strong>https:&#x2F;&#x2F;{host}:{port}</strong></p><p>并打开万事大吉开关(自动添加请求头)，其他所有选项全部保持默认，添加完成。 </p><p><img src="/img/lucky/37.webp" alt="img"></p><p>这样一来，在外网访问时我们只需要输入xxx.xx.xxx:端口号，浏览器就会自动跳转到https协议，非常方便。</p><p><img src="/img/lucky/38.webp" alt="img"></p><p>到此为止，我们就可以从外网使用反向代理+HTTPS方式访问家里的NAS服务器了，这已经是目前最完美的方式。不过有些小伙伴可能还会问，为什么不把最后的反代端口号也去掉，直接输入二级域名访问，岂不是更加优雅？</p><p>实际上，HTTPS协议默认的端口为443。当我们输入 <a href="https://xxx.xx.xx/">https://xxx.xx.xx</a> 时，就等同于访问 <a href="https://xxx.xx.xx/">https://xxx.xx.xx:443</a> ，只不过由于通用标准的缘故，443端口在输入时可以省略。</p><p>遗憾的是，目前绝大多数家庭宽带80和443端口都是被运营商封闭的，因此只能退而求其次，选择其他端口使用。如果你家宽带是万里挑一的幸运儿，没有被封闭443端口，那么就可以使用443端口作反代，并直接使用域名访问。</p><p>443端口是否开放，可以通过站长之家查询，输入域名或者IP和端口号即可：</p><p><a href="https://tool.chinaz.com/port">https://tool.chinaz.com/port</a></p><p>比如我这里443端口就是关闭状态：</p><p><img src="/img/lucky/39.webp" alt="img"></p>]]></content>
+    
+    
+    <summary type="html">lucky</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="lucky" scheme="https://macin.top/categories/web/lucky/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="lucky" scheme="https://macin.top/tags/lucky/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Tailscale内网穿透、异地组网、远程访问，点对点传输</title>
+    <link href="https://macin.top/posts/2b9d1ca1/"/>
+    <id>https://macin.top/posts/2b9d1ca1/</id>
+    <published>2024-08-16T09:43:34.000Z</published>
+    <updated>2024-11-27T12:35:02.135Z</updated>
+    
+    <content type="html"><![CDATA[<p>• 在软路由&#x2F;iStoreOS上安装Tailscale实现内网穿透、异地组网、远程访问，点对点传输，更好的使用体验！轻松打通内外网！群晖、威联通NAS，替代zerotier</p><p><img src="/img/tailscale/1.webp" alt="img"></p><p>准备工具：SSH连接工具Finalshell：【<a href="https://www.hostbuf.com/t/988.html">点击进入</a>】</p><p>1、开源项目地址：【<a href="https://github.com/adyanth/openwrt-tailscale-enabler/releases">点击进入</a>】</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget &lt;https://github.com/adyanth/openwrt-tailscale-enabler/releases/download/v1.60.0-e428948-autoupdate/openwrt-tailscale-enabler-v1.60.0-e428948-autoupdate.tgz&gt;  </span><br><span class="line"></span><br><span class="line"><span class="comment">#版本号自行替换最新的</span></span><br></pre></td></tr></table></figure><p>2、解压软件包</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar x -zvC / -fopenwrt-tailscale-enabler-v1.60.0-e428948-autoupdate.tgz   </span><br><span class="line"></span><br><span class="line"><span class="comment">#版本号自行替换最新的</span></span><br></pre></td></tr></table></figure><p>3、安装依赖包</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg install libustream-openssl ca-bundle kmod-tunCopy</span><br></pre></td></tr></table></figure><p>4、设置开机自启并验证</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/tailscale <span class="built_in">enable</span></span><br><span class="line"><span class="built_in">ls</span> /etc/rc.d/S*tailscale*Copy</span><br></pre></td></tr></table></figure><p>5、启动Tailscale</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/tailscale startCopy</span><br></pre></td></tr></table></figure><p>6、获取登录链接，配置路由</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale upCopy</span><br></pre></td></tr></table></figure><p>7、Tailscale常用命令</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#退出Tailscale：</span></span><br><span class="line">tailscale <span class="built_in">logout</span></span><br><span class="line"><span class="comment">#关闭Tailscale：</span></span><br><span class="line">tailscale down</span><br><span class="line"><span class="comment">#检查Derp服务器：</span></span><br><span class="line">tailscale netcheck</span><br><span class="line"><span class="comment">#检查Tailscale：</span></span><br><span class="line">tailscale statusCopy</span><br></pre></td></tr></table></figure><p>8、开启子网网路由（作用：将局域网内的某个设备设为网关，外网就能通过这个设备访问局域网内的任意设备）</p><ul><li>在Tailscale的管理页面上，单击设备列表右侧的更多图标，禁用密钥过期，并打开子网路由。</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tailscale up --accept-routes --advertise-routes=192.168.1.0/24 --accept-dns=falseCopy</span><br><span class="line"><span class="comment">#指定 192.168.1.0/24 这个网段</span></span><br><span class="line"></span><br><span class="line">tailscale up --accept-routes --advertise-routes=192.168.1.0/24</span><br><span class="line"><span class="comment">#报错就用这个命令</span></span><br></pre></td></tr></table></figure><p><img src="/img/tailscale/2.webp" alt="img"></p><ul><li>如果是使用<a href="https://github.com/juanfont/headscale">headscale</a>搭建的，可以用下面的命令</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale up --login-server=http://服务器IP:headscale端口 --accept-routes=<span class="literal">true</span> --accept-dns=<span class="literal">false</span> --advertise-routes=192.168.1.0/24 --resetCopy</span><br></pre></td></tr></table></figure><p>9、<strong>添加接口</strong></p><ul><li>在OpenWrt上新建一个接口，协议选静态地址，设备选tailscale0，地址为Taliscale管理页面上分配的地址，掩码255.0.0.0 防火墙区域选lan区域（旁路由选lan）。</li></ul><p><img src="/img/tailscale/3.webp" alt="img"></p><p><img src="/img/tailscale/4.webp" alt="img"></p><p>10、添加防火墙规则</p><ul><li>网络——防火墙——自定义规则——把下面的规则添加进去——重启防火墙</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -I FORWARD -i tailscale0 -j ACCEPT</span><br><span class="line">iptables -I FORWARD -o tailscale0 -j ACCEPT</span><br><span class="line">iptables -t nat -I POSTROUTING -o tailscale0 -j MASQUERADE</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">tailscale</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="tailscale" scheme="https://macin.top/categories/web/tailscale/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="tailscale" scheme="https://macin.top/tags/tailscale/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iStoreOS扩容docker分区</title>
+    <link href="https://macin.top/posts/c3c02c7d/"/>
+    <id>https://macin.top/posts/c3c02c7d/</id>
+    <published>2024-07-26T11:39:17.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="扩容Docker分区"><a href="#扩容Docker分区" class="headerlink" title="扩容Docker分区"></a>扩容Docker分区</h2><ul><li>ARS2自带是8G EMMC，除开系统占用，会剩余6G多，自动划分到Docker数据分区，常理来说，6G是完全够运行一般的Docker项目。</li><li>但是docker项目大小不一，可能有些小伙伴玩的项目体积比较大，6G容量不够， 那么就需要扩容Docker数据分区。</li></ul><h4 id="开始扩容"><a href="#开始扩容" class="headerlink" title="开始扩容:"></a>开始扩容:</h4><ul><li>扩容前，先停用已部署的docker项目，扩容完成后重新部署。若当前无docker项目，直接开始扩容。</li><li>确定自己已经挂载了硬盘，可以看挂载点里的信息。比如我的硬盘路径就是&#x2F;mnt&#x2F;sda1。</li></ul><p><img src="/img/istore-docker/1.webp" alt="img"></p><ul><li>然后在&#x2F;mnt&#x2F;sda1建立一个docker文件夹，最终路径为：&#x2F;mnt&#x2F;sda1&#x2F;docker。</li><li>进入Docker——概况——设置，根目录填入&#x2F;mnt&#x2F;sda1&#x2F;docker，然后保存应用。</li></ul><p><img src="/img/istore-docker/2.webp" alt="img"></p><ul><li>扩容完成，然后就能畅快的部署Docker项目了。</li></ul><p><img src="/img/istore-docker/3.webp" alt="img"></p>]]></content>
+    
+    
+    <summary type="html">docker</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用docker安装home assistant，node-red，mqtt-emqx</title>
+    <link href="https://macin.top/posts/99c1f2ca/"/>
+    <id>https://macin.top/posts/99c1f2ca/</id>
+    <published>2024-07-26T10:18:50.000Z</published>
+    <updated>2024-11-27T12:35:02.147Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Home-Assistant"><a href="#Home-Assistant" class="headerlink" title="Home Assistant"></a>Home Assistant</h2><p>一款优秀的家庭自动化平台，您的智能家居好帮手。</p><h4 id="1-Docker拉取homeassistant镜像，进入终端，输入下面的命令并回车运行"><a href="#1-Docker拉取homeassistant镜像，进入终端，输入下面的命令并回车运行" class="headerlink" title="1.Docker拉取homeassistant镜像，进入终端，输入下面的命令并回车运行;"></a>1.Docker拉取homeassistant镜像，进入终端，输入下面的命令并回车运行;</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull homeassistant/home-assistant:latest</span><br></pre></td></tr></table></figure><p><img src="/img/ha+nodered+mqtt/1.webp" alt="img"></p><h4 id="2-接着继续输入如下命令并回车运行，创建homeassistant容器-先别直接复制输入，下方有说明-；"><a href="#2-接着继续输入如下命令并回车运行，创建homeassistant容器-先别直接复制输入，下方有说明-；" class="headerlink" title="2.接着继续输入如下命令并回车运行，创建homeassistant容器(先别直接复制输入，下方有说明)；"></a>2.接着继续输入如下命令并回车运行，创建homeassistant容器(先别直接复制输入，下方有说明)；</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name homeassistant \</span><br><span class="line">  --privileged \</span><br><span class="line">  --restart=unless-stopped \</span><br><span class="line">  -e TZ=<span class="string">&quot;Asia/Shanghai&quot;</span> \</span><br><span class="line">  -v /root/homeassistant/config:/config \</span><br><span class="line">  --network=host \</span><br><span class="line">  homeassistant/home-assistant:latest</span><br></pre></td></tr></table></figure><p><strong>说明：</strong></p><p>&#x2F;root&#x2F;homeassistant&#x2F;config 用来存放homeassistant的配置文件，按需修改。</p><p><img src="/img/ha+nodered+mqtt/2.webp" alt="img"></p><h4 id="3-上面2条命令完成以后，管理界面—Docker—容器，就能看到homeassistant已经运行起来了；"><a href="#3-上面2条命令完成以后，管理界面—Docker—容器，就能看到homeassistant已经运行起来了；" class="headerlink" title="3.上面2条命令完成以后，管理界面—Docker—容器，就能看到homeassistant已经运行起来了；"></a>3.上面2条命令完成以后，管理界面—Docker—容器，就能看到homeassistant已经运行起来了；</h4><p><img src="/img/ha+nodered+mqtt/3.webp" alt="img"></p><h4 id="4-浏览器打开设备对应IP加上8123端口，例如-http-192-168-1-2-8123-即可进入homeassistant控制台。"><a href="#4-浏览器打开设备对应IP加上8123端口，例如-http-192-168-1-2-8123-即可进入homeassistant控制台。" class="headerlink" title="4.浏览器打开设备对应IP加上8123端口，例如 http://192.168.1.2:8123/ 即可进入homeassistant控制台。"></a>4.浏览器打开设备对应IP加上8123端口，例如 <a href="http://192.168.1.2:8123/">http://192.168.1.2:8123/</a> 即可进入homeassistant控制台。</h4><p><img src="/img/ha+nodered+mqtt/4.webp" alt="img"></p><h2 id="Node-RED"><a href="#Node-RED" class="headerlink" title="Node-RED"></a>Node-RED</h2><p>Node-RED，这个项目是由IBM新兴技术服务团队构建的可视化物联网编排工具，可基于浏览器的流程编辑器连接设备、服务器和API应用。可以将Home Assistant接入Node-Red实现自动化。</p><h4 id="1-Docker拉取node-red镜像，进入终端，输入下面的命令并回车运行"><a href="#1-Docker拉取node-red镜像，进入终端，输入下面的命令并回车运行" class="headerlink" title="1.Docker拉取node-red镜像，进入终端，输入下面的命令并回车运行;"></a>1.Docker拉取node-red镜像，进入终端，输入下面的命令并回车运行;</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nodered/node-red</span><br></pre></td></tr></table></figure><p><img src="/img/ha+nodered+mqtt/5.webp" alt="img"></p><h4 id="2-接着继续输入如下命令并回车运行，创建node-red容器-先别直接复制输入，下方有说明-；"><a href="#2-接着继续输入如下命令并回车运行，创建node-red容器-先别直接复制输入，下方有说明-；" class="headerlink" title="2.接着继续输入如下命令并回车运行，创建node-red容器(先别直接复制输入，下方有说明)；"></a>2.接着继续输入如下命令并回车运行，创建node-red容器(先别直接复制输入，下方有说明)；</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=<span class="string">&quot;nodered&quot;</span> \</span><br><span class="line">  --net=bridge \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  -e TZ=<span class="string">&quot;Asia/Shanghai&quot;</span> \</span><br><span class="line">  -p 1880:1880/tcp \</span><br><span class="line">  -v /root/node-red/nodered:/data:rw \</span><br><span class="line">  nodered/node-red</span><br></pre></td></tr></table></figure><p><strong>说明：</strong></p><p>&#x2F;root&#x2F;node-red&#x2F;nodered 用来存放node-red的数据文件，按需修改。</p><p><img src="/img/ha+nodered+mqtt/6.webp" alt="img"></p><h4 id="3-接着输入以下命令-解决node-red容器启动不了的bug-；"><a href="#3-接着输入以下命令-解决node-red容器启动不了的bug-；" class="headerlink" title="3.接着输入以下命令(解决node-red容器启动不了的bug)；"></a>3.接着输入以下命令(解决node-red容器启动不了的bug)；</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> -R 777 /root/node-red/nodered</span><br></pre></td></tr></table></figure><p><img src="/img/ha+nodered+mqtt/7.webp" alt="img"></p><h4 id="4-上面3条命令完成以后，管理界面—Docker—容器，找到node-red重启，然后node-red就运行起来了；"><a href="#4-上面3条命令完成以后，管理界面—Docker—容器，找到node-red重启，然后node-red就运行起来了；" class="headerlink" title="4.上面3条命令完成以后，管理界面—Docker—容器，找到node-red重启，然后node-red就运行起来了；"></a>4.上面3条命令完成以后，管理界面—Docker—容器，找到node-red重启，然后node-red就运行起来了；</h4><p><img src="/img/ha+nodered+mqtt/8.webp" alt="img"></p><h4 id="5-浏览器打开设备对应IP加上1880端口，例如-http-192-168-1-2-1880-即可进入node-red控制台。"><a href="#5-浏览器打开设备对应IP加上1880端口，例如-http-192-168-1-2-1880-即可进入node-red控制台。" class="headerlink" title="5.浏览器打开设备对应IP加上1880端口，例如 http://192.168.1.2:1880/ 即可进入node-red控制台。"></a>5.浏览器打开设备对应IP加上1880端口，例如 <a href="http://192.168.1.2:1880/">http://192.168.1.2:1880/</a> 即可进入node-red控制台。</h4><p><img src="/img/ha+nodered+mqtt/9.webp" alt="img"></p><h2 id="MQTT-EMQX"><a href="#MQTT-EMQX" class="headerlink" title="MQTT-EMQX"></a>MQTT-EMQX</h2><p>EMQX基于Erlang&#x2F;OTP平台开发的MQTT消息服务器，是开源社区中最流行的MQTT 消息服务器，支持丰富的物联网协议，包括 MQTT、LwM2M、MQTT-SN、CoAP、 LoRaWAN、 HTTP和WebSocket等。</p><h4 id="1-Docker拉取emqx镜像并创建容器，进入终端，输入下面的命令并回车运行"><a href="#1-Docker拉取emqx镜像并创建容器，进入终端，输入下面的命令并回车运行" class="headerlink" title="1.Docker拉取emqx镜像并创建容器，进入终端，输入下面的命令并回车运行;"></a>1.Docker拉取emqx镜像并创建容器，进入终端，输入下面的命令并回车运行;</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name emqx --restart unless-stopped -p 1883:1883 -p 8081:8081 -p 8083:8083 -p 8883:8883 -p 8084:8084 -p 18083:18083 emqx/emqx</span><br></pre></td></tr></table></figure><p><img src="/img/ha+nodered+mqtt/10.webp" alt="img"></p><h4 id="2-上面命令完成以后，管理界面—Docker—容器，就能看到emqx已经运行起来了；"><a href="#2-上面命令完成以后，管理界面—Docker—容器，就能看到emqx已经运行起来了；" class="headerlink" title="2.上面命令完成以后，管理界面—Docker—容器，就能看到emqx已经运行起来了；"></a>2.上面命令完成以后，管理界面—Docker—容器，就能看到emqx已经运行起来了；</h4><p><img src="/img/ha+nodered+mqtt/11.webp" alt="img"></p><h4 id="3-浏览器打开设备对应IP加上18083端口，例如-http-192-168-1-2-18083-即可进入eqmx控制台。"><a href="#3-浏览器打开设备对应IP加上18083端口，例如-http-192-168-1-2-18083-即可进入eqmx控制台。" class="headerlink" title="3.浏览器打开设备对应IP加上18083端口，例如 http://192.168.1.2:18083/ 即可进入eqmx控制台。"></a>3.浏览器打开设备对应IP加上18083端口，例如 <a href="http://192.168.1.2:18083/">http://192.168.1.2:18083/</a> 即可进入eqmx控制台。</h4><p><strong>说明：</strong></p><p>初始帐号：admin</p><p>初始密码：public</p><p>连接端口是1883</p><p><img src="/img/ha+nodered+mqtt/12.webp" alt="img"></p><p><img src="/img/ha+nodered+mqtt/13.webp" alt="img"></p>]]></content>
+    
+    
+    <summary type="html">homeassistant,docker,awtrix,nodered,mqtt</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    <category term="awtrix" scheme="https://macin.top/categories/tools/awtrix/"/>
+    
+    <category term="homeassistant" scheme="https://macin.top/categories/web/homeassistant/"/>
+    
+    
+    <category term="homeassistant" scheme="https://macin.top/tags/homeassistant/"/>
+    
+    <category term="mqtt" scheme="https://macin.top/tags/mqtt/"/>
+    
+    <category term="nodered" scheme="https://macin.top/tags/nodered/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>awtrix3介绍和相关软件，mqtt使用教程</title>
+    <link href="https://macin.top/posts/8ebfdc59/"/>
+    <id>https://macin.top/posts/8ebfdc59/</id>
+    <published>2024-07-23T23:59:07.000Z</published>
+    <updated>2024-11-27T12:35:02.139Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="awtrix3-主页"><a href="#awtrix3-主页" class="headerlink" title="awtrix3 主页"></a>awtrix3 主页</h1><p><a href="https://blueforcer.github.io/awtrix3/#/quickstart">https://blueforcer.github.io/awtrix3/#/quickstart</a></p><h1 id="awtrix3-GitHub"><a href="#awtrix3-GitHub" class="headerlink" title="awtrix3 GitHub"></a>awtrix3 GitHub</h1><p><a href="https://github.com/Blueforcer/awtrix3">https://github.com/Blueforcer/awtrix3</a></p><h1 id="awtrix-flows"><a href="#awtrix-flows" class="headerlink" title="awtrix flows"></a>awtrix flows</h1><p><a href="https://flows.blueforcer.de/">https://flows.blueforcer.de/</a></p><h1 id="bilibili介绍视频"><a href="#bilibili介绍视频" class="headerlink" title="bilibili介绍视频"></a>bilibili介绍视频</h1><p><a href="https://www.bilibili.com/video/BV1rs421u7br/?spm_id_from=333.337.search-card.all.click&vd_source=746a190457bf6404cc501e8cacad5ae4">https://www.bilibili.com/video/BV1rs421u7br/?spm_id_from=333.337.search-card.all.click&amp;vd_source=746a190457bf6404cc501e8cacad5ae4</a></p><h1 id="一、服务端"><a href="#一、服务端" class="headerlink" title="一、服务端"></a>一、服务端</h1><h2 id="1-1-下载"><a href="#1-1-下载" class="headerlink" title="1.1 下载"></a>1.1 下载</h2><p>EMQ 服务端下载地址</p><p><a href="https://www.emqx.com/zh/downloads/broker/v5.3.0">https://www.emqx.com/zh/downloads/broker/v5.3.0</a></p><h2 id="1-2-相关命令"><a href="#1-2-相关命令" class="headerlink" title="1.2 相关命令"></a>1.2 相关命令</h2><p>官方命令行说明<a href="https://docs.emqx.com/zh/emqx/v5.2/admin/cli.html#admins">https://docs.emqx.com/zh/emqx/v5.2/admin/cli.html#admins</a></p><h3 id="（1）启动"><a href="#（1）启动" class="headerlink" title="（1）启动"></a>（1）启动</h3><p>cd到bin目录下，然后输入：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.\emqx start</span><br><span class="line">或者有交互的启动</span><br><span class="line">.\emqx.cmd console</span><br></pre></td></tr></table></figure><p> 就可以启动MQTT服务端</p><p><img src="/img/awtrix3/1.webp" alt="img"></p><h3 id="（2）关闭"><a href="#（2）关闭" class="headerlink" title="（2）关闭"></a>（2）关闭</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emqx stop</span><br></pre></td></tr></table></figure><p><img src="/img/awtrix3/2.webp" alt="img"> </p><h3 id="（3）修改用户名和密码"><a href="#（3）修改用户名和密码" class="headerlink" title="（3）修改用户名和密码"></a>（3）修改用户名和密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emqx ctl admins passwd 用户名 密码</span><br></pre></td></tr></table></figure><p><img src="/img/awtrix3/3.webp" alt="img"></p><p>创建、修改、删除账户</p><p><img src="/img/awtrix3/4.webp" alt="img"> </p><h2 id="1-3-后台管理"><a href="#1-3-后台管理" class="headerlink" title="1.3 后台管理"></a>1.3 后台管理</h2><p>访问 <a href="http://127.0.0.1:18083/">http://127.0.0.1:18083/</a> 然后输入上一步配置的用户名和密码即可登录EMQX后台，下面列举一下基本常用的板块。</p><h3 id="（1）MQTT配置"><a href="#（1）MQTT配置" class="headerlink" title="（1）MQTT配置"></a>（1）MQTT配置</h3><p>如果要传输比较大的数据，如图像数据，我们可以在“MQTT配置”中先设置一下最大报文大小（上限是256M）</p><p><img src="/img/awtrix3/5.webp" alt="img"></p><h3 id="（2）集群概览"><a href="#（2）集群概览" class="headerlink" title="（2）集群概览"></a>（2）集群概览</h3><p>在“集群概览”板块中，我们可以看到当前连接到本服务的客户端数量，订阅的主题数等信息 </p><p><img src="/img/awtrix3/6.webp" alt="img"></p><h3 id="（3）客户端"><a href="#（3）客户端" class="headerlink" title="（3）客户端"></a>（3）客户端</h3><p>在“客户端”板块中，我们可以看到客户端的具体信息</p><p><img src="/img/awtrix3/7.webp" alt="img"></p><h3 id="（4）订阅管理"><a href="#（4）订阅管理" class="headerlink" title="（4）订阅管理"></a>（4）订阅管理</h3><p>在“订阅管理”板块中，我们可以看到当前有哪些主题，以及主题被客户端订阅的情况</p><p><img src="/img/awtrix3/8.webp" alt="img"></p><h3 id="（5）-Websocket客户端"><a href="#（5）-Websocket客户端" class="headerlink" title="（5） Websocket客户端"></a>（5） Websocket客户端</h3><p>我们可以用自带的客户端来测试连接服务端</p><p><img src="/img/awtrix3/9.webp" alt="img"></p><p>这里ip为127.0.0.1，端口为8083，用户名密码可以随便填，然后点击连接按钮</p><p><img src="/img/awtrix3/10.webp" alt="img"></p><p>连接后可以订阅一个主题</p><p><img src="/img/awtrix3/11.webp" alt="img"></p><p>当客户端向指定主题发布信息后，可以看到所有订阅了该主题的客户端都会收到信息</p><p><img src="/img/awtrix3/12.webp" alt="img"></p><p>看到可以发布订阅并接收消息后，服务端基本就是可以正常使用的。 </p><h3 id="（6）客户端认证"><a href="#（6）客户端认证" class="headerlink" title="（6）客户端认证"></a>（6）客户端认证</h3><p>如果不想任意用户都可以使用我们的MQTT服务，我们可以使用客户端认证功能来设置账号密码。 </p><p><img src="/img/awtrix3/13.webp" alt="img"></p><p>这里使用密码认证</p><p><img src="/img/awtrix3/14.webp" alt="img"></p><p>这里使用内置数据库</p><p><img src="/img/awtrix3/15.webp" alt="img"></p><p>这里使用用户名认证，使用默认加密方式</p><p><img src="/img/awtrix3/16.webp" alt="img"></p><p>创建后点击用户管理</p><p><img src="/img/awtrix3/17.webp" alt="img"></p><p>点击添加一个用户名和密码</p><p><img src="/img/awtrix3/18.webp" alt="img"></p><p><img src="/img/awtrix3/19.webp" alt="img"></p><p><img src="/img/awtrix3/20.webp" alt="img"></p><p>此时我们就启用了客户端认证。如果想控制每个客户端的权限，如控制客户端是否允许发布、订阅，这就需要使用“客户端授权”功能。</p><h1 id="二、客户端"><a href="#二、客户端" class="headerlink" title="二、客户端"></a>二、客户端</h1><p>这里使用的是MQTTX，下载地址：</p><p><a href="https://mqttx.app/zh/downloads">MQTTX 下载</a></p><p><img src="/img/awtrix3/21.webp" alt="img"> </p><p>下载安装后打开，我们可以先新建一个连接，注意修改一下ip和端口。如果启用了客户端认证，还需填写正确的账号和密码。</p><p><img src="/img/awtrix3/22.webp" alt="img"></p><p>连接成功后可以点击添加订阅一个主题</p><p><img src="/img/awtrix3/23.webp" alt="img"></p><p>订阅后，我们可以向该主题发送一个信息</p><p><img src="/img/awtrix3/24.webp" alt="img"></p><p>可以看到另一个订阅了该主题的客户端也收到了信息</p><p><img src="/img/awtrix3/25.webp" alt="img"></p>]]></content>
+    
+    
+    <summary type="html">tools,awtrix,mqtt</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="awtrix" scheme="https://macin.top/categories/tools/awtrix/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Photoshop 2024恶意风险盗版提示弹窗解决办法</title>
+    <link href="https://macin.top/posts/a6addd3/"/>
+    <id>https://macin.top/posts/a6addd3/</id>
+    <published>2024-05-08T04:50:09.000Z</published>
+    <updated>2024-11-27T12:35:02.135Z</updated>
+    
+    <content type="html"><![CDATA[<p>英文弹窗”This non-genuine Adobe app will bedisabled soon“<br>解决办法：修改系统目录下的UXP扩展com.adobe.ccx.start样式文件<br>com.adobe.ccx.start-7.4.0（不同版本数字可能不同，目前2024 v25.6版本开始以后是7.4.0）<br>C:\Program Files\Common Files\Adobe\UXP\extensions\com.adobe.ccx.start-7.4.0\css\styles.css<br>搜索styles.css样式文件以下关键词</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">background-color&quot;:&quot;#1473e6</span><br><span class="line">background-color&quot;:&quot;#d7373f</span><br></pre></td></tr></table></figure><p>全部替换为 </p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display&quot;:&quot;none</span><br></pre></td></tr></table></figure><h2 id="Photoshop-2024安装包下载地址："><a href="#Photoshop-2024安装包下载地址：" class="headerlink" title="Photoshop 2024安装包下载地址："></a>Photoshop 2024安装包下载地址：</h2><p>Photoshop 2024-25.12.0.806 </p><p><a href="https://www.123pan.com/s/zuYeVv-t3bbd?%E6%8F%90%E5%8F%96%E7%A0%81:YTTd">https://www.123pan.com/s/zuYeVv-t3bbd?提取码:YTTd</a></p><h2 id="各个版本的Adobe软件下载地址："><a href="#各个版本的Adobe软件下载地址：" class="headerlink" title="各个版本的Adobe软件下载地址："></a>各个版本的Adobe软件下载地址：</h2><p>PS2023 <a href="https://www.123pan.com/s/A6cA-rKAJh">https://www.123pan.com/s/A6cA-rKAJh</a><br>PS2022,2021<a href="https://www.123pan.com/s/A6cA-YkAJh">https://www.123pan.com/s/A6cA-YkAJh</a><br><a href="https://pan.baidu.com/s/1kwBrkZ5SrlOWocGUn65iVw?pwd=2023">https://pan.baidu.com/s/1kwBrkZ5SrlOWocGUn65iVw?pwd=2023</a><br><a href="https://pan.baidu.com/s/1hJZtjUWLQ-RGV5CGGKPO8w?pwd=2023">https://pan.baidu.com/s/1hJZtjUWLQ-RGV5CGGKPO8w?pwd=2023</a></p><p><a href="http://www.kkx.net/soft/76871.html">PS2023破解版下载-Adobe PhotoShop 2023破解版下载 v24.5.0.500直装完整版-KK下载站 (kkx.net)</a></p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;英文弹窗”This non-genuine Adobe app will bedisabled</summary>
+        
+      
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="photoshop" scheme="https://macin.top/categories/tools/photoshop/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="photoshop" scheme="https://macin.top/tags/photoshop/"/>
+    
+  </entry>
+  
+</feed>

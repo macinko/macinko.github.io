@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>docker搭建plasible网站流量分析平台(新版)</title>
+    <url>/posts/27f3948a/</url>
+    <content><![CDATA[<p>自托管 <a href="https://plausible.io/blog/community-edition">Plausible Community Edition</a> 的入门指南</p>
+<hr>
+<h1 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h1><ul>
+<li>必须在计算机上安装 <a href="https://docs.docker.com/engine/install/">Docker</a> 和 <a href="https://docs.docker.com/compose/install/">Docker Compose</a></li>
+<li><strong>CPU</strong> 必须支持 <strong>SSE 4.2</strong> 或 <strong>NEON</strong> 指令集或更高版本（ClickHouse 需要）。</li>
+<li>建议至少 <strong>2 GB 的 RAM</strong> 来运行 ClickHouse 和 Plausible 而不必担心 OOM。</li>
+</ul>
+<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><h2 id="克隆此存储库："><a href="#克隆此存储库：" class="headerlink" title="克隆此存储库："></a>克隆此存储库：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#克隆源码文件</span></span><br><span class="line">git <span class="built_in">clone</span> -b v2.1.4 --single-branch https://github.com/plausible/community-edition plausible-ce</span><br><span class="line"></span><br><span class="line"><span class="comment">#屏幕显示如下</span></span><br><span class="line">Cloning into <span class="string">&#x27;plausible-ce&#x27;</span>...</span><br><span class="line">remote: Enumerating objects: 13, <span class="keyword">done</span>.</span><br><span class="line">remote: Counting objects: 100% (10/10), <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (9/9), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 13 (delta 0), reused 7 (delta 0), pack-reused 3 (from 1)</span><br><span class="line">Receiving objects: 100% (13/13), <span class="keyword">done</span>.</span><br><span class="line"></span><br><span class="line"><span class="comment">#进入文件夹内部</span></span><br><span class="line"><span class="built_in">cd</span> plausible-ce</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看文件夹内文件</span></span><br><span class="line"><span class="built_in">ls</span> -1</span><br><span class="line"></span><br><span class="line"><span class="comment">#有如下文件</span></span><br><span class="line">README.md</span><br><span class="line">clickhouse/</span><br><span class="line">compose.yml</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建并配置您的环境文件："><a href="#创建并配置您的环境文件：" class="headerlink" title="创建并配置您的环境文件："></a>创建并配置<a href="https://docs.docker.com/compose/environment-variables/">您的环境</a>文件：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#新建环境文件.env</span></span><br><span class="line"><span class="built_in">touch</span> .<span class="built_in">env</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#写入做好DNS解析的域名和随机生成的秘钥到环境文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;BASE_URL=https://plausible.example.com&quot;</span> &gt;&gt; .<span class="built_in">env</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;SECRET_KEY_BASE=<span class="subst">$(openssl rand -base64 48)</span>&quot;</span> &gt;&gt; .<span class="built_in">env</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#输出环境文件信息</span></span><br><span class="line"><span class="built_in">cat</span> .<span class="built_in">env</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#屏幕显示如下</span></span><br><span class="line">BASE_URL=https://xxx.com</span><br><span class="line">SECRET_KEY_BASE=As0fZsJlUpuFYSthRjT5Yflg/NlxkFKPRro72xMLXF8yInZ60s6xGGXYVqml+XN1</span><br></pre></td></tr></table></figure>
+
+<p>确保 Set 为您计划托管服务的实际域。该域必须具有指向您的服务器的 DNS 条目，以便正确解析和自动颁发 Let’s Encrypt TLS 证书。下一步将对此进行更多介绍。<code>$BASE_URL</code></p>
+<h2 id="使用-compose-覆盖文件向-Web-公开-Plausible-服务器："><a href="#使用-compose-覆盖文件向-Web-公开-Plausible-服务器：" class="headerlink" title="使用 compose 覆盖文件向 Web 公开 Plausible 服务器："></a>使用 <a href="https://github.com/plausible/community-edition/wiki/compose-override">compose 覆盖文件</a>向 Web 公开 Plausible 服务器：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#插入http和https端口信息</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;HTTP_PORT=80&quot;</span> &gt;&gt; .<span class="built_in">env</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;HTTPS_PORT=443&quot;</span> &gt;&gt; .<span class="built_in">env</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#使用cat和EOF语法写入文件内容，也可以新建compose.override.yml编辑services内容</span></span><br><span class="line"><span class="built_in">cat</span> &gt; compose.override.yml &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">services:</span></span><br><span class="line"><span class="string">  plausible:</span></span><br><span class="line"><span class="string">    ports:</span></span><br><span class="line"><span class="string">      - 80:80              </span></span><br><span class="line"><span class="string">      - 443:443</span></span><br><span class="line"><span class="string">EOF</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">#如果80和443端口被占用，可自定义88:80，444:443等映射出来的端口</span></span><br></pre></td></tr></table></figure>
+
+<p>设置并启用自动 Let’s Encrypt TLS 证书颁发。例如，如果您计划在<a href="https://github.com/plausible/community-edition/wiki/reverse-proxy">反向代理</a>后面运行 Plausible，则可能需要选择不同的值。<code>HTTP_PORT=80``HTTPS_PORT=443</code></p>
+<h2 id="使用-Docker-Compose-启动服务："><a href="#使用-Docker-Compose-启动服务：" class="headerlink" title="使用 Docker Compose 启动服务："></a>使用 Docker Compose 启动服务：</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="https://xxx.com/">https://xxx.com</a> 并创建用户</p>
+]]></content>
+      <categories>
+        <category>tools</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>tools</tag>
+        <tag>plausible</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker搭建rustdesk id中继服务器</title>
+    <url>/posts/8832024/</url>
+    <content><![CDATA[<h2 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h2><p>创建一下安装的目录：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line">nano docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p><code>docker-compose.yml</code>填入以下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">rustdesk-net:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">hbbs:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21115</span><span class="string">:21115</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116/udp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21118</span><span class="string">:21118</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbs</span> <span class="string">-r</span> <span class="string">hbbs.example.com:21117</span>   <span class="comment"># hbbs.example.com改成自己的服务器ip或者域名</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbs:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">hbbr:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21117</span><span class="string">:21117</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21119</span><span class="string">:21119</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbr:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure>
+
+<p>没问题的话，<code>ctrl+x</code>退出，按<code>y</code>保存，<code>enter</code>确认。</p>
+<p>打开防火墙的端口<code>21115</code>、<code>21116</code>、<code>21117</code>、<code>21118</code>、<code>21119</code></p>
+<blockquote>
+<p>默认情况下，hbbs 监听<code>21115(tcp)</code>, <code>21116(tcp/udp)</code>, <code>21118(tcp)</code>，hbbr 监听<code>21117(tcp)</code>, <code>21119(tcp)</code>。</p>
+<p>务必在防火墙开启这几个端口， **请注意<code>21116</code>同时要开启<code>TCP</code>和<code>UDP</code>**。</p>
+<p>其中<code>21115</code>是hbbs用作NAT类型测试，<code>21116/UDP</code>是hbbs用作ID注册与心跳服务，<code>21116/TCP</code>是hbbs用作TCP打洞与连接服务，<code>21117</code>是hbbr用作中继服务, <code>21118</code>和<code>21119</code>是为了支持网页客户端。</p>
+<p>如果您不需要网页客户端<code>（21118，21119）</code>支持，对应端口可以不开。</p>
+</blockquote>
+<ul>
+<li>TCP(<strong>21115, 21116, 21117, 21118, 21119</strong>)</li>
+<li>UDP(<strong>21116</strong>)</li>
+</ul>
+<p><a href="https://img.laoda.de/i/2022/06/30/zlio5h-2.webp"><img src="/img/rustdesk/1.webp" alt="image-20220630215240864"></a><br><a href="https://img.laoda.de/i/2022/06/30/10h3dqt-2.webp"><img src="/img/rustdesk/2.webp" alt="image-20220630220546335"></a><br><a href="https://img.laoda.de/i/2022/06/30/zkvklo-2.webp"><img src="/img/rustdesk/3.webp" alt="image-20220630215134217"></a><br><a href="https://img.laoda.de/i/2022/06/30/10hlio9-2.webp"><img src="/img/rustdesk/4.webp" alt="image-20220630220629996"></a></p>
+<p>查看端口是否被占用（以<code>21115</code>为例），输入：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsof -i:21115  <span class="comment">#查看21115端口是否被占用，如果被占用，重新自定义一个端口</span></span><br></pre></td></tr></table></figure>
+
+<p>如果出现：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-bash: lsof: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install lsof  <span class="comment">#安装lsof</span></span><br></pre></td></tr></table></figure>
+
+<p>如果端口没有被占用，我们接着可以运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk</span><br><span class="line"></span><br><span class="line">docker-compose up -d  </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意：</strong></p>
+<p>1、不知道服务器IP，可以直接在命令行输入：<code>curl ip.sb</code>，会显示当前服务器的IP。</p>
+<p>2、遇到访问不了的情况，请在宝塔面板的防火墙和服务商的后台防火墙里打开对应端口。</p>
+</blockquote>
+<h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r /root/data/docker_data/rustdesk /root/data/docker_data/rustdesk.archive  <span class="comment"># 万事先备份，以防万一</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk  <span class="comment"># 进入docker-compose所在的文件夹</span></span><br><span class="line"></span><br><span class="line">docker-compose pull    <span class="comment"># 拉取最新的镜像</span></span><br><span class="line"></span><br><span class="line">docker-compose up -d   <span class="comment"># 重新更新当前镜像</span></span><br></pre></td></tr></table></figure>
+
+<p>利用Docker-compose搭建的应用，更新非常容易～</p>
+<h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/rustdesk  <span class="comment"># 进入docker-compose所在的文件夹</span></span><br><span class="line"></span><br><span class="line">docker-compose down    <span class="comment"># 停止容器，此时不会删除映射到本地的数据</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -rf /root/data/docker_data/rustdesk  <span class="comment"># 完全删除映射到本地的数据</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用教程"><a href="#使用教程" class="headerlink" title="使用教程"></a>使用教程</h2><h3 id="安装和配置"><a href="#安装和配置" class="headerlink" title="安装和配置"></a>安装和配置</h3><p>见咕咕鸽的视频</p>
+<p>点击 ID 右侧的菜单按钮如下，选择“ ID&#x2F;中继服务器”。</p>
+<p><a href="https://img.laoda.de/i/2022/06/30/10vdndr-2.webp"><img src="/img/rustdesk/5.webp" alt="img"></a></p>
+<p>在 ID 服务器输入框中（被控端+主控端）输入 hbbs 主机或 ip 地址，另外两个地址可以不填，<a href="https://iwanlab.com/tag/rustdesk/">RustDesk</a>会自动推导（如果没有特别设定），中继服务器指的是hbbr（21116）端口。</p>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hbbs.example.com</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hbbs.example.com:21116</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://img.laoda.de/i/2022/06/30/10werrl-2.webp"><img src="/img/rustdesk/6.webp" alt="img"></a><br><a href="https://img.laoda.de/i/2022/06/30/126s6aa-2.webp"><img src="/img/rustdesk/7.webp" alt="image-20220630230905895"></a><br><a href="https://img.laoda.de/i/2022/06/30/127cdzg-2.webp"><img src="/img/rustdesk/8.webp" alt="image-20220630231000711"></a><br><a href="https://img.laoda.de/i/2022/06/30/12b7cbz-2.webp"><img src="/img/rustdesk/9.webp" alt="image-20220630231648227"></a><br><a href="https://img.laoda.de/i/2022/06/30/128m0xb-2.webp"><img src="/img/rustdesk/10.webp" alt="image-20220630231211642"></a></p>
+<h4 id="功能展示"><a href="#功能展示" class="headerlink" title="功能展示"></a>功能展示</h4><p><a href="https://img.laoda.de/i/2022/06/30/12awwj1-2.webp"><img src="/img/rustdesk/11.webp" alt="image-20220630231557544"></a><br><a href="https://img.laoda.de/i/2022/06/30/12bpj3z-2.webp"><img src="/img/rustdesk/12.webp" alt="image-20220630231732435"></a><br><a href="https://img.laoda.de/i/2022/06/30/12c44fx-2.webp"><img src="/img/rustdesk/13.webp" alt="image-20220630231801433"></a></p>
+<h4 id="传输文件"><a href="#传输文件" class="headerlink" title="传输文件"></a>传输文件</h4><p><a href="https://img.laoda.de/i/2022/06/30/12crxpe-2.webp"><img src="/img/rustdesk/18.webp" alt="image-20220630231912131"></a><br><a href="https://img.laoda.de/i/2022/06/30/12dih3s-2.webp"><img src="/img/rustdesk/14.webp" alt="image-20220630232034319"></a></p>
+<h3 id="几个小问题"><a href="#几个小问题" class="headerlink" title="几个小问题"></a>几个小问题</h3><h4 id="加密通话"><a href="#加密通话" class="headerlink" title="加密通话"></a>加密通话</h4><p>最新版必须过设置Key，来加密通话。</p>
+<p>以下来自<a href="https://rustdesk.com/docs/zh-cn/self-host/install/">官方文档</a>：</p>
+<p>hbbs在第一次运行时，会自动产生一对加密私钥和公钥（分别位于运行目录下的<code>id_ed25519</code>和<code>id_ed25519.pub</code>文件中），其主要用途是为了通讯加密。</p>
+<p><a href="https://img.laoda.de/i/2022/06/30/111dylz-2.webp"><img src="/img/rustdesk/15.webp" alt="image-20220630223952511"></a></p>
+<p>如果您在上一步骤中没有填写<code>Key:</code>(公钥文件<code>id_ed25519.pub</code>中的内容)，会影响连接，且无法加密。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat /root/data/docker_data/rustdesk/hbbs/id_ed25519.pub</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://img.laoda.de/i/2022/06/30/111y9hm-2.webp"><img src="/img/rustdesk/16.webp" alt="image-20220630224047960"></a></p>
+<p>如果您禁止没有key的用户建立非加密连接，请在运行hbbs和hbbr的时候添加<code>-k _ </code>参数，例如:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">rustdesk-net:</span></span><br><span class="line">    <span class="attr">external:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">hbbs:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21115</span><span class="string">:21115</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21116</span><span class="string">:21116/udp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21118</span><span class="string">:21118</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbs</span> <span class="string">-r</span> <span class="string">hbbs.example.com:21117</span> <span class="string">-k</span> <span class="string">_</span>     <span class="comment"># 加上-k _ </span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbs:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">hbbr:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hbbr</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21117</span><span class="string">:21117</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">21119</span><span class="string">:21119</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rustdesk/rustdesk-server:latest</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">hbbr</span> <span class="string">-k</span> <span class="string">_</span> <span class="comment"># 加上-k _ </span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hbbr:/root</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">rustdesk-net</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实测加上<code>-k _</code>参数后，会导致无法连接，不确定是不是BUG，有解决的小伙伴欢迎在评论区留言交流！</p>
+</blockquote>
+<p>如果要更改key，请删除 <code>id_ed25519</code> 和 <code>id_ed25519.pub</code> 文件并重新启动 hbbs&#x2F;hbbr，hbbs将会产生新的密钥对。</p>
+<h4 id="把配置放在可执行文件名里-Windows-only"><a href="#把配置放在可执行文件名里-Windows-only" class="headerlink" title="把配置放在可执行文件名里 (Windows only)"></a>把配置放在可执行文件名里 (Windows only)</h4><p>把<code>rustdesk.exe</code> 修改为 rustdesk-<code>host=&lt;host-ip-or-name&gt;,key=&lt;public-key-string&gt;</code>.exe, 例如： rustdesk-<code>host=192.168.1.137,key=xfdsfsd32=32</code>.exe，你可以在About窗口看到配置结果，如下图所示。</p>
+<p><code>host</code> 和 <code>key</code> 都需要添加，缺少一个就不好使。</p>
+<blockquote>
+<p>如果密钥中有无效字符而不能用于文件名，请删除<code>id_ed25519</code>文件并重新启动hbbs&#x2F;hbbr，<code>id_ed25519.pub</code>文件将被重新生成，请重复操作直到获得有效字符。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Menu</th>
+<th align="left">About Page</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="https://rustdesk.com/docs/en/self-host/install/images/aboutmenu.png"><img src="/img/rustdesk/19.webp" alt="img"></a></td>
+<td align="left"><a href="https://rustdesk.com/docs/en/self-host/install/images/lic.png"><img src="/img/rustdesk/17.webp" alt="img"></a></td>
+</tr>
+</tbody></table>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>祝大家用得开心，有问题可以去GitHub提<a href="https://github.com/rustdesk/rustdesk-server/issues">Issues</a>，也可以在评论区互相交流探讨。</p>
+<p>同时，有能力给项目做贡献的同学，也欢迎积极加入到<a href="https://github.com/rustdesk">项目</a>中来，贡献自己的一份力量！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://github.com/rustdesk/rustdesk-server">https://github.com/rustdesk/rustdesk-server</a></p>
+]]></content>
+      <categories>
+        <category>tools</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>tools</tag>
+        <tag>rustdesk</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker搭建plausible流量统计集成谷歌搜索控制台(旧版)</title>
+    <url>/posts/d5df7017/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
+<p>Plausible Analytics 是一个简单、开源、轻量级（&lt; 1 KB）且注重隐私的 Google Analytics 替代品。Plausible 被超过10,000个付费订阅用户信任，用于提供他们网站和业务洞察力。我们完全独立、自筹资金并自给自足。</p>
+</blockquote>
+<p>来自<a href="https://plausible.io/docs">官方Docs</a></p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>支持docker一键部署，轻量级Docker镜像（使用Alpine Linux）</li>
+<li>支持谷歌API，链接谷歌分析、谷歌关键词工具</li>
+<li>支持自定义事件</li>
+</ul>
+<h1 id="安装-Docker-与-Nginx-Proxy-Manager"><a href="#安装-Docker-与-Nginx-Proxy-Manager" class="headerlink" title="安装 Docker 与 Nginx Proxy Manager"></a>安装 Docker 与 Nginx Proxy Manager</h1><p>可以直接参考这篇内容：</p>
+<p><a href="https://macin.top/posts/3ecd216c/?highlight=nginx">docker-compose 搭建 nginx proxy manager | 赛博空间 (macin.top)</a></p>
+<h1 id="安装教程"><a href="#安装教程" class="headerlink" title="安装教程"></a>安装教程</h1><h2 id="创建安装目录"><a href="#创建安装目录" class="headerlink" title="创建安装目录"></a>创建安装目录</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#管理员权限</span></span><br><span class="line">sudo -i</span><br><span class="line"><span class="comment">#新建文件夹和路径</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /root/data/docker_data/plausible</span><br><span class="line"><span class="comment">#进入文件夹</span></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/plausible</span><br><span class="line"><span class="comment">#克隆项目</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/plausible/hosting</span><br><span class="line"><span class="comment">#进入文件夹</span></span><br><span class="line"><span class="built_in">cd</span> hosting</span><br><span class="line"><span class="comment">#编辑docker-compose内容</span></span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>英文输入法下，按 <code>i</code>进入编辑</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.3&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mail:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bytemark/smtp</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">plausible_db:</span></span><br><span class="line">    <span class="comment"># supported versions are 12, 13, and 14</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:14-alpine</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./db-data:/var/lib/postgresql/data</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=postgres</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">plausible_events_db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">clickhouse/clickhouse-server:23.3.7.5-alpine</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./event-data:/var/lib/clickhouse</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro</span></span><br><span class="line">    <span class="attr">ulimits:</span></span><br><span class="line">      <span class="attr">nofile:</span></span><br><span class="line">        <span class="attr">soft:</span> <span class="number">262144</span></span><br><span class="line">        <span class="attr">hard:</span> <span class="number">262144</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">plausible:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">plausible/analytics:v2.0</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">sh</span> <span class="string">-c</span> <span class="string">&quot;sleep 10 &amp;&amp; /entrypoint.sh db createdb &amp;&amp; /entrypoint.sh db migrate &amp;&amp; /entrypoint.sh run&quot;</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">plausible_db</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">plausible_events_db</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mail</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8090</span><span class="string">:8000</span></span><br><span class="line">    <span class="attr">env_file:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">plausible-conf.env</span></span><br></pre></td></tr></table></figure>
+
+<p>修改好之后，注意切换成英文输入法，然后按一下 <code>esc</code>，然后 <code>:wq</code> 保存退出</p>
+<h2 id="生成一串随机字符，写到下面的-SECRET-KEY-BASE-里"><a href="#生成一串随机字符，写到下面的-SECRET-KEY-BASE-里" class="headerlink" title="生成一串随机字符，写到下面的 SECRET_KEY_BASE 里"></a>生成一串随机字符，写到下面的 <code>SECRET_KEY_BASE</code> 里</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#生成随机秘钥</span></span><br><span class="line">openssl rand -<span class="built_in">base64</span> 64 | <span class="built_in">tr</span> -d <span class="string">&#x27;\n&#x27;</span> ; <span class="built_in">echo</span></span><br><span class="line"><span class="comment">#示例输出</span></span><br><span class="line">FhNHzoWJyoQgT21RsFQG+KUzJ/o5YbKsszc6CMOArA0OXxjZ763oCGiItOPlKJAfIQO0uov8xt8p5k+MqtmtOQ==</span><br></pre></td></tr></table></figure>
+
+<h2 id="打开环境配置文件："><a href="#打开环境配置文件：" class="headerlink" title="打开环境配置文件："></a>打开环境配置文件：</h2><p><code>vim plausible-conf.env</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BASE_URL=访问plausible的域名，例如：https://fenxi.xxx.com</span><br><span class="line">SECRET_KEY_BASE=填刚刚生成的那个密钥</span><br><span class="line">DISABLE_REGISTRATION=<span class="literal">true</span>  <span class="comment"># 禁止用户注册</span></span><br></pre></td></tr></table></figure>
+
+<p>修改好之后，注意切换成英文输入法，然后按一下 <code>esc</code>，然后 <code>:wq</code> 保存退出。</p>
+<p>更多参数配置，请看文档：<a href="https://plausible.io/docs/self-hosting-configuration">https://plausible.io/docs/self-hosting-configuration</a></p>
+<h2 id="查看端口是否被占用"><a href="#查看端口是否被占用" class="headerlink" title="查看端口是否被占用"></a>查看端口是否被占用</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsof -i:8000  <span class="comment">#查看 8000 端口是否被占用，如果被占用，重新自定义一个端口</span></span><br></pre></td></tr></table></figure>
+
+<p>如果啥也没出现，表示端口未被占用，我们可以继续下面的操作了</p>
+<p>如果出现：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-bash: lsof: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install lsof  <span class="comment">#安装 lsof</span></span><br></pre></td></tr></table></figure>
+
+<p>被占用就修改一下端口，比如改成 <code>8081</code>，注意 docker 命令行里和防火墙端口放行都要改</p>
+<p>输入 <code>http://ip:8000</code> 访问</p>
+<h1 id="添加发信邮箱【可选】"><a href="#添加发信邮箱【可选】" class="headerlink" title="添加发信邮箱【可选】"></a>添加发信邮箱【可选】</h1><p>使用外部 SMTP 发信邮箱，编辑 Plausible 环境变量文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim plausible-conf.env</span><br></pre></td></tr></table></figure>
+
+<p>添加下面内容</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">MAILER_EMAIL</span>=plausible@your.domain	<span class="comment"># 发信邮箱</span></span><br><span class="line"><span class="attr">SMTP_HOST_ADDR</span>=smtp.your.domain	<span class="comment"># SMTP 主机名</span></span><br><span class="line"><span class="attr">SMTP_HOST_PORT</span>=<span class="number">625</span>	<span class="comment"># SMTP 端口</span></span><br><span class="line"><span class="attr">SMTP_USER_NAME</span>=plausible@your.domain	<span class="comment"># 发信邮箱用户名</span></span><br><span class="line"><span class="attr">SMTP_USER_PWD</span>=admin1234567890	<span class="comment"># 发信邮箱密码</span></span><br><span class="line"><span class="attr">SMTP_HOST_SSL_ENABLED</span>=<span class="literal">true</span>	<span class="comment"># 是否启用 SSL？</span></span><br><span class="line"><span class="attr">SMTP_RETRIES</span>=<span class="number">2</span>	<span class="comment"># 发信重试次数</span></span><br></pre></td></tr></table></figure>
+
+<p>重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose down &amp;&amp; docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>没问题的话可以去 Plausible 后台开启每周／每月／异常流量邮件报告，当然这个邮箱也可以在你忘记密码的时候用来重置密码</p>
+<p><img src="/img/plausible/1.webp" alt="SMTP"></p>
+<center>SMTP</center>
+
+<h1 id="重写路径【建议】"><a href="#重写路径【建议】" class="headerlink" title="重写路径【建议】"></a>重写路径【建议】</h1><p>Plausible 是一个极其尊重隐私的网站统计服务，它：</p>
+<ul>
+<li>与广告技术和监视资本主义无关</li>
+<li>不收集任何个人数据，所有统计数据仅为汇总数据</li>
+<li>没有跨站点或跨设备跟踪</li>
+<li>您 100% 拥有您的网站数据，不会将其发送、共享或出售给任何第三方</li>
+<li>完全开源的网络分析软件，可以自行托管</li>
+</ul>
+<p>即使如此，它 <a href="https://plausible.io/docs/proxy/introduction">仍然</a> 被一些广告过滤器规则所屏蔽，作为网站管理员，我们可以使用反向代理脚本和 API 路由来减少被广告过滤器误杀的风险，按照官网文档，至少可以使用的是：</p>
+<ul>
+<li><a href="https://plausible.io/docs/proxy/guides/cloudflare">Cloudflare Workers</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/akamai">Akamai</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/netlify">Netlify</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/vercel">Vercel</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/cloudfront">CloudFront</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/nginx">Nginx</a></li>
+<li><a href="https://plausible.io/docs/proxy/guides/caddy">Caddy</a></li>
+</ul>
+<p>我的服务依赖 Cloudflare，但 Cloudflare Workers 每日请求数有限制，因此在本文中，我会使用 Cloudflare <strong>转换规则</strong> 下面的 <strong>重写 URL 规则</strong> 来完成这个过程，它实施起来非常容易。</p>
+<p>在 Plausible 控制台获取到站点统计的脚本示例如下</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script defer</span><br><span class="line">  data-domain=<span class="string">&quot;blog.your.domain&quot;</span></span><br><span class="line">  src=<span class="string">&quot;https://plausible.your.domain/js/script.js&quot;</span></span><br><span class="line">&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li>plausible.your.domain 是您部署 Plausible 的域名</li>
+<li>blog.your.domain 是您安装 Plausible 统计脚本的域名</li>
+</ul>
+<p>创建重写 URL 规则</p>
+<p><img src="/img/plausible/2.webp" alt="Add Rewrite Rules"></p>
+<center>Add Rewrite Rules</center>
+
+<p>规则名称随便填，传入请求匹配自定义筛选表达式</p>
+<p><img src="/img/plausible/3.webp" alt="Rewrite Script Rule.webp"></p>
+<center>Rewrite Script Rule.webp</center>
+
+
+
+<p>同理，再添加一条规则，重写 API 路由</p>
+<p><img src="/img/plausible/4.webp" alt="Rewrite API Rule.webp"></p>
+<center>Rewrite API Rule.webp</center>
+
+<p>接下来，修改安装到被统计站点的脚本如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script defer</span><br><span class="line">  src=<span class="string">&quot;https://plausible.your.domain/js/vue.min.js&quot;</span></span><br><span class="line">  data-api=<span class="string">&quot;https://plausible.your.domain/stats/car/benz&quot;</span></span><br><span class="line">  data-domain=<span class="string">&quot;blog.your.domain&quot;</span></span><br><span class="line">&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果您的站点使用 Plausible 的其他 <a href="https://plausible.io/docs/script-extensions">统计脚本拓展</a> 也按照上面修改就可以。</p>
+<h1 id="统计关键词【可选】"><a href="#统计关键词【可选】" class="headerlink" title="统计关键词【可选】"></a>统计关键词【可选】</h1><p>Plausible 支持集成 <a href="https://search.google.com/search-console/">Google Search Console</a>，可以获得通过搜索引擎得到的关键词统计，详细配置流程可参阅 <a href="https://plausible.io/docs/google-search-console-integration">Plausible 文档</a>，步骤如下：</p>
+<ul>
+<li>在 <a href="https://console.developers.google.com/">Google Cloud Console</a> 创建一个新项目</li>
+<li>配置 OAuth 同意屏幕</li>
+<li>创建一个 OAuth 客户端，获取 Client ID 和 CLIENT SECRET</li>
+</ul>
+<p><img src="/img/plausible/6.webp" alt="微信截图_20230815125015"></p>
+<blockquote>
+<p>已获授权的 JavaScript 来源，填被查询网站的网址，例：<a href="https://macin.top/">https://macin.top</a></p>
+<p>已获授权的重定向 URI，填plausible网址&#x2F;auth&#x2F;google&#x2F;callback，例：<a href="https://stats.macin.ac.cn/auth/google/callback">https://stats.macin.ac.cn/auth/google/callback</a></p>
+</blockquote>
+<p>启用 <a href="https://console.developers.google.com/apis/api/searchconsole.googleapis.com">Google Search Console API</a></p>
+<p><img src="/img/plausible/7.webp" alt="微信截图_20230815125223"></p>
+<p>将 Client ID 和 Client Secret 添加到 Plausible 环境变量文件里</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">GOOGLE_CLIENT_ID</span>=xxxx</span><br><span class="line"><span class="attr">GOOGLE_CLIENT_SECRET</span>=yyyy</span><br></pre></td></tr></table></figure>
+
+<p>重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose down &amp;&amp; docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>之后在 Plausible 配置下 Google 集成即可</p>
+<p><img src="/img/plausible/5.webp" alt="Google Integration"></p>
+<center>Google Integration</center>
+
+<h1 id="城市精细度【可选】"><a href="#城市精细度【可选】" class="headerlink" title="城市精细度【可选】"></a>城市精细度【可选】</h1><p>Plausible 的 <a href="https://github.com/plausible/analytics/releases/tag/v1.5.1">v1.5.1</a> 版本新增一条可选配置项，完成这步可获得精细度达到省（州）到具体城市的统计效果，但会额外消耗 1GB 左右的 RAM，请酌情选择。</p>
+<p>在前面部署好 Plausible 服务后，进入 geoip 文件夹，下载所需数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> geoip</span><br><span class="line">curl -O https://s3.eu-central-1.wasabisys.com/plausible-application/geonames.csv</span><br><span class="line"><span class="comment"># 将 LNpsJCCKPis6XvBP 替换为您的 GeoLite2 API Key</span></span><br><span class="line"><span class="built_in">export</span> MAXMIND_LICENSE_KEY=LNpsJCCKPis6XvBP</span><br><span class="line">curl -L <span class="string">&quot;https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&amp;license_key=<span class="variable">$&#123;MAXMIND_LICENSE_KEY&#125;</span>&amp;suffix=tar.gz&quot;</span> -o geolite2-city.mmdb.gz</span><br><span class="line">gunzip geolite2-city.mmdb.gz</span><br></pre></td></tr></table></figure>
+
+<p>回到 Plausible 根目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="comment"># 编辑环境变量</span></span><br><span class="line">vim plausible-conf.env</span><br><span class="line"><span class="comment"># 添加下面两行</span></span><br><span class="line">GEONAMES_SOURCE_FILE=/etc/app/geonames.csv</span><br><span class="line">IP_GEOLOCATION_DB=/etc/app/geolite2-city.mmdb</span><br></pre></td></tr></table></figure>
+
+<p>编辑 docker-compose.yml 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim docker-compose.yml</span><br><span class="line"><span class="comment"># 添加两行（有 + 标记的两行）</span></span><br><span class="line"> plausible:</span><br><span class="line">    image: plausible/analytics:latest</span><br><span class="line">    restart: always</span><br><span class="line">    <span class="built_in">command</span>: sh -c <span class="string">&quot;sleep 10 &amp;&amp; /entrypoint.sh db createdb &amp;&amp; /entrypoint.sh db migrate &amp;&amp; /entrypoint.sh run&quot;</span></span><br><span class="line">    ...</span><br><span class="line">    volumes:</span><br><span class="line">       - ./geoip:/geoip:ro</span><br><span class="line">+      - ./geoip/geonames.csv:/etc/app/geonames.csv:ro</span><br><span class="line">+      - ./geoip/geolite2-city.mmdb:/etc/app/geolite2-city.mmdb:ro</span><br></pre></td></tr></table></figure>
+
+<p>重新创建容器即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose down &amp;&amp; docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p><strong>参考信息</strong></p>
+<p><a href="https://plausible.io/docs/self-hosting">Getting started | Plausible docs</a></p>
+<ol>
+<li>尽量使用 Gmail、Outlook 等邮箱</li>
+<li>非必需，您也可以使用其他方式部署 SSL 证书</li>
+</ol>
+]]></content>
+      <categories>
+        <category>tools</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>tools</tag>
+        <tag>plausible</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker常用命令</title>
+    <url>/posts/749ad7d8/</url>
+    <content><![CDATA[<h1 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">非大陆</span><br><span class="line">wget -qO- get.docker.com | bash</span><br><span class="line">大陆</span><br><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br><span class="line"></span><br><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br><span class="line"></span><br><span class="line">curl -sS -O https://raw.gitmirror.com/kejilion/docker/main/install &amp;&amp; <span class="built_in">chmod</span> +x install</span><br><span class="line"></span><br><span class="line">sh install --mirror Aliyun</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载旧版本"><a href="#卸载旧版本" class="headerlink" title="卸载旧版本"></a>卸载旧版本</h1><p>较旧的 Docker 版本称为 docker 或 docker-engine 。如果已安装这些程序，请卸载它们以及相关的依赖项。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+<h1 id="启动docker"><a href="#启动docker" class="headerlink" title="启动docker"></a>启动docker</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start docker.service</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看Docker版本"><a href="#查看Docker版本" class="headerlink" title="查看Docker版本"></a>查看Docker版本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+<h1 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> docker.service</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get purge docker-ce docker-ce-cli containerd.io</span><br><span class="line">sudo <span class="built_in">rm</span> -rf /var/lib/docker</span><br><span class="line">sudo <span class="built_in">rm</span> -rf /var/lib/containerd</span><br></pre></td></tr></table></figure>
+
+<h1 id="列出所有容器ID"><a href="#列出所有容器ID" class="headerlink" title="列出所有容器ID"></a>列出所有容器ID</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps -aq</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看所有运行或者不运行容器"><a href="#查看所有运行或者不运行容器" class="headerlink" title="查看所有运行或者不运行容器"></a>查看所有运行或者不运行容器</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<h1 id="停止所有的container（容器），这样才能够删除其中的images："><a href="#停止所有的container（容器），这样才能够删除其中的images：" class="headerlink" title="停止所有的container（容器），这样才能够删除其中的images："></a>停止所有的container（容器），这样才能够删除其中的images：</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop $(docker ps -a -q) 或者 docker stop $(docker ps -aq) </span><br></pre></td></tr></table></figure>
+
+<h1 id="如果想要删除所有container（容器）的话再加一个指令："><a href="#如果想要删除所有container（容器）的话再加一个指令：" class="headerlink" title="如果想要删除所有container（容器）的话再加一个指令："></a>如果想要删除所有container（容器）的话再加一个指令：</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">rm</span> $(docker ps -a -q) 或者 docker <span class="built_in">rm</span> $(docker ps -aq) </span><br></pre></td></tr></table></figure>
+
+<h1 id="查看当前有些什么images"><a href="#查看当前有些什么images" class="headerlink" title="查看当前有些什么images"></a>查看当前有些什么images</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除images（镜像），通过image的id来指定删除谁"><a href="#删除images（镜像），通过image的id来指定删除谁" class="headerlink" title="删除images（镜像），通过image的id来指定删除谁"></a>删除images（镜像），通过image的id来指定删除谁</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi &lt;image <span class="built_in">id</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="想要删除untagged-images，也就是那些id为的image的话可以用"><a href="#想要删除untagged-images，也就是那些id为的image的话可以用" class="headerlink" title="想要删除untagged images，也就是那些id为的image的话可以用"></a>想要删除untagged images，也就是那些id为的image的话可以用</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images | grep <span class="string">&quot;^&lt;none&gt;&quot;</span> | awk <span class="string">&quot;&#123;print <span class="variable">$3</span>&#125;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="要删除全部image（镜像）的话"><a href="#要删除全部image（镜像）的话" class="headerlink" title="要删除全部image（镜像）的话"></a>要删除全部image（镜像）的话</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
+
+<h1 id="强制删除全部image的话"><a href="#强制删除全部image的话" class="headerlink" title="强制删除全部image的话"></a>强制删除全部image的话</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi -f $(docker images -q)</span><br></pre></td></tr></table></figure>
+
+<h1 id="从容器到宿主机复制"><a href="#从容器到宿主机复制" class="headerlink" title="从容器到宿主机复制"></a>从容器到宿主机复制</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">cp</span> tomcat：/webapps/js/text.js /home/admin</span><br><span class="line">docker <span class="built_in">cp</span> 容器名:容器路径 宿主机路径        </span><br></pre></td></tr></table></figure>
+
+<h1 id="从宿主机到容器复制"><a href="#从宿主机到容器复制" class="headerlink" title="从宿主机到容器复制"></a>从宿主机到容器复制</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">cp</span> /home/admin/text.js tomcat：/webapps/js</span><br><span class="line">docker <span class="built_in">cp</span> 宿主路径中文件 容器名 容器路径 </span><br></pre></td></tr></table></figure>
+
+<h1 id="删除所有停止的容器"><a href="#删除所有停止的容器" class="headerlink" title="删除所有停止的容器"></a>删除所有停止的容器</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker container prune</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除所有不使用的镜像"><a href="#删除所有不使用的镜像" class="headerlink" title="删除所有不使用的镜像"></a>删除所有不使用的镜像</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker image prune --force --all</span><br><span class="line">或者</span><br><span class="line">docker image prune -f -a</span><br></pre></td></tr></table></figure>
+
+<h1 id="停止、启动、杀死、重启一个容器"><a href="#停止、启动、杀死、重启一个容器" class="headerlink" title="停止、启动、杀死、重启一个容器"></a>停止、启动、杀死、重启一个容器</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop Name或者ID  </span><br><span class="line">docker start Name或者ID  </span><br><span class="line">docker <span class="built_in">kill</span> Name或者ID  </span><br><span class="line">docker restart name或者ID</span><br></pre></td></tr></table></figure>
+
+<h1 id="docker进入容器，查看配置文件"><a href="#docker进入容器，查看配置文件" class="headerlink" title="docker进入容器，查看配置文件"></a>docker进入容器，查看配置文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> ：在运行的容器中执行命令</span><br><span class="line">        -d :分离模式: 在后台运行</span><br><span class="line">        -i :即使没有附加也保持STDIN（标准输入） 打开,以交互模式运行容器，通常与 -t 同时使用；</span><br><span class="line">        -t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；</span><br><span class="line">docker <span class="built_in">exec</span> -it  f94d2c317477 /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h1 id="出现bash-vi-command-not-found"><a href="#出现bash-vi-command-not-found" class="headerlink" title="出现bash: vi: command not found"></a>出现bash: vi: command not found</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装和更新软件并安装vim</span></span><br><span class="line">apt-get update &amp;&amp; apt-get install vim -y</span><br></pre></td></tr></table></figure>
+
+<h1 id="修改配置、退出容器"><a href="#修改配置、退出容器" class="headerlink" title="修改配置、退出容器"></a>修改配置、退出容器</h1><p>1、如果要正常退出不关闭容器，请按Ctrl+P+Q进行退出容器<br>2、如果使用exit退出，那么在退出之后会关闭容器，可以使用下面的流程进行恢复</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#重启容器</span></span><br><span class="line">docker restart </span><br><span class="line"></span><br><span class="line"><span class="comment">#进入容器</span></span><br><span class="line">docker attach</span><br></pre></td></tr></table></figure>
+
+<h1 id="杀死所有运行容器"><a href="#杀死所有运行容器" class="headerlink" title="杀死所有运行容器"></a>杀死所有运行容器</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除所有容器"><a href="#删除所有容器" class="headerlink" title="删除所有容器"></a>删除所有容器</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">rm</span> $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除所有镜像"><a href="#删除所有镜像" class="headerlink" title="删除所有镜像"></a>删除所有镜像</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure>
+
+<h1 id="停止-docker-服务"><a href="#停止-docker-服务" class="headerlink" title="停止 docker 服务"></a>停止 docker 服务</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除存储目录"><a href="#删除存储目录" class="headerlink" title="删除存储目录"></a>删除存储目录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /etc/docker</span><br><span class="line"><span class="built_in">rm</span> -rf /run/docker</span><br><span class="line"><span class="built_in">rm</span> -rf /var/lib/dockershim</span><br><span class="line"><span class="built_in">rm</span> -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="如果发现删除不掉，需要先-umount，如"><a href="#如果发现删除不掉，需要先-umount，如" class="headerlink" title="如果发现删除不掉，需要先 umount，如"></a>如果发现删除不掉，需要先 umount，如</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">umount /var/lib/docker/devicemapper</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载-docker"><a href="#卸载-docker" class="headerlink" title="卸载 docker"></a>卸载 docker</h1><p>查看已安装的 docker 包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum list installed | grep docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="卸载相关包"><a href="#卸载相关包" class="headerlink" title="卸载相关包"></a>卸载相关包</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum remove docker-engine docker-engine-selinux.noarch</span><br></pre></td></tr></table></figure>
+
+<p>文章内容和代码来源于 [CentOS 7 清理删除卸载 Docker 环境](yum remove docker-engine docker-engine-selinux.noarch) ，如有侵权请联系站长立即删除。</p>
+]]></content>
+      <categories>
+        <category>tools</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker-compose常用命令</title>
+    <url>/posts/5f933334/</url>
+    <content><![CDATA[<h1 id="1-安装docker-compose"><a href="#1-安装docker-compose" class="headerlink" title="1.安装docker-compose"></a>1.安装docker-compose</h1><p><a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a> 要安装其他版本的 Compose，请替换2.32.2</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">非大陆</span><br><span class="line">sudo curl -L <span class="string">&quot;https://github.com/docker/compose/releases/download/v2.32.2/docker-compose-<span class="subst">$(uname -s)</span>-<span class="subst">$(uname -m)</span>&quot;</span> -o /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">大陆</span><br><span class="line">curl -L https://get.daocloud.io/docker/compose/releases/download/v2.32.2/docker-compose-`<span class="built_in">uname</span> -s`-`<span class="built_in">uname</span> -m` &gt; /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-添加可执行权限-x"><a href="#2-添加可执行权限-x" class="headerlink" title="2.添加可执行权限:x"></a>2.添加可执行权限:x</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-在-usr-bin-路径下创建软连接"><a href="#3-在-usr-bin-路径下创建软连接" class="headerlink" title="3.在&#x2F;usr&#x2F;bin&#x2F;路径下创建软连接"></a>3.在&#x2F;usr&#x2F;bin&#x2F;路径下创建软连接</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-查看docker-compose版本"><a href="#4-查看docker-compose版本" class="headerlink" title="4.查看docker-compose版本"></a>4.查看docker-compose版本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
+<h1 id="ARM架构服务器Linux-安装-docker-compose"><a href="#ARM架构服务器Linux-安装-docker-compose" class="headerlink" title="ARM架构服务器Linux 安装 docker-compose"></a>ARM架构服务器Linux 安装 docker-compose</h1><p>下载网址 <a href="https://github.com/docker/compose/releases/">https://github.com/docker/compose/releases/</a><br>甲骨文云的Ampere架构用 docker-compose-Linux-aarch64<br>放置路径&#x2F;usr&#x2F;local&#x2F;bin<br>重命名docker-compose</p>
+]]></content>
+      <categories>
+        <category>tools</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>docker-compose</tag>
+        <tag>tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>centos 防火墙常用命令</title>
+    <url>/posts/37afb970/</url>
+    <content><![CDATA[<h1 id="1-查看防火墙状态："><a href="#1-查看防火墙状态：" class="headerlink" title="1.查看防火墙状态："></a>1.查看防火墙状态：</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --state </span><br></pre></td></tr></table></figure>
+<h1 id="2-启动防火墙"><a href="#2-启动防火墙" class="headerlink" title="2.启动防火墙"></a>2.启动防火墙</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start firewalld</span><br></pre></td></tr></table></figure>
+<h1 id="3-关闭防火墙"><a href="#3-关闭防火墙" class="headerlink" title="3.关闭防火墙"></a>3.关闭防火墙</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+<h1 id="4-检查防火墙开放的端口"><a href="#4-检查防火墙开放的端口" class="headerlink" title="4.检查防火墙开放的端口"></a>4.检查防火墙开放的端口</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --zone=public --list-ports</span><br></pre></td></tr></table></figure>
+<h1 id="5-开放一个新的端口"><a href="#5-开放一个新的端口" class="headerlink" title="5.开放一个新的端口"></a>5.开放一个新的端口</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br></pre></td></tr></table></figure>
+<h1 id="6-重启防火墙"><a href="#6-重启防火墙" class="headerlink" title="6.重启防火墙"></a>6.重启防火墙</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h1 id="7-验证新增加端口是否生效"><a href="#7-验证新增加端口是否生效" class="headerlink" title="7.验证新增加端口是否生效"></a>7.验证新增加端口是否生效</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --zone=public --query-port=8080/tcp</span><br></pre></td></tr></table></figure>
+<h1 id="8-防火墙开机自启动"><a href="#8-防火墙开机自启动" class="headerlink" title="8.防火墙开机自启动"></a>8.防火墙开机自启动</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+<h1 id="9-防火墙取消某一开放端口"><a href="#9-防火墙取消某一开放端口" class="headerlink" title="9.防火墙取消某一开放端口"></a>9.防火墙取消某一开放端口</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">firewall-cmd --zone=public --remove-port=9200/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<p>文章内容和代码来源于网络，如有侵权请联系站长立即删除。</p>
+]]></content>
+      <categories>
+        <category>os</category>
+        <category>centos</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>os</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker 搭建 typecho</title>
+    <url>/posts/1c497000/</url>
+    <content><![CDATA[<h1 id="创建安装路径-root-data-docker-data-typecho"><a href="#创建安装路径-root-data-docker-data-typecho" class="headerlink" title="创建安装路径&#x2F;root&#x2F;data&#x2F;docker_data&#x2F;typecho"></a>创建安装路径&#x2F;root&#x2F;data&#x2F;docker_data&#x2F;typecho</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/data/docker_data/typecho</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho</span><br></pre></td></tr></table></figure>
+<h1 id="安装nano，unzip"><a href="#安装nano，unzip" class="headerlink" title="安装nano，unzip"></a>安装nano，unzip</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install nano -y</span><br><span class="line">yum install -y zip unzip</span><br></pre></td></tr></table></figure>
+<h1 id="创建数据库mysql"><a href="#创建数据库mysql" class="headerlink" title="创建数据库mysql"></a>创建数据库mysql</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho</span><br><span class="line"></span><br><span class="line">nano mysql.env</span><br></pre></td></tr></table></figure>
+
+<h1 id="复制粘贴数据库环境信息"><a href="#复制粘贴数据库环境信息" class="headerlink" title="复制粘贴数据库环境信息"></a>复制粘贴数据库环境信息</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">MYSQL_ROOT_PASSWORD=root_pass</span><br><span class="line">MYSQL_DATABASE=typecho</span><br><span class="line">MYSQL_USER=username</span><br><span class="line">MYSQL_PASSWORD=password</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建php文件夹和Dockerfile"><a href="#创建php文件夹和Dockerfile" class="headerlink" title="创建php文件夹和Dockerfile"></a>创建php文件夹和Dockerfile</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> php</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> php</span><br><span class="line"></span><br><span class="line">nano Dockerfile</span><br></pre></td></tr></table></figure>
+
+<h1 id="复制粘贴下面代码到Dockerfile"><a href="#复制粘贴下面代码到Dockerfile" class="headerlink" title="复制粘贴下面代码到Dockerfile"></a>复制粘贴下面代码到Dockerfile</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM php:7.3.29-fpm</span><br><span class="line">RUN apt-get update \</span><br><span class="line">    &amp;&amp; docker-php-ext-install pdo_mysql \</span><br><span class="line">    &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;output_buffering = 4096&quot;</span> &gt; /usr/local/etc/php/conf.d/php.ini \</span><br><span class="line">    &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;date.timezone = PRC&quot;</span> &gt;&gt; /usr/local/etc/php/conf.d/php.ini</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建nginx文件夹和反代配置default-conf"><a href="#创建nginx文件夹和反代配置default-conf" class="headerlink" title="创建nginx文件夹和反代配置default.conf"></a>创建nginx文件夹和反代配置default.conf</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> nginx</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> nginx</span><br><span class="line"></span><br><span class="line">nano default.conf</span><br></pre></td></tr></table></figure>
+
+<h1 id="复制粘贴如下反代配置"><a href="#复制粘贴如下反代配置" class="headerlink" title="复制粘贴如下反代配置"></a>复制粘贴如下反代配置</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    root /var/www/html;</span><br><span class="line">    index index.php;</span><br><span class="line"></span><br><span class="line">    access_log /var/log/nginx/typecho_access.log main;</span><br><span class="line">    <span class="keyword">if</span> (!-e <span class="variable">$request_filename</span>) &#123;</span><br><span class="line">        rewrite ^(.*)$ /index.php<span class="variable">$1</span> last;</span><br><span class="line">    &#125;</span><br><span class="line">    location / &#123;</span><br><span class="line">        index index.html index.htm index.php;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!-e <span class="variable">$request_filename</span>) &#123;</span><br><span class="line">            rewrite . /index.php last;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ \.php(.*)$ &#123;</span><br><span class="line">        fastcgi_pass   php:9000;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  PATH_TRANSLATED $document_root<span class="variable">$fastcgi_path_info</span>;</span><br><span class="line">        fastcgi_split_path_info  ^((?U).+\.php)(/?.+)$;</span><br><span class="line">        fastcgi_param  PATH_INFO  <span class="variable">$fastcgi_path_info</span>;</span><br><span class="line">        fastcgi_param  SCRIPT_NAME <span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME $document_root<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="下载typecho源代码（暂时最新版本1-2-0）"><a href="#下载typecho源代码（暂时最新版本1-2-0）" class="headerlink" title="下载typecho源代码（暂时最新版本1.2.0）"></a>下载typecho源代码（暂时最新版本1.2.0）</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#再新建一个typecho文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> typecho</span><br><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho/typecho</span><br><span class="line"><span class="comment">#下载typecho.zip安装包</span></span><br><span class="line">wget https://github.com/typecho/typecho/releases/download/v1.2.0/typecho.zip</span><br><span class="line"><span class="comment">#安装zip</span></span><br><span class="line">apt install zip -y </span><br><span class="line"><span class="comment">#解压缩</span></span><br><span class="line">unzip typecho.zip</span><br></pre></td></tr></table></figure>
+
+<h1 id="对uploads及其下文件授权，或者对usr及其下文件授权"><a href="#对uploads及其下文件授权，或者对usr及其下文件授权" class="headerlink" title="对uploads及其下文件授权，或者对usr及其下文件授权"></a>对uploads及其下文件授权，或者对usr及其下文件授权</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> -R 777 uploads</span><br><span class="line"></span><br><span class="line"><span class="built_in">chmod</span> -R 777 usr</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建docker-compose-yml文件"><a href="#创建docker-compose-yml文件" class="headerlink" title="创建docker-compose.yml文件"></a>创建docker-compose.yml文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/data/docker_data/typecho</span><br><span class="line"></span><br><span class="line">nano docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<h1 id="复制粘贴如下代码到docker-compose-yml"><a href="#复制粘贴如下代码到docker-compose-yml" class="headerlink" title="复制粘贴如下代码到docker-compose.yml"></a>复制粘贴如下代码到docker-compose.yml</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">version: <span class="string">&quot;3&quot;</span></span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  nginx:</span><br><span class="line">    image: nginx</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">&quot;8223:80&quot;</span>    <span class="comment"># 左边可以改成任意没使用的端口</span></span><br><span class="line">    restart: always</span><br><span class="line">    environment:</span><br><span class="line">      - TZ=Asia/Shanghai</span><br><span class="line">    volumes:</span><br><span class="line">      - ./typecho:/var/www/html</span><br><span class="line">      - ./nginx:/etc/nginx/conf.d</span><br><span class="line">      - ./logs:/var/log/nginx</span><br><span class="line">    depends_on:</span><br><span class="line">      - php</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line"></span><br><span class="line">  php:</span><br><span class="line">    build: php</span><br><span class="line">    restart: always</span><br><span class="line">    expose:</span><br><span class="line">      - <span class="string">&quot;9000&quot;</span>       <span class="comment"># 不暴露公网，故没有写9000:9000</span></span><br><span class="line">    volumes:</span><br><span class="line">      - ./typecho:/var/www/html</span><br><span class="line">    environment:</span><br><span class="line">      - TZ=Asia/Shanghai</span><br><span class="line">    depends_on:</span><br><span class="line">      - mysql</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line"></span><br><span class="line">  mysql:</span><br><span class="line">    image: mysql:5.7</span><br><span class="line">    restart: always</span><br><span class="line">    environment:</span><br><span class="line">      - TZ=Asia/Shanghai</span><br><span class="line">    expose:</span><br><span class="line">      - <span class="string">&quot;3306&quot;</span>  <span class="comment"># 不暴露公网，故没有写3306:3306</span></span><br><span class="line">    volumes:</span><br><span class="line">      - ./mysql/data:/var/lib/mysql</span><br><span class="line">      - ./mysql/logs:/var/log/mysql</span><br><span class="line">      - ./mysql/conf:/etc/mysql/conf.d</span><br><span class="line">    env_file:</span><br><span class="line">      - mysql.env</span><br><span class="line">    networks:</span><br><span class="line">      - web</span><br><span class="line"></span><br><span class="line">networks:</span><br><span class="line">  web:</span><br></pre></td></tr></table></figure>
+
+<p>ctrl+o保存，ctrl+x退出，按y保存，enter确认</p>
+<h1 id="查看端口是否被占用"><a href="#查看端口是否被占用" class="headerlink" title="查看端口是否被占用"></a>查看端口是否被占用</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsof -i:8223  <span class="comment">#查看8223端口是否被占用，如果被占用，重新自定义一个端口</span></span><br></pre></td></tr></table></figure>
+
+<p>如果出现：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-bash: lsof: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install lsof  <span class="comment">#安装lsof</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="如果端口没有被占用，可以启动docker-compose"><a href="#如果端口没有被占用，可以启动docker-compose" class="headerlink" title="如果端口没有被占用，可以启动docker-compose"></a>如果端口没有被占用，可以启动docker-compose</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up -d </span><br></pre></td></tr></table></figure>
+
+<h1 id="访问typecho后台-0-0-0-0-8223-admin"><a href="#访问typecho后台-0-0-0-0-8223-admin" class="headerlink" title="访问typecho后台: 0.0.0.0:8223&#x2F;admin"></a>访问typecho后台: 0.0.0.0:8223&#x2F;admin</h1><p>数据库地址：mysql<br>数据库用户名：username<br>数据库密码：password<br>数据库名：typecho</p>
+<p>在&#x2F;root&#x2F;data&#x2F;docker_data&#x2F;typecho&#x2F;typecho<br>创建 touch config.inc.php</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">// site root path</span><br><span class="line">define(<span class="string">&#x27;__TYPECHO_ROOT_DIR__&#x27;</span>, <span class="built_in">dirname</span>(__FILE__));</span><br><span class="line"></span><br><span class="line">// plugin directory (relative path)</span><br><span class="line">define(<span class="string">&#x27;__TYPECHO_PLUGIN_DIR__&#x27;</span>, <span class="string">&#x27;/usr/plugins&#x27;</span>);</span><br><span class="line"></span><br><span class="line">// theme directory (relative path)</span><br><span class="line">define(<span class="string">&#x27;__TYPECHO_THEME_DIR__&#x27;</span>, <span class="string">&#x27;/usr/themes&#x27;</span>);</span><br><span class="line"></span><br><span class="line">// admin directory (relative path)</span><br><span class="line">define(<span class="string">&#x27;__TYPECHO_ADMIN_DIR__&#x27;</span>, <span class="string">&#x27;/admin/&#x27;</span>);</span><br><span class="line"></span><br><span class="line">// register <span class="built_in">autoload</span></span><br><span class="line">require_once __TYPECHO_ROOT_DIR__ . <span class="string">&#x27;/var/Typecho/Common.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line">// init</span><br><span class="line">\Typecho\Common::init();</span><br><span class="line"></span><br><span class="line">// config db</span><br><span class="line"><span class="variable">$db</span> = new \Typecho\Db(<span class="string">&#x27;Pdo_Mysql&#x27;</span>, <span class="string">&#x27;typecho_&#x27;</span>);</span><br><span class="line"><span class="variable">$db</span>-&gt;addServer(array (</span><br><span class="line">  <span class="string">&#x27;host&#x27;</span> =&gt; <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;port&#x27;</span> =&gt; 3306,</span><br><span class="line">  <span class="string">&#x27;user&#x27;</span> =&gt; <span class="string">&#x27;username&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;password&#x27;</span> =&gt; <span class="string">&#x27;password&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;charset&#x27;</span> =&gt; <span class="string">&#x27;utf8mb4&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;database&#x27;</span> =&gt; <span class="string">&#x27;typecho&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;engine&#x27;</span> =&gt; <span class="string">&#x27;InnoDB&#x27;</span>,</span><br><span class="line">), \Typecho\Db::READ | \Typecho\Db::WRITE);</span><br><span class="line">\Typecho\Db::<span class="built_in">set</span>(<span class="variable">$db</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>文章内容和代码来源于网络，如有侵权请联系站长立即删除。</p>
+]]></content>
+      <categories>
+        <category>web</category>
+        <category>docker</category>
+        <category>typecho</category>
+        <category>typecho</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>tools</tag>
+        <tag>typecho</tag>
+        <tag>web</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>centos 常用命令</title>
+    <url>/posts/fa3e6a5/</url>
+    <content><![CDATA[<h1 id="1-root管理员"><a href="#1-root管理员" class="headerlink" title="1.root管理员"></a>1.root管理员</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo -i</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-打开文件夹，返回上一级"><a href="#2-打开文件夹，返回上一级" class="headerlink" title="2.打开文件夹，返回上一级"></a>2.打开文件夹，返回上一级</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> .. </span><br></pre></td></tr></table></figure>
+
+<h1 id="3-对root及其下所有文件、文件夹授权"><a href="#3-对root及其下所有文件、文件夹授权" class="headerlink" title="3.对root及其下所有文件、文件夹授权"></a>3.对root及其下所有文件、文件夹授权</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> -R 777 /root</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-显示所在路径"><a href="#4-显示所在路径" class="headerlink" title="4.显示所在路径"></a>4.显示所在路径</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">pwd</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="5-显示所在位置的所有文件夹"><a href="#5-显示所在位置的所有文件夹" class="headerlink" title="5.显示所在位置的所有文件夹"></a>5.显示所在位置的所有文件夹</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span> -al</span><br></pre></td></tr></table></figure>
+
+<h1 id="6-删除直接rm就可以，不过要加两个参数-rf-即：rm-rf-目录名字"><a href="#6-删除直接rm就可以，不过要加两个参数-rf-即：rm-rf-目录名字" class="headerlink" title="6.删除直接rm就可以，不过要加两个参数-rf 即：rm -rf 目录名字"></a>6.删除直接rm就可以，不过要加两个参数-rf 即：rm -rf 目录名字</h1><p>-r 就是向下递归，不管有多少级目录，一并删除<br>-f 就是直接强行删除，不作任何提示的意思</p>
+<p>强制删除&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access目录以及其下所有文件、文件夹<br>强制删除&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access.log这个文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /var/log/httpd/access</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> -f /var/log/httpd/access.log</span><br></pre></td></tr></table></figure>
+
+<h1 id="7-移动文件：mv-文件名-移动目的地文件名"><a href="#7-移动文件：mv-文件名-移动目的地文件名" class="headerlink" title="7.移动文件：mv 文件名 移动目的地文件名"></a>7.移动文件：mv 文件名 移动目的地文件名</h1><p>重命名文件：mv 文件名 修改后的文件名<br>示例（oldfilename为旧文件名，newfilename为新文件名）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> oldfilename newfilename</span><br></pre></td></tr></table></figure>
+
+<h1 id="8-vim-vi-nano"><a href="#8-vim-vi-nano" class="headerlink" title="8.vim , vi , nano"></a>8.vim , vi , nano</h1><p>这一组的命令，我们介绍了文件编辑工具。这里介绍三种编辑工具，各有所长，根据自己的喜好来选择。我比较倾向于组合使用，发挥在Linux系统上文件编辑的最高效率。<br>vim &#x2F; vi<br>它们都是多模式编辑器，不同的是vim 是vi的升级版本，它不仅兼容vi的所有指令，而且还有一些新的特性在里面。所以在这里只要学习vim的基本操作就ok了，本节命令更适合实践演练和操作，故只推荐一个慕课（点击这里），和学习的参考文档（点击这里）。<br>nano<br>nano：nano是一个字符终端的文本编辑器，有点像DOS下的editor程序。它比vi&#x2F;vim要简单得多，比较适合Linux初学者使用。某些Linux发行版的默认编辑器就是nano。<br>如果你没有安装nano编辑器的话，可以使用yum进行安装：yum -y install nano。</p>
+<h1 id="9-wget"><a href="#9-wget" class="headerlink" title="9.wget"></a>9.wget</h1><p>wget：wget命令用来从指定的URL下载文件。wget非常稳定，它在带宽很窄的情况下和不稳定网络中有很强的适应性，如果是由于网络的原因下载失败，wget会不断的尝试，直到整个文件下载完毕。如果是服务器打断下载过程，它会再次联到服务器上从停止的地方继续下载。这对从那些限定了链接时间的服务器上下载大文件非常有用。</p>
+<h1 id="10-创建文件"><a href="#10-创建文件" class="headerlink" title="10.创建文件"></a>10.创建文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">touch</span></span><br></pre></td></tr></table></figure>
+<h1 id="11-编辑文件"><a href="#11-编辑文件" class="headerlink" title="11.编辑文件"></a>11.编辑文件</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi</span><br><span class="line"></span><br><span class="line">nano</span><br></pre></td></tr></table></figure>
+<p>保存退出<br>按esc， 然后输入 :wq ，回车退出 </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">:wq</span><br></pre></td></tr></table></figure>
+
+<p>不保存直接退出<br>敲击esc，然后输入:q!</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">:q!</span><br></pre></td></tr></table></figure>
+<h1 id="CentOS7-安装curl命令"><a href="#CentOS7-安装curl命令" class="headerlink" title="CentOS7 安装curl命令"></a>CentOS7 安装curl命令</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#直接使用yum安装</span><br><span class="line"> yum -y install curl</span><br><span class="line">#查看是否安装成功</span><br><span class="line">curl --version</span><br><span class="line">#测试一下是否能够使用</span><br><span class="line">curl www.baidu.com</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>os</category>
+        <category>centos</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>os</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>centos 安装 docker</title>
+    <url>/posts/1efa1fcf/</url>
+    <content><![CDATA[<h1 id="Docker支持以下的CentOS版本："><a href="#Docker支持以下的CentOS版本：" class="headerlink" title="Docker支持以下的CentOS版本："></a>Docker支持以下的CentOS版本：</h1><p>CentOS 7 (64-bit)<br>CentOS 6.5 (64-bit) 或更高的版本<br>前提条件<br>目前，CentOS 仅发行版本中的内核支持 Docker。<br>Docker 运行在 CentOS 7 上，要求系统为64位、系统内核版本为 3.10 以上。<br>Docker 运行在 CentOS-6.5 或更高的版本的 CentOS 上，要求系统为64位、系统内核版本为 2.6.32-431 或者更高版本。</p>
+<h1 id="使用-yum-安装（CentOS-7下）"><a href="#使用-yum-安装（CentOS-7下）" class="headerlink" title="使用 yum 安装（CentOS 7下）"></a>使用 yum 安装（CentOS 7下）</h1><p>Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前提条件来验证你的CentOS 版本是否支持 Docker 。<br>通过 uname -r 命令查看你当前的内核版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">uname</span> -r 3.10.0-327.el7.x86_64</span><br></pre></td></tr></table></figure>
+<h1 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h1><p>Docker 软件包和依赖包已经包含在默认的 CentOS-Extras 软件源里，安装命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum -y install docker</span><br></pre></td></tr></table></figure>
+<p>安装完成。</p>
+<p>启动 Docker 后台服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">service docker start</span><br></pre></td></tr></table></figure>
+<p>测试运行 hello-world</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>由于本地没有hello-world这个镜像，所以会下载一个hello-world的镜像，并在容器内运行。<br>使用脚本安装 Docker<br>1、使用 sudo 或 root 权限登录 Centos。<br>2、确保 yum 包更新到最新。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum update</span><br></pre></td></tr></table></figure>
+<p>3、执行 Docker 安装脚本。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>执行这个脚本会添加 docker.repo 源并安装 Docker。<br>4、启动 Docker 进程。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">service docker start</span><br></pre></td></tr></table></figure>
+<p>5、验证 docker 是否安装成功并在容器中执行一个测试的镜像。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>到此，docker 在 CentOS 系统的安装完成。</p>
+<h1 id="查看-Docker-版本"><a href="#查看-Docker-版本" class="headerlink" title="查看 Docker 版本"></a>查看 Docker 版本</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+<h1 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> docker.service</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>os</category>
+        <category>centos</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>docker</tag>
+        <tag>os</tag>
+      </tags>
+  </entry>
+</search>

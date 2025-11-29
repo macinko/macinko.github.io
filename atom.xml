@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>马斯克的赛博空间</title>
+  <icon>https://macin.top/img/ast.webp</icon>
+  <subtitle>Cyber</subtitle>
+  <link href="https://macin.top/atom.xml" rel="self"/>
+  
+  <link href="https://macin.top/"/>
+  <updated>2025-11-29T02:56:53.677Z</updated>
+  <id>https://macin.top/</id>
+  
+  <author>
+    <name>马斯克</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RedInk一站式小红书图文生成器，一句话一张图片生成小红书图文，帮助用户快速生成小红书平台所需的图文内容</title>
+    <link href="https://macin.top/posts/8511dabf/"/>
+    <id>https://macin.top/posts/8511dabf/</id>
+    <published>2025-11-29T02:46:36.000Z</published>
+    <updated>2025-11-29T02:56:53.677Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>基于🍌Nano Banana Pro🍌的一站式小红书图文生成器，能够实现“一句话一张图片生成小红书图文”，帮助用户快速生成小红书平台所需的图文内容。</p></blockquote><p>Github地址</p><p><strong><a href="https://github.com/HisMax/RedInk">https://github.com/HisMax/RedInk</a></strong></p><p><img src="/img/RedInk/1.webp" alt="img"></p><p><img src="/img/RedInk/2.webp" alt="img"></p><h2 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a><strong>功能特点</strong></h2><ul><li><strong>一键生成图文</strong>：用户只需输入一句话的主题，即可快速生成小红书图文内容，包括封面页和多页内容大纲。</li><li><strong>自定义编辑</strong>：生成的大纲和图片内容可以进行编辑和调整，用户可以根据自己的需求修改描述词、重新生成不满意的部分等，以满足个性化需求。</li><li><strong>上传参考图片</strong>：支持上传参考图片，有助于保持品牌视觉风格的统一性，适合品牌方使用。</li><li><strong>高并发模式</strong>：可选择开启高并发模式，同时生成多张图片，提高生成效率，但需确保 API 支持高并发。</li><li><strong>配置灵活</strong>：支持 Web 界面配置和 YAML 文件配置两种方式，用户可以根据自己的喜好和需求进行配置。</li><li><strong>历史记录管理</strong>：优化了历史记录管理功能，方便用户查看和管理已生成的图文内容。</li></ul><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a><strong>部署方式</strong></h2><ul><li><p><strong>Docker 部署（推荐）</strong>：</p></li><li><ul><li>使用一行命令即可启动服务，访问 Web 界面后在设置页面配置 API Key 即可使用。</li><li>支持持久化生成的图片，可选挂载自定义配置文件。</li><li>官方 Docker 镜像地址：<code>histonemax/redink</code>。</li></ul></li><li><p><strong>本地开发部署</strong>：</p></li><li><ul><li>前置要求：Python 3.11+、Node.js 18+、pnpm、uv。</li><li>需要克隆项目、配置 API 服务、安装后端和前端依赖，然后启动服务。</li></ul></li></ul><h2 id="🏗️-技术架构"><a href="#🏗️-技术架构" class="headerlink" title="🏗️ 技术架构"></a>🏗️ 技术架构</h2><h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><ul><li><strong>语言</strong>: Python 3.11+</li><li><strong>框架</strong>: Flask</li><li>AI 模型:<ul><li>Gemini 3 (文案生成)</li><li>🍌Nano banana Pro (图片生成)</li></ul></li><li><strong>包管理</strong>: uv</li></ul><h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><ul><li><strong>框架</strong>: Vue 3 + TypeScript</li><li><strong>构建</strong>: Vite</li><li><strong>状态管理</strong>: Pinia</li></ul><hr><h2 id="📦-如何自己部署"><a href="#📦-如何自己部署" class="headerlink" title="📦 如何自己部署"></a>📦 如何自己部署</h2><h3 id="方式一：Docker-部署（推荐）"><a href="#方式一：Docker-部署（推荐）" class="headerlink" title="方式一：Docker 部署（推荐）"></a>方式一：Docker 部署（推荐）</h3><p><strong>最简单的部署方式，一行命令即可启动：</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 12398:12398 -v ./output:/app/output histonemax/redink:latest</span><br></pre></td></tr></table></figure><p>访问 <a href="http://localhost:12398，在">http://localhost:12398，在</a> Web 界面的<strong>设置页面</strong>配置你的 API Key 即可使用。</p><p><strong>使用 docker-compose（可选）：</strong></p><p>下载 <a href="https://github.com/HisMax/RedInk/blob/main/docker-compose.yml">docker-compose.yml</a> 后：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure><p><strong>Docker 部署说明：</strong></p><ul><li>容器内不包含任何 API Key，需要在 Web 界面配置</li><li>使用 <code>-v ./output:/app/output</code> 持久化生成的图片</li><li>可选：挂载自定义配置文件 <code>-v ./text_providers.yaml:/app/text_providers.yaml</code></li></ul><hr><h3 id="方式二：本地开发部署"><a href="#方式二：本地开发部署" class="headerlink" title="方式二：本地开发部署"></a>方式二：本地开发部署</h3><p><strong>前置要求：</strong></p><ul><li>Python 3.11+</li><li>Node.js 18+</li><li>pnpm</li><li>uv</li></ul><h3 id="1-克隆项目"><a href="#1-克隆项目" class="headerlink" title="1. 克隆项目"></a>1. 克隆项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/HisMax/RedInk.git</span><br><span class="line"><span class="built_in">cd</span> RedInk</span><br></pre></td></tr></table></figure><h3 id="2-配置-API-服务"><a href="#2-配置-API-服务" class="headerlink" title="2. 配置 API 服务"></a>2. 配置 API 服务</h3><p>复制配置模板文件：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> text_providers.yaml.example text_providers.yaml</span><br><span class="line"><span class="built_in">cp</span> image_providers.yaml.example image_providers.yaml</span><br></pre></td></tr></table></figure><p>编辑配置文件，填入你的 API Key 和服务配置。也可以启动后在 Web 界面的<strong>设置页面</strong>进行配置。</p><h3 id="3-安装后端依赖"><a href="#3-安装后端依赖" class="headerlink" title="3. 安装后端依赖"></a>3. 安装后端依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv <span class="built_in">sync</span></span><br></pre></td></tr></table></figure><h3 id="4-安装前端依赖"><a href="#4-安装前端依赖" class="headerlink" title="4. 安装前端依赖"></a>4. 安装前端依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> frontend</span><br><span class="line">pnpm install</span><br></pre></td></tr></table></figure><h3 id="5-启动服务"><a href="#5-启动服务" class="headerlink" title="5. 启动服务"></a>5. 启动服务</h3><p><strong>启动后端:</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run python -m backend.app</span><br></pre></td></tr></table></figure><p>访问: <a href="http://localhost:12398/">http://localhost:12398</a></p><p><strong>启动前端:</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> frontend</span><br><span class="line">pnpm dev</span><br></pre></td></tr></table></figure><p>访问: <a href="http://localhost:5173/">http://localhost:5173</a></p><hr><h2 id="🎮-使用指南"><a href="#🎮-使用指南" class="headerlink" title="🎮 使用指南"></a>🎮 使用指南</h2><h3 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h3><ol><li><strong>输入主题</strong>: 在首页输入想要创作的主题,如”如何在家做拿铁”</li><li><strong>生成大纲</strong>: AI 自动生成 6-9 页的内容大纲</li><li><strong>编辑确认</strong>: 可以编辑和调整每一页的描述</li><li><strong>生成图片</strong>: 点击生成,实时查看进度</li><li><strong>下载使用</strong>: 一键下载所有图片</li></ol><h3 id="进阶使用"><a href="#进阶使用" class="headerlink" title="进阶使用"></a>进阶使用</h3><ul><li><strong>上传参考图片</strong>: 适合品牌方,保持品牌视觉风格</li><li><strong>修改描述词</strong>: 精确控制每一页的内容和构图</li><li><strong>重新生成</strong>: 对不满意的页面单独重新生成</li></ul><hr><h2 id="🔧-配置说明"><a href="#🔧-配置说明" class="headerlink" title="🔧 配置说明"></a>🔧 配置说明</h2><h3 id="配置方式"><a href="#配置方式" class="headerlink" title="配置方式"></a>配置方式</h3><p>项目支持两种配置方式：</p><ol><li><strong>Web 界面配置（推荐）</strong>：启动服务后，在设置页面可视化配置</li><li><strong>YAML 文件配置</strong>：直接编辑配置文件</li></ol><h3 id="文本生成配置"><a href="#文本生成配置" class="headerlink" title="文本生成配置"></a>文本生成配置</h3><p>配置文件: <code>text_providers.yaml</code></p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前激活的服务商</span></span><br><span class="line"><span class="attr">active_provider:</span> <span class="string">openai</span></span><br><span class="line"></span><br><span class="line"><span class="attr">providers:</span></span><br><span class="line">  <span class="comment"># OpenAI 官方或兼容接口</span></span><br><span class="line">  <span class="attr">openai:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">openai_compatible</span></span><br><span class="line">    <span class="attr">api_key:</span> <span class="string">sk-xxxxxxxxxxxxxxxxxxxx</span></span><br><span class="line">    <span class="attr">base_url:</span> <span class="string">https://api.openai.com/v1</span></span><br><span class="line">    <span class="attr">model:</span> <span class="string">gpt-4o</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Google Gemini（原生接口）</span></span><br><span class="line">  <span class="attr">gemini:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">google_gemini</span></span><br><span class="line">    <span class="attr">api_key:</span> <span class="string">AIzaxxxxxxxxxxxxxxxxxxxxxxxxx</span></span><br><span class="line">    <span class="attr">model:</span> <span class="string">gemini-2.0-flash</span></span><br></pre></td></tr></table></figure><h3 id="图片生成配置"><a href="#图片生成配置" class="headerlink" title="图片生成配置"></a>图片生成配置</h3><p>配置文件: <code>image_providers.yaml</code></p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前激活的服务商</span></span><br><span class="line"><span class="attr">active_provider:</span> <span class="string">gemini</span></span><br><span class="line"></span><br><span class="line"><span class="attr">providers:</span></span><br><span class="line">  <span class="comment"># Google Gemini 图片生成</span></span><br><span class="line">  <span class="attr">gemini:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">google_genai</span></span><br><span class="line">    <span class="attr">api_key:</span> <span class="string">AIzaxxxxxxxxxxxxxxxxxxxxxxxxx</span></span><br><span class="line">    <span class="attr">model:</span> <span class="string">gemini-3-pro-image-preview</span></span><br><span class="line">    <span class="attr">high_concurrency:</span> <span class="literal">false</span>  <span class="comment"># 高并发模式</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># OpenAI 兼容接口</span></span><br><span class="line">  <span class="attr">openai_image:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">image_api</span></span><br><span class="line">    <span class="attr">api_key:</span> <span class="string">sk-xxxxxxxxxxxxxxxxxxxx</span></span><br><span class="line">    <span class="attr">base_url:</span> <span class="string">https://your-api-endpoint.com</span></span><br><span class="line">    <span class="attr">model:</span> <span class="string">dall-e-3</span></span><br><span class="line">    <span class="attr">high_concurrency:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure><h3 id="高并发模式说明"><a href="#高并发模式说明" class="headerlink" title="高并发模式说明"></a>高并发模式说明</h3><ul><li><strong>关闭（默认）</strong>：图片逐张生成，适合 GCP 300$ 试用账号或有速率限制的 API</li><li><strong>开启</strong>：图片并行生成（最多15张同时），速度更快，但需要 API 支持高并发</li></ul><p>⚠️ <strong>GCP 300$ 试用账号不建议启用高并发</strong>，可能会触发速率限制导致生成失败。</p><hr><h2 id="⚠️-注意事项"><a href="#⚠️-注意事项" class="headerlink" title="⚠️ 注意事项"></a>⚠️ 注意事项</h2><ol><li><strong>API 配额限制</strong>:<ul><li>注意 Gemini 和图片生成 API 的调用配额</li><li>GCP 试用账号建议关闭高并发模式</li></ul></li><li><strong>生成时间</strong>:<ul><li>图片生成需要时间,请耐心等待（不要离开页面）</li></ul></li></ol>]]></content>
+    
+    
+    <summary type="html">RedInk</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>未来已来？本地部署小米开源 Miloco，用 AI 控制全屋设备</title>
+    <link href="https://macin.top/posts/f9d9dd32/"/>
+    <id>https://macin.top/posts/f9d9dd32/</id>
+    <published>2025-11-29T02:30:31.000Z</published>
+    <updated>2025-11-29T02:56:53.706Z</updated>
+    
+    <content type="html"><![CDATA[<p>Xiaomi Miloco：</p><p>由小米推出的智能家居未来探索解决方案，以米家摄像机为视觉信息来源，以自研大模型为核心，打通全屋 IoT 设备。基于大模型的开发范式，让用户能够以自然语言定义家庭的各种需求和规则，实现更广泛、更具创意的智能联动。</p><p><img src="/img/Miloco/1.webp" alt="null"></p><p>关键特性：</p><ul><li>交互新范式：基于大模型的开发范式，通过自然语言交互就可以完成规则设置、设备的复杂指令控制。</li><li>视觉数据新用途：以摄像头数据流作为感知信息源，使用大模型将视觉数据包含的各种家庭场景事件解析出来，用于回复用户 Query。</li><li>端侧大模型：将家庭场景任务拆分规划+视觉理解两个阶段，提供小米自研端侧模型，实现端侧视频理解，保障家庭隐私安全。</li><li>米家生态：打通米家生态，支持米家设备、米家场景的获取与执行，支持自定义内容发送米家通知。</li></ul><p>特别提醒：</p><p>运行 Xiaomi Miloco 对硬件要求很低，不要一下子就被吓到，没有继续往后看！之所以为什么需要显卡，是因为完全体是本地设备跑 AI 模型，但其实也可以直接调用 API 的运行云端的模型。</p><p>硬件要求：</p><ul><li>CPU: x64 架构</li><li>显卡: NVIDIA 30系及以上显卡，显存 8GB 及以上（最低），建议 12GB 及以上</li><li>存储: 建议 16GB 及以上可用空间（用于本地模型存储）</li></ul><p>软件要求：</p><p>操作系统:</p><ul><li>Linux: x64 架构，建议 Ubuntu 22.04 及以上 LTS 版本</li><li>Windows: x64 架构，建议 Windows 10 及以上版本，要求支持 WSL2</li><li>macOS: 暂不支持<br>Docker: 20.10 及以上版本，需要支持 docker compose<br>NVIDIA 驱动: 支持 CUDA 的 NVIDIA 驱动<br>NVIDIA Container Toolkit: 用于Docker GPU支持</li></ul><p>运行和开发环境配置：</p><p><a href="https://github.com/XiaoMi/xiaomi-miloco/blob/main/docs/environment-setup_zh-Hans.md">https://github.com/XiaoMi/xiaomi-miloco/blob/main/docs/environment-setup_zh-Hans.md</a></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Xiaomi Miloco 是由两部分组成的，分别是后端服务和 AI 引擎。本地部署完全体当然是两个一起部署，这就需要一块高性能独显了；当然对于普通设备，其实只要部署后端服务就行了，AI 部分可以直接调用 API 也是可以的。</p><h4 id="一键部署"><a href="#一键部署" class="headerlink" title="一键部署"></a>一键部署</h4><p>对于新手小白，个人建议使用一键安装命令</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -c <span class="string">&quot;<span class="subst">$(wget -qO- https://xiaomi-miloco.cnbj1.mi-fds.com/xiaomi-miloco/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure><p><img src="/img/Miloco/2.webp" alt="null"></p><h4 id="轻量部署"><a href="#轻量部署" class="headerlink" title="轻量部署"></a>轻量部署</h4><p>可以去 GitHub（<a href="https://github.com/XiaoMi/xiaomi-miloco/tree/main/docker%EF%BC%89">https://github.com/XiaoMi/xiaomi-miloco/tree/main/docker）</a> 下载配置文件和模版</p><p><img src="/img/Miloco/3.webp" alt="null"></p><p>这里我也整理好了 Docker Compose（只部署后端服务，不安装 AI 引擎） 直接使用就行，注意端口不要被占用了</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">backend:</span><br><span class="line">    container_name: miloco-backend</span><br><span class="line">    image: ghcr.io/xiaomi/miloco-backend:latest</span><br><span class="line">    network_mode: host</span><br><span class="line">    expose:</span><br><span class="line">      - 8000:8000</span><br><span class="line">    environment:</span><br><span class="line">      - BACKEND_HOST=0.0.0.0</span><br><span class="line">      - BACKEND_PORT=8000</span><br><span class="line">      - AI_ENGINE_HOST=0.0.0.0</span><br><span class="line">      - AI_ENGINE_PORT=8001</span><br><span class="line">      - BACKEND_LOG_LEVEL=info</span><br><span class="line">      - TZ=Asia/Shanghai</span><br><span class="line">    volumes:</span><br><span class="line">      - ./data:/app/miloco_server/.temp</span><br><span class="line">      - ./log/backend:/app/miloco_server/.temp/log</span><br><span class="line">    restart: unless-stopped</span><br></pre></td></tr></table></figure><p>参数说明（更多参数建议去看文档）<br>BACKEND_HOST（环境变量）：后端服务的主机地址</p><p>BACKEND_PORT（环境变量）：后端服务的端口号</p><p>AI_ENGINE_HOST（环境变量）：AI 引擎服务的主机地址</p><p>AI_ENGINE_PORT（环境变量）：AI 引擎服务的端口号</p><p>BACKEND_LOG_LEVEL（环境变量）：后端服务的日志级别</p><p>TZ（环境变量）：容器时区设置</p><p>&#x2F;app&#x2F;miloco_server&#x2F;.temp（路径）：用于存放后端临时数据目录</p><p>&#x2F;app&#x2F;miloco_server&#x2F;.temp&#x2F;log（路径）：用于存放后端日志目录</p><h4 id="完整部署"><a href="#完整部署" class="headerlink" title="完整部署"></a>完整部署</h4><p>可以去 GitHub（<a href="https://github.com/XiaoMi/xiaomi-miloco/tree/main/docker%EF%BC%89">https://github.com/XiaoMi/xiaomi-miloco/tree/main/docker）</a> 下载配置文件和模版</p><p><img src="/img/Miloco/4.webp" alt="null"></p><p>这里我也整理好了 Docker Compose 直接使用就行，要注意端口不要被占用了</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">ai_engine:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">miloco-ai_engine</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/xiaomi/miloco-ai_engine:latest</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8001</span><span class="string">:8001</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">AI_ENGINE_HOST=0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">AI_ENGINE_PORT=8001</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">AI_ENGINE_LOG_LEVEL=info</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./models:/models</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./log/ai_engine:/app/.log/ai_engine</span></span><br><span class="line">    <span class="attr">deploy:</span></span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">reservations:</span></span><br><span class="line">          <span class="attr">devices:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">driver:</span> <span class="string">nvidia</span></span><br><span class="line">              <span class="attr">count:</span> <span class="string">all</span></span><br><span class="line">              <span class="attr">capabilities:</span> [<span class="string">gpu</span>]</span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line"><span class="attr">backend:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">miloco-backend</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/xiaomi/miloco-backend:latest</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">expose:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8000</span><span class="string">:8000</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">BACKEND_HOST=0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">BACKEND_PORT=8000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">AI_ENGINE_HOST=0.0.0.0</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">AI_ENGINE_PORT=8001</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">BACKEND_LOG_LEVEL=info</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/app/miloco_server/.temp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./log/backend:/app/miloco_server/.temp/log</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><p>参数说明（更多参数建议去看文档）<br>AI_ENGINE_HOST（环境变量）：AI 引擎服务的主机地址</p><p>AI_ENGINE_PORT（环境变量）：AI 引擎服务的端口号</p><p>AI_ENGINE_LOG_LEVEL（环境变量）：AI 引擎服务的日志级别</p><p>TZ（环境变量）：容器时区设置</p><p>&#x2F;models（路径）：用于存放 AI 模型</p><p>&#x2F;app&#x2F;.log&#x2F;ai_engine（路径）：用于存放 AI 引擎日志</p><p>BACKEND_HOST（环境变量）：后端服务的主机地址</p><p>BACKEND_PORT（环境变量）：后端服务的端口号</p><p>BACKEND_LOG_LEVEL（环境变量）：后端服务的日志级别</p><p>&#x2F;app&#x2F;miloco_server&#x2F;.temp（路径）：用于存放后端临时数据目录</p><p>&#x2F;app&#x2F;miloco_server&#x2F;.temp&#x2F;log（路径）：用于存放后端日志目录</p><p>创建 miloco 文件夹，里面再创建一个 models 文件夹</p><p><img src="/img/Miloco/5.webp" alt="null"></p><p>下载模型：<a href="https://github.com/XiaoMi/xiaomi-miloco/blob/main/docs/environment-setup_zh-Hans.md">https://github.com/XiaoMi/xiaomi-miloco/blob/main/docs/environment-setup_zh-Hans.md</a></p><p><img src="/img/Miloco/6.webp" alt="null"></p><p>按上面要求放，将模型放在 models 路径下的文件夹里（显存够最好两个都下载）</p><p><img src="/img/Miloco/7.webp" alt="null"></p><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>https://NAS的IP:8000</code> 就能看到界面，注意是 HTTPS 协议</p><p><img src="/img/Miloco/8.webp" alt="null"></p><p>设置安全登录码</p><p><img src="/img/Miloco/9.webp" alt="null"></p><p>输入刚刚设置的登录码</p><p><img src="/img/Miloco/10.webp" alt="null"></p><p>勾选，点击同意</p><p><img src="/img/Miloco/11.webp" alt="null"></p><p>这里会打开新页面，需要登录小米账号进行联动</p><p><img src="/img/Miloco/12.webp" alt="null"></p><p>显示授权成功，输入服务端的地址，点击跳转</p><p><img src="/img/Miloco/13.webp" alt="null"></p><p>大功告成，成功进入面板了</p><p><img src="/img/Miloco/14.webp" alt="null"></p><p>因为我有米家摄像头（摄像头还是为了做这个教程，海鲜市场买回来的），所以页面上有显示监控画面</p><p><img src="/img/Miloco/15.webp" alt="null"></p><p>右侧就是 Xiaomi Miloco 的 AI 对话窗口了</p><p><img src="/img/Miloco/16.webp" alt="null"></p><p>先对接一下 AI 模型，我部署的是带 AI 引擎的所以可以加载本地模型</p><p><img src="/img/Miloco/17.webp" alt="null"></p><p>加载模型后，在上面分别选择模型（视觉模型有敏感需求的，还是本地部署比较好）</p><p><img src="/img/Miloco/18.webp" alt="null"></p><p>当然这里也是可以选择调用云端 API 的</p><p><img src="/img/Miloco/19.webp" alt="null"></p><p>TIP：我用的是硅基流动的 API，可以点击用我的邀请码注册（送 2000 万 Tokens）</p><p><a href="https://cloud.siliconflow.cn/i/1kFLquql">https://cloud.siliconflow.cn/i/1kFLquql</a></p><p>参考设置，模型也能按实际需求选择</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://api.siliconflow.cn/v1</span><br><span class="line">Qwen/Qwen3-32B</span><br><span class="line">Qwen/Qwen3-VL-32B-Instruct</span><br></pre></td></tr></table></figure><p><img src="/img/Miloco/20.webp" alt="null"></p><p>设置模型，注意别选错了</p><p><img src="/img/Miloco/21.webp" alt="null"></p><p>回到 AI 中心，先试试上面给的“看看画面里有什么”的问题</p><p><img src="/img/Miloco/22.webp" alt="null"></p><p>AI 自动会调用调用摄像头进行识别</p><p><img src="/img/Miloco/23.webp" alt="null"></p><p>效果非常不错，米家设备结合 AI 可以说实现一加一大于二</p><p><img src="/img/Miloco/24.webp" alt="null"></p><p>之前已经授权了米家账号，在设备管理就能看到捆绑的所有设备</p><p><img src="/img/Miloco/25.webp" alt="null"></p><p>在这个界面，是不能直接点击操作设备的</p><p><img src="/img/Miloco/26.webp" alt="null"></p><p>但可以直接在 AI 这里调用，比如简单的开关灯</p><p><img src="/img/Miloco/27.webp" alt="null"></p><p>除了米家设备，也可以对接 Home Assistant</p><p><img src="/img/Miloco/28.webp" alt="null"></p><p>输入 Home Assistant 的访问 URL（注意链接最后不带斜杠）和 Token</p><p><img src="/img/Miloco/29.webp" alt="null"></p><p>TIP：Home Assistant 获取 Token ，点击用户头像，创建令牌即可</p><p><img src="/img/Miloco/30.webp" alt="null"></p><p>添加 Home Assistant 后，MCP 就可以看到多了选项了（不过要注意，这里是自动化而不是直接控制）</p><p><img src="/img/Miloco/31.webp" alt="null"></p><p>输入开关灯不能直接控制，只能创建自动化任务，后期能加上控制就更方便了</p><p><img src="/img/Miloco/32.webp" alt="null"></p><p>还有设备管理，不会显示 Home Assistant 里的设备的</p><p><img src="/img/Miloco/33.webp" alt="null"></p><p>规则管理，可以手动添加规则（都是围绕摄像头相关的）</p><p><img src="/img/Miloco/34.webp" alt="null"></p><p>也可以使用 AI 进行创建添加规则（还需要手动检测确认，才会添加）</p><p><img src="/img/Miloco/35.webp" alt="null"></p><p>回到规则管理，就能看到创建好的规则了</p><p><img src="/img/Miloco/36.webp" alt="null"></p><p>目前执行管理，米家自动化还不能正常获取已经创建的任务</p><p><img src="/img/Miloco/37.webp" alt="null"></p><p>MCP 服务，可以接入多种类型（我不太会就没折腾了）</p><p><img src="/img/Miloco/38.webp" alt="null"></p><p>日志会记录触发规则的事件</p><p><img src="/img/Miloco/39.webp" alt="null"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>只能说对得起“智能家居未来探索”这几个字，它不仅仅只是简单的给米家应用强加上一个 AI 进行控制这么简单，而是把大模型真正落地到日常使用场景的一次大胆尝试。目前来说，主要是以米家摄像机作为视觉信息来源为主，通过 AI 模型处理，最后配合控制器进行智能联动。</p><p>当然不可否认，当前体验还有很多不完善的地方，但已经可以看到未来智能家居的影子了。想象一下，米家和 Home Assistant 相互打通调用，已经可以覆盖绝大部分智能设备了，再配合 AI 驱动，这才是真正的智能家居应该有的样子。</p>]]></content>
+    
+    
+    <summary type="html">Miloco,xiaomi,docker</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>照片快速去重，Rbtray最小化托盘</title>
+    <link href="https://macin.top/posts/c248e037/"/>
+    <id>https://macin.top/posts/c248e037/</id>
+    <published>2025-11-27T07:02:40.000Z</published>
+    <updated>2025-11-29T02:56:53.707Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>引言</strong></p><p>经常有小伙伴问我要重复文件查找软件，这类的软件其实还蛮多的，比较好用的是<a href="https://macin.top/posts/2e4a8780/">Dup licate Cleaner Pro</a>，功能很强大，也非常好用！</p><p>也因为功能强大，所以操作也比较复杂，如果只是想查找图片的话，我觉得没必要非要用复杂的，简简单单可能更好，比如下面这款软件。</p><p><strong>软件介绍</strong></p><p>今天推荐两款软件，一款是图片去重，一款是能把任何窗口最小化到托盘。</p><p><strong>第一款：照片快速去重</strong></p><p>照片快速去重是一款绿色软件，软件可以实现图片查重功能，而且查重后的重复文件可以根据需要进行批量删除。</p><p><img src="/img/%E7%85%A7%E7%89%87%E5%BF%AB%E9%80%9F%E5%8E%BB%E9%87%8D/1.webp" alt="img"></p><p>使用非常简单，选择查重的路径，然后点【开始计算】，软件就开始查找重复文件。</p><p><img src="/img/%E7%85%A7%E7%89%87%E5%BF%AB%E9%80%9F%E5%8E%BB%E9%87%8D/2.webp" alt="img"></p><p>如果图片比较多，在这个地方查找的时间会相对长一点，大家耐心等待即可。</p><p>查出结果可以看到相似度，100%相似的那肯定就是重复文件了。</p><p><img src="/img/%E7%85%A7%E7%89%87%E5%BF%AB%E9%80%9F%E5%8E%BB%E9%87%8D/3.webp" alt="img"></p><p>重复文件分为左边和右边，查重后可以批量的“删除左”、“删除右”、“均删”和“删重”。</p><p><img src="/img/%E7%85%A7%E7%89%87%E5%BF%AB%E9%80%9F%E5%8E%BB%E9%87%8D/4.webp" alt="img"></p><p>另外我们查找文件时可以根据aHash、pHash、dHash值进行查找。</p><p><strong>第二款：Rbtray</strong></p><p>Rbtray是一款<strong>任何窗口都可以最小化到系统托盘</strong>的工具。软件非常非常小，仅192 KB。</p><p>双击打开软件以后没有界面，使用非常简单，只要“按Shift+窗口”即可把软件最小化了。</p><p>这个洛雪音乐，我没进行设置，软件不能最小化到托盘，只能最小到任务栏，但用这款小工具，可一键最小化到系统右下角的托盘。看看软妹演示的动图：</p><p><img src="/img/%E7%85%A7%E7%89%87%E5%BF%AB%E9%80%9F%E5%8E%BB%E9%87%8D/1.gif" alt="img"></p><p>按“<strong>Shift+右键</strong>”可一键的把洛雪音乐最小化到托盘。</p><p>这款软件在我们想摸鱼的时候还挺好用的，最小化到托盘可以进行隐藏，非常不错！</p><p>图片去重和最小化托盘</p><p>夸克：<a href="https://pan.quark.cn/s/040d5065317f">https://pan.quark.cn/s/040d5065317f</a></p><p>百度：<a href="https://pan.baidu.com/s/1X3zbieqvAKf1RG-FlmSptg?pwd=8888">https://pan.baidu.com/s/1X3zbieqvAKf1RG-FlmSptg?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOf2T62-bbjryE8NQwPYCBXIA1?pwd=ybnk#">https://pan.xunlei.com/s/VOf2T62-bbjryE8NQwPYCBXIA1?pwd=ybnk#</a></p>]]></content>
+    
+    
+    <summary type="html">照片快速去重,Rbtray</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>本地文件重复查找软件Duplicate Cleaner Pro</title>
+    <link href="https://macin.top/posts/2e4a8780/"/>
+    <id>https://macin.top/posts/2e4a8780/</id>
+    <published>2025-11-27T06:13:33.000Z</published>
+    <updated>2025-11-29T02:56:53.706Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>软件介绍</strong></p><p>今天介绍的这款软件叫：Duplicate Cleaner Pro</p><p>我在这里分两部分介绍吧，第一部分是安装，第二部分是使用。</p><p><strong>安装：</strong>文末获取的压缩包里包括两部分，首先我们双击可执行文件。</p><p><img src="/img/duplicatecleaner/1.webp" alt="img"></p><p>安装全是英文，不懂的小伙伴就无脑的“Next”吧。</p><p><img src="/img/duplicatecleaner/2.webp" alt="img"></p><p>安装完成后，<strong>不要打开软件，不要打开软件，不要打开软件</strong>，把“运行软件”前面的勾去掉，然后点“Finish”。</p><p><img src="/img/duplicatecleaner/3.webp" alt="img"></p><p>再然后就是把“C rack”文件夹下的文件，复制到软件的安装目录下，然后替换掉原来的文件。</p><p>不知道软件的安装目录的小伙伴，可以参考下图我默认安装的文件夹所在位置。</p><p><img src="/img/duplicatecleaner/4.webp" alt="img"></p><p>替换成功后，软件就安装成功了，然后就可以愉快的使用了！</p><p><strong>使用：</strong>安装成功后，首次打开，软件的界面长得下面这样：</p><p><img src="/img/duplicatecleaner/5.webp" alt="img"></p><p>功能超级强大，不过…不过…不过这功能强大的背后就是功能太多，看得头有点晕晕的。</p><p>所以我从我的使用角度给大家初步讲解。我平常用得比较多的是查找相同的图片。</p><p><strong>搜索规则 ：</strong>在【搜索规则】中选择【图片模式】，然后在图片模式中设置图片的相似度，图片的标签和附加选项。</p><p><img src="/img/duplicatecleaner/6.webp" alt="img"></p><p>图片模式中大家可以自己去设置搜索规则，也可以在【更多判断重复的选项】和【搜索过滤器】中自己设置搜索规则。</p><p><strong>扫描位置：</strong>设置了规则以后，左边选择需要查找的文件夹，选中后点击箭头移入。如果移入错误，选择右边的文件夹，再点移出即可。</p><p><img src="/img/duplicatecleaner/7.webp" alt="img"></p><p><strong>扫描：</strong>接下来就是点击扫描了，在扫描前，我们可以看到我们选择的图片模式，点击【立即扫描】即可。</p><p><img src="/img/duplicatecleaner/8.webp" alt="img"></p><p><strong>重复文件：</strong>扫描完成以后，在【重复文件】里即可查看到重复的文件，每张重复的图片会按颜色进行分隔标识，很是清楚明了。需要删除哪项，勾选即可！</p><p><img src="/img/duplicatecleaner/9.webp" alt="img"></p><p><strong>删除：</strong>再然后到删除里，可以先选择删除至回收站里，而“移除空目录”和“保护系统重要文件夹”这两项可以勾选，勾选后点【删除文件】即可。</p><p><img src="/img/duplicatecleaner/10.webp" alt="img"></p><p>如果你不想删除文件，也可以“移动&#x2F;复制文件”、“重命名文件”和“导出”。</p><p><img src="/img/duplicatecleaner/11.webp" alt="img"></p><p>而上面我只给大家讲了图片，像音频、视频都可以通过软件找到重复文件，我在这里就不带着大家体验了，有需要的小伙伴可以细细研究，你会发现，功能强大到不敢想像！</p><p>重复文件查找Duplicate File Finder（240702）</p><p>百度：<a href="https://pan.baidu.com/s/13IKEDIEWhspefR0OpJPFFg?pwd=8888">https://pan.baidu.com/s/13IKEDIEWhspefR0OpJPFFg?pwd=8888</a> 提取码：8888</p><p>夸克：<a href="https://pan.quark.cn/s/da9c427ac6fd">https://pan.quark.cn/s/da9c427ac6fd</a></p><p>阿里：<a href="https://www.alipan.com/s/J62iBQdx9c6">https://www.alipan.com/s/J62iBQdx9c6</a></p><p>重复文件查找</p><p>夸克：<a href="https://pan.quark.cn/s/bb2116095539">https://pan.quark.cn/s/bb2116095539</a></p><p>百度：<a href="https://pan.baidu.com/s/1v2R-5R8KzvJMeQQqVeL0Pw?pwd=8888">https://pan.baidu.com/s/1v2R-5R8KzvJMeQQqVeL0Pw?pwd=8888</a> 提取码：8888</p><p>阿里：<a href="https://www.alipan.com/s/PPXmbzfcWm8">https://www.alipan.com/s/PPXmbzfcWm8</a></p><p>重复文件查找Duplicate Cleaner Pro</p><p>夸克：<a href="https://pan.quark.cn/s/0290357008a2">https://pan.quark.cn/s/0290357008a2</a></p><p>阿里：<a href="https://www.alipan.com/s/S3Xru4NzUVN">https://www.alipan.com/s/S3Xru4NzUVN</a></p><p>百度：<a href="https://pan.baidu.com/s/1x6ad25S-nNxpTnF5cVnGzA?pwd=8888">https://pan.baidu.com/s/1x6ad25S-nNxpTnF5cVnGzA?pwd=8888</a> 提取码：8888</p>]]></content>
+    
+    
+    <summary type="html">Duplicate Cleaner Pro</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一款功能强大的磁盘备份还原软件--Snapshot，v1.50.0.1767 新版本，中文绿色便携版~</title>
+    <link href="https://macin.top/posts/ba30beec/"/>
+    <id>https://macin.top/posts/ba30beec/</id>
+    <published>2025-11-27T06:04:55.000Z</published>
+    <updated>2025-11-29T02:56:53.696Z</updated>
+    
+    <content type="html"><![CDATA[<p>哈喽大家好，今天给分享一款小巧强大的系统备份还原软件–Drive SnapShot，v1.50.0.1767新版本（2025.11.24）。大小仅3MB，中文绿色便携版～（文末获取）</p><p>支持Windows2000&#x2F;XP，Windows7-11，Server2003-2022。</p><p><img src="/img/SnapShot/1.webp" alt="图片"></p><p>支持磁盘卷热备份还原,差异备份,增量备份,异机还原,远程备份,RAID磁盘阵列,挂载映像文件映射虚拟驱动器,生成哈希文件,命令行操作等。</p><p>备份速度快,备份的镜像文件体积较小，该工具体积小巧,原生绿色单执行文件,无额外临时数据生成。</p><p>使用方法如下：</p><p>界面简洁，一目了然。</p><p><strong>一、备份分区</strong></p><p>1、选择需要备份的分区，点下一步。</p><p><img src="/img/SnapShot/2.webp" alt="图片"></p><p>2、选要备份位置，备份镜像可进行密码加密，点开始备份即可。</p><p><img src="/img/SnapShot/3.webp" alt="图片"></p><p><strong>二、还原分区</strong></p><p>选择之前的备份镜像，选定需要还原的分区位置，点下一步按提示操作即可。</p><p><img src="/img/SnapShot/4.webp" alt="图片"></p><p>分享文件：Snapshot链接：<a href="https://pan.xunlei.com/s/VNud85sTxCYWqC1HcA879PNDA1?pwd=cqwx#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E6%89%8B%E6%9C%BA%E8%BF%85%E9%9B%B7App%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VNud85sTxCYWqC1HcA879PNDA1?pwd=cqwx#复制这段内容后打开手机迅雷App，查看更方便</a></p><p>我用夸克网盘分享了「Snapshot」，点击链接即可保存。打开「夸克APP」，无需下载在线播放视频，畅享原画5倍速，支持电视投屏。链接：<a href="https://pan.quark.cn/s/7e6aeda9a8fa">https://pan.quark.cn/s/7e6aeda9a8fa</a></p>]]></content>
+    
+    
+    <summary type="html">SnapShot</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一款简单实用的音频文件转换软件--XRecode3，v1.175.2911新版本，绿色便携版~</title>
+    <link href="https://macin.top/posts/e6edaad1/"/>
+    <id>https://macin.top/posts/e6edaad1/</id>
+    <published>2025-11-26T07:53:57.000Z</published>
+    <updated>2025-11-29T02:56:53.696Z</updated>
+    
+    <content type="html"><![CDATA[<p>哈喽大家好，今天给大家分享一款简单实用的音频文件转换软件–XRecode3，v1.175.2911新版本，免安装便携版~</p><p><img src="/img/XRecode3/1.webp" alt="img"></p><p>XRecode 是一款相当简洁的音频文件转换软件,如格式转换、CD抓轨、音频提取等。</p><p>支持常见的 MP3、WMA、WAV 等格式的转换.可将 mp3、mp2、wma、ogg、flac、wav、mp4、aac 等音频文件转换成 m4a、alac、ape、flac、mp3、mp4、ogg、raw、wav、wma、WavPack、mpc、mp2、Speex、ofr、ac3 等格式。</p><p><strong>特点：</strong></p><p>集成注册补丁</p><p>默认启动为简体中文</p><p>我用夸克网盘给你分享了「实用工具」，点击链接或复制整段内容，打开「夸克APP」即可获取。&#x2F;<del>75b839HjaW</del>:&#x2F;链接：<a href="https://pan.quark.cn/s/1297930f7544?pwd=qe8u%E6%8F%90%E5%8F%96%E7%A0%81%EF%BC%9Aqe8u">https://pan.quark.cn/s/1297930f7544?pwd=qe8u提取码：qe8u</a></p><p>分享文件：实用工具链接：<a href="https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E8%BF%85%E9%9B%B7%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#复制这段内容后打开迅雷，查看更方便</a></p>]]></content>
+    
+    
+    <summary type="html">XRecode3</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>音乐爱好者利器：开源免费的无损音乐下载器--小梦音乐下载，v1.0.6.0新版本，绿色便携版~</title>
+    <link href="https://macin.top/posts/c7ebd99c/"/>
+    <id>https://macin.top/posts/c7ebd99c/</id>
+    <published>2025-11-26T07:48:02.000Z</published>
+    <updated>2025-11-29T02:56:53.712Z</updated>
+    
+    <content type="html"><![CDATA[<p>音乐爱好者利器：开源免费的无损音乐下载器–小梦音乐下载，v1.0.6.0，绿色便携版~</p><p><img src="/img/xiaomeng/1.webp" alt="img"></p><p><img src="/img/xiaomeng/2.webp" alt="img"></p><p><strong>功能：</strong></p><p>丰富音乐资源整合：整合了各大主流音乐平台资源，还注重挖掘小众音乐和独立音乐人作品，用户在一个软件中就能搜索到全网音乐。</p><p>精准智能搜索：支持按歌名、歌手、专辑、歌词等多种方式精准搜索，且具备智能联想功能，根据用户输入自动联想相关歌曲和歌手。</p><p>多样下载选项：提供普通音质、高音质、无损音质等多种音质选择，支持MP3和FLAC格式下载，还可自定义下载路径、文件名格式。</p><p>歌词同步：下载歌曲的同时自动同步歌词，方便用户听歌时查看。</p><p>歌单导入导出：支持导入其他音乐平台的歌单，也能将自己在该软件中创建的歌单导出分享。</p><p><strong>特点：</strong></p><p>界面简洁易用：软件界面简洁明了，操作简单，新手用户也能快速上手。</p><p>安全可靠：经过严格安全检测，无广告、无插件、无恶意软件，保障用户电脑和个人信息安全。</p><p>稳定高效：采用先进下载技术和服务器架构，下载过程稳定，不易出现卡顿、中断问题。</p><p>批量下载：支持批量下载功能，用户可按音质选择，一次性下载多首歌曲，适合整理歌单或收藏专辑，省时高效。</p><p>我用夸克网盘给你分享了「实用工具」，点击链接或复制整段内容，打开「夸克APP」即可获取。&#x2F;<del>75b839HjaW</del>:&#x2F;链接：<a href="https://pan.quark.cn/s/1297930f7544?pwd=qe8u%E6%8F%90%E5%8F%96%E7%A0%81%EF%BC%9Aqe8u">https://pan.quark.cn/s/1297930f7544?pwd=qe8u提取码：qe8u</a></p><p>分享文件：实用工具链接：<a href="https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E8%BF%85%E9%9B%B7%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#复制这段内容后打开迅雷，查看更方便</a></p>]]></content>
+    
+    
+    <summary type="html">小梦音乐下载</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>国内有声书元数据太难找？Audiobookshelf 终于能刮喜马拉雅了</title>
+    <link href="https://macin.top/posts/1de695ad/"/>
+    <id>https://macin.top/posts/1de695ad/</id>
+    <published>2025-11-26T01:30:19.000Z</published>
+    <updated>2025-11-29T02:56:53.700Z</updated>
+    
+    <content type="html"><![CDATA[<p>Abs-Ximalaya：</p><p>一款为 Audiobookshelf 提供喜马拉雅刮削元数据的应用。</p><p><img src="/img/Audiobookshelf/32.webp" alt="null"></p><p>关联教程：</p><p><a href="https://macin.top/posts/d2a09c0a/">Audiobookshelf 有声书与播客服务器</a></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker Compose</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">ximalaya:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">shanyanwcx/abs-ximalaya:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">ximalaya</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">7814</span><span class="string">:7814</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>http://NAS的IP:7814</code> 就能看到提示界面</p><p><img src="/img/Audiobookshelf/33.webp" alt="null"></p><p>打开 Audiobookshelf 有声书与播客服务器</p><p><img src="/img/Audiobookshelf/34.webp" alt="null"></p><p>设置 -&gt; 项目元数据管理 -&gt; 自定义元数据提供商</p><p><img src="/img/Audiobookshelf/35.webp" alt="null"></p><p>点击添加</p><p><img src="/img/Audiobookshelf/36.webp" alt="null"></p><p>参考设置，注意 URL 最后不能带“&#x2F;”</p><p><img src="/img/Audiobookshelf/37.webp" alt="null"></p><p>选择一本有声书，再试试重新匹配</p><p><img src="/img/Audiobookshelf/38.webp" alt="null"></p><p>提供商选“喜马拉雅”，这样就有很多可以选择了</p><p><img src="/img/Audiobookshelf/39.webp" alt="null"></p><p>这些元数据信息都很全的</p><p><img src="/img/Audiobookshelf/40.webp" alt="null"></p><p>如果上面没问题，可以回到媒体库，选择编辑</p><p><img src="/img/Audiobookshelf/41.webp" alt="null"></p><p>将默认元数据提供商改为“喜马拉雅”</p><p><img src="/img/Audiobookshelf/42.webp" alt="null"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这款刮削元数据的应用是需要搭配 Audiobookshelf 使用的，可以为国内有声书资源提供更本地化刮削适配，并且不需要一直开着良好网络也能正常使用。</p>]]></content>
+    
+    
+    <summary type="html">Audiobookshelf</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>有声书党必装！3 分钟搭建私人有声书 &amp; 播客服务器！Audiobookshelf</title>
+    <link href="https://macin.top/posts/d2a09c0a/"/>
+    <id>https://macin.top/posts/d2a09c0a/</id>
+    <published>2025-11-26T01:16:58.000Z</published>
+    <updated>2025-11-29T02:56:53.706Z</updated>
+    
+    <content type="html"><![CDATA[<p>Audiobookshelf：</p><p>一个开源的自托管有声书和播客服务器，旨在提供便捷的有声内容管理和流媒体服务。</p><p><img src="/img/Audiobookshelf/1.webp" alt="null"></p><p>核心功能：</p><ul><li>• 全开源特性：包括安卓和 iOS 应用（处于测试阶段）</li><li>• 音频格式支持：可实时流式传输所有音频格式</li><li>• 播客管理：支持搜索、添加播客并自动下载剧集</li><li>• 多用户支持：具备自定义权限控制</li><li>• 进度同步：为每位用户记录进度并跨设备同步</li><li>• 自动检测更新：无需重新扫描即可识别库更新</li><li>• 便捷上传：支持批量上传有声书和播客（拖放文件夹）</li><li>• 备份功能：支持元数据备份及每日自动备份</li><li>• PWA 支持：具备渐进式 Web 应用特性</li><li>• Chromecast 支持：Web 应用和安卓应用均支持</li><li>• 元数据获取：可从多个来源获取元数据和封面图</li><li>• 章节编辑：支持章节编辑和章节查询（使用 Audnexus API）</li><li>• 音频合并：可将音频文件合并为单个 m4b 文件</li><li>• 元数据嵌入：能将元数据和封面图嵌入音频文件</li><li>• 基础电子书支持：<br>支持 Epub、pdf、cbr、cbz 格式<br>可将电子书发送到设备（如 Kindle）</li><li>• 开放 RSS 源：提供播客和有声书的 RSS 订阅源</li></ul><p>在线 Demo（demo&#x2F;demo）：</p><p><a href="https://audiobooks.dev/">https://audiobooks.dev</a></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker Compose</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">audiobookshelf:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/advplyr/audiobookshelf:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">audiobookshelf</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">13378</span><span class="string">:80</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./audiobooks:/audiobooks</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./podcasts:/podcasts</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./metadata:/metadata</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config:/config</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><p>参数说明（更多参数建议去看文档）<br>&#x2F;audiobooks（路径）：有声书目录</p><p>&#x2F;podcasts（路径）：播客目录</p><p>&#x2F;metadata（路径）：元数据存储目录</p><p>&#x2F;config（路径）：配置文件目录</p><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>http://NAS的IP:13378</code> 就能看到界面</p><p><img src="/img/Audiobookshelf/2.webp" alt="null"></p><p>设置初始管理员的密码</p><p><img src="/img/Audiobookshelf/3.webp" alt="null"></p><p>输入账号和密码进行登录</p><p><img src="/img/Audiobookshelf/4.webp" alt="null"></p><p>点击设置，修改服务器语言</p><p><img src="/img/Audiobookshelf/5.webp" alt="null"></p><p>首先添加一个媒体库</p><p><img src="/img/Audiobookshelf/6.webp" alt="null"></p><p>选择媒体类型（图书指图书音频），填写库的名称</p><p><img src="/img/Audiobookshelf/7.webp" alt="null"></p><p>元数据提供商默认 Google Books 就行（都需要良好网络）</p><p><img src="/img/Audiobookshelf/8.webp" alt="null"></p><p>点击“浏览文件夹”，选择 audiobooks 文件夹</p><p><img src="/img/Audiobookshelf/9.webp" alt="null"></p><p>TIP：映射的 audiobooks 路径存放有声书，如果比较多可以创建文件夹分类</p><p><img src="/img/Audiobookshelf/10.webp" alt="null"></p><p>其他设置可以后面有需要再调整，点击“创建”</p><p><img src="/img/Audiobookshelf/11.webp" alt="null"></p><p>扫描媒体库文件后，返回首页</p><p><img src="/img/Audiobookshelf/12.webp" alt="null"></p><p>等待扫描完成，因为我的有声书自带刮削元数据，所以有封面介绍这些内容</p><p><img src="/img/Audiobookshelf/13.webp" alt="null"></p><p>展示效果还是挺不错的</p><p><img src="/img/Audiobookshelf/14.webp" alt="null"></p><p>媒体库，按文件夹分类好的了</p><p><img src="/img/Audiobookshelf/15.webp" alt="null"></p><p>如果对封面信息不满意，点击图书右下角进行匹配（刮削）</p><p><img src="/img/Audiobookshelf/16.webp" alt="null"></p><p>直接用 Google Books 就能进行刮削（前提是网络没问题）</p><p><img src="/img/Audiobookshelf/17.webp" alt="null"></p><p>这样就都改好了</p><p><img src="/img/Audiobookshelf/18.webp" alt="null"></p><p>效果挺好的，封面图片和介绍信息都有</p><p><img src="/img/Audiobookshelf/19.webp" alt="null"></p><p>下面章节标题是根据音频文件名称显示的</p><p><img src="/img/Audiobookshelf/20.webp" alt="null"></p><p>播放进度条很有特色，显示时长是整本书的，每一刻度就是一个章节</p><p><img src="/img/Audiobookshelf/21.webp" alt="null"></p><p>移动网页端也有适配，主要不用下载 APP 就可以使用</p><p><img src="/img/Audiobookshelf/22.webp" alt="null"></p><p>有需要客户端的可以在官网下载：<a href="https://audiobookshelf.org/">https://audiobookshelf.org</a></p><p><img src="/img/Audiobookshelf/23.webp" alt="null"></p><p>媒体库统计数据，能清晰直观看到当前服务器信息</p><p><img src="/img/Audiobookshelf/24.webp" alt="null"></p><p>回到后台设置界面，简单说说需要注意的地方</p><p><img src="/img/Audiobookshelf/25.webp" alt="null"></p><p>需要自己整理有声书元数据，先将这个打开再匹配刮削，元数据就会保存到当前音频的文件夹中</p><p><img src="/img/Audiobookshelf/26.webp" alt="null"></p><p>很多有声书是没有元数据的，可以启用扫描自动刮削</p><p><img src="/img/Audiobookshelf/27.webp" alt="null"></p><p>这里是视图显示，有需要的可以打开</p><p><img src="/img/Audiobookshelf/28.webp" alt="null"></p><p>打开之后，界面就是书架的样子</p><p><img src="/img/Audiobookshelf/29.webp" alt="null"></p><p>有用户管理功能，可以创建多个用户账号</p><p><img src="/img/Audiobookshelf/30.webp" alt="null"></p><p>支持自动备份，有用但好像又没什么用</p><p><img src="/img/Audiobookshelf/31.webp" alt="null"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>可以说，Audiobookshelf 是目前用的人最多、体验最好的自托管有声书与播客服务器系统。它界面美观、功能全面，支持自动扫描刮削和多用户管理。部署也很简单，特别适合 NAS 用户或家庭媒体中心使用。</p><p>或许有人会问：有声书直接用音乐播放器不就行了？但实际用过就会发现，两者在使用体验和操作上有着很大区别，就像用普通播放器和用 Emby 音影媒体播放一样。</p>]]></content>
+    
+    
+    <summary type="html">Audiobookshelf</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>游戏常用运行库合集--Game Runtime Libraries Package，v6.13.25.1124新版本</title>
+    <link href="https://macin.top/posts/1b90c79c/"/>
+    <id>https://macin.top/posts/1b90c79c/</id>
+    <published>2025-11-26T01:08:40.000Z</published>
+    <updated>2025-11-29T02:56:53.706Z</updated>
+    
+    <content type="html"><![CDATA[<p>游戏常用运行库合集–Game Runtime Libraries Package，v6.13.25.1124新版本，整合了许多游戏会用到的运行库。</p><p>支持 Windows XP – Windows 11系统，并且支持自动检测系统勾选推荐的运行库，方便快捷。</p><p>by:mefel大佬制作。</p><p><img src="/img/Runtime/1.webp" alt="img"></p><p><strong>更新内容：</strong></p><p>v6.13.25.1124 (2025.11.24)<br>更新 Microsoft Visual C++ v14 (2026) Redist 14.50.35719.0</p><p><strong>温馨提示：适度游戏，不要玩物丧志，玩的话尽量选择一些益智类游戏😊</strong></p><p><strong>特点：</strong></p><p>整合常见最新游戏所需运行库。<br>根据系统自动勾选推荐的版本。<br>纯净安装包无病毒和弹窗行为。</p><p><strong>包含组件：</strong></p><p>Microsoft Visual C++ 2002-2003 Runtime x86</p><p>Microsoft Visual C++ 2005 Redist x86 x64</p><p>Microsoft Visual C++ 2008 Redist x86 x64</p><p>Microsoft Visual C++ 2010 Redist x86 x64</p><p>Microsoft Visual C++ 2012 Redist x86 x64</p><p>Microsoft Visual C++ 2013 Redist x86 x64</p><p>Microsoft Visual C++ 2015-2022 Redist x86 x64</p><p>Microsoft .NET Framework 1.0</p><p>Microsoft .NET Framework 1.1</p><p>Microsoft .NET Framework 3.5（含2.0、3.0） x86 x64</p><p>Microsoft .NET Framework 4.0 x86 x64</p><p>Microsoft .NET Framework 4.8 x86 x64</p><p>Microsoft .NET Framework 6.0 x86 x64</p><p>Microsoft .NET Framework 7.0 x86 x64</p><p>Microsoft .NET Framework 8.0 x86 x64</p><p>Microsoft .NET Framework 9.0 x86 x64</p><p>Microsoft XNA Framework 1.0 x86 x64</p><p>Microsoft XNA Framework 2.0 x86 x64</p><p>Microsoft XNA Framework 3.0 x86 x64</p><p>Microsoft XNA Framework 3.1 x86 x64</p><p>Microsoft XNA Framework 4.0 x86 x64</p><p>Microsoft Visual F# Runtime</p><p>Microsoft Visual J# Redistributable Package</p><p>Microsoft AppLocale</p><p>Microsoft XML Core Services 4.0</p><p>Microsoft XML Core Services 6.0</p><p>Microsoft Silverlight 5.0</p><p>Microsoft Games for Windows Marketplace</p><p>Microsoft Games for Windows – LIVE Redistributable</p><p>Microsoft Visual Basic&#x2F;C++ Runtime</p><p>Microsoft Visual Basic 6.0 Runtime Plus</p><p>– Visual Basic runtime files (v1.0 至 v6.0)</p><p>– Visual Basic Extensions (VBX)</p><p>– ActiveX Controls</p><p>– Dynamic Data Exchange (DDE)</p><p>– Open Link Embedding (OLE)</p><p>– OLE Automation</p><p>– Data Access Objects (DAO)</p><p>– Remote Data Objects (RDO)</p><p>– Distributive Component Object Model (DCOM)</p><p>– Microsoft Data Access Components (MDAC)</p><p>– Microsoft Jet (from 1.x 至 3.x)</p><p>– Windows Script Host (WSH)</p><p>– Windows Management Instrumentation (WMI)</p><p>– DirectX Components for Visual Basic</p><p>– WinG</p><p>– Crystal Report runtime files</p><p>– Third-party ActiveX Controls 和 libraries</p><p>– Microsoft XML Services</p><p>– NTVDM 和 DirectPlay（通过 Windows 功能，仅适用于 Windows 8 或更高版本）</p><p>Microsoft Visual Studio 2010 Tools for Office Runtime</p><p>DirectX 9.0c 9.0、10、11</p><p>NVIDIA PhysX System Software</p><p>Open Audio Library (OpenAL) 2.1</p><p>Rapture3D 2.7.4</p><p>SlimDX Runtime .NET 2.0</p><p>SlimDX Runtime .NET 4.0</p><p>Rockstar Games Social Club 1.1</p><p>Unity Web Player 5.3</p><p>VulkanRT 1.3</p><p>UE4 Prerequisites 1.0 x64</p><p><strong>注意事项：</strong></p><p>1.由于组件众多，安装时请耐心等待，特别是 .NET 组件安装会比较慢。</p><p>2.建议保持默认勾选方式安装（当然你清楚系统支持和组件之间支持关系除外）。</p><p>我用夸克网盘给你分享了「实用工具」，点击链接或复制整段内容，打开「夸克APP」即可获取。&#x2F;<del>75b839HjaW</del>:&#x2F;链接：<a href="https://pan.quark.cn/s/1297930f7544?pwd=qe8u%E6%8F%90%E5%8F%96%E7%A0%81%EF%BC%9Aqe8u">https://pan.quark.cn/s/1297930f7544?pwd=qe8u提取码：qe8u</a></p><p>分享文件：实用工具链接：<a href="https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E8%BF%85%E9%9B%B7%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VORdZnbXX_SrnaWVzMFFppdiA1?pwd=hm46#复制这段内容后打开迅雷，查看更方便</a></p>]]></content>
+    
+    
+    <summary type="html">Game Runtime Libraries Package</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>视频压缩软件CompressO，水印工具</title>
+    <link href="https://macin.top/posts/4ed243f5/"/>
+    <id>https://macin.top/posts/4ed243f5/</id>
+    <published>2025-11-26T00:59:09.000Z</published>
+    <updated>2025-11-29T02:56:53.710Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>啰嗦几句</strong></p><p>我推荐软件都是以实用为主，一般的情况下不实用，我会少推荐甚至不推荐，毕竟一款软件用得着才是最重要的。</p><p>今天推荐的这两款软件都非常实用、好用，有需要的小伙伴及时收藏！</p><p><strong>软件介绍</strong></p><p>今天推荐两款软件，一款是视频压缩软件，一款是水印工具。</p><p><strong>第一款：CompressO</strong></p><p>CompressO是一款视频压缩软件，这类的软件其实市面上很多，比如Wise Video Converter、File Converter、格式工厂等等。</p><p>今天介绍的这款软件我原以为不咋嘀，但是测试下来发现是真牛啊！</p><p>看看原来的视频画质是下面👇这样：</p><p><img src="/img/CompressO/1.webp" alt="图片"></p><p>压缩以后变成这样：</p><p><img src="/img/CompressO/2.webp" alt="图片"></p><p>说真的，完全看不出来是被压缩后的画质。最关键的是它还是<strong>从原来1.46GB，压缩至545MB</strong>，压缩了62.7%。</p><p><img src="/img/CompressO/3.webp" alt="图片"></p><p>这款工具我以前也推荐过，但是当时拿了一个小视频进行测试，现在拿一个大的视频测试才发现它非常非常好用。</p><p>唯一觉得遗憾的是它是安装版，而且没有汉化，不过其实也简单，就是调节质量、尺寸、格式、帧率等信息。</p><p><img src="/img/CompressO/4.webp" alt="图片"></p><p>这款软件是在不失真的情况下，能尽量把视频压缩到最小，非常牛！</p><p><strong>第二款：水印工具</strong></p><p>好多小伙伴问我要水印相机的特殊版，但是我至今没找到好用的版本，不过最近我发现有款叫水印工具的软件，有点类似水印相机。</p><p>在右下角可以输入水印信息，可填写省和市，还可以设置水印坐标和水印大小。</p><p><img src="/img/CompressO/5.webp" alt="图片"></p><p>添加后在图片中就会显示你的时间和地址，效果如下：</p><p><img src="/img/CompressO/6.webp" alt="图片"></p><p>没有自动添加水印的图片，可以用这款软件手动去添加。</p><p>视频压缩和水印工具</p><p>夸克：<a href="https://pan.quark.cn/s/f999445eb7d9">https://pan.quark.cn/s/f999445eb7d9</a></p><p>百度：<a href="https://pan.baidu.com/s/1t2T-Md6B5p_IFW05hdH81A?pwd=8888">https://pan.baidu.com/s/1t2T-Md6B5p_IFW05hdH81A?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOevG5DNR9GyLKj9SwJB5xezA1?pwd=8j27#">https://pan.xunlei.com/s/VOevG5DNR9GyLKj9SwJB5xezA1?pwd=8j27#</a></p>]]></content>
+    
+    
+    <summary type="html">CompressO,水印工具</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>TextEditorPro电脑文本代码编辑器 v35.0.0 中文绿色便携版</title>
+    <link href="https://macin.top/posts/cfa67df3/"/>
+    <id>https://macin.top/posts/cfa67df3/</id>
+    <published>2025-11-25T10:49:15.000Z</published>
+    <updated>2025-11-29T02:56:53.679Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>前言</strong></p><p>Text Editor好用的文本编辑软件，而且它的代码是开源的。它能在好多不同的电脑系统上运行，像Windows、苹果电脑用的macOS，还有Linux系统都没问题。这个软件界面设计得特别简单，让人一看就明白，能很快上手进行文本编辑。而且它功能可多了，能给文本设置格式，写代码的时候还能高亮显示，还能检查语法有没有错误呢。</p><p><strong>功能特点</strong></p><p>能同时开启多个文件，各文件以独立标签呈现，方便快速切换编辑，内置超强搜索与替换功能，可迅速锁定并修改代码里的关键字，支持安装各类插件，能按需增强编辑器的功能。</p><p><img src="/img/texteditor/1.webp" alt="img"></p><p>TextEditor文本代码编辑器夸克云<br>链接:<a href="https://pan.quark.cn/s/aa824fc08b0b">https://pan.quark.cn/s/aa824fc08b0b</a><br>提取码:Qdc7</p><p>备用地址 TextEditor文本代码编辑器百度云<br>链接:<a href="https://pan.baidu.com/s/1C2RtJEjTAeRDi6A7tSkPvw">https://pan.baidu.com/s/1C2RtJEjTAeRDi6A7tSkPvw</a><br>提取码:3une</p>]]></content>
+    
+    
+    <summary type="html">Text Editor</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>微软常用运行库合集，2025.11.24新版本，（提供静默快速安装方法）</title>
+    <link href="https://macin.top/posts/674b6984/"/>
+    <id>https://macin.top/posts/674b6984/</id>
+    <published>2025-11-25T06:20:51.000Z</published>
+    <updated>2025-11-29T02:56:53.704Z</updated>
+    
+    <content type="html"><![CDATA[<p>微软常用运行库合集，2025.11.24新版本，32+64位合集，By:Dreamcast大佬制作，支持Windows XP-Windows11。（文末获取）</p><p><img src="/img/%E5%BE%AE%E8%BD%AF%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E5%BA%93/1.webp" alt="img"></p><p><img src="/img/%E5%BE%AE%E8%BD%AF%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E5%BA%93/2.webp" alt="img"></p><p><img src="/img/%E5%BE%AE%E8%BD%AF%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E5%BA%93/3.webp" alt="img"></p><p><strong>更新日志：</strong></p><p>更新：Microsoft Visual C++ v14 Redist 14.50.35719.0</p><p>微软常用运行库合集适用于Windows系统的运行库合集包，基于微软官方的运行库而制作，包括了常用的vb，vc++2005&#x2F;2008&#x2F;2010&#x2F;2012&#x2F;2013&#x2F;2017&#x2F;2019&#x2F;2005-2022，Microsoft Universal C Runtime，VS 2010 Tools For Office Runtime等等。</p><p>整合了所有版本Visual C ++，可自选更新VC++版本组件，支持win XP-11并自动识别系统环境。</p><p>这些运行库可以更好的保证电脑软件和游戏的正常运行，从而解决由于运行库安装不完整造成一些软件打开的时候报错，提示缺少dll文件等问题。</p><p>亦适用于某些新机或重装系统或挂载镜像等情况(喜欢绿色软件人士必备)。微软常用运行库合集原始脚本为roustar31@睿派克开发，后由 Dreamcast 大佬接手打包。</p><p>Microsoft Visual C++ Redistributable(简称MSVC,VB&#x2F;VC,VC运行库)系统运行库是Windows操作系统应用程序的基础类型库的可再发行程序包。</p><p>这些运行库都是采用Microsoft Visual Studio 20XX编写的软件必须使用的公用DLL运行库，相当于程序的字典文件。</p><p>某些网上和论坛的部分精简软件没有附带这些公用DLL，所以安装这些运行库是系统安装后第一件要做的事情。</p><p>某些程序在64位系统下运行任然需要32位的运行库，因为程序是基于32位Visual Studio开发的，典型的例子比如QQ。</p><p><strong>提供一个静默安装方法，比正常安装快很多。</strong></p><p><strong>静默参数：&#x2F;verysilent</strong></p><p>使用方法：</p><p>拖动软件程序到cmd窗口，然后空格，输入 <code>/verysilent</code>，回车即可。 </p><p>如下图：</p><p><img src="/img/%E5%BE%AE%E8%BD%AF%E5%B8%B8%E7%94%A8%E8%BF%90%E8%A1%8C%E5%BA%93/4.webp" alt="img"></p><p>有需要的小伙伴们可以动手操作一下哈！</p><p>分享文件：微软常用运行库合集链接：<a href="https://pan.xunlei.com/s/VO4Hqck6WDoGyrn-zmZ9t1UqA1?pwd=28km#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E6%89%8B%E6%9C%BA%E8%BF%85%E9%9B%B7App%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VO4Hqck6WDoGyrn-zmZ9t1UqA1?pwd=28km#复制这段内容后打开手机迅雷App，查看更方便</a></p><p>我用夸克网盘分享了「微软常用运行库合集」，点击链接即可保存。打开「夸克APP」，无需下载在线播放视频，畅享原画5倍速，支持电视投屏。链接：<a href="https://pan.quark.cn/s/468fedede1bb">https://pan.quark.cn/s/468fedede1bb</a></p>]]></content>
+    
+    
+    <summary type="html">微软常用运行库</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>BaiduPanFilesTransfers 大厂网盘批量转存工具</title>
+    <link href="https://macin.top/posts/1b3bceb7/"/>
+    <id>https://macin.top/posts/1b3bceb7/</id>
+    <published>2025-11-25T06:13:08.000Z</published>
+    <updated>2025-11-29T02:56:53.673Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>软件介绍</strong></p><p>今天推荐的这款软件名叫：<strong>BaiduPanFilesTransfers</strong>，是一款大厂网盘批量转存工具。</p><p>软件主要的功能是批量转存，也就是你有很多个链接，你不需要一个个打开点击转存，只要粘贴到软件中一键就可以批量转存到自己网盘中。<em>（下图是单个分享链接超过文件数限制，软件无法转存）</em></p><p><img src="/img/BaiduPanFilesTransfers/1.webp" alt="图片"></p><p><strong>文件批量转存：</strong>如果我们分享的文件没有超出数量限制，但是个数实在是太多了，这时候我们就可以通过这款工具把要转存的文件粘贴到空白处，然后点【批量转存】即可。</p><p><img src="/img/BaiduPanFilesTransfers/2.webp" alt="图片"></p><p><strong>检测链接有效性：</strong>对于资源分享者来说，定时的检测分享链接的有效性可以避免资源和谐，从而有利于我们定时更新和谐的资源。</p><p>BaiduPanFilesTransfers有一键检测分享链接的功能，只要把链接粘贴到软件中，然后勾选“检测模式”即可检测链接是否还有效。</p><p><img src="/img/BaiduPanFilesTransfers/3.webp" alt="图片"></p><p><strong>批量分享：</strong>批量分享的功能注意步骤2，输入你的网盘的分享目录，比如我要分享根目录下的“软件插件”文件夹下的所有文件，这时候我只要输入“软件插件”，再点批量分享即可。</p><p><img src="/img/BaiduPanFilesTransfers/4.webp" alt="图片"></p><p>如果分享根目录下的文件和文件夹，则留空白。另外，分享时可以自己设置分享期限和提取码。</p><p><img src="/img/BaiduPanFilesTransfers/5.webp" alt="图片"></p><p>BaiduPanFilesTransfers</p><p>夸克：<a href="https://pan.quark.cn/s/7e8e336de23d">https://pan.quark.cn/s/7e8e336de23d</a></p><p>百度：<a href="https://pan.baidu.com/s/12Z1EVLggyWJdp2oy3DNoNw?pwd=8888">https://pan.baidu.com/s/12Z1EVLggyWJdp2oy3DNoNw?pwd=8888</a></p><p>迅雷：<a href="https://pan.xunlei.com/s/VOPzJ3_veHRZY2IUihcUkNqSA1?pwd=72w6#">https://pan.xunlei.com/s/VOPzJ3_veHRZY2IUihcUkNqSA1?pwd=72w6#</a></p><p>来源：<a href="https://www.52pojie.cn/thread-2029537-1-1.html">https://www.52pojie.cn/thread-2029537-1-1.html</a></p>]]></content>
+    
+    
+    <summary type="html">BaiduPanFilesTransfers</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Stata 18.0安装包免费下载附视频讲解安装教程</title>
+    <link href="https://macin.top/posts/5d473317/"/>
+    <id>https://macin.top/posts/5d473317/</id>
+    <published>2025-11-25T06:07:46.000Z</published>
+    <updated>2025-11-29T02:56:53.678Z</updated>
+    
+    <content type="html"><![CDATA[<p>Stata 18.0是一款功能强大的综合性统计软件，在社会科学、生物统计学、健康科学、流行病学、心理学和经济学等多个领域广泛应用。</p><p>它能高效处理大型数据集，支持多种数据格式的导入和导出，如Excel、CSV等。</p><p>提供强大的数据清理和转换功能，可方便地进行数据合并、拆分、排序、筛选等操作，为后续分析奠定基础。</p><p> 它还涵盖了丰富的统计方法，从基础的描述性统计、t检验、方差分析，到高级的贝叶斯模型平均、因果关系分析、异质差异差异（DID）模型、多级荟萃分析等应有尽有。</p><p>可以进行线性回归、非线性回归、逻辑回归等多种回归分析，还支持生存分析、时间序列分析、面板数据分析等特定领域的分析方法。</p><p> 另外提供了多样化的图形类型，如散点图、直方图、折线图、条形图、箱线图等，还支持绘制更复杂的图形，如交互图、生存图等。</p><p>用户可对图形的颜色、字体、线条等进行高度定制，以生成美观且符合出版要求的图表，直观展示数据特征和分析结果。</p><p> Stata具有自己的编程语言，用户可通过编写程序来实现自动化的数据处理和分析流程，还能创建自定义的命令和函数。</p><p>支持与Python、Java等其他编程语言集成，拓展了软件的功能和应用范围。</p><p> 既有命令行界面，方便熟练用户快速输入命令进行操作；也有图形用户界面，通过菜单和对话框操作，便于初学者上手。</p><p>软件还提供了详细的帮助文档和示例，方便用户学习和使用。</p><p><img src="/img/stata/1.webp" alt="图片"></p><p><strong>注意：先复制下载链接用手机浏览器打开转存后再下载可避免安装过程中出现的不明错误码！！</strong></p><p>Stata 18.0 软件安装包（含视频安装教程）夸克网盘高速下载链接：</p><p><a href="https://pan.quark.cn/s/a548ab2943a3">https://pan.quark.cn/s/a548ab2943a3</a></p><p>Stata 18.0 软件安装包（含视频安装教程）迅雷网盘高速下载链接：</p><p><a href="https://pan.xunlei.com/s/VOO2tDAXcCzWZxcB_GjhIDCvA1?pwd=tcvt">https://pan.xunlei.com/s/VOO2tDAXcCzWZxcB_GjhIDCvA1?pwd=tcvt</a></p>]]></content>
+    
+    
+    <summary type="html">Stata</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电脑行为快照，窗口管理器</title>
+    <link href="https://macin.top/posts/422b8d88/"/>
+    <id>https://macin.top/posts/422b8d88/</id>
+    <published>2025-11-25T01:14:14.000Z</published>
+    <updated>2025-11-29T02:56:53.707Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>软件介绍</strong></p><p>今天推荐一款电脑行为快照，一款是窗口管理器。</p><p><strong>第一款：行为快照</strong></p><p>行为快照是一款能记录软件的程序使用轨迹、文件活动、网页活动、剪切板活动、键鼠活动的工具。</p><p><img src="/img/xingweikuaizhao/1.webp" alt="图片"></p><p>不过在监控前，需要点击监控按钮进行监控，比如我想监控程序，那么点击【监控程序】按钮开启监控即可。</p><p><img src="/img/xingweikuaizhao/2.webp" alt="图片"></p><p>然后你就可以看到程序使用时间、程序名称、程序路径、标题等等，甚至这款软件的使用时间它都会给你统计。</p><p><img src="/img/xingweikuaizhao/3.webp" alt="图片"></p><p>家有未成年的小伙伴，如果想知道未成年都浏览了些什么网页，可以用<strong>【网页活动记录】</strong>查看详细的情况，几点浏览，网址是什么，浏览的标题是什么，它都能详细的记录。</p><p><img src="/img/xingweikuaizhao/4.webp" alt="图片"></p><p>其他的文件活动记录、剪切板活动记录等等它都有一一的记录。</p><p><img src="/img/xingweikuaizhao/1.gif" alt="图片"></p><p>这款软件无毒无害，作者承诺完全免费，非常良心。</p><p>此外，软件依赖net9.0，如果没有安装net 9.0的小伙伴，文末获取软件的时候有给大家提供。</p><p><strong>第二款：窗口管理器</strong></p><p>由于我工作比较忙，有时候到点下班了还有工作，导致每次下班都匆匆忙忙的关机。</p><p>而如果打开的窗口少的话，关机还容易些；有时候打开的软件、文档、文件夹都有十几二十个，那要一一的关掉这些程序，再关机就比较耗时间。</p><p>窗口管理器就是一款可以一键关闭所有窗口的软件。软件左侧是当前打开的窗口，右侧是加入了白名单的窗口。</p><p><img src="/img/xingweikuaizhao/5.webp" alt="图片"></p><p>如果不想关闭哪个程序，只要选择窗口，再点【添加到白名单】即可，想要移出白名单，选择白名单列表的窗口，再点【从白名单移除】即可。</p><p><img src="/img/xingweikuaizhao/6.webp" alt="图片"></p><p>除了【一键关闭所有】窗口之外，还可以【一键全部最小化】和【一键全部最大化】</p><p>行为快照和窗口管理器</p><p>夸克：<a href="https://pan.quark.cn/s/f3fe61e7dda3">https://pan.quark.cn/s/f3fe61e7dda3</a></p><p>百度：<a href="https://pan.baidu.com/s/1_BN5gO4NFpwi_5seKCmozw?pwd=8888">https://pan.baidu.com/s/1_BN5gO4NFpwi_5seKCmozw?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOeEyeni96Pf2pJbcawUJGeDA1?pwd=9y67#">https://pan.xunlei.com/s/VOeEyeni96Pf2pJbcawUJGeDA1?pwd=9y67#</a></p>]]></content>
+    
+    
+    <summary type="html">电脑行为快照,窗口管理器</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>批量AI抠图，文件数量检查器</title>
+    <link href="https://macin.top/posts/54df623e/"/>
+    <id>https://macin.top/posts/54df623e/</id>
+    <published>2025-11-25T01:04:33.000Z</published>
+    <updated>2025-11-29T02:56:53.704Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>啰嗦几句</strong></p><p>前两天推荐了Excel抠图，好多小伙伴们说有点点麻烦，有没有方便点AI抠图工具？答案当然是有！</p><p>今天给大家带来两款工具，有需要的小伙伴及时收藏！</p><p><strong>软件介绍</strong></p><p>今天推荐两款软件，一款是AI抠图软件，一款是文件数量统计软件。</p><p><strong>第一款：批量AI抠图</strong></p><p>这款离线抠图工具支持Win10和Win11,其原理是基于 RMBG大模型实现离线抠图功能。</p><p>与之前的 RMBG大模型抠图相比，这款工具有了Web界面，操作起来会非常方便。</p><p><img src="/img/koutu/1.webp" alt="图片"></p><p>软件使用非常简单，选择需要处理的图片上传，然后点击【批量处理】即可。</p><p><img src="/img/koutu/2.webp" alt="图片"></p><p>处理后的图片可以【批量下载结果】，非常方便！</p><p><strong>第二款：文件数量检查器</strong></p><p>文件数量检查器是一款可以检查文件和文件夹数量的功能，这个功能其实不是很实用，但是用得着的小伙伴确实会觉得好用。</p><p><img src="/img/koutu/3.webp" alt="图片"></p><p>软件可统计文件、文件和文件夹，可统计仅当前文件夹的数量，也可以统计当前目录下的所有文件数量。</p><p>点【开始扫描】即可显示扫描的结果，每个文件夹下的文件数量都给你罗列出来。</p><p><img src="/img/koutu/4.webp" alt="图片"></p><p>这款工具我记得之前有小伙伴求过，具体的应用场景我一下没想到，但我敢肯定不止一个小伙伴要过这个功能。</p><p>其他的大家自己去体验，软件就介绍到这里啦！</p><p>AI抠图和文件数量检查器</p><p>夸克：<a href="https://pan.quark.cn/s/ef635c1b6405">https://pan.quark.cn/s/ef635c1b6405</a></p><p>百度：<a href="https://pan.baidu.com/s/1fAM0C7tLtxE7DuCEnMq1ow?pwd=8888">https://pan.baidu.com/s/1fAM0C7tLtxE7DuCEnMq1ow?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOefr1-qwLQNTDdNrb0BXuekA1?pwd=itgs#">https://pan.xunlei.com/s/VOefr1-qwLQNTDdNrb0BXuekA1?pwd=itgs#</a></p>]]></content>
+    
+    
+    <summary type="html">批量AI抠图,文件数量检查器</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一键部署、永久免费：AllinSSL 教你搞定 SSL 证书自动续期</title>
+    <link href="https://macin.top/posts/912c1291/"/>
+    <id>https://macin.top/posts/912c1291/</id>
+    <published>2025-11-24T06:27:52.000Z</published>
+    <updated>2025-11-29T02:56:53.697Z</updated>
+    
+    <content type="html"><![CDATA[<p>互联网安全已迈入“秒签 + 秒续”的时代，SSL 证书的有效期正从“年&#x2F;月”压缩至“天”，频繁手动续签令人头疼。</p><p>本文将深入介绍 AllinSSL —— 一个永久免费、开源的 SSL 全生命周期管理平台。它帮你彻底告别续期焦虑，轻松实现“证书永久免费 + 自动更新”。</p><p><strong>为什么“永久免费”不只是噱头？</strong></p><ul><li><p>开源驱动，社区力量强大：</p><p>AllinSSL 在 GitHub 上已有 2.2k+⭐，完全开源、支持自托管，真正做到永久免费使用。</p><p><img src="/img/allinssl/1.webp" alt="图片"></p><p>Github地址：</p><p><a href="https://github.com/allinssl/allinssl">https://github.com/allinssl/allinssl</a></p><p>官网地址：</p><p><a href="https://allinssl.com/">https://allinssl.com</a></p></li><li><p>多 CA 全覆盖：</p><p>支持 Let’s Encrypt、ZeroSSL、Google Trust Services、SSL.com、BuyPass 等主流证书颁发机构（CA），还可自定义 CA，真正实现自由选择，无平台锁定。</p></li><li><p>自动续签，不限次数：</p><p>内建定时任务，一次配置，永久无忧。支持自动续签后无缝部署至各类环境，如自建服务器（Nginx，Apache）、宝塔面板、1P、CDN&#x2F;WAF&#x2F;对象存储等多平台，且支持通过插件的形式扩展平台支持。</p></li></ul><p><strong>实战操作：从安装→申请→自动部署</strong></p><p>下面通过具体部署演示，实现面板证书的自动化管理：</p><ol><li>All in SSL支持多种部署方式，如脚本部署，Docker，宝塔面板一键部署等，大家可根据需要自行选择（以下三种方式任选其一即可）：</li></ol><p><strong>脚本部署（推荐）：</strong></p><p>SSH登录服务器，执行以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSO http://download.allinssl.com/install_allinssl.sh &amp;&amp; bash install_allinssl.sh allinssl</span><br></pre></td></tr></table></figure><p>海外服务器请使用以下命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSO https://cnb.cool/allinssl/install.sh/-/git/raw/main/install_allinssl.sh &amp;&amp; bash install_allinssl.sh allinssl</span><br></pre></td></tr></table></figure><p>安装完成会提示以下登录信息，请安装提示放通云厂商的服务器或安全组后访问外网IPv4面板地址登陆（如放通端口后无法打开，可执行allinssl 3重启：</p><p><img src="/img/allinssl/2.webp" alt="图片"></p><p><strong>Docker部署（可选)：</strong></p><p>用户名：allinssl 密码：allinssldocker 安全入口：allinssl</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd </span><br><span class="line">  --name allinssl </span><br><span class="line">  -p 7979:8888 </span><br><span class="line">  -v /www/allinssl/data:/www/allinssl/data </span><br><span class="line">  -e ALLINSSL_USER=allinssl </span><br><span class="line">  -e ALLINSSL_PWD=allinssldocker </span><br><span class="line">  -e ALLINSSL_URL=allinssl </span><br><span class="line">  allinssl/allinssl:latest</span><br></pre></td></tr></table></figure><p><strong>宝塔面板部署（可选）：</strong></p><p>在侧边栏找到Docker-应用商店-AllinSSL点击安装，安装完可访问http:&#x2F;&#x2F;面板ip:7979&#x2F;allinssl访问，用户名：allinssl 密码：allinssldocker</p><p><img src="/img/allinssl/3.webp" alt="图片"></p><ol start="2"><li>部署完成后进入AllinSSL界面，点击授权API管理，添加授权API。（本文以域名在腾讯云注册解析为例，并部署到宝塔面板和腾讯云CDN，如您需要部署到其他位置或域名在其他厂商，可根据需要切换）</li></ol><ul><li><p>添加宝塔面板API</p></li><li><ul><li><p>打开宝塔面板，点击设置，在常用设置中找到API接口</p><p><img src="/img/allinssl/4.webp" alt="图片"></p></li></ul></li><li><ul><li><p>点击API接口设置，开启API接口，重置密钥（如果密钥不可见），并配置IP白名单，若 AllinSSL 与宝塔面板部署在同一台服务器上，白名单可填写 127.0.0.1；如分布在不同服务器，请填写对应的公网 IP，或视情况使用 *（不推荐）。</p><p><img src="/img/allinssl/5.webp" alt="图片"></p></li></ul></li><li><ul><li><p>将API密钥，面板地址（<a href="http://ip+端口),填入allinssl,并确认保存./">http://ip+端口），填入ALLinSSL，并确认保存。</a></p><p><img src="/img/allinssl/6.webp" alt="图片"></p></li></ul></li><li><ul><li>添加完成后可以在页面点击测试验证API是否添加正确。</li></ul></li><li><p>添加腾讯云API</p></li><li><ul><li><p>前往腾讯云新建密钥</p><p><a href="https://console.cloud.tencent.com/cam/capi">https://console.cloud.tencent.com/cam/capi</a></p></li><li><p>创建完成后填写到AllinSSL保存</p><p><img src="/img/allinssl/7.webp" alt="图片"></p></li></ul></li><li><ul><li><p>添加完成后点击测试测试API是否正常</p><p>完成后我们即可开始创建工作流，进行证书的自动部署与续签</p></li></ul></li></ul><ol start="3"><li>点击自动化部署，并添加自动化部署</li></ol><p><img src="/img/allinssl/8.webp" alt="图片"></p><ol start="4"><li>选择快速部署模板</li></ol><p><img src="/img/allinssl/9.webp" alt="图片"></p><ol start="5"><li>点击申请证书</li></ol><p><img src="/img/allinssl/10.webp" alt="图片"></p><p>设置需要申请证书的邮箱和域名，点击保存</p><p><img src="/img/allinssl/11.webp" alt="图片"></p><ol start="6"><li>点击部署，设置需要部署的服务，此处因为需要部署到宝塔面板的网站，因此选择宝塔面板-网站</li></ol><p><img src="/img/allinssl/12.webp" alt="图片"></p><p>选择需要部署的网站名，其他默认即可，设置完成后提交</p><p><img src="/img/allinssl/13.webp" alt="图片"></p><p>如需同时部署到腾讯云CDN（或其他服务商）可向下添加部署分支或并行分支，按页面提示填写即可，此处不再另外演示。</p><p><img src="/img/allinssl/14.webp" alt="图片"></p><ol start="7"><li>最后可配置通知任务接收部署任务状态通知，添加前请前往设置页面配置具体的通知渠道，如果不需要通知，可直接删除后续流程。</li></ol><p><img src="/img/allinssl/15.webp" alt="图片"></p><ol start="8"><li>全部配置完成后点击保存即可</li></ol><p><img src="/img/allinssl/16.webp" alt="图片"></p><ol start="9"><li>保存后建议点击执行手动执行验证工作流是否正常，确认执行成功。</li></ol><p><img src="/img/allinssl/17.webp" alt="图片"></p><ol start="10"><li>前往宝塔面板即可看到已经部署的证书。</li></ol><p><img src="/img/allinssl/18.webp" alt="图片"></p><ol start="11"><li>访问测试，可以看到证书已经正常部署</li></ol><p><img src="/img/allinssl/19.webp" alt="图片"></p><p>实战操作：网站证书监控</p><p>自动化续签与部署并非终点。实时、精准的监控才是确保“永久免费+自动更新”真正落地的核心保障。AllinSSL 提供了多维度的监控能力，让证书状态尽在掌握。</p><p><em>PS：当前监控功能正在升级，改版后将支持更多协议类型，并引入更灵活的通知规则配置，预计本周内正式上线。敬请期待！</em></p><ol><li>打开监控页面</li></ol><p><img src="/img/allinssl/20.webp" alt="图片"></p><ol start="2"><li>点击添加监控，并输入要监控的域名（可以自定义端口，不填写的话默认443），选择通知渠道。</li></ol><p><img src="/img/allinssl/21.webp" alt="图片"></p><ol start="3"><li>点击确认添加，添加后即可看到证书状态，如出现异常，会通过配置的通知渠道发送告警通知。</li></ol><p><img src="/img/allinssl/22.webp" alt="图片"></p><p>AllinSSL 以<strong>“永久免费 + 完全开源”</strong>为核心理念，通过自动化流水线实现 SSL 证书的<strong>申请 - 自动续期 - 无缝部署 - 实时监控</strong>全流程闭环，真正解决 SSL 运维的最后一公里问题。</p><p><strong>立即上手 AllinSSL：开启证书管理新时代：</strong></p><ul><li><p>Github地址：</p><p><a href="https://github.com/allinssl/allinssl">https://github.com/allinssl/allinssl</a></p></li><li><p>官网地址：</p><p><a href="https://allinssl.com/">https://allinssl.com</a></p></li></ul>]]></content>
+    
+    
+    <summary type="html">AllinSSL</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>硬盘越涨越疯，SUG Drive 我却 0 成本扩容 10TB？</title>
+    <link href="https://macin.top/posts/1ec394b0/"/>
+    <id>https://macin.top/posts/1ec394b0/</id>
+    <published>2025-11-24T05:44:10.000Z</published>
+    <updated>2025-11-29T02:56:53.708Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近不少消费者发现，原本亲民的固态硬盘价格已悄然翻倍。据报道本轮涨价的核心驱动力来自 AI 算力需求的爆发，AI 服务器在推理阶段需处理 TB 级资料，仅靠 DRAM 或 HBM 无法承载，因此高容量 HDD 与 SSD 也同步出现供应吃紧。</p><p>面对存储价格的高涨，当下价格过高，现在入手不划算，如果没有必须购买的情况，可以选择将网盘作为一种 “本地磁盘” 的替代方案，可低成本实现存储需求的过渡。</p><p>那么如何把网盘挂载到你的电脑里，就像用自己的本地硬盘一样那么方便？这里给大家推荐这款「SUG Drive」工具，据介绍是基于 AList 挂载，所以基本上支持主流的网盘，包括：123云盘、百度网盘、115网盘、夸克网盘、阿里云盘、天翼网盘等。</p><p><img src="/img/alist/11.webp" alt="图片"></p><p><strong>使用介绍</strong></p><p>目前「SUG Drive」内置了 Alist 本地服务器，只需要启动服务器，即可访问 Alist 项目进行添加网站挂载。可惜不支持远程服务器的 Alist 添加。用管理员身份运行「SUG Drive」首次访问 Alist 的账号名是 Admin，密码在 CMD 里面的 password is:。</p><p><img src="/img/alist/12.webp" alt="图片"></p><p>浏览器访问你的本地电脑 IP+5244 端口（例如：<a href="http://192.168.245.1:5244/%EF%BC%89">http://192.168.245.1:5244/）</a> ，访问 Alist 之后点击存储，添加你需要挂载到本地的网盘。</p><p><img src="/img/alist/13.webp" alt="图片"></p><p>接下来点击 Rclone 挂载，会提示你安装 Rclone 软件，然后输入你的 Alist 用户名和密码，点击保存配置文件。</p><p><img src="/img/alist/14.webp" alt="图片"></p><p>挂载成功后，会在文件管理器里面显示 SUG Drive。需要提醒的是，点击 挂载按钮前，还可以设置挂载盘符、挂载名称、挂载图标。</p><p><img src="/img/alist/15.webp" alt="图片"></p><p>接下来你可以可像本地磁盘一样直接读写文件，无需频繁上传下载，不过速度取决于网盘，有些网盘如果你没有会员的话，速度也会很慢，这里推荐挂载天翼网盘，基本上不限速。</p><p><img src="/img/alist/16.webp" alt="图片"></p><p><strong>总结</strong></p><p>这款「SUG Drive」支持多平台网盘聚合挂载，适合需要整合多个云端资源的用户，同类的软件还有 CloudDrive 以及 闪秒云（将网盘变成本地磁盘的划时代产品），感兴趣的都自己试试看咯。</p><p>下载地址</p><p><strong>网盘下载：</strong><br><a href="https://pan.quark.cn/s/f3faa0c54892">https://pan.quark.cn/s/f3faa0c54892</a></p><p><strong>视频介绍：</strong></p><p><a href="https://www.bilibili.com/video/BV1U4yHBJEn7">https://www.bilibili.com/video/BV1U4yHBJEn7</a></p>]]></content>
+    
+    
+    <summary type="html">SUG Drive</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tiktok 抖音国际最新版下载安装全流程！免拔卡附安装包+常见问题</title>
+    <link href="https://macin.top/posts/ede69f08/"/>
+    <id>https://macin.top/posts/ede69f08/</id>
+    <published>2025-11-23T00:33:16.000Z</published>
+    <updated>2025-11-29T02:56:53.694Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="软件简介"><a href="#软件简介" class="headerlink" title="软件简介"></a><strong>软件简介</strong></h2><p>很多小伙伴在使用的时候，总觉得步骤太复杂，尤其是遇到需要“拔卡”才能正常使用的时候，体验并不算好。今天要分享的就是最新的 <strong>42.4.3 版本</strong>，它无需繁琐操作，安装后即可正常使用。再配合 <strong>插件 2.22 版本</strong>，功能更完整，体验更加顺畅。</p><p><strong>功能特点</strong></p><p>首次进入软件需要等几秒关掉弹窗，此后可正常观看</p><p>（当然还有一个前提条件）</p><table><thead><tr><th><img src="/img/tiktok/2.webp" alt="图片"></th><th><img src="/img/tiktok/3.webp" alt="图片"></th><th><img src="/img/tiktok/4.webp" alt="图片"></th></tr></thead></table><p> 语言根据自己设置</p><table><thead><tr><th><img src="/img/tiktok/5.webp" alt="图片"></th><th><img src="/img/tiktok/6.webp" alt="图片"></th></tr></thead></table><table><thead><tr><th><img src="/img/tiktok/7.webp" alt="图片"></th><th><img src="/img/tiktok/8.webp" alt="图片"></th></tr></thead></table><p>注：更多功能请自行下载后体验</p><p>TikTok国际版夸克云<br>链接:<a href="https://pan.quark.cn/s/c2cf4782274d">https://pan.quark.cn/s/c2cf4782274d</a><br>提取码:N2sv</p><p>备用地址 TikTok国际版百度云<br>链接:<a href="https://pan.baidu.com/s/18r4UnA8YS5dunUUAFWFhqw">https://pan.baidu.com/s/18r4UnA8YS5dunUUAFWFhqw</a><br>提取码:8w7p</p><p>备用地址 TikTok国际版迅雷云<br>链接:<a href="https://pan.xunlei.com/s/VO_Ft_3r6Unwx2X5r9ThFfGMA1">https://pan.xunlei.com/s/VO_Ft_3r6Unwx2X5r9ThFfGMA1</a><br>提取码:frhe</p>]]></content>
+    
+    
+    <summary type="html">TikTok</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="android" scheme="https://macin.top/categories/os/android/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="android" scheme="https://macin.top/tags/android/"/>
+    
+  </entry>
+  
+</feed>

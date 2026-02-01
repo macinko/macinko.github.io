@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>马斯克的赛博空间</title>
+  <icon>https://macin.top/img/ast.webp</icon>
+  <subtitle>Cyber</subtitle>
+  <link href="https://macin.top/atom.xml" rel="self"/>
+  
+  <link href="https://macin.top/"/>
+  <updated>2026-02-01T00:50:14.205Z</updated>
+  <id>https://macin.top/</id>
+  
+  <author>
+    <name>马斯克</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AGI雏形，OpenClaw（Clawdbot）本地部署和使用教程</title>
+    <link href="https://macin.top/posts/e1063cb2/"/>
+    <id>https://macin.top/posts/e1063cb2/</id>
+    <published>2026-01-28T06:25:21.000Z</published>
+    <updated>2026-02-01T00:50:14.205Z</updated>
+    
+    <content type="html"><![CDATA[<p>你知道部署 OpenClaw 的收费教程，在闲鱼卖多少钱吗？几元到十几元不等。</p><p><img src="/img/Clawdbot/1.webp" alt="Yangyixxxx - 1月26日_1"></p><p>今天我就带你跑通 OpenClaw 的本地部署和使用。 </p><p>本次教程主要分为三部： </p><ol><li><p>安装 OpenClaw</p></li><li><p>配置 OpenClaw</p></li><li><p>实战</p></li></ol><h1 id="安装-OpenClaw"><a href="#安装-OpenClaw" class="headerlink" title="安装 OpenClaw"></a>安装 OpenClaw</h1><p>在尝鲜的情况下，你选择在一台虚拟机，云主机或者废弃老电脑上安装。最主要的是，上面没有任何个人隐私信息和重要的数据文件。</p><p>然后你可以根据你的情况，选择下面的方法：</p><h2 id="任何系统，之前装过-node-js-的，可以使用-npm-安装"><a href="#任何系统，之前装过-node-js-的，可以使用-npm-安装" class="headerlink" title="任何系统，之前装过 node.js 的，可以使用 npm 安装"></a>任何系统，之前装过 node.js 的，可以使用 npm 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g openclaw@latest</span><br></pre></td></tr></table></figure><p>然后下面的命令启动</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw onboard --install-daemon</span><br></pre></td></tr></table></figure><h2 id="在-mac-或者-liunx-环境下，选择一台没有宝贵数据的电脑，输入下面命令："><a href="#在-mac-或者-liunx-环境下，选择一台没有宝贵数据的电脑，输入下面命令：" class="headerlink" title="在 mac 或者 liunx 环境下，选择一台没有宝贵数据的电脑，输入下面命令："></a>在 mac 或者 liunx 环境下，选择一台没有宝贵数据的电脑，输入下面命令：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://openclaw.ai/install.sh | bash</span><br></pre></td></tr></table></figure><h2 id="window-（PowerShell）电脑输入下面命令："><a href="#window-（PowerShell）电脑输入下面命令：" class="headerlink" title="window （PowerShell）电脑输入下面命令："></a>window （PowerShell）电脑输入下面命令：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iwr -useb https://openclaw.ai/install.ps1 | iex</span><br></pre></td></tr></table></figure><p>耐心等待安装完成，记得保持外网畅通。</p><p>装完后，下面，我们还需配置两样东西。</p><h1 id="配置-openclaw"><a href="#配置-openclaw" class="headerlink" title="配置 openclaw"></a>配置 openclaw</h1><p>然后输入下面命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw onboard --flow quickstart</span><br></pre></td></tr></table></figure><p>启动快速设置模式</p><p><img src="/img/Clawdbot/2.webp" alt="图像"></p><p>选择 yes，忽略风险</p><p>接下来选择模型，</p><p><img src="/img/Clawdbot/3.webp" alt="图像"></p><p>然后输入 apikey</p><p><img src="/img/Clawdbot/4.webp" alt="图像"></p><p>最后是链接 Whatsapp，这个最好连接了，就扫二维码。其他的 Telegram，Discord 都很麻烦。</p><p><img src="/img/Clawdbot/5.webp" alt="图像"></p><p>搞完后，在 Whatsapp 中会有一个联系人：格式是电话号码+（你）</p><p>接下来就是选择安装 Claude Skill 和 hook，假如你不懂，就理解为一些 AI 能用的小程序就行。</p><p>最后就出这个界面，让你打开本地聊天界面</p><p><img src="/img/Clawdbot/6.webp" alt="图像"></p><p>到此，我们就安装好了。辛苦这么久，现在就得好好把玩一下。</p><h1 id="实战一下"><a href="#实战一下" class="headerlink" title="实战一下"></a>实战一下</h1><p>让它在聊天界面画图</p><p><img src="/img/Clawdbot/7.webp" alt="图像"></p><p>也可以让它，收集 AI 资讯</p><p><img src="/img/Clawdbot/8.webp" alt="图像"></p><p>看起来很普通聊天工具没啥区别，其实是我没那么疯狂。</p><p>海外已经有不少使用案例，有人用他订餐厅，有人出 10k 让它自己炒币。</p><p>最近，苹果 Mac mini 的销量也是因为它的出现开始飙升。有 AI 初创CEO，昨天装了它，给自己干活 写了三个油管脚本、 总结 AI 新闻…</p><p><strong>最后总结一下：</strong></p><p>这个东西牛逼的地方在于打破不同软件之间的生态壁垒，然后充分放开了本地电脑的权限干事情。</p><p>相当于完全奔放版本的 Claude Code</p><p>值得注意的是，这个东西十分不安全，不建议普通人安装。</p><p>不过，任何伟大的事情刚出来的时候都有风险的，比如：比特币</p>]]></content>
+    
+    
+    <summary type="html">Clawdbot</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在线转换工具广告太多？Docker 部署 VERT，更安全无广告</title>
+    <link href="https://macin.top/posts/5032a6bf/"/>
+    <id>https://macin.top/posts/5032a6bf/</id>
+    <published>2026-01-27T06:11:16.000Z</published>
+    <updated>2026-02-01T00:50:14.235Z</updated>
+    
+    <content type="html"><![CDATA[<p>VERT：</p><p>一个本地文件转换的开源工具，主打没有广告，完全开源和本地处理。</p><p><img src="/img/VERT/1.webp" alt="图片"></p><p>在线站点：</p><p><a href="https://vert.sh/">https://vert.sh</a></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker Compose</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">vert:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/vert-sh/vert:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">vert</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:80</span> </span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>http://NAS的IP:8080</code> 就能看到界面</p><p><img src="/img/VERT/2.webp" alt="图片"></p><p>点击顶部菜单栏，来到设置页面，就可以切换语言为中文了</p><p><img src="/img/VERT/3.webp" alt="图片"></p><p>TIP：如果是 HTTP 访问界面，有可能右小角会有小弹窗警告，有些功能需要 HTTPS 访问才能完整使用</p><p><img src="/img/VERT/4.webp" alt="图片"></p><p>回到首页或者上传页面，能看到支持的格式非常多</p><p><img src="/img/VERT/5.webp" alt="图片"></p><p>点击上传文件，我这里先用图片试试</p><p><img src="/img/VERT/6.webp" alt="图片"></p><p>选择需要转换的格式（可以批量进行转换）</p><p><img src="/img/VERT/7.webp" alt="图片"></p><p>点击转换按钮，等进度条完成就可以下载了</p><p><img src="/img/VERT/8.webp" alt="图片"></p><p>将音频 .flac 转为 .mp3 也是没有问题的</p><p><img src="/img/VERT/9.webp" alt="图片"></p><p>将文档 .docx 转为 .md ，图片会自动提取处理打包</p><p><img src="/img/VERT/10.webp" alt="图片"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>VERT 支持图片、音频、文档等多类格式转换，还能批量操作，上手使用简单。我平时也会用在线转换工具，将 svg、webp 格式的图片转换成 png 格式，有一点不方便就是广告多，而且担心有后台上传图片。对于平时经常需要转换各种格式小伙伴，可以部署一个试试。</p>]]></content>
+    
+    
+    <summary type="html">VERT</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NAS 部署 BentoPDF 工具箱，处理 PDF 文件安全又高效</title>
+    <link href="https://macin.top/posts/c96e1648/"/>
+    <id>https://macin.top/posts/c96e1648/</id>
+    <published>2026-01-27T05:51:39.000Z</published>
+    <updated>2026-02-01T00:50:14.209Z</updated>
+    
+    <content type="html"><![CDATA[<p>BentoPDF：</p><p>一款功能强大、注重隐私的 PDF 工具箱，支持自托管部署，可让用户直接在浏览器中操作、编辑、合并和处理 PDF 文件。无需服务器端参与，确保文件的安全性和隐私性。</p><p><img src="/img/BentoPDF/1.webp" alt="图片"></p><p>在线站点：</p><p><a href="https://bentopdf.com/">https://bentopdf.com</a></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker Compose</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">bentopdf:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bentopdf/bentopdf:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">bentopdf</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:8080</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>http://NAS的IP:8080</code> 就能看到界面</p><p><img src="/img/BentoPDF/2.webp" alt="图片"></p><p>首先滑动到最底部，切换语言为中文</p><p><img src="/img/BentoPDF/3.webp" alt="图片"></p><p>这样就舒服多了</p><p><img src="/img/BentoPDF/4.webp" alt="图片"></p><p>自带的功能很多，而且都有分类好</p><p><img src="/img/BentoPDF/5.webp" alt="图片"></p><p>PDF 编辑器，可以标注文字非常便捷</p><p><img src="/img/BentoPDF/6.webp" alt="图片"></p><p>签署 PDF，给合同签名有时候需要用到</p><p><img src="/img/BentoPDF/7.webp" alt="图片"></p><p>下面放一个长截图，可以看看也没用需要的功能</p><p><img src="/img/BentoPDF/8.webp" alt="图片"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>BentoPDF 是一款兼顾实用性与隐私性的 PDF 工具箱，十分值得推荐。拥有 50 余个功能，覆盖 PDF 编辑、签署、标注等绝大部分使用场景，满足日常各类处理需求。界面设计美观大气，无论是自用还是对外提供服务都很合适。部署操作简单，且所有文件处理均在客户端完成，无需服务器参与，安全性和隐私性拉满。</p>]]></content>
+    
+    
+    <summary type="html">BentoPDF</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>终极版 Windows 7 镜像！集成全更新补丁</title>
+    <link href="https://macin.top/posts/f4f53848/"/>
+    <id>https://macin.top/posts/f4f53848/</id>
+    <published>2026-01-27T05:45:35.000Z</published>
+    <updated>2026-02-01T00:50:14.243Z</updated>
+    
+    <content type="html"><![CDATA[<p>虽然微软在 2020 年 1 月 14 日正式停止对 Win7 系统的支持，不过有些老旧电脑还在用 Win7 系统，又或者只是单纯怀念那个熟悉 Aero 界面。</p><p>不过很多软件宣布不再支持 Win7 系统，好在之前有国外开发者为解决这个痛点，让 Win10 及以上系统的软件支持在 Win7 运行，开发了免费开源的 Win7 补丁「VxKex」主要是给系统新增了一些 API 接口，然后开启兼容性的方式来加载。</p><p><img src="/img/win7/21.webp" alt="图片"></p><p>现在还有国外大神 @BobPony 制作了一个终极版 Windows 7 镜像，特点就是集成了截至 2026 年 1 月的所有关键更新，包括 ESU（扩展安全更新）、累积更新、服务包，以及USB3.x、NVMe 和部分网络适配器驱动程序。</p><p>这个终极版 Windows 7 镜像体积 11.8G 大小，主要是内置了大量系统语言，包括简体、繁体中文、英、日、韩等 35 种离线语言包。</p><p><img src="/img/win7/22.webp" alt="图片"></p><p>安装过程选择简体中文即可，安装完成后，可通过控制面板 → 区域和语言 → 键盘和语言 → 安装或卸载显示语言，卸载无用的语言包。</p><p><img src="/img/win7/23.webp" alt="图片"></p><p>这个终极版 Windows 7 镜像包含： Windows 7 入门版（Starter）、家庭基础版（HomeBasic）、家庭高级版（HomePremium）、专业版（Professional）、终极版（Ultimate），安装时可根据需求选择。</p><p><img src="/img/win7/24.webp" alt="图片"></p><p>下载地址</p><p>网盘下载：<br><a href="https://pan.quark.cn/s/6994c0e2f00f">https://pan.quark.cn/s/6994c0e2f00f</a></p>]]></content>
+    
+    
+    <summary type="html">windows</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="windows" scheme="https://macin.top/categories/os/windows/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="windows" scheme="https://macin.top/tags/windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>两款键盘改键和屏蔽的工具，KeyboardShield，KeybMap</title>
+    <link href="https://macin.top/posts/b68e531c/"/>
+    <id>https://macin.top/posts/b68e531c/</id>
+    <published>2026-01-27T05:40:49.000Z</published>
+    <updated>2026-02-01T00:50:14.231Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天推荐两款键盘<strong>改键</strong>和<strong>屏蔽</strong>的工具。</p><p><strong>第一款：KeyboardShield</strong></p><p>KeyboardShield是一款轻量级的键盘屏蔽和键位映射工具，软件大小仅124K，非常非常小，而且还是绿色单文件版，功能也挺强大的。</p><p><img src="/img/KeyboardShield/1.webp" alt="图片"></p><p>软件的功能主要有两个，一个是键盘映射的功能，也就是我们说的键位更改，一个是键盘屏蔽的功能。</p><p><strong>键位更改：</strong>就是把你的某个坏的键改为其他键，让其他键替换掉原来坏的键位。比如我电脑的Q键坏了，我想用A键来代替。</p><p><img src="/img/KeyboardShield/2.webp" alt="图片"></p><p>那么我们可以这么操作：</p><ol><li>在【原按键】里挑选A，在【新按键】里挑选Q</li><li>点【添加】</li><li>在列表里勾选我们刚刚添加的更改项；</li><li>勾选【开启屏蔽、改键】即可</li></ol><p>这样我们在<strong>按“A”键的时候就会变成字母Q键</strong>了。</p><p>有小伙伴说我键盘都坏了，那怎么输入键位？其实软件并不是让你键盘敲入，而是可以用鼠标进行选择的，如下图：</p><p><img src="/img/KeyboardShield/3.webp" alt="图片"></p><p>通过上面的方法，如果哪个键坏了，可以更改为其他不常用的键，起到临时代替的作用！</p><p><strong>键盘屏蔽：</strong>除了更改键位以外，软件还有屏蔽整个键盘的功能，操作非常简单，点击勾选右下角的【屏蔽所有按键】，然后再勾选【开启屏蔽、改键】即可。</p><p><img src="/img/KeyboardShield/4.webp" alt="图片"></p><p>有了这个功能，我们就可以屏蔽掉键盘，然后再擦拭键盘了。</p><p>其他的功能像屏蔽热键、多键组合键更改等等功能，大家自己去体验！</p><p><strong>第二款：KeybMap</strong></p><p>KeybMap同样是一款键盘映射的工具，它可以把某个有问题的键位更改成其他键，让其他的键代替它。</p><p>软件同样是绿色版，打开软件是下面这样，点【添加】</p><p><img src="/img/KeyboardShield/5.webp" alt="图片"></p><p>比如Q键坏了，我想用A键来代替，那么【原始值】里就选择A，而映射值就选择Q，然后【确定】</p><p><img src="/img/KeyboardShield/6.webp" alt="图片"></p><p>再然后【确定】</p><p><img src="/img/KeyboardShield/7.webp" alt="图片"></p><p>要使功能有效，就要重启电脑，重启以后，软件就变更改成功了。</p><p>键盘映射</p><p>夸克：<a href="https://pan.quark.cn/s/0c64cba3c2db">https://pan.quark.cn/s/0c64cba3c2db</a></p><p>百度：<a href="https://pan.baidu.com/s/5p6hfpIGiKFoyfmI-gsCGgg">https://pan.baidu.com/s/5p6hfpIGiKFoyfmI-gsCGgg</a></p><p>迅雷：<a href="https://pan.xunlei.com/s/VOjxY6HRfydRz9Z7cKiStIKgA1?pwd=fiih#">https://pan.xunlei.com/s/VOjxY6HRfydRz9Z7cKiStIKgA1?pwd=fiih#</a></p>]]></content>
+    
+    
+    <summary type="html">KeyboardShield,KeybMap</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS任意版本号APP下载，无需越狱</title>
+    <link href="https://macin.top/posts/fa0f42ee/"/>
+    <id>https://macin.top/posts/fa0f42ee/</id>
+    <published>2026-01-20T00:55:06.000Z</published>
+    <updated>2026-02-01T00:50:14.222Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="iOS任意版本号APP下载"><a href="#iOS任意版本号APP下载" class="headerlink" title="iOS任意版本号APP下载"></a>iOS任意版本号APP下载</h1><blockquote><p>下载iOS旧版应用，简化抓包流程。支持Windows 10&#x2F;8&#x2F;7（由于使用了Fiddler库，因此需要.Net环境）</p></blockquote><p>论坛地址</p><p><a href="https://www.52pojie.cn/thread-2077257-1-1.html">https://www.52pojie.cn/thread-2077257-1-1.html</a></p><p>视频教程</p><p><a href="https://www.bilibili.com/video/BV1VQ4y1M77t/?vd_source=dd369a7bc984f8691b5fa701ea92880b">https://www.bilibili.com/video/BV1VQ4y1M77t/?vd_source=dd369a7bc984f8691b5fa701ea92880b</a></p><h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p><strong>iOS任意版本号APP下载 v8.1</strong></p><ul><li>百度云：<a href="https://pan.baidu.com/s/19OpQ_DCrnTaxxyRMB5rUVQ?pwd=hkhk">https://pan.baidu.com/s/19OpQ_DCrnTaxxyRMB5rUVQ?pwd=hkhk</a> 提取码：hkhk</li><li>蓝奏云：<a href="https://wwanj.lanzouu.com/iDqnF3cqzzpc">https://wwanj.lanzouu.com/iDqnF3cqzzpc</a></li></ul><p><strong>iTunes v12.6.5.3 下载</strong></p><ul><li>64位：<a href="https://secure-appldnld.apple.com/itunes12/091-87819-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A6/iTunes64Setup.exe">https://secure-appldnld.apple.com/itunes12/091-87819-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A6/iTunes64Setup.exe</a></li><li>32位：<a href="https://secure-appldnld.apple.com/itunes12/091-87820-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A5/iTunesSetup.exe">https://secure-appldnld.apple.com/itunes12/091-87820-20180912-69177170-B085-11E8-B6AB-C1D03409AD2A5/iTunesSetup.exe</a></li></ul><p><img src="/img/ios/1.webp" alt="图片"></p><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a><strong>使用方法</strong></h2><ul><li><p><strong>直接搜索方式</strong>：</p></li><li><ol><li>搜索APP，双击选择。</li><li>双击选择要下载的版本。</li><li>在iTunes中下载即可。</li></ol></li><li><p><strong>复制APP链接方式</strong>：</p></li><li><ol><li>在iTunes下载按钮右侧下拉菜单中选择【复制链接】。</li><li>双击选择要下载的版本。</li><li>在iTunes中下载即可。</li></ol></li></ul><h2 id="常见问题及解决方法"><a href="#常见问题及解决方法" class="headerlink" title="常见问题及解决方法"></a><strong>常见问题及解决方法</strong></h2><ul><li><p><strong>iTunes账号无法登录成功</strong>：</p></li><li><ol><li>关闭本工具，重新登录 iTunes。</li><li>登录成功后再打开本工具。</li></ol></li><li><p><strong>iTunes对电脑进行授权时无法成功，反复授权</strong>：</p></li><li><ul><li>关闭本工具，再进行授权。</li></ul></li><li><p><strong>无法搜索到APP历史版本号</strong>：</p></li><li><ol><li>不要拦截，先下载软件最新版。</li><li>在本工具中【安装管理】下找到对应IPA安装包，右键选择【查找版本ID】。</li><li>即可列出软件所有历史版本ID，版本号按新版到旧版排序。</li></ol></li><li><p><strong>iTunes 一直显示正在下载</strong>：</p></li><li><ol><li>取消iTunes中的下载。</li><li>本工具【停止拦截】，再点击iTunes【继续下载】。</li></ol></li><li><p><strong>下载完APP后安装到手机上打开闪退</strong>：</p></li><li><ol><li>在手机中卸载该APP。</li><li>使用下载此App的账号登录App Store，在App Store中随便下载一个应用，不要卸载。</li><li>使用同步助手重新安装。（如果仍闪退，尝试覆盖安装）</li></ol></li><li><p><strong>导入伪旧版App后，iTunes未检测到更新</strong>：</p></li><li><ol><li>在iTunes更新列表页面下，按F5刷新。</li><li>如上述方法未解决，删除当列表所有文件，保留文件，再点击右下角检测更新按钮。</li></ol></li><li><p><strong>“已停止供货”的APP怎么抓取</strong>（已失效）：</p></li><li><ol><li>取消拦截，下载该软件最新版。</li><li>在本助手里切换到【安装管理】，右键APP，选择【伪装旧版APP】。</li><li>双击【*_伪装版.ipa】（或右键，在文件夹中打开），将APP拖动到iTunes资料库，替换并检查更新，该软件变为更新状态。</li><li>【开始拦截】，在iTunes中更新该软件，即可正常下载该版本。</li></ol></li></ul>]]></content>
+    
+    
+    <summary type="html">ios</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一个专门用于去除 Nano Banana 水印的批量处理工具，所有处理在浏览器本地完成，保护用户隐私。</title>
+    <link href="https://macin.top/posts/a6a1c961/"/>
+    <id>https://macin.top/posts/a6a1c961/</id>
+    <published>2026-01-19T01:57:05.000Z</published>
+    <updated>2026-02-01T00:50:14.230Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>这是一个专门用于去除 <strong>Nano Banana</strong> 水印的批量处理工具，使用 <strong>Reverse Alpha Blending</strong> 算法，所有处理在浏览器本地完成，保护用户隐私。</p></blockquote><p>Github地址</p><p><strong><a href="https://github.com/24K-GA/banana-watermark">https://github.com/24K-GA/banana-watermark</a></strong></p><p>在线体验（科学上网）</p><p><strong><a href="https://banana-watermark.vercel.app/">https://banana-watermark.vercel.app</a></strong></p><p><img src="/img/nano/1.webp" alt="图片"></p><h2 id="项目特点"><a href="#项目特点" class="headerlink" title="项目特点"></a><strong>项目特点</strong></h2><ul><li>专属定制：专门针对 Nano Banana 水印优化。</li><li>自动检测：智能识别图片右下角的 Nano Banana 水印。</li><li>批量处理：一次上传多张图片，批量去除水印。</li><li>本地处理：所有处理在浏览器本地完成，图片不会上传到服务器。</li><li>手绘风格 UI：可爱的香蕉主题界面设计。</li><li>响应式设计：支持桌面和移动设备。</li></ul><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a><strong>适用范围</strong></h2><ul><li>支持：Nano Banana 水印、右下角固定位置水印、白色半透明水印。</li><li>不支持：其他平台水印、随机位置水印、彩色水印。</li></ul>]]></content>
+    
+    
+    <summary type="html">google,nano banana,ai</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/categories/ai/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+    <category term="google" scheme="https://macin.top/tags/google/"/>
+    
+    <category term="nano banana" scheme="https://macin.top/tags/nano-banana/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>huobao-drama 基于AI的一站式短剧生成平台，实现从剧本生成、角色设计、分镜制作到视频合成的全流程自动化。</title>
+    <link href="https://macin.top/posts/860fd374/"/>
+    <id>https://macin.top/posts/860fd374/</id>
+    <published>2026-01-19T01:43:23.000Z</published>
+    <updated>2026-02-01T00:50:14.221Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>基于AI的一站式短剧生成平台，实现从剧本生成、角色设计、分镜制作到视频合成的全流程自动化。</p></blockquote><p>Github地址</p><p><strong><a href="https://github.com/chatfire-AI/huobao-drama">https://github.com/chatfire-AI/huobao-drama</a></strong></p><h1 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h1><ul><li><p><strong>角色管理</strong>：</p></li><li><ul><li>AI生成角色形象。</li><li>批量角色生成。</li><li>角色图片上传和管理。</li></ul></li><li><p><strong>分镜制作</strong>：</p></li><li><ul><li>自动生成分镜脚本。</li><li>场景描述和镜头设计。</li><li>分镜图片生成（文生图）。</li><li>帧类型选择（首帧&#x2F;关键帧&#x2F;尾帧&#x2F;分镜板）。</li></ul></li><li><p><strong>视频生成</strong>：</p></li><li><ul><li>图生视频自动生成。</li><li>视频合成和剪辑。</li><li>转场效果。</li></ul></li><li><p><strong>资源管理</strong>：</p></li><li><ul><li>素材库统一管理。</li><li>本地存储支持。</li><li>资源导入导出。</li><li>任务进度追踪。</li></ul></li></ul><h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><ul><li><p><strong>环境要求</strong>：</p></li><li><ul><li>Go：1.23+</li><li>Node.js：18+</li><li>npm：9+</li><li>FFmpeg：4.0+（必需）</li><li>SQLite：3.x（已内置）</li></ul></li><li><p><strong>安装 FFmpeg</strong>：</p></li><li><ul><li>macOS：<code>brew install ffmpeg</code></li><li>Ubuntu&#x2F;Debian：<code>sudo apt update &amp;&amp; sudo apt install ffmpeg</code></li><li>Windows：从FFmpeg官网下载并配置环境变量</li></ul></li><li><p><strong>配置文件</strong>：</p></li><li><ul><li><p>复制并编辑<code>configs/config.example.yaml</code>为<code>configs/config.yaml</code>。</p></li><li><p>配置文件示例：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">app:</span></span><br><span class="line">  <span class="string">name:&quot;Huobao</span> <span class="string">Drama</span> <span class="string">API&quot;</span></span><br><span class="line"><span class="string">version:&quot;1.0.0&quot;</span></span><br><span class="line"><span class="string">debug:true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="string">port:5678</span></span><br><span class="line"><span class="string">host:&quot;0.0.0.0&quot;</span></span><br><span class="line"><span class="attr">cors_origins:</span></span><br><span class="line">    <span class="string">-&quot;http://localhost:3012&quot;</span></span><br><span class="line"><span class="string">read_timeout:600</span></span><br><span class="line"><span class="string">write_timeout:600</span></span><br><span class="line"></span><br><span class="line"><span class="attr">database:</span></span><br><span class="line"><span class="string">type:&quot;sqlite&quot;</span></span><br><span class="line"><span class="string">path:&quot;./data/drama_generator.db&quot;</span></span><br><span class="line"><span class="string">max_idle:10</span></span><br><span class="line"><span class="string">max_open:100</span></span><br><span class="line"></span><br><span class="line"><span class="attr">storage:</span></span><br><span class="line"><span class="string">type:&quot;local&quot;</span></span><br><span class="line"><span class="string">local_path:&quot;./data/storage&quot;</span></span><br><span class="line"><span class="string">base_url:&quot;http://localhost:5678/static&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">ai:</span></span><br><span class="line"><span class="string">default_text_provider:&quot;openai&quot;</span></span><br><span class="line"><span class="string">default_image_provider:&quot;openai&quot;</span></span><br><span class="line"><span class="string">default_video_provider:&quot;doubao&quot;</span></span><br></pre></td></tr></table></figure></li></ul></li><li><p><strong>安装依赖</strong>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/chatfire-AI/huobao-drama.git</span><br><span class="line"><span class="built_in">cd</span> huobao-drama</span><br><span class="line">go mod download</span><br><span class="line"><span class="built_in">cd</span> web</span><br><span class="line">npm install</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure></li><li><p><strong>启动项目</strong>：</p></li><li><ul><li>访问：<code>http://localhost:5678</code></li></ul></li><li><ul><li>前端地址：<code>http://localhost:3012</code></li><li>后端API：<code>http://localhost:5678/api/v1</code></li></ul></li><li><ul><li><p><strong>开发模式</strong>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 终端1：启动后端服务</span></span><br><span class="line">go run main.go</span><br><span class="line"></span><br><span class="line"><span class="comment"># 终端2：启动前端开发服务器</span></span><br><span class="line"><span class="built_in">cd</span> web</span><br><span class="line">npm run dev</span><br></pre></td></tr></table></figure></li><li><p><strong>单服务模式</strong>：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 构建前端</span></span><br><span class="line"><span class="built_in">cd</span> web</span><br><span class="line">npm run build</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 启动服务</span></span><br><span class="line">go run main.go</span><br></pre></td></tr></table></figure></li></ul></li></ul><h1 id="🐳-Docker-部署（推荐）"><a href="#🐳-Docker-部署（推荐）" class="headerlink" title="🐳 Docker 部署（推荐）"></a>🐳 Docker 部署（推荐）</h1><h4 id="方式一：Docker-Compose（推荐）"><a href="#方式一：Docker-Compose（推荐）" class="headerlink" title="方式一：Docker Compose（推荐）"></a>方式一：Docker Compose（推荐）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">docker-compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line">docker-compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">docker-compose down</span><br></pre></td></tr></table></figure><h4 id="方式二：Docker-命令"><a href="#方式二：Docker-命令" class="headerlink" title="方式二：Docker 命令"></a>方式二：Docker 命令</h4><blockquote><p><strong>注意</strong>：Linux 用户需添加 <code>--add-host=host.docker.internal:host-gateway</code> 以访问宿主机服务</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 Docker Hub 运行</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name huobao-drama \</span><br><span class="line">  -p 5678:5678 \</span><br><span class="line">  -v $(<span class="built_in">pwd</span>)/data:/app/data \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  huobao/huobao-drama:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line">docker logs -f huobao-drama</span><br></pre></td></tr></table></figure><p><strong>本地构建</strong>（可选）：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t huobao-drama:latest .</span><br><span class="line">docker run -d --name huobao-drama -p 5678:5678 -v $(<span class="built_in">pwd</span>)/data:/app/data huobao-drama:latest</span><br></pre></td></tr></table></figure><p><strong>Docker 部署优势：</strong></p><ul><li>✅ 开箱即用，内置默认配置</li><li>✅ 环境一致性，避免依赖问题</li><li>✅ 一键启动，无需安装 Go、Node.js、FFmpeg</li><li>✅ 易于迁移和扩展</li><li>✅ 自动健康检查和重启</li><li>✅ 自动处理文件权限，无需手动配置</li></ul><h4 id="🔗-访问宿主机服务（Ollama-本地模型）"><a href="#🔗-访问宿主机服务（Ollama-本地模型）" class="headerlink" title="🔗 访问宿主机服务（Ollama&#x2F;本地模型）"></a>🔗 访问宿主机服务（Ollama&#x2F;本地模型）</h4><p>容器已配置支持访问宿主机服务，直接使用 <code>http://host.docker.internal:端口号</code> 即可。</p><p><strong>配置步骤：</strong></p><ol><li><p><strong>宿主机启动服务（监听所有接口）</strong></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> OLLAMA_HOST=0.0.0.0:11434 &amp;&amp; ollama serve</span><br></pre></td></tr></table></figure></li><li><p><strong>前端 AI 服务配置</strong></p><ul><li>Base URL: <code>http://host.docker.internal:11434/v1</code></li><li>Provider: <code>openai</code></li><li>Model: <code>qwen2.5:latest</code></li></ul></li></ol>]]></content>
+    
+    
+    <summary type="html">huobao-drama</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>超强硬盘检测神器--硬盘哨兵，v6.30.7 PRO新版本，单文件便携版</title>
+    <link href="https://macin.top/posts/b46c6754/"/>
+    <id>https://macin.top/posts/b46c6754/</id>
+    <published>2026-01-19T01:34:36.000Z</published>
+    <updated>2026-02-01T00:50:14.246Z</updated>
+    
+    <content type="html"><![CDATA[<p>哈喽大家好，今天给大家介绍一款非常高效实用的硬盘检测工具–Hard Disk Sentinel(硬盘哨兵) 。v6.30.7 Pro新版本，单文件便携版</p><p>直接双击打开后就可以使用。</p><p><img src="/img/sentinel/9.webp" alt="图片"></p><p>它是一个硬盘(HDD和SSD)监控工具，可以用来鉴别可能的硬盘问题、性能退化或者硬盘错误。</p><p>它的目标是寻找、测试、诊断和修复磁盘驱动器的问题、报告和显示SSD和硬盘健康、性能下降和失败信息。</p><p>硬盘哨兵可以给您一个完整的文本描述，提示和显示&#x2F;报告对硬盘和计算机固态磁盘的最全面信息。</p><p>Hard Disk Sentinel 能够检测硬盘状态、健康程度、温度，及性能等重要参数。</p><p><img src="/img/sentinel/10.webp" alt="图片"></p><p>健康度</p><p><img src="/img/sentinel/11.webp" alt="图片"></p><p>温度</p><p><img src="/img/sentinel/12.webp" alt="图片"></p><p>磁盘性能</p><p>包括每个硬盘的S.M.A.R.T值（自我监控、分析和报告技术）、磁盘性能、剩余寿命等。</p><p><img src="/img/sentinel/13.webp" alt="图片"></p><p>SMART</p><p>本工具同时还可以测试硬盘的实时传输率以便用来做为性能测试或者硬盘是否有隐含问题的功能。</p><p>此软件最大的作用就是对硬盘温度的监控和警示，比如达到特定温度上限时通知用户等。</p><p>根据此软件监控的性状，在资金允许的前提下购置如大功率风扇或被动散热系统等硬盘降温设备。</p><p>软件有测试硬盘通电时间和对硬盘剩余寿命预测的重要功能，这样我们一方面可以在购买硬盘时带上它测试不法商家是不是把回笼货拿来坑人；</p><p>一方面还能有效的控制硬盘的使用周期，在其寿终正寝之前就及时更换掉，避免造成无可挽回的数据损失，毕竟数据是无价的。</p><p><img src="/img/sentinel/14.webp" alt="图片"></p><p>硬盘状态极佳</p><p>如遇到下面这种情况，健康度极低，出现大量坏扇区时，请您及时备份资料，准备更换新硬盘。<br><img src="/img/sentinel/15.webp" alt="图片"></p><p>硬盘出现大量坏扇区<br>硬盘哨兵对硬盘检测非常全面，经常使用它检测一下你的硬盘状况，可以尽最大程度地保护你的硬盘资料。毕竟硬盘有价，数据无价。</p><p>分享文件：硬盘哨兵链接：<a href="https://pan.xunlei.com/s/VNsQmXkBcdKekIP_tFCx0_deA1?pwd=hyzu#%E5%A4%8D%E5%88%B6%E8%BF%99%E6%AE%B5%E5%86%85%E5%AE%B9%E5%90%8E%E6%89%93%E5%BC%80%E6%89%8B%E6%9C%BA%E8%BF%85%E9%9B%B7App%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%96%B9%E4%BE%BF">https://pan.xunlei.com/s/VNsQmXkBcdKekIP_tFCx0_deA1?pwd=hyzu#复制这段内容后打开手机迅雷App，查看更方便</a></p><p>我用夸克网盘分享了「硬盘哨兵」，点击链接即可保存。打开「夸克APP」，无需下载在线播放视频，畅享原画5倍速，支持电视投屏。链接：<a href="https://pan.quark.cn/s/5f19760cfe92">https://pan.quark.cn/s/5f19760cfe92</a></p>]]></content>
+    
+    
+    <summary type="html">Hard Disk Sentinel</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>三款安卓APP，扫描软件，照片压缩，GIF制作</title>
+    <link href="https://macin.top/posts/549bdf06/"/>
+    <id>https://macin.top/posts/549bdf06/</id>
+    <published>2026-01-19T01:23:35.000Z</published>
+    <updated>2026-02-01T00:50:14.231Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>软件介绍</strong></p><p>今天推荐三款手机<strong>安卓APP</strong>，一款是扫描软件，一款是照片压缩，一款是GIF制作。</p><p><strong>第一款：扫描软件</strong></p><p>扫描的软件之前总有小伙伴说要，此次带来的是布丁扫描最后免费的版本，这个版本过后就要收费了。</p><p>软件支持文档扫描、文字提取、证件扫描、表格识别等等，这些基础的功能没有收费，不过AI应该是收费使用的。</p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/1.webp" alt="图片"></p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/2.webp" alt="图片"></p><p>市面上好用的扫描软件挺多的，这款软件算比较好用的之一，有需要的小伙伴及时收藏！</p><p><strong>第一款：照片压缩（安卓）</strong></p><p>图片压缩的软件之前有介绍过好几款，今天带来的这款目前完全免费，不知道以后会不会收费。</p><p>软件支持图片无损压缩、等比缩放、指定尺寸压缩、格式转换等功能。</p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/3.webp" alt="图片"></p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/4.webp" alt="图片"></p><p>我一个3M的图片，使用无损压缩成了200K，肉眼看不出画质有明显的差异，压缩效果还是挺不错的。</p><p>目前来说这款软件还挺好用，以后要是收费了，我再给大家带来其他软件吧！</p><p><strong>第三款：小萌GIF</strong></p><p>GIF制作的工具前几天小伙伴有让我推荐，我给他推荐了这款小萌GIF，这款软件多年来一直免费。</p><p>软件有“GIF拆分”、“GIF转视频”和“动态照片转GIF”这几项功能。</p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/5.webp" alt="图片"></p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/6.webp" alt="图片"></p><p>另外，软件可以调整画面比例、输入文字和调节速度等等。</p><p><img src="/img/%E6%89%AB%E6%8F%8F%E8%BD%AF%E4%BB%B6/7.webp" alt="图片"></p><p>这款GIF制作的软件可离线使用，并且不收集用户数据，挺良心的。</p><p>三款安卓APP</p><p>夸克：<a href="https://pan.quark.cn/s/beb5e570a691">https://pan.quark.cn/s/beb5e570a691</a></p><p>百度：<a href="https://pan.baidu.com/s/1plQqLb5XMbf12kWAJ7j02g?pwd=8888">https://pan.baidu.com/s/1plQqLb5XMbf12kWAJ7j02g?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOjGL9u98IUnodFsx5Sm7rzHA1?pwd=gr3s#">https://pan.xunlei.com/s/VOjGL9u98IUnodFsx5Sm7rzHA1?pwd=gr3s#</a></p>]]></content>
+    
+    
+    <summary type="html">扫描软件,照片压缩,GIF制作</summary>
+    
+    
+    
+    <category term="os" scheme="https://macin.top/categories/os/"/>
+    
+    <category term="android" scheme="https://macin.top/categories/os/android/"/>
+    
+    
+    <category term="os" scheme="https://macin.top/tags/os/"/>
+    
+    <category term="android" scheme="https://macin.top/tags/android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>postbot 开源的多平台内容同步分发生产力工具，支持将文章、笔记、动态、图片、视频、音频等内容一键同步发布至主流媒体平台。</title>
+    <link href="https://macin.top/posts/1a03ca2c/"/>
+    <id>https://macin.top/posts/1a03ca2c/</id>
+    <published>2026-01-19T01:09:39.000Z</published>
+    <updated>2026-02-01T00:50:14.237Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="postbot"><a href="#postbot" class="headerlink" title="postbot"></a>postbot</h1><blockquote><p>一款开源的多平台内容同步分发生产力工具，支持将文章、笔记、动态、图片、视频、音频等内容一键同步发布至主流媒体平台。</p></blockquote><p>Github地址</p><p><strong><a href="https://github.com/gitcoffee-os/postbot">https://github.com/gitcoffee-os/postbot</a></strong></p><p><img src="/img/postbot/1.webp" alt="图片"></p><h2 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a><strong>支持的平台</strong></h2><ul><li><p><strong>国内主流媒体平台</strong>：</p></li><li><ul><li>微信</li><li>微博</li><li>今日头条</li><li>小红书</li><li>知乎</li><li>百家号</li><li>企鹅号</li><li>视频号</li><li>抖音</li><li>快手</li><li>哔哩哔哩（B站）</li></ul></li><li><p><strong>国际媒体平台（可扩展兼容）</strong>：</p></li><li><ul><li>X（Twitter）</li><li>Facebook</li><li>Instagram</li><li>TikTok</li><li>YouTube</li><li>LinkedIn</li></ul></li></ul><h2 id="核心特性"><a href="#核心特性" class="headerlink" title="核心特性"></a><strong>核心特性</strong></h2><p><strong>专注内容</strong></p><ul><li>支持文章、笔记、动态、图片、视频、音频等多种内容类型。</li><li>文本内容支持 HTML 和 Markdown 格式。</li></ul><p><strong>多平台同步</strong></p><ul><li>覆盖国内外主流媒体平台，支持一键同步发布。</li></ul><p><strong>一键发布</strong></p><ul><li>一次编辑排版，可将内容同步至所有已登录的媒体平台。</li></ul><p><strong>安全机制</strong></p><ul><li>本地化操作机制，复用浏览器本地登录状态，规避云端存储账号信息的隐私风险。</li></ul><p><strong>智能阅读器</strong></p><ul><li>内置智能网页阅读器，可智能提取网页内容。</li></ul><p><strong>平台适配</strong></p><ul><li>自动优化内容以适配各平台特性要求。</li></ul><p><strong>AI 集成</strong></p><ul><li>可扩展集成 AI，实现内容个性化和流程智能化。</li></ul><p><strong>扩展性</strong></p><ul><li>支持通过插件、SDK、API 接口、MCP、AI 智能体及开放平台与应用市场进行扩展。</li></ul><p><strong>生态支持</strong></p><ul><li>提供内容创作者效率提升和开发者业务集成的生态支持。</li></ul>]]></content>
+    
+    
+    <summary type="html">postbot</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GeekFaka docker部署开源自动发卡系统</title>
+    <link href="https://macin.top/posts/61294098/"/>
+    <id>https://macin.top/posts/61294098/</id>
+    <published>2026-01-12T03:47:40.000Z</published>
+    <updated>2026-02-01T00:50:14.207Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="GeekFaka"><a href="#GeekFaka" class="headerlink" title="GeekFaka"></a>GeekFaka</h1><blockquote><p>一个专为独立开发者和创作者打造的 Headless 自动发卡系统。它基于 Next.js + React 18 + Prisma 构建，拥有极致的深色极客 UI、Markdown 渲染、多渠道易支付（RSA&#x2F;MD5）集成以及 Docker 一键部署能力。其目标是让数字商品售卖回归简单与优雅。</p></blockquote><p>Github地址</p><p><strong><a href="https://github.com/huangzijian888/GeekFaka">https://github.com/huangzijian888/GeekFaka</a></strong></p><p><img src="/img/GeekFaka/1.webp" alt="图片"></p><p><img src="/img/GeekFaka/2.webp" alt="图片"></p><h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a><strong>功能特性</strong></h2><ul><li><strong>用户界面</strong>：极致深色模式，毛玻璃质感，商品卡片悬停详情预览，全平台响应式适配</li><li><strong>支付集成</strong>：支持多渠道支付（易支付&#x2F;支付宝&#x2F;微信），集成 RSA&#x2F;MD5 安全签名</li><li><strong>邮件通知</strong>：支付成功后自动将卡密发送至客户邮箱</li><li><strong>优惠码系统</strong>：支持固定金额或百分比折扣，可绑定特定商品或分类</li><li><strong>内容管理系统</strong>：内置文章管理系统，可发布购买教程、常见问题等页面</li><li><strong>安全特性</strong>：后台采用 JWT 认证，支持 API Key 保护，Session 稳定可靠</li></ul><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a><strong>部署方式</strong></h2><ul><li><strong>Docker 部署</strong>：推荐用于生产环境，通过 docker-compose.yml 文件配置环境变量后，运行 <code>docker-compose up -d</code> 即可启动</li><li><strong>本地源码运行</strong>：适合开发环境，通过 yarn 安装依赖，配置环境变量后运行 <code>yarn dev</code></li></ul><h2 id="功能指南"><a href="#功能指南" class="headerlink" title="功能指南"></a><strong>功能指南</strong></h2><ul><li><strong>后台管理</strong>：提供仪表盘统计、商品分类管理、订单列表（带补单）、优惠码配置、文章发布等功能</li><li><strong>邮件发货</strong>：集成 Resend 服务，支付成功后自动将卡密发送至客户邮箱</li><li><strong>批量创建优惠码 API</strong>：通过 POST 请求到 <code>/api/v1/coupons/bulk</code> 接口，使用环境变量 <code>COUPON_API_KEY</code> 进行鉴权</li></ul>]]></content>
+    
+    
+    <summary type="html">GeekFaka</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PDF添加马赛克的工具,PDF橡皮擦工具,PDF去水印工具</title>
+    <link href="https://macin.top/posts/ef3242cb/"/>
+    <id>https://macin.top/posts/ef3242cb/</id>
+    <published>2026-01-12T01:00:23.000Z</published>
+    <updated>2026-02-01T00:50:14.209Z</updated>
+    
+    <content type="html"><![CDATA[<p>前段时间我推荐PDF的工具推荐得非常频繁，导致有小伙伴评论区说别老推荐PDF了，于是我就尽量不推荐了。</p><p>不过你不是打工人，你不知道打工人看到提高生产力的工具是多少想要收藏。就比如我，看到下面推荐的三款PDF工具，就真的挪不开眼了，一定要给大家推荐！</p><p><strong>软件介绍</strong></p><p>今天推荐三款工具，一款是PDF添加马赛克的工具，一款是PDF橡皮擦工具，一款是PDF去水印工具。</p><p><strong>第一款：PDF批量加马赛克</strong></p><p>之前我们领导想要把去年的合同发给其他单位作为合同范本，让他们参考参考，但是合同里面涉及到金额，想让我帮他抹除掉，为此我找了好久都没有找到好用的工具。</p><p>今天推荐的这款添加马赛克的工具是绿色版本，操作很简单，首先【打开PDF】</p><p><img src="/img/pdf/1.webp" alt="图片"></p><p>然后选择需要打马赛克的区域，最后点【应用马赛克】，软件就把选择的区域打上马赛克了。</p><p>最后点【保存】即可，这样发给他人就可以把相应的敏感信息给擦除掉。</p><p><strong>第二款：福昕PDF</strong></p><p>其实我之前我用于擦除的软件是福昕PDF，这款工具在【保护】里，有个擦除工具，使用它可以擦除掉我们需要隐藏的信息。</p><p><img src="/img/pdf/2.webp" alt="图片"></p><p>这个功能挺好用的，就是擦除以后是空白的，这让人很容易怀疑它只是缺了一块，而不是原来有数据在这里。</p><p><img src="/img/pdf/1.gif" alt="图片"></p><p>福昕PDF其实很符合国人的习惯，有需要的小伙伴及时收藏！</p><p><strong>第三款：PDF批量去水印工具</strong></p><p>PDF去水印其实没有非常好用的工具，因为如果只是添加文字的PDF，那么用fu昕PDF、万兴PDF、DC等工具就能去除，如果是图片的PDF，目前最好的方式就是把PDF转成图片，然后图片去水印，最后把图片转成PDF。</p><p>这款PDF去水印的工具其实也只是针对文字型的PDF，只不过它有批量的功能。</p><p><img src="/img/pdf/3.webp" alt="图片"></p><p>选择需要去除水印的PDF以后，再点右下角的选择区域然后右键选择水印区域，最后点【应用当前页】或者【应用当前文件所有页】</p><p>然后在右侧就可以看到去除后的效果，点【确认并应用】即可。</p><p>最后点【处理选中文件】或者【处理全部文件】即可把PDF的水印全部去除。</p><p><img src="/img/pdf/4.webp" alt="图片"></p><p>这款其实功能一搬，如果是文字水印，可以用上面的fu昕PDF里面的水印功能，可【全部移除】水印。</p><p><img src="/img/pdf/5.webp" alt="图片"></p><p>其他的大家自己去体验，软件就介绍到这里啦！</p><p>PDF马赛克等工具</p><p>夸克：<a href="https://pan.quark.cn/s/2618f0cc76e4">https://pan.quark.cn/s/2618f0cc76e4</a></p><p>百度：<a href="https://pan.baidu.com/s/1WBimMs4bfWbwpLFINhjKmA?pwd=8888">https://pan.baidu.com/s/1WBimMs4bfWbwpLFINhjKmA?pwd=8888</a> 提取码: 8888</p><p>迅雷：<a href="https://pan.xunlei.com/s/VOiSqc80Lx31EGsj_BxVw_evA1?pwd=9vxi#">https://pan.xunlei.com/s/VOiSqc80Lx31EGsj_BxVw_evA1?pwd=9vxi#</a></p>]]></content>
+    
+    
+    <summary type="html">PDF添加马赛克的工具,PDF橡皮擦工具,PDF去水印工具</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NAS 上部署 Lama Cleaner ，移除水印一键清除</title>
+    <link href="https://macin.top/posts/a44ff5c8/"/>
+    <id>https://macin.top/posts/a44ff5c8/</id>
+    <published>2026-01-02T08:07:05.000Z</published>
+    <updated>2026-02-01T00:50:14.208Z</updated>
+    
+    <content type="html"><![CDATA[<p>Lama Cleaner：</p><p>一款免费开源的图像修复工具，基于最先进的 AI 模型构建</p><p><img src="/img/lama/1.webp" alt="图片"></p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker Compose</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">lama-cleaner:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">cwq1913/lama-cleaner:cpu-1.2.5</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">lama-cleaner</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">lama-cleaner</span> <span class="string">--device=cpu</span> <span class="string">--port=8080</span> <span class="string">--host=0.0.0.0</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:8080</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./torch_cache:/root/.cache/torch</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./huggingface_cache:/root/.cache/huggingface</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure><p>参数说明（更多参数建议去看文档）<br>device（命令）：指定运行环境</p><p>port（命令）：指定访问端口</p><p>&#x2F;root&#x2F;.cache&#x2F;torch（路径）：存放 Lama&#x2F;LDM&#x2F;Zits&#x2F;MAT&#x2F;FCF 模型</p><p>&#x2F;root&#x2F;.cache&#x2F;huggingface（路径）：存放 SD1.5 模型</p><p>运行启动后，会自动下载模型（如果网络条件不行，可以参考下面手动下载模型）</p><p><img src="/img/lama/2.webp" alt="图片"></p><p>先关停容器，来到对应的映射目录</p><p><img src="/img/lama/3.webp" alt="图片"></p><p>找到这个 &#x2F;torch_cache&#x2F;hub&#x2F;checkpoints 目录（如果有文件删除掉就行）</p><p><img src="/img/lama/4.webp" alt="图片"></p><p>来到 GitHub 下载模型（<a href="https://github.com/guocuixia/lama-cleaner-%EF%BC%89">https://github.com/guocuixia/lama-cleaner-）</a></p><p><img src="/img/lama/5.webp" alt="图片"></p><p>只下载 LaMa 模型就行了（其他有需要的可以自行下载）</p><p><img src="/img/lama/6.webp" alt="图片"></p><p>将 .pt 模型放到前面的文件夹里</p><p><img src="/img/lama/7.webp" alt="图片"></p><p>再次启动容器就行了</p><p><img src="/img/lama/8.webp" alt="图片"></p><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>浏览器中输入 <code>http://NAS的IP:8080</code> 就能看到界面</p><p><img src="/img/lama/9.webp" alt="图片"></p><p>TIP：运行 CPU 模式跑 AI 模型，占用内存也不小</p><p><img src="/img/lama/10.webp" alt="图片"></p><p>点击左上角图标（或者中间区域）选择图片就行</p><p><img src="/img/lama/11.webp" alt="图片"></p><p>先来个简单的，去除下面字体</p><p><img src="/img/lama/12.webp" alt="图片"></p><p>用画笔涂抹取消去除的水印</p><p><img src="/img/lama/13.webp" alt="图片"></p><p>TIP：工作的时候，CPU 占用几乎可以跑满</p><p><img src="/img/lama/14.webp" alt="图片"></p><p>耗时比较短，处理后的效果非常不错，看不出原来是有文字的</p><p><img src="/img/lama/15.webp" alt="图片"></p><p>点击后退或者查看原图，就可以方便对比前后图片</p><p><img src="/img/lama/16.webp" alt="图片"></p><p>没问题，就可以下载图片了</p><p><img src="/img/lama/17.webp" alt="图片"></p><p>平时 AI 生成图片，一般右下角都会有水印就可以用这个工具去除了</p><p><img src="/img/lama/18.webp" alt="图片"></p><p>这种位置还是很刁钻的，处理后效果也不错</p><p><img src="/img/lama/19.webp" alt="图片"></p><p>右上角设置，可以切换不同的模型（网络没问题，能直接下载）</p><p><img src="/img/lama/20.webp" alt="图片"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Lama Cleaner 这款开源的图像修复工具，除了上面演示的去除水印，还可以用于修复老照片，移除物体、人物和文字等。上手操作也是很简单的，而且不用安装应用打开网页就能使用。</p><p>对于我个人来说，已经列为常驻应用了，有需要的也可以部署试试。特别是目前很多生成的 AI 图片都是带有水印的，打开 PS 工具的时间，用这个已经搞定出图了，处理的效果也很不错。</p>]]></content>
+    
+    
+    <summary type="html">Lama Cleaner</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/categories/tools/docker/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="docker" scheme="https://macin.top/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Light Image Resizer(图片处理工具)</title>
+    <link href="https://macin.top/posts/972a8ad0/"/>
+    <id>https://macin.top/posts/972a8ad0/</id>
+    <published>2025-12-27T01:38:59.000Z</published>
+    <updated>2026-02-01T00:50:14.208Z</updated>
+    
+    <content type="html"><![CDATA[<p>平时大家处理图片都用什么？之前我给大家推荐过Adobe Bridge和 Photoshop，这些确实是行业标杆，但说实话，如果我们只是想简单改个尺寸、转个格式，每次还要启动那么大的软件，电脑风扇狂转不说，操作起来也挺累人的，简直就是“杀鸡用牛刀”。</p><p>最近我挖到了一款特别顺手的轻量级工具—— <strong>Light Image Resizer</strong> </p><p><img src="/img/resizer/1.webp" alt="图片"></p><p>用下来就一个感觉： <strong>这才是打工人该用的效率神器！ 必须给大家安利一下。</strong></p><p>懒人式操作：拖进去就完事</p><p>打开软件，界面特别清爽。添加图片完全不用在那儿一层层翻文件夹，直接把桌面上的图片，或者 整个文件夹拖进软件窗口 ，一秒就能识别，不管你是几十张还是几百张，往里一扔就搞定。</p><p>调整大小：不仅快，还聪明</p><p>这软件最基础也最常用的功能就是改尺寸。逻辑特别符合直觉：你只要输入想要的 宽度 或 高度 ，它会自动帮你 锁定比例 ，完全不用担心把人脸压扁或者把产品图拉长。</p><p>这里有个小窍门： <strong>如果你只是单纯改个大小，输完数字点右下角的【确定】（处理）就行了。</strong> </p><p>但先别急！ 真正强大的功能其实藏在后面的“选项”里，建议大家设置完再点确定。</p><p>格式转换 &amp; 压缩：拿捏各种需求</p><p>在【高级】选项里，那个格式转换真的太实用了。有时候甲方非要 PDF，有时候网站只要 WebP，这软件<strong>支持 JPEG、PNG、TIFF、AVIF 等 17 种格式</strong> ，想要啥格式选一下就行。</p><p>而且它还能给图片“瘦身”。现在的手机照片动不动就几兆，发微信都慢。在【选项】里，你可以按 品质 压缩（默认 80% 就很完美，肉眼几乎看不出画质变差），或者直接霸道地按 大小 压缩，比如指定“所有图片必须压到 2MB 以内”，它都能自动搞定。</p><p>批量水印：防盗图救星</p><p>对于做自媒体或者需要发样图的小伙伴，这个功能简直是刚需。</p><p>在【效果】里勾选【添加水印】，不管是传公司 Logo 还是打字都行。最贴心的是，你可以随意调节不透明度、位置和旋转角度。设置好这一张，几百张图片瞬间就能全部打上水印，这效率真的没谁了。</p><p>推荐理由</p><p>总的来说， <strong>Light Image Resizer</strong> 最大的优势就是 批量处理 。</p><p>它没有 PS 那么复杂，但胜在 小巧、专注、速度快 。<strong>批量改大小、批量转格式、批量加水印，一条龙服务</strong>。如果你平时经常跟一堆图片打交道，这款工具绝对值得你收藏，别等急用的时候再满世界找啦！</p><p>下载链接：</p><p><a href="https://api.ddooo.com/down/40080/45">https://api.ddooo.com/down/40080/45</a></p><p>夸克网盘<br><a href="https://pan.quark.cn/s/1b5fe80fa56b">https://pan.quark.cn/s/1b5fe80fa56b</a></p><p>迅雷网盘<br><a href="https://pan.xunlei.com/s/VOhKA3dx968fcOz23303XsWhA1?pwd=r79m#">https://pan.xunlei.com/s/VOhKA3dx968fcOz23303XsWhA1?pwd=r79m#</a></p>]]></content>
+    
+    
+    <summary type="html">Light Image Resizer</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>硕鼠电脑视频下载工具 v0.4.8 中文绿色便携版</title>
+    <link href="https://macin.top/posts/20144c7c/"/>
+    <id>https://macin.top/posts/20144c7c/</id>
+    <published>2025-12-26T03:51:45.000Z</published>
+    <updated>2026-02-01T00:50:14.242Z</updated>
+    
+    <content type="html"><![CDATA[<p>硕鼠电脑视频下载工具一款能在好多不同电脑系统上用的视频下载软件，主要就是帮大家从各种热门视频平台把视频下载下来。它有专门给 Windows 系统用的版本，也有适合 Linux 系统的版本。能快速解析视频，把视频下载下来，要是视频是分成好几段的，它还能用相关工具把这些分段视频合并成一个完整的视频</p><p><strong>安装环境</strong></p><p>[名称]：硕鼠电脑视频下载工具</p><p>[版本]：0.4.8</p><p>[大小]：7.4MB</p><p>[语言]：简体中文</p><p>[安装环境]：Windows</p><p><strong>功能特点</strong></p><p>硕鼠这个软件有个特别厉害的解析工具，能很快又很精准地把视频链接解析开，这样下载下来的视频既完整，画面还特别清楚。安装包特别小，装起来不占地方，而且里面干干净净的，没有乱七八糟捆绑的其他软件，也没有广告和那些会搞破坏的恶意软件，用的时候不会被广告烦到</p><p><img src="/img/%E7%A1%95%E9%BC%A0%E7%94%B5%E8%84%91%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/1.webp" alt="img"></p><p>支持同时下好几个视频，能自己挑出下载最快的那个地址，而且还能把下载的 FLV 或者 MP4 格式的视频自动合并成一个完整的视频，让下载变得更简单。</p><p>硕鼠视频下载器夸克云<br>链接:<a href="https://pan.quark.cn/s/36e20328844c">https://pan.quark.cn/s/36e20328844c</a><br>提取码:7WEW</p><p>备用地址 硕鼠视频下载器百度云<br>链接:<a href="https://pan.baidu.com/s/1qUQ_w845v9Rr8pwC34EtzA">https://pan.baidu.com/s/1qUQ_w845v9Rr8pwC34EtzA</a><br>提取码:cb95</p>]]></content>
+    
+    
+    <summary type="html">硕鼠电脑视频下载工具</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI抠图，去背景 Hugging Face项目</title>
+    <link href="https://macin.top/posts/8dd1976e/"/>
+    <id>https://macin.top/posts/8dd1976e/</id>
+    <published>2025-12-26T03:19:54.000Z</published>
+    <updated>2026-02-01T00:50:14.205Z</updated>
+    
+    <content type="html"><![CDATA[<p>BRIA-RMBG-1.4</p><p><a href="https://huggingface.co/spaces/briaai/BRIA-RMBG-1.4">https://huggingface.co/spaces/briaai/BRIA-RMBG-1.4</a></p><p>remove-background-webgpu</p><p><a href="https://huggingface.co/spaces/webml-community/remove-background-webgpu">https://huggingface.co/spaces/webml-community/remove-background-webgpu</a></p><p>remove-background-webgpu</p><p><a href="https://huggingface.co/spaces/Xenova/remove-background-webgpu">https://huggingface.co/spaces/Xenova/remove-background-webgpu</a></p><p>background-removal</p><p><a href="https://huggingface.co/spaces/not-lain/background-removal">https://huggingface.co/spaces/not-lain/background-removal</a></p>]]></content>
+    
+    
+    <summary type="html">Hugging Face</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/categories/ai/"/>
+    
+    <category term="huggingface" scheme="https://macin.top/categories/ai/huggingface/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+    <category term="huggingface" scheme="https://macin.top/tags/huggingface/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI图像（增强、调整大小、移除、放大）Hugging Face项目</title>
+    <link href="https://macin.top/posts/6bda0904/"/>
+    <id>https://macin.top/posts/6bda0904/</id>
+    <published>2025-12-25T06:00:11.000Z</published>
+    <updated>2026-02-01T00:50:14.205Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="image-enhance-resize-remove-upscale"><a href="#image-enhance-resize-remove-upscale" class="headerlink" title="image(enhance,resize,remove,upscale)"></a>image(enhance,resize,remove,upscale)</h1><p>现实时间40秒， 增加GPU能力1s， 1小时可恢复90s。</p><hr><p>  <a href="https://huggingface.co/spaces/bookbot/Image-Upscaling-Playground">Image Upscaling Playground🦆761Upscale images to higher resolution</a></p><p>  <em>Note</em> 图片变大，有2倍和4倍选项，只变大，不改变清晰度</p><hr><p>  <a href="https://huggingface.co/spaces/muhammadnasar/image_resizer">Image Resizer🏃9Resize an image to any desired dimensions</a></p><p>  <em>Note</em> 图片尺寸变化，可大可小，界面不直观。需要手工输入大小(输入不合适图片会变形)，没有输入和输出的预览图，生成后只给一个下载链接。</p><hr><p>  <a href="https://huggingface.co/spaces/JOY-Huang/InstantIR">InstantIR🖼86diffusion-based Image Restoration model</a></p><p>  <em>Note</em> 图片修复，自动生成以后，用左下的free按钮，与右边中间的restoration按钮调整输出效果。没有高清效果。 可以自定义调节输出尺寸，宽和高默认是0，保持原尺寸不变。</p><hr><p>  <a href="https://huggingface.co/spaces/finegrain/finegrain-image-enhancer">Finegrain Image Enhancer🖼1.94kClarity AI Upscaler Reproduction</a></p><p>  <em>Note</em> 模糊图片变清晰，参数较多，upscale factor可调大，生成图片尺寸不变，清晰度不如flux和tile。与原图一致性较好。</p><hr><p>  <a href="https://huggingface.co/spaces/jasperai/Flux.1-dev-Controlnet-Upscaler">Flux.1-dev Upscaler🔎1.62kUpscale low-resolution images to high resolution</a></p><p>  <em>Note</em> 模糊图片变清晰，随机种子关闭，默认参数即可，自动放大到2048大小。表情有轻微变化，用时约1分钟</p><hr><p>  <a href="https://huggingface.co/spaces/gokaygokay/TileUpscalerV2">Tile Upscaler V2😻153Enhance and upscale images with advanced settings</a></p><p>  <em>Note</em> 模糊图片变清晰，有高级设置，图片尺寸，强化度等等</p><hr><p>  <a href="https://huggingface.co/spaces/not-lain/background-removal">Background Removal🌘2.61kRemove background from images</a></p><p>  <em>Note</em> 背景去除，速度快，没有参数选项，有左右效果比对预览。原图片有网址输入功能。需要png格式需要选file output</p><hr><p>  <a href="https://huggingface.co/spaces/briaai/BRIA-RMBG-2.0">BRIA RMBG 2.0🐢858remove background from any image</a></p><p>  <em>Note</em> 背景去除，速度快，有左右对比预览效果。右下有png格式下载，有图长按选择下载图片webp格式。</p><p>  <a href="https://top.aibase.com/excesslink?py=flux-1-dev-controlnet-upscaler">Flux.1-dev Controlnet Upscaler</a></p><p>Flux.1-dev Controlnet Upscaler 是一个基于Hugging Face平台的图像放大模型，它使用先进的深度学习技术来提高图像的分辨率，同时保持图像质量。该模型特别适合需要对图像进行无损放大的场景，如图像编辑、游戏开发、虚拟现实等。</p><h1 id="图片无损放大网站："><a href="#图片无损放大网站：" class="headerlink" title="图片无损放大网站："></a>图片无损放大网站：</h1><p><a href="https://bigjpg.com/zh">https://bigjpg.com/zh</a></p><p><a href="https://picwish.cn/image-enlarger">https://picwish.cn/image-enlarger</a></p><p><a href="https://ai.nero.com/zh-cn/image-upscaler">https://ai.nero.com/zh-cn/image-upscaler</a></p><p><a href="https://2ximg.com/">https://2ximg.com/</a></p>]]></content>
+    
+    
+    <summary type="html">Hugging Face</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/categories/ai/"/>
+    
+    <category term="huggingface" scheme="https://macin.top/categories/ai/huggingface/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+    <category term="ai" scheme="https://macin.top/tags/ai/"/>
+    
+    <category term="huggingface" scheme="https://macin.top/tags/huggingface/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电脑办公软件 打印机工具箱 v1.2.0.715中文绿色便携版</title>
+    <link href="https://macin.top/posts/619ba8a1/"/>
+    <id>https://macin.top/posts/619ba8a1/</id>
+    <published>2025-12-25T05:47:01.000Z</published>
+    <updated>2026-02-01T00:50:14.242Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是一款非常小巧的打印机帮手，只有700KB大小。它能帮你一键扫描连接到电脑的打印机，然后自动安装对应的驱动程序，让打印机可以正常工作。除此之外，它还能方便地管理打印机，操作简单。</p><p><strong>安装环境</strong></p><p>[名称]：打印机工具箱</p><p>[版本]：1.2.0</p><p>[大小]：0.7MB</p><p>[语言]：简体中文</p><p>[安装环境]：Windows</p><p><strong>功能特点</strong></p><p>无论你是电脑小白，不知道怎样安装驱动；还是公司里需要管理好多台打印机的工作人员；或者是想快速打印标签的电商卖家，这款打印机工具都能帮你轻松搞定。平时的打印问题检查、定期维护设备、驱动程序更新等，都能一站式完成。它是办公室和家庭用打印机的好帮手。</p><p><img src="/img/%E6%89%93%E5%8D%B0%E6%9C%BA%E5%B7%A5%E5%85%B7%E7%AE%B1/1.webp" alt="img"></p><p>打印机工具箱免费又智能，使用起来非常方便，让安装驱动变得简单，管理打印机更高效，解决打印机用起来碰到的各种麻烦，是帮你提高打印效率的实用工具。</p><p><img src="/img/%E6%89%93%E5%8D%B0%E6%9C%BA%E5%B7%A5%E5%85%B7%E7%AE%B1/2.webp" alt="img"></p><p>打印机工具箱夸克云<br>链接:<a href="https://pan.quark.cn/s/2d767769cdbf">https://pan.quark.cn/s/2d767769cdbf</a><br>提取码:GL9x</p><p>备用地址 打印机工具箱百度云<br>链接:<a href="https://pan.baidu.com/s/1A2I8z1mBwO8EJCI0WE6epQ">https://pan.baidu.com/s/1A2I8z1mBwO8EJCI0WE6epQ</a><br>提取码:i7b6</p>]]></content>
+    
+    
+    <summary type="html">打印机工具箱</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Windows11轻松设置</title>
+    <link href="https://macin.top/posts/1a55debf/"/>
+    <id>https://macin.top/posts/1a55debf/</id>
+    <published>2025-12-25T01:37:40.000Z</published>
+    <updated>2026-02-01T00:50:14.215Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天介绍的这款工具叫：<strong>Windows11轻松设置</strong>，这款工具已经有一两年没分享了，此次带来的是它的1.12正式版。</p><p>软件功能包括六个部分，分别是系统设置、高级设置、Defender、Apps、常用软件和系统信息。</p><p><img src="/img/win11/19.webp" alt="img"></p><p><strong>系统设置：</strong>包括“系统还原”、“启用禁用搜索热点”、“启用禁用小组件”、“启用禁用驱动更新”等等功能，其中最好用的是“Windows更新”了。</p><p><img src="/img/win11/20.webp" alt="img"></p><p>勾选后，其可暂停更新到2042年，能暂停17年，基本也是永久了！</p><p>不过记得勾选了后，点击【刷新】可启用我们勾选的选项。</p><p><strong>Defender：</strong>系统的防病毒的功能“太强大”了，导致我有时候安装个软件它也能提示，所以好多小伙伴想关闭这个功能。</p><p><img src="/img/win11/21.webp" alt="img"></p><p>用这款软件，可以“一键禁用WD”也可以“一键恢复WD”。</p><p><strong>Apps：</strong>Apps是微软的商店管理，可卸载Windows系统自带的工具，这些系统自带的工具用电脑的控制面板可卸载不了。</p><p><img src="/img/win11/22.webp" alt="img"></p><p><strong>常用软件：</strong>常用软件是为小白量身打造的功能，其可以一键的下载安装系统常用的软件，比如NotePad3、PotPlayer播放器、Everything等等。</p><p><img src="/img/win11/23.webp" alt="img"></p><p><strong>Edge：</strong>上次有小伙伴说要卸载Edge，我当时给他推荐的是我之前推荐的卸载工具。其实在Windows轻松设置里也有此功能，其包括安装\升级Edge，也可以卸载Edge。</p><p><img src="/img/win11/24.webp" alt="img"></p><p><strong>Explorer：</strong>此外还有资源管理器设置，包括显示隐藏文件扩展名、去除快捷方式小箭头，还可以设置右键菜单风格等等非常实用的功能。</p><p><img src="/img/win11/25.webp" alt="img"></p><p>可以说“Windows11轻松设置”可以设置系统里的常用的功能，比用其他小工具要好用得太多太多，有需要的小伙伴及时收藏，软件就介绍到这里啦！</p><p>Windows轻松设置</p><p>夸克：<a href="https://pan.quark.cn/s/1ddd2867f253">https://pan.quark.cn/s/1ddd2867f253</a></p><p>百度：<a href="https://pan.baidu.com/s/12vHKOgEe6xalHOMKiXn-ZA?pwd=8888">https://pan.baidu.com/s/12vHKOgEe6xalHOMKiXn-ZA?pwd=8888</a> 提取码: 8888 </p><p>迅雷：<a href="https://pan.xunlei.com/s/VOh8RfGuwLQvYFy-80gD9-dsA1?pwd=fgyz#">https://pan.xunlei.com/s/VOh8RfGuwLQvYFy-80gD9-dsA1?pwd=fgyz#</a></p>]]></content>
+    
+    
+    <summary type="html">Windows11轻松设置</summary>
+    
+    
+    
+    <category term="tools" scheme="https://macin.top/categories/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/categories/tools/software/"/>
+    
+    
+    <category term="tools" scheme="https://macin.top/tags/tools/"/>
+    
+    <category term="software" scheme="https://macin.top/tags/software/"/>
+    
+  </entry>
+  
+</feed>

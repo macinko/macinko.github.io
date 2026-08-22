@@ -1,0 +1,449 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>自用 tampermonkey 油猴脚本分享：好用实用，值得收藏 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="自用 Tampermonkey 油猴脚本分享：屏蔽 YouTube 广告、百度搜索优化、网页图片查看器、免登录下载天翼云盘等实用脚本合集。"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "自用 tampermonkey 油猴脚本分享：好用实用，值得收藏",
+  "url": "https://macin.top/posts/b3b1d9a8/",
+  "image": "https://macin.top/img/tampermonkey.webp",
+  "datePublished": "2023-07-27T03:21:35.000Z",
+  "dateModified": "2026-08-22T09:44:31.062Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/b3b1d9a8/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '自用 tampermonkey 油猴脚本分享：好用实用，值得收藏',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1196</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1731</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">153</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI Agent</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI Video</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI Picture</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI Audio</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI Tool</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tampermonkey.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">自用 tampermonkey 油猴脚本分享：好用实用，值得收藏</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI Agent</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI Video</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI Picture</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI Audio</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI Tool</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">自用 tampermonkey 油猴脚本分享：好用实用，值得收藏</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-08-22T09:44:31.062Z" title="更新于 2026-08-22 17:44:31">2026-08-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/">web</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/tampermonkey/">tampermonkey</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">197</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:180,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-08-22 17:44:31&quot;}" hidden></div><ol>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-TW/scripts/14178-ac-baidu-%E9%87%8D%E5%AE%9A%E5%90%91%E4%BC%98%E5%8C%96%E7%99%BE%E5%BA%A6%E6%90%9C%E7%8B%97%E8%B0%B7%E6%AD%8C%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2-favicon-%E5%8F%8C%E5%88%97">AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/8426-download-youtube-videos-and-subtitles">Download Youtube videos and subtitles</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/24204-picviewer-ce">Picviewer CE+</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://zh.savefrom.net/6/user.php?helper=userjs">SaveFrom.net helper</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/401709-%E5%85%8D%E7%99%BB%E5%BD%95%E4%B8%8B%E8%BD%BD%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%E5%88%86%E4%BA%AB%E6%96%87%E4%BB%B6">免登录下载天翼云盘分享文件</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/2312-resize-image-on-open-image-in-new-tab">右键在新标签中打开图片时显示最优化图像质量</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.baiduyun.wiki/tool/install-darkmode.html">夜间模式助手</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/434936-%E5%B1%8F%E8%94%BD%E6%89%80%E6%9C%89youtube%E5%B9%BF%E5%91%8A-youtube-ad-blocker-block-all-ad-including-blocking-youtube-music">屏蔽所有Youtube广告 Youtube AD blocker (Block all ad). Including blocking Youtube Music.</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/27183-%E6%8B%92%E7%BB%9D%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%99%BB%E5%BD%95-%E6%B7%98%E5%AE%9D-%E4%BA%AC%E4%B8%9C%E7%AD%89%E7%BD%91%E7%AB%99%E9%BB%98%E8%AE%A4%E5%87%BA%E7%8E%B0%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2">拒绝二维码登录（淘宝、京东等网站默认出现账号密码登录界面）</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/373334-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93-wenku-%E5%9C%A8%E7%BA%BF%E4%B8%8B%E8%BD%BDpdf%E6%A0%BC%E5%BC%8F%E6%96%87%E4%BB%B6">百度文库（wenku）在线下载PDF格式文件</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/418182-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%AE%80%E6%98%93%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%A4%8D%E6%B4%BB%E7%89%88">百度网盘简易下载助手（直链下载复活版）</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/29762-%E7%BD%91%E7%9B%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%AE%BF%E9%97%AE%E7%A0%81-%E5%A8%81%E5%8A%9B%E5%8A%A0%E5%BC%BA%E7%89%88">网盘自动填写访问码【威力加强版】</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/28497-%E7%BD%91%E9%A1%B5%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4-%E6%94%B9">网页限制解除(改)</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/30545-html5%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%B7%A5%E5%85%B7">HTML5视频播放工具</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/37951-%E8%B7%B3%E8%BF%87%E8%B0%B7%E6%AD%8C%E7%BD%91%E9%A1%B5%E9%A3%8E%E9%99%A9%E6%8F%90%E9%86%92">跳过谷歌网页风险提醒</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://greasyfork.org/zh-CN/scripts/373099-%E9%92%88%E5%AF%B9%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6">针对百度网盘视频播放器增强插件</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/b3b1d9a8/">https://macin.top/posts/b3b1d9a8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%84%9A%E6%9C%AC/">脚本</a><a class="post-meta__tags" href="/tags/web/">web</a><a class="post-meta__tags" href="/tags/tampermonkey/">tampermonkey</a><a class="post-meta__tags" href="/tags/%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC/">油猴脚本</a><a class="post-meta__tags" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%A2%9E%E5%BC%BA/">浏览器增强</a><a class="post-meta__tags" href="/tags/%E8%84%9A%E6%9C%AC%E5%88%86%E4%BA%AB/">脚本分享</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6ffa8c01/" title="小米手机刷入欧版无广告系统并获取 root"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/xiaomi.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">小米手机刷入欧版无广告系统并获取 root</div></div><div class="info-2"><div class="info-item-1">小米手机刷入欧版无广告系统并获取 Root 教程：开启开发者模式、解锁 Bootloader、下载欧版线刷包运行 flash_all.bat，全程无广告纯净体验。</div></div></div></a><a class="pagination-related" href="/posts/4684bdea/" title="自用系统镜像分享：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">自用系统镜像分享：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">自用系统镜像分享：Win10 企业版 LTSC 21H2 原版集成更新 ISO、Win7 SP1 等镜像网盘下载地址，装机系统资源收藏。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/25d27a92/" title="bbr加速脚本集合bbr plus&#x2F;bbr原版&#x2F;bbr魔改版：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bbr.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">bbr加速脚本集合bbr plus&#x2F;bbr原版&#x2F;bbr魔改版：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">BBR 加速脚本集合：BBR Plus/原版 BBR/魔改 BBR 四合一脚本，支持 Centos 7、Debian 8/9、Ubuntu 16/18，开启 TCP 加速提升网络速度。</div></div></div></a><a class="pagination-related" href="/posts/1cfba232/" title="一行 bash 脚本把 Halo 博客备份到另一台服务器，rsync 省流量"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/halo.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="info-item-2">一行 bash 脚本把 Halo 博客备份到另一台服务器，rsync 省流量</div></div><div class="info-2"><div class="info-item-1">bash 脚本备份 Halo 博客到另一台服务器：使用 rsync 复制文件并压缩备份，附完整脚本示例与变量修改说明，数据安全有保障。</div></div></div></a><a class="pagination-related" href="/posts/97937c5b/" title="校对错别字，改写，模板，文案，总结，脚本，广告词，等ai工具（爱校对，写作猫，AI墨飞鱼）：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/cuobiezi.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="info-item-2">校对错别字，改写，模板，文案，总结，脚本，广告词，等ai工具（爱校对，写作猫，AI墨飞鱼）：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">AI 文字工具合集：爱校对（清华人机交互实验室，公文论文纠错）、写作猫、AI 墨飞鱼，覆盖错别字校对、改写、文案、总结、脚本与广告词创作。</div></div></div></a><a class="pagination-related" href="/posts/ef5cc648/" title="Markdown 基础语法速查：半小时上手，写作效率翻倍"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/markdown.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">Markdown 基础语法速查：半小时上手，写作效率翻倍</div></div><div class="info-2"><div class="info-item-1">Markdown 基本语法教程：段落换行、HTML 语法实现居中、左对齐右对齐等排版技巧，Markdown 写作者必看。</div></div></div></a><a class="pagination-related" href="/posts/eb184961/" title="LeePanel：免费开源的 Linux 服务器面板，下一代运维体验"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/LeePanel.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-21</div><div class="info-item-2">LeePanel：免费开源的 Linux 服务器面板，下一代运维体验</div></div><div class="info-2"><div class="info-item-1">LeePanel 是一款免费开源的下一代 Linux 服务器管理面板（桌面端软件），由 gna1280072 开发，发布于 2026 年 7 月。</div></div></div></a><a class="pagination-related" href="/posts/80490b8a/" title="Hexo 接入百度 API 提交，新文章秒收录（hexo-baidu-url-submit）"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/hexo.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">Hexo 接入百度 API 提交，新文章秒收录（hexo-baidu-url-submit）</div></div><div class="info-2"><div class="info-item-1">Hexo 百度 API 提交教程：安装 hexo-baidu-url-submit 插件，配置站点后每次 hexo d 部署自动向百度提交 URL，加快博客收录提升 SEO。</div></div></div></a><a class="pagination-related" href="/posts/d2be79e3/" title="Halo 博客自定义导航图标：iconfont 接入教程，菜单更精致"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/iconfont.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="info-item-2">Halo 博客自定义导航图标：iconfont 接入教程，菜单更精致</div></div><div class="info-2"><div class="info-item-1">Halo 博客自定义导航条菜单图标教程：通过 iconfont 获取图标链接（或 FontAwesome 字体），font-class 类型引用，为导航菜单添加自定义图标。</div></div></div></a><a class="pagination-related" href="/posts/1a195287/" title="UptimeFlare：基于 Cloudflare Workers 的免费开源网站监控方案"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/cloudflare.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">UptimeFlare：基于 Cloudflare Workers 的免费开源网站监控方案</div></div><div class="info-2"><div class="info-item-1">UptimeFlare 基于 Cloudflare Workers 的免费开源网站监控：实时监测网站在线状态与响应速度，精美可自定义状态页面，仅需免费账号无需绑卡，GitHub 全自动部署。</div></div></div></a><a class="pagination-related" href="/posts/b85ee3b6/" title="Cloudflare Workers 教程：零成本搭建轻量精美个人网址导航站"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/cloudflare.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">Cloudflare Workers 教程：零成本搭建轻量精美个人网址导航站</div></div><div class="info-2"><div class="info-item-1">Cloudflare Workers 零成本搭建个人网址导航站教程：基于纯 HTML 开发、完全开源轻量，利用 Workers 每日 10 万次免费请求额度，打造高效美观的专属导航页。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1196</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1731</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">153</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/fa116a81/" title="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼"/></a><div class="content"><a class="title" href="/posts/fa116a81/" title="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼">Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼</a><time datetime="2026-08-22T07:37:17.000Z" title="发表于 2026-08-22 15:37:17">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c4903d3a/" title="Res-Downloader 安装与使用指南：多平台网络资源下载工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Res-Downloader 安装与使用指南：多平台网络资源下载工具"/></a><div class="content"><a class="title" href="/posts/c4903d3a/" title="Res-Downloader 安装与使用指南：多平台网络资源下载工具">Res-Downloader 安装与使用指南：多平台网络资源下载工具</a><time datetime="2026-08-22T07:34:51.000Z" title="发表于 2026-08-22 15:34:51">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/89838b08/" title="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统"/></a><div class="content"><a class="title" href="/posts/89838b08/" title="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统">Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统</a><time datetime="2026-08-22T07:29:49.000Z" title="发表于 2026-08-22 15:29:49">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bd56f0a2/" title="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎"/></a><div class="content"><a class="title" href="/posts/bd56f0a2/" title="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎">UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎</a><time datetime="2026-08-22T07:27:06.000Z" title="发表于 2026-08-22 15:27:06">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ab70195d/" title="LinkSwift 安装与使用指南：网盘文件直链获取助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LinkSwift 安装与使用指南：网盘文件直链获取助手"/></a><div class="content"><a class="title" href="/posts/ab70195d/" title="LinkSwift 安装与使用指南：网盘文件直链获取助手">LinkSwift 安装与使用指南：网盘文件直链获取助手</a><time datetime="2026-08-22T07:23:31.000Z" title="发表于 2026-08-22 15:23:31">2026-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>本地部署实时 AI 语音助手：完全开源与断网运行指南 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本地部署实时 AI 语音助手：HuggingFace 官方语音智能体流水线串联语音识别、大语言模型与语音合成，完全开源免费，4GB 显存即可断网流畅运行。"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "本地部署实时 AI 语音助手：完全开源与断网运行指南",
+  "url": "https://macin.top/posts/472eb26e/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-07-11T06:47:27.000Z",
+  "dateModified": "2026-08-22T09:44:31.054Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/472eb26e/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '本地部署实时 AI 语音助手：完全开源与断网运行指南',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1196</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1731</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">153</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI Agent</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI Video</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI Picture</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI Audio</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI Tool</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">本地部署实时 AI 语音助手：完全开源与断网运行指南</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI Agent</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI Video</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI Picture</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI Audio</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI Tool</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">本地部署实时 AI 语音助手：完全开源与断网运行指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-08-22T09:44:31.054Z" title="更新于 2026-08-22 17:44:31">2026-08-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:180,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-08-22 17:44:31&quot;}" hidden></div><p>如果你对云端语音助手的隐私安全有所顾虑，或者希望在完全不联网的环境下拥有一套实时交互的语音对话系统，可以通过本地部署 HuggingFace 官方的语音智能体流水线来实现。</p>
+<p>该方案将<strong>语音识别 (STT)</strong>、<strong>大语言模型 (LLM)</strong> 与<strong>语音合成 (TTS)</strong> 串联，并配有可视化交互界面。系统整体完全开源免费，在配备 4GB 及以上显存的本地电脑上即可流畅运行。</p>
+<hr>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>在开始部署前，请确保系统中已安装并配置好以下基础组件：</p>
+<ol>
+<li><p><strong>Python 3.11</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.python.org/downloads/">点击下载官方安装包</a>，安装时务必勾选 <strong>“Add Python to PATH”</strong>。</p>
+</li>
+<li><p><strong>Git</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://git-scm.com/">点击下载配置程序</a>。</p>
+</li>
+<li><p><strong>FFmpeg</strong>：以管理员身份打开 PowerShell，执行以下命令一键安装，完成后需<strong>重启 PowerShell</strong> 窗口使变量生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">winget install Gyan.FFmpeg</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2><h3 id="1-初始化虚拟环境"><a href="#1-初始化虚拟环境" class="headerlink" title="1. 初始化虚拟环境"></a>1. 初始化虚拟环境</h3><p>打开 PowerShell，依序执行以下命令创建并激活独立的虚拟环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先激活环境</span></span><br><span class="line">Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行一键安装命令</span></span><br><span class="line"><span class="built_in">cd</span> C:\</span><br><span class="line"><span class="built_in">mkdir</span> s2s</span><br><span class="line"><span class="built_in">cd</span> s2s</span><br><span class="line">python -m venv venv</span><br><span class="line">.\venv\Scripts\Activate.ps1</span><br></pre></td></tr></table></figure>
+
+<p>当命令行前端出现 <code>(venv)</code> 标记时，说明已成功进入虚拟环境。</p>
+<h3 id="2-安装核心依赖"><a href="#2-安装核心依赖" class="headerlink" title="2. 安装核心依赖"></a>2. 安装核心依赖</h3><p>在激活的虚拟环境中，安装 <code>speech-to-speech</code> 流水线及所需组件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install speech-to-speech</span><br><span class="line">pip install <span class="string">&quot;huggingface_hub&gt;=0.36.0,&lt;1.0&quot;</span></span><br><span class="line">winget install ChrisBagwell.SoX</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意（显卡加速配置）：</strong></p>
+<p>默认安装的 PyTorch 可能为 CPU 版本。为了调用显卡提高响应速度，建议先卸载纯 CPU 版，再安装对应的 CUDA 12.4 运行库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip uninstall torch torchaudio -y</span><br><span class="line">pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124</span><br></pre></td></tr></table></figure></blockquote>
+<h3 id="3-配置本地大模型（基于-llama-cpp）"><a href="#3-配置本地大模型（基于-llama-cpp）" class="headerlink" title="3. 配置本地大模型（基于 llama.cpp）"></a>3. 配置本地大模型（基于 llama.cpp）</h3><p>为了实现低延迟的本地推理，推荐使用免编译的 <code>llama.cpp</code> 作为后端服务：</p>
+<ol>
+<li><p><strong>下载程序</strong>：前往 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ggerganov/llama.cpp/releases">llama.cpp 官方 Releases</a> 页面，根据你的显卡驱动下载最新版的二进制主程序包与运行时组件（如：<code>win-cuda-12.4-x64</code> 相关压缩包），解压合并至同一个文件夹中（例如 <code>D:\llama</code>）。</p>
+</li>
+<li><p><strong>下载中文大模型</strong>：在 <code>(venv)</code> 窗口中运行以下命令，将 Qwen3-4B-Instruct 的 GGUF 模型下载至本地：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&quot;from huggingface_hub import snapshot_download; snapshot_download(&#x27;unsloth/Qwen3-4B-Instruct-2507-GGUF&#x27;, allow_patterns=&#x27;*Q4_K_M.gguf&#x27;, local_dir=r&#x27;D:\llama\models\qwen3-4b&#x27;)&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动大模型服务端</strong>：新建一个独立的 PowerShell 窗口，进入 <code>D:\llama</code> 并运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\llama-server.exe -m .\models\qwen3-4b\Qwen3-4B-Instruct-2507-Q4_K_M.gguf -c 32768 -fa on --port 8080 -ngl 99</span><br></pre></td></tr></table></figure>
+
+<p><em>注：<code>-ngl 99</code> 代表将模型所有层加载至 GPU 显存，<code>--port 8080</code> 为本地服务端口。若习惯使用 Ollama，可跳过此步并调整后续终端的 API 地址。</em></p>
+</li>
+</ol>
+<h3 id="4-启动语音对话核心服务"><a href="#4-启动语音对话核心服务" class="headerlink" title="4. 启动语音对话核心服务"></a>4. 启动语音对话核心服务</h3><p>回到此前激活了 <code>(venv)</code> 的 PowerShell 窗口，将下述指令粘贴并回车（首次运行会自动下载 Whisper 和 Qwen3-TTS 模型）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">speech-to-speech `</span><br><span class="line">--mode realtime `</span><br><span class="line">--stt whisper `</span><br><span class="line">--stt_model_name openai/whisper-large-v3 `</span><br><span class="line">--language zh `</span><br><span class="line">--llm_backend responses-api `</span><br><span class="line">--model_name <span class="string">&quot;unsloth/Qwen3-4B-Instruct-2507-GGUF&quot;</span> `</span><br><span class="line">--responses_api_base_url <span class="string">&quot;http://127.0.0.1:8080/v1&quot;</span> `</span><br><span class="line">--responses_api_api_key <span class="string">&quot;none&quot;</span> `</span><br><span class="line">--responses_api_stream `</span><br><span class="line">--tts qwen3 `</span><br><span class="line">--qwen3_tts_language zh `</span><br><span class="line">--enable_live_transcription</span><br></pre></td></tr></table></figure>
+
+<p>当控制台输出 <code>Realtime server listening on ws://localhost:8765/v1/realtime</code> 时，说明底层语音服务已就绪。</p>
+<p><em>若显卡配置较低，可将 <code>--stt_model_name</code> 的参数变更为 <code>openai/whisper-medium</code> 以提高识别速度。</em></p>
+<h3 id="5-部署前端可视化界面"><a href="#5-部署前端可视化界面" class="headerlink" title="5. 部署前端可视化界面"></a>5. 部署前端可视化界面</h3><p>再开启一个全新的 PowerShell 窗口，克隆前端 UI 代码并利用 <code>uvicorn</code> 托管：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\s2s</span><br><span class="line">git <span class="built_in">clone</span> https://huggingface.co/spaces/smolagents/hf-realtime-voice</span><br><span class="line"><span class="built_in">cd</span> hf-realtime-voice</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line">uvicorn server:app --port 7860</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="调试与使用"><a href="#调试与使用" class="headerlink" title="调试与使用"></a>调试与使用</h2><ol>
+<li>使用 <strong>Chrome</strong> 或 <strong>Edge</strong> 浏览器访问本地前端地址：<code>[http://127.0.0.1:7860](http://127.0.0.1:7860)</code>。</li>
+<li>首次进入界面后，点击 <strong>Settings</strong>，将本地语音地址（WS 地址）修改为 <code>localhost:8765</code>。</li>
+<li>点击页面中央的“交互球”并允许麦克风权限。当球体变为<strong>绿色</strong>时，即可直接进行普通话语音对话。</li>
+</ol>
+<blockquote>
+<p><strong>状态指示球说明：</strong></p>
+<ul>
+<li><strong>绿&#x2F;青色</strong>：系统就绪 &#x2F; 正在接收或聆听你的语音。</li>
+<li><strong>琥珀色</strong>：大模型本地思考中。</li>
+<li><strong>紫色</strong>：AI 正在进行本地语音实时合成与回答。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="更强模型下载"><a href="#更强模型下载" class="headerlink" title="更强模型下载"></a>更强模型下载</h2><p>Qwen3.5 A3B 模型：【<a target="_blank" rel="noopener external nofollow noreferrer" href="https://pan.quark.cn/s/577ea1996347">点击下载</a><strong>】 或 【</strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF/tree/main">更多模型下载</a>】</p>
+<p>下载将模型放入D:\llama\models 模型文件夹下，把把启动脚本里的模型文件名称改成你新放入的模型名称即可。</p>
+<h2 id="重启电脑后怎么使用？"><a href="#重启电脑后怎么使用？" class="headerlink" title="重启电脑后怎么使用？"></a>重启电脑后怎么使用？</h2><p>你可以使用下方这个一键启动脚本来执行，它会自动依次弹出三个服务窗口、等各自加载好、最后打开浏览器。</p>
+<h3 id="一键启动脚本【点击下载】-或-【备用下载】"><a href="#一键启动脚本【点击下载】-或-【备用下载】" class="headerlink" title="一键启动脚本【点击下载】 或 【备用下载】"></a>一键启动脚本【<a target="_blank" rel="noopener external nofollow noreferrer" href="https://pan.quark.cn/s/bb747b3f6ce8">点击下载</a>】 或 【<a target="_blank" rel="noopener external nofollow noreferrer" href="https://pan.cloudeop.com/s/FC2719AB36B8F625">备用下载</a>】</h3><p><strong>怎么用：</strong></p>
+<ol>
+<li>把 <code>启动语音对话.bat</code> 下载下来，放一个好找的位置（比如桌面）</li>
+<li><strong>双击运行</strong></li>
+<li>它会自动：弹窗口1(大模型)→等20秒→弹窗口2(语音服务)→等30秒→弹窗口3(网页)→等6秒→自动打开浏览器</li>
+<li>浏览器打开后，进 Settings 填 <code>localhost:8765</code>，点球开始说话&#96;&#96;</li>
+</ol>
+<p><strong>几个要注意的点：</strong></p>
+<p><strong>① 那几个”等待秒数”可能要微调。</strong> 脚本里给大模型留了20秒、语音服务留了30秒。如果你机器加载慢，可能网页窗口起来了、语音服务还没好，导致第一次点球连不上——这时<strong>等语音服务窗口出现 <code>running on http://0.0.0.0:8765</code> 之后，刷新一下浏览器</strong>再点球就行。如果你发现每次都要等更久，告诉我，我把秒数调大。</p>
+<p><strong>② 三个服务窗口别关。</strong> 脚本主窗口(黑色那个提示信息的)可以关，但弹出的三个 cmd 窗口要留着，它们就是在跑服务。关掉哪个哪个服务就停了。</p>
+<p><strong>③ 第一次双击如果 Windows 拦截。</strong> 可能弹”Windows 已保护你的电脑”，点”更多信息”→”仍要运行”即可（因为是本地脚本、没有数字签名，属正常）。</p>
+<p><strong>④ 想改中文提示词。</strong> 网页 Settings 里的 Instructions（中文提示词）浏览器会自己记住，脚本不管这个，填一次以后就在。</p>
+<p>先双击试一次，看三个窗口能不能都正常起来、浏览器能不能自动打开。如果哪个窗口报错、或者点球连不上，把情况告诉我，我帮你调脚本的等待时间或路径。</p>
+<h2 id="Linux方案："><a href="#Linux方案：" class="headerlink" title="Linux方案："></a>Linux方案：</h2><h4 id="WSL2（原生装不上时用这个）"><a href="#WSL2（原生装不上时用这个）" class="headerlink" title="WSL2（原生装不上时用这个）"></a>WSL2（原生装不上时用这个）</h4><p>WSL2 是 Windows 自带的 Linux 子系统，4090 能直通，Linux 依赖装起来最顺，对观众来说仍然是”在 Windows 电脑上”。</p>
+<p><strong>装 WSL2</strong>（管理员 PowerShell）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl --install -d Ubuntu</span><br></pre></td></tr></table></figure>
+
+<p>重启后设个用户名密码，开始菜单搜 “Ubuntu” 进 Linux 终端。在里面跑 <code>nvidia-smi</code> 能看到 驱动版本号 就说明 GPU 直通成功了。</p>
+<p><strong>在 Ubuntu 里装</strong>（跟 Linux 一样）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt install -y python3-venv ffmpeg</span><br><span class="line">python3 -m venv ~/s2s &amp;&amp; <span class="built_in">source</span> ~/s2s/bin/activate</span><br><span class="line">pip install <span class="string">&quot;qwentts-cpp-python==0.3.0+cu124&quot;</span> -f https://huggingface.co/datasets/andito/qwentts-cpp-python-wheels/tree/main/whl/cu124</span><br><span class="line">pip install speech-to-speech</span><br><span class="line">pip install <span class="string">&quot;llama-cpp-python[server]&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动命令和正文第三、四步一样，只是换行符改回 Linux 的斜杠 <code>\</code>、路径用 Linux 风格。网页部分照旧——WSL 里跑 <code>python3 -m http.server 9000</code>，Windows 上的 Chrome 直接访问 <code>http://127.0.0.1:9000/voice-chat-client.html</code>（WSL2 会自动把端口转发到 Windows）。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/472eb26e/">https://macin.top/posts/472eb26e/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/tools/">tools</a><a class="post-meta__tags" href="/tags/software/">software</a><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/">本地部署</a><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E6%BA%90/">开源</a><a class="post-meta__tags" href="/tags/%E8%AF%AD%E9%9F%B3%E5%8A%A9%E6%89%8B/">语音助手</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/3372f4e2/" title="每次处理文件都上传别人的网站？NAS 部署 SnapOtter 241+ 工具全本地：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/snapotter.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">每次处理文件都上传别人的网站？NAS 部署 SnapOtter 241+ 工具全本地：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">NAS 部署 SnapOtter：开源注重隐私的文件处理平台，超过 200 种图片视频音频 PDF 工具全本地运行，文件始终掌握在自己手里，AI 加持。</div></div></div></a><a class="pagination-related" href="/posts/c713b475/" title="Windows 11 26H2 正式发布：七大重磅更新及安装指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Windows 11 26H2 正式发布：七大重磅更新及安装指南</div></div><div class="info-2"><div class="info-item-1">Windows 11 26H2 正式发布：桌面交互、AI 集成、搜索机制与底层安全深度优化，24H2/25H2 用户仅需 174KB 启用包升级，23H2 及以下需完整 ISO 安装。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/63c9298e/" title="最强 30B 开源 Agent 模型 Muse-Glimmer 正式发布与本地部署指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/muse.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-13</div><div class="info-item-2">最强 30B 开源 Agent 模型 Muse-Glimmer 正式发布与本地部署指南</div></div><div class="info-2"><div class="info-item-1">Muse-Glimmer-30B 最强开源 Agent 模型：Meta 官方面向消费级硬件打造，128K 上下文，强化 MCP 工具调用、代码执行、文件操作与多步骤任务拆解，附本地部署指南。</div></div></div></a><a class="pagination-related" href="/posts/e6671f22/" title="8G 显存也能玩转无审查AI 视频？开源模型 Sulphur 2 本地部署全攻略"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/comfyui.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-23</div><div class="info-item-2">8G 显存也能玩转无审查AI 视频？开源模型 Sulphur 2 本地部署全攻略</div></div><div class="info-2"><div class="info-item-1">8G 显存也能本地部署开源无审查 AI 视频模型 Sulphur 2，被称为"开源白嫖版 Sora"。本文提供 ComfyUI 部署全攻略与显存优化方案，含安装包与升级方法。</div></div></div></a><a class="pagination-related" href="/posts/d7b98cee/" title="MiniCPM5-1B 部署教程：10 亿参数小钢炮，支持 128K 上下文与双模式推理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/minicpm5.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-16</div><div class="info-item-2">MiniCPM5-1B 部署教程：10 亿参数小钢炮，支持 128K 上下文与双模式推理</div></div><div class="info-2"><div class="info-item-1">MiniCPM5-1B 部署教程：OpenBMB 开源轻量级语言模型，仅 10 亿参数却在综合测试中表现惊人，支持 128K 超长上下文与双模式推理，低配设备也能本地运行。</div></div></div></a><a class="pagination-related" href="/posts/c68a33b7/" title="LTX 2.3 本地部署教程：低显存优化与 ComfyUI 音视频生成配置指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ltx.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-11</div><div class="info-item-2">LTX 2.3 本地部署教程：低显存优化与 ComfyUI 音视频生成配置指南</div></div><div class="info-2"><div class="info-item-1">LTX 2.3 本地部署教程：Lightricks 新一代开源音视频生成模型，支持本地同步生成视频与匹配音频，通过 FP8、GGUF 等量化方案显存需求最低降至 8GB，附 ComfyUI 配置指南。</div></div></div></a><a class="pagination-related" href="/posts/aaca61b9/" title="Qwythos-9B：Claude Mythos 风格推理模型，4GB 显存即可本地部署"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/claude.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-27</div><div class="info-item-2">Qwythos-9B：Claude Mythos 风格推理模型，4GB 显存即可本地部署</div></div><div class="info-2"><div class="info-item-1">Qwythos-9B 开源推理模型：融合 Claude Mythos 与 Fable 风格的后训练模型，仅 4GB 显存即可本地部署，本地 AI 社区高性能推理利器。</div></div></div></a><a class="pagination-related" href="/posts/3ceb4fc6/" title="Clypra 安装与使用指南：免费、开源的现代视频编辑器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Clypra 安装与使用指南：免费、开源的现代视频编辑器</div></div><div class="info-2"><div class="info-item-1">Clypra 是一个免费、开源（MIT 许可证）的专业级视频编辑器。它采用原生 Rust/Tauri v2 核心进行硬件加速视频处理，并结合 React 19 前端，提供跨平台（macOS、Windows、Linux）支持。</div></div></div></a><a class="pagination-related" href="/posts/251cbd10/" title="Google Gemma 4 12B 本地部署与多模态实测指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/gemma.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-06</div><div class="info-item-2">Google Gemma 4 12B 本地部署与多模态实测指南</div></div><div class="info-2"><div class="info-item-1">Google Gemma 4 12B 本地部署与多模态实测指南：原生多模态 + 最高 256K 超长上下文，详解在消费级显卡上的高效部署方案与实测表现。</div></div></div></a><a class="pagination-related" href="/posts/a96bf10c/" title="在非美区 Chrome 中开启 Gemini 侧边栏的实测指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/gemini.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-29</div><div class="info-item-2">在非美区 Chrome 中开启 Gemini 侧边栏的实测指南</div></div><div class="info-2"><div class="info-item-1">在非美区 Chrome 中开启 Gemini 侧边栏实测指南：为 Chrome 快捷方式添加启动参数强制绕过地区限制，国内或其他非美国地区直接启用功能。</div></div></div></a><a class="pagination-related" href="/posts/6054b1f8/" title="Z-Image Turbo 模型！8G显存能跑，无审查、超高速，本地部署教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Z-Image.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-07</div><div class="info-item-2">Z-Image Turbo 模型！8G显存能跑，无审查、超高速，本地部署教程</div></div><div class="info-2"><div class="info-item-1">Z-Image Turbo 本地部署教程：开源文生图模型支持中文图片文字、无审查限制，8G 显存即可运行，速度极快，ComfyUI + 官方 Workflow 在 Windows/Mac 均可部署。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1196</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1731</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">153</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.</span> <span class="toc-text">部署步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="toc-number">2.1.</span> <span class="toc-text">1. 初始化虚拟环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E6%A0%B8%E5%BF%83%E4%BE%9D%E8%B5%96"><span class="toc-number">2.2.</span> <span class="toc-text">2. 安装核心依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E6%9C%AC%E5%9C%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B%EF%BC%88%E5%9F%BA%E4%BA%8E-llama-cpp%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">3. 配置本地大模型（基于 llama.cpp）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%90%AF%E5%8A%A8%E8%AF%AD%E9%9F%B3%E5%AF%B9%E8%AF%9D%E6%A0%B8%E5%BF%83%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.4.</span> <span class="toc-text">4. 启动语音对话核心服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E5%8F%AF%E8%A7%86%E5%8C%96%E7%95%8C%E9%9D%A2"><span class="toc-number">2.5.</span> <span class="toc-text">5. 部署前端可视化界面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">调试与使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%BC%BA%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.</span> <span class="toc-text">更强模型下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%90%AF%E7%94%B5%E8%84%91%E5%90%8E%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">重启电脑后怎么使用？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC%E3%80%90%E7%82%B9%E5%87%BB%E4%B8%8B%E8%BD%BD%E3%80%91-%E6%88%96-%E3%80%90%E5%A4%87%E7%94%A8%E4%B8%8B%E8%BD%BD%E3%80%91"><span class="toc-number">5.1.</span> <span class="toc-text">一键启动脚本【点击下载】 或 【备用下载】</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-number">6.</span> <span class="toc-text">Linux方案：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WSL2%EF%BC%88%E5%8E%9F%E7%94%9F%E8%A3%85%E4%B8%8D%E4%B8%8A%E6%97%B6%E7%94%A8%E8%BF%99%E4%B8%AA%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">WSL2（原生装不上时用这个）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/fa116a81/" title="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼"/></a><div class="content"><a class="title" href="/posts/fa116a81/" title="Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼">Agent Reach 安装与使用指南：为您的 AI Agent 装上互联网之眼</a><time datetime="2026-08-22T07:37:17.000Z" title="发表于 2026-08-22 15:37:17">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c4903d3a/" title="Res-Downloader 安装与使用指南：多平台网络资源下载工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Res-Downloader 安装与使用指南：多平台网络资源下载工具"/></a><div class="content"><a class="title" href="/posts/c4903d3a/" title="Res-Downloader 安装与使用指南：多平台网络资源下载工具">Res-Downloader 安装与使用指南：多平台网络资源下载工具</a><time datetime="2026-08-22T07:34:51.000Z" title="发表于 2026-08-22 15:34:51">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/89838b08/" title="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统"/></a><div class="content"><a class="title" href="/posts/89838b08/" title="Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统">Daily Stock Analysis 部署与安装指南：LLM驱动的多市场股票智能分析系统</a><time datetime="2026-08-22T07:29:49.000Z" title="发表于 2026-08-22 15:29:49">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bd56f0a2/" title="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎"/></a><div class="content"><a class="title" href="/posts/bd56f0a2/" title="UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎">UZI-Skill 安装与使用指南：AI 驱动的个股深度分析引擎</a><time datetime="2026-08-22T07:27:06.000Z" title="发表于 2026-08-22 15:27:06">2026-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ab70195d/" title="LinkSwift 安装与使用指南：网盘文件直链获取助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LinkSwift 安装与使用指南：网盘文件直链获取助手"/></a><div class="content"><a class="title" href="/posts/ab70195d/" title="LinkSwift 安装与使用指南：网盘文件直链获取助手">LinkSwift 安装与使用指南：网盘文件直链获取助手</a><time datetime="2026-08-22T07:23:31.000Z" title="发表于 2026-08-22 15:23:31">2026-08-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

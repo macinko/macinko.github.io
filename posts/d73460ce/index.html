@@ -1,0 +1,579 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="我把这些做法整理成 16 个技巧，穿插几段可以照着操作的演示。写代码、整理资料、改文章，都有用得上的地方。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token">
+<meta property="og:url" content="https://macin.top/posts/d73460ce/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="我把这些做法整理成 16 个技巧，穿插几段可以照着操作的演示。写代码、整理资料、改文章，都有用得上的地方。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/codex.webp">
+<meta property="article:published_time" content="2026-09-04T14:58:20.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.591Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/codex.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token",
+  "url": "https://macin.top/posts/d73460ce/",
+  "image": "https://macin.top/img/codex.webp",
+  "datePublished": "2026-09-04T14:58:20.000Z",
+  "dateModified": "2026-09-05T15:22:43.591Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/d73460ce/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/codex.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">6000字长文｜Codex 6 入门指南：16个必备技巧，节省90%的Token</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.591Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/agent/">agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>用 Codex 6 时，最怕的是看它忙了半天，拿到结果以后，我还得从头检查、重新整理。</p>
+<p>比如我只想调一下排版，它却连配色一起换了。我要的是一篇能发的文章，它交来的文字像产品说明。</p>
+<p>文件生成了，我还得打开看看，图表有没有挤在一起。没处理好的地方，还是得接着改。</p>
+<p>所以我更关心一个朴素的问题：怎么把任务交代清楚，让它做出我能接着用的结果？</p>
+<p>我把这些做法整理成 16 个技巧，穿插几段可以照着操作的演示。写代码、整理资料、改文章，都有用得上的地方。</p>
+<p>❗️演示里的报名记录、文件名和页面尺寸是示例，你可以换成自己的材料。</p>
+<h2 id="01｜先更新，再找按钮，别拿旧截图和新界面较劲"><a href="#01｜先更新，再找按钮，别拿旧截图和新界面较劲" class="headerlink" title="01｜先更新，再找按钮，别拿旧截图和新界面较劲"></a>01｜先更新，再找按钮，别拿旧截图和新界面较劲</h2><p>打开后，我先确认自己用的是什么：桌面应用、编辑器里的扩展，还是终端里的 Codex CLI。这几个入口能做的事有重叠，按钮位置和操作方式却不完全一样。</p>
+<p>如果教程里的菜单找不到，我会先检查应用更新和账号当前能用的功能。跟着旧截图改配置，尤其是把别人整份配置文件复制过来，容易把对方的模型、路径和权限一起带进自己的环境。</p>
+<p>需要升级时，我会这样交代：</p>
+<p>先识别我正在使用的 Codex 入口、当前版本和安装方式。按原来的安装渠道检查最新稳定版，保留现有配置。更新完成后，告诉我实际版本，以及哪些功能在当前环境可以使用。</p>
+<p>我会先选稳定版。手头有任务要做的时候，我不想把时间花在预览版本的兼容问题上。</p>
+<p>模型也一样。我会先用当前可选列表里的默认项，复杂任务再比较能力和耗时。换个按钮文案，不值得为了“最强模型”先折腾半小时。</p>
+<h2 id="02｜先看目录，别改错文件"><a href="#02｜先看目录，别改错文件" class="headerlink" title="02｜先看目录，别改错文件"></a>02｜先看目录，别改错文件</h2><p>电脑里同时有“项目”“项目备份”“项目最终版”，这种目录命名实在太常见了。</p>
+<p>开工之前，我会让 Codex 报一下当前路径。如果是代码项目，再确认分支和未提交修改；如果是文章或资料任务，就确认它读到的素材是不是这一批。</p>
+<p>先查看当前工作目录，告诉我你找到哪些主要文件、哪些是输入素材，以及结果准备存在哪里。暂时不要修改。遇到同名文件或多个版本，先把区别列出来。</p>
+<p>写长文时，我会把资料和成稿分开放。参考文章、截图、访谈记录放进素材目录，交付文件另存到输出目录。代码项目则尽量沿用原有结构。</p>
+<p>我不想等文章写完，才发现它读的是上个月那份旧提纲。</p>
+<p>我会这样开始一个新任务</p>
+<p>假设文件夹里有报名表和写作要求，我先把这个文件夹交给 Codex，再输入：</p>
+<p>先检查目录。告诉我报名表和写作要求分别在哪里，准备把结果存到哪里。现在只读取，不改文件。</p>
+<p>我会看它回复的路径。如果它找到了两份报名表，就补一句“使用素材目录里的那份，备份目录先不读”。确认后再发出整理指令。</p>
+<p>这一步的交付很小：明确读哪份文件、写到哪里。先确认这一点，后面的提示词才有意义。</p>
+<h2 id="03｜把四件事说清楚"><a href="#03｜把四件事说清楚" class="headerlink" title="03｜把四件事说清楚"></a>03｜把四件事说清楚</h2><p>“帮我优化一下”这句话，我会尽量少用。优化到什么程度、给谁看、哪些东西要保留，都没有说清楚。</p>
+<p>我交代稍微复杂一点的任务，会补齐目标、材料、限制和完成标准。中文就行，不必为了显得专业改成英文。</p>
+<p>比如我要整理一份活动报名表，会这样写：</p>
+<p>plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把这份报名表整理成能交给活动执行人员使用的版本。读取我提供的表格，以手机号识别疑似重复报名，但先标记，不直接删掉。保留原表，另存清理结果和问题清单。完成后检查总人数、缺失联系方式和重复记录，说明每一类怎么处理。</span><br></pre></td></tr></table></figure>
+
+<p>“整理一下表格”和这段话，差的就是交付要求。后者让它知道什么能直接做，什么需要留给我判断。</p>
+<p>演示：遇到重复报名，我会怎么追问</p>
+<p>我用六条虚构记录演示。01 和 03 都是林同学，联系标识都是号码 A；04 没填联系标识；05 和 06 的名字不同，却填了同一个号码 C。其余一条是周同学，号码 B。</p>
+<p>第一轮，我只让它找问题：</p>
+<p>检查这六条记录。保留原始编号，标记疑似重复、缺少联系标识、同号不同名。不要删除，也不要把同一个号码直接当作同一个人。</p>
+<p>如果它准备把 05 和 06 合并，我就补充：</p>
+<p>05 和 06 可能是两个人共用一个联系方式。保留两条，并注明需要人工确认。01 和 03 也先标成疑似重复，等我确认后再处理。</p>
+<p>这份示例里，我希望看到的结果是：六条都保留，01、03 标为疑似重复，04 标为联系标识缺失，05、06 标为同号不同名。周同学那条不需要问题标记。</p>
+<p>我验收时先数记录，再看标签。表格看起来再整齐，少了一条报名记录也不算做好。</p>
+<p>写文章时，我也会补上读者是谁、篇幅大概多长、哪些事实必须保留，以及有没有不能编的经历。尤其是第一人称文章，不能一句“写得真实一点”，就让它给我添一段不存在的创业故事。</p>
+<h2 id="04｜没想清楚，先开-Plan"><a href="#04｜没想清楚，先开-Plan" class="headerlink" title="04｜没想清楚，先开 Plan"></a>04｜没想清楚，先开 Plan</h2><p>如果只是改个错别字，我会直接让它改。</p>
+<p>但要做一个新页面、调整整篇文章结构，或者排查一个不知道原因的报错，我会先用 Plan。支持的入口可以输入 &#x2F;plan；也可以直接说“先分析和规划，暂时不要动文件”。</p>
+<p>我会让计划回答几个具体问题：它理解的结果是什么，需要查看哪些材料，哪一步最容易出错，还有什么关键问题没确定。</p>
+<p>先读材料，给我两种可行方案，解释各自需要改动什么。重点指出你还不能确认的地方。计划控制在我能快速看完的长度，暂时不要执行。</p>
+<p>我会警惕一种计划：写得很长，换个项目名称也能照用。它如果没提到我的文件、页面或内容，说明还没有把任务看明白。</p>
+<p>计划确定后，再明确说“按这个方案执行”。我不需要让一个按钮改色任务也开成需求评审会。</p>
+<h2 id="05｜能圈出来，就发图"><a href="#05｜能圈出来，就发图" class="headerlink" title="05｜能圈出来，就发图"></a>05｜能圈出来，就发图</h2><p>“上面那块有点大”“右边那个按钮不太对”，对着屏幕说的时候很好理解，放进聊天框就容易产生歧义。</p>
+<p>我会把截图一起发过去，圈出要改的区域，再补一句具体要求。比如标题保留两行、图片按原比例显示、按钮与正文左边缘对齐。</p>
+<p>有 Appshots 的 macOS 桌面入口，可以把当前应用窗口和可读取的文字一起带进任务。默认快捷键涉及同时按下左右两个 Command 键，自己改过快捷键的话就按实际设置来。普通截图也足够解决很多问题。</p>
+<p>我会这样提要求：</p>
+<p>看我圈出的这组卡片。标题与图片之间留白太大，请缩小这段间距，保留字体、颜色和卡片顺序。改完给我同一位置的预览，方便比较。</p>
+<p>如果浏览器预览支持元素标注，我会直接点对应元素。反馈越靠近具体位置，我越容易确认它有没有改对。</p>
+<p>截图主要负责告诉它“我看到什么”。涉及网页交互、文件内容或应用操作，还需要相应工具和访问权限。</p>
+<p>演示：把“这个页面不好看”改成能执行的要求</p>
+<p>假设我要改一张文章卡片：标题太长，封面图变形，按钮还挤出了边界。我会附上截图，并让它查看对应项目文件。</p>
+<p>只调整这张文章卡片。标题最多显示两行，超出部分用省略号；封面保持 16:9，并说明是否会裁切；按钮留在卡片内。保留当前配色、文案和链接。请在 390px 宽的手机视口下检查。</p>
+<p>如果裁切后封面上的字没了，我会继续补充：</p>
+<p>这张封面里的文字必须完整。请改为完整显示图片，允许留白，卡片外框的比例保持不变。</p>
+<p>验收时，我会打开页面缩到目标宽度，看标题行数、图片里的文字和按钮位置，再点一下链接。截图能告诉我排版，点击才能确认链接有没有被改坏。</p>
+<h2 id="06｜发现方向偏了，我会在它工作时插一句"><a href="#06｜发现方向偏了，我会在它工作时插一句" class="headerlink" title="06｜发现方向偏了，我会在它工作时插一句"></a>06｜发现方向偏了，我会在它工作时插一句</h2><p>我不会为了等一个完整结果，眼看着它沿着错误方向继续做。</p>
+<p>桌面任务运行时可以补充消息。发现它准备换掉整套配色，我就直接说清楚接下来怎么改：</p>
+<p>保留已经完成的排版调整。配色继续沿用原方案，接下来只修复小屏幕上的文字换行。请检查刚才有没有改动颜色，有的话只撤回这一部分。</p>
+<p>这里我会把“保留什么”和“撤回什么”一起说。只发一句“不要这样改”，它还得猜我反对的是哪一步。</p>
+<p>还有一种消息，我会明确放到后面执行：</p>
+<p>当前修改做完并检查后，再整理一份交付说明。现在先完成页面。</p>
+<p>界面提供即时补充和排队选项时，我就按当前需要选择。前一种是在改当前方向，后一种是在安排后续工作。选错了，原本只是补个说明，也可能打断正在处理的任务。</p>
+<h2 id="07｜多步骤任务，我会用-Goal-写清终点"><a href="#07｜多步骤任务，我会用-Goal-写清终点" class="headerlink" title="07｜多步骤任务，我会用 Goal 写清终点"></a>07｜多步骤任务，我会用 Goal 写清终点</h2><p>我不喜欢每隔一会儿就发一次“继续”。</p>
+<p>任务确实需要多步完成，而且我知道最终要什么时，会用 &#x2F;goal。目标要写到它能判断是否完成，不能只写“把网站做好”。</p>
+<p>例如：</p>
+<p>&#x2F;goal 把这个作品集页面做到可以本地验收。完成首页和项目详情页，使用我提供的文案与图片。桌面和手机布局都要检查，导航可以跳转，所有图片正常加载。最后交付启动方法、页面预览和未完成项。做到这些就停止。</p>
+<p>我会区分“继续尝试就能解决的问题”和“缺少我的决定”。某张图加载失败，可以继续排查；主视觉要选哪张，而我还没给素材，就需要把缺口告诉我。</p>
+<p>Goal 不会凭空增加权限，也不能保证机器休眠、网络断开后任务仍然照常运行。本地长任务开始前，我会确认运行环境能保持可用。</p>
+<h2 id="08｜同一件事接着聊，关键决定留文件"><a href="#08｜同一件事接着聊，关键决定留文件" class="headerlink" title="08｜同一件事接着聊，关键决定留文件"></a>08｜同一件事接着聊，关键决定留文件</h2><p>同一篇文章的提纲、初稿、修改意见，我会留在同一个任务里。这样我说“把第二版那个例子放回来”，还有上下文可接。</p>
+<p>话题换了，我就新建任务。把论文整理、网页改版和周报写作混在一起，后面自己找记录也费劲。</p>
+<p>但我不会把长期约定只留在聊天里。一个阶段结束时，我会要求：</p>
+<p>把已经确定的要求、当前文件位置、完成的部分和下一步写进项目记录。只记录最终决定，已经放弃的方案除非影响后续判断，否则不展开。</p>
+<p>以后换任务，我可以让它先读这份记录。有关品牌语气、文章读者、输出规格的要求，也能继续沿用。</p>
+<p>长对话有助于延续工作，却不等于每个细节都会永久、完整地保留。需要反复依赖的信息，我更愿意放到自己看得见、改得了的文件中。</p>
+<h2 id="09｜总在重复的要求，我会写进-AGENTS-md"><a href="#09｜总在重复的要求，我会写进-AGENTS-md" class="headerlink" title="09｜总在重复的要求，我会写进 AGENTS.md"></a>09｜总在重复的要求，我会写进 AGENTS.md</h2><p>“正文用中文”“别改原始数据”“结果另存”“没验证的地方要说出来”，如果这些要求一直重复出现，我会把它们写成项目规则。</p>
+<p>AGENTS.md 就适合放这种说明。它可以告诉 Codex 这个项目怎么工作，而不必每次重新交代。</p>
+<p>内容项目里，我会写得很具体：</p>
+<p>读者是刚接触 AI 工具的人。正文用简体中文，第一次出现的必要术语要解释。没有材料支持的数字、亲身经历和引语不补写。参考素材保留原文件，成稿另存。图片使用同一套配色和比例。</p>
+<p>代码项目还可以补充实际使用的启动和检查命令。我会先让它查看项目配置，确认命令存在，再写进去。把网上常见的 npm test 抄进一个根本没有测试脚本的项目，只会制造新问题。</p>
+<p>规则也要定期删。已经不用的技术栈、过时的目录、互相打架的要求，留着只会让后面的任务更难理解。</p>
+<h2 id="10｜Skill-我会按工作选，少装一点也没关系"><a href="#10｜Skill-我会按工作选，少装一点也没关系" class="headerlink" title="10｜Skill 我会按工作选，少装一点也没关系"></a>10｜Skill 我会按工作选，少装一点也没关系</h2><p>我对“必装几十个 Skill”这种清单没什么兴趣。真正用得到的流程，才值得留下。</p>
+<p>项目规则写的是这份工作有哪些约定；Skill 可以把一类任务的做法保存下来，例如处理 PDF、制作表格、审查代码，或者修改中文文章。</p>
+<p>拿这篇文章来说，我会让三个写作 Skill 分工。humanizer-zh 看中文句子是否自然，qu-ai-wei 检查空话和未经支持的细节，stop-slop 再删掉重复铺垫与口号式收尾。</p>
+<p>我不会让它们各自把整篇文章推倒重写。多轮打磨最容易出的问题，是文字越来越顺，原来的意思却一点点变了。所以事实、例子和判断要保留，修改重点放在表达上。</p>
+<p>重复做的任务，也可以让 Codex 帮我整理成自己的 Skill：</p>
+<p>plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把这次已经跑通的整理流程做成可复用 Skill，说明需要什么输入、按什么步骤处理、最后交付什么。缺材料时明确报告，不要用假数据填满模板。</span><br></pre></td></tr></table></figure>
+
+<p>能稳定完成一次，再保存成流程，我觉得更靠谱。</p>
+<h2 id="11｜先确认工具接通了没有"><a href="#11｜先确认工具接通了没有" class="headerlink" title="11｜先确认工具接通了没有"></a>11｜先确认工具接通了没有</h2><p>需要调用外部应用时，我先问 Codex 当前能访问哪些工具。</p>
+<p>会整理笔记，不等于已经接通我的笔记库；会分析表格，也不等于能操作我电脑上任何一个打开的表格窗口。Skill 里的步骤与实际工具访问，是两回事。</p>
+<p>如果需要用到外部应用，我会连接对应插件或工具，然后做一个很小的读取任务，例如找出我指定的页面，确认标题和内容都对。</p>
+<p>浏览器任务也要选对入口。我会先说清楚，是查看公开网页，还是使用我已经登录的浏览器页面。不能默认一个新开的预览窗口就带着我的登录状态。</p>
+<p>我会先这样问：</p>
+<p>这项任务需要读取指定页面和附件。请先确认当前工具能访问哪一部分；无法访问的部分直接列出来，并告诉我可以补交什么文件。</p>
+<p>看得到什么就处理什么，缺什么就补什么。比起让它围绕一段看不见的内容猜，我宁愿直接把文件给它。</p>
+<h2 id="12｜遇到权限提示，我先看它具体要做什么"><a href="#12｜遇到权限提示，我先看它具体要做什么" class="headerlink" title="12｜遇到权限提示，我先看它具体要做什么"></a>12｜遇到权限提示，我先看它具体要做什么</h2><p>我不会把“全自动”理解成把所有权限一次放开。</p>
+<p>它需要读取哪个目录、写入哪个文件、连接哪个网站，这些都可以具体说明。运行项目已有的检查命令，和修改系统设置，是不同的事情。</p>
+<p>旧教程里的 approval_policy &#x3D; “on-request”，也不能简单理解成“每条命令都问一次”。是否发起请求，要结合当前权限、沙盒和审批策略来看。</p>
+<p>如果某一步被拦住，我会先要求它说明原因：</p>
+<p>告诉我刚才哪项操作没有执行，当前限制是什么。能在已有权限内完成的部分继续做；确实需要额外访问时，说明具体范围和用途。</p>
+<p>我尤其不想为了消除一个弹窗，把整个环境改得面目全非。权限问题解决到当前任务够用就行。</p>
+<p>13｜并行前，先分清谁改什么</p>
+<p>我要同时做资料整理和封面设计，这两件事可以分开推进。但如果两个任务都要修改文章正文，就得排好先后顺序。</p>
+<p>代码项目更需要留意。只开两个聊天窗口，不代表文件也隔离了。它们如果操作同一个工作目录，改动可能互相覆盖。</p>
+<p>需要并行开发时，我会使用独立工作副本，比如 Git worktree，并划清负责范围。一个处理页面，另一个检查独立模块，最后再合并和验证。worktree 能隔开工作目录，但不能替我解决所有合并冲突。</p>
+<p>如果任务太小，我就顺着做。为了并行先交代半天分工，再花半天合并，省下的时间未必够付这些成本。</p>
+<h2 id="14｜它说“完成了”，我会先看改动范围"><a href="#14｜它说“完成了”，我会先看改动范围" class="headerlink" title="14｜它说“完成了”，我会先看改动范围"></a>14｜它说“完成了”，我会先看改动范围</h2><p>验收时，我先打开 Diff，看看修改前后有什么差异。</p>
+<p>如果需求只是修复某个按钮，我会留意有没有顺手改掉配置、引入依赖、删除原有逻辑。看不懂的部分，可以让 Codex 按文件解释修改原因。</p>
+<p>按文件说明本次改动，每一项对应哪条需求。把与任务无关的变化、删除的内容和新增依赖单独列出来，先不要继续修改。</p>
+<p>文章也能按这个思路检查。要求它润色，我就重点看观点有没有变化，数字有没有被补写，原本有条件的判断有没有变成绝对结论。</p>
+<p>“语气更有力量”不能成为改动事实的理由。把“在这个场景下可用”改成“所有人都应该用”，句子是更响亮了，意思也已经不一样。</p>
+<h2 id="16｜自动化从一件小事开始，先手动跑通"><a href="#16｜自动化从一件小事开始，先手动跑通" class="headerlink" title="16｜自动化从一件小事开始，先手动跑通"></a>16｜自动化从一件小事开始，先手动跑通</h2><p>定时任务里，我会先选范围小、结果容易判断的工作，比如每天检查某个资料目录有没有新增文件，再整理变化清单。</p>
+<p>流程还不稳定时，我会先手动跑。今天漏了附件，明天输出格式又变了，这时候加上定时，只会按时重复这些问题。</p>
+<p>确认能跑通后，我会把频率、时区、检查范围和通知条件一起写清楚：</p>
+<p>每个工作日上午九点，按北京时间检查这个项目的资料目录。与上次记录比较，只整理新增和修改的文件。没有变化时保持安静；遇到读取失败或需要我处理的问题再提醒。继续使用当前任务里的上下文。</p>
+<p>保存后，我会核对下一次运行时间和任务内容，再看首轮结果。本地项目的定时工作，需要对应机器、应用和文件保持可用。关了电脑后会不会继续跑，取决于任务实际运行在哪里，不能靠想当然。</p>
+<blockquote>
+<p>演示：我会先试三种结果，再开定时</p>
+</blockquote>
+<blockquote>
+<p>拿检查资料目录来说，我先手动执行一次，让它保存本次检查记录。随后用三种情况确认任务写法是否够清楚。</p>
+</blockquote>
+<blockquote>
+<p>目录没有变化时，它应该不发提醒。加入一份新的演示文件后，下一次检查应该指出新增文件的名称和位置。如果目录读不到，它应该报告读取失败，不能把“没读到”写成“没有变化”。</p>
+</blockquote>
+<p>这几种情况的处理符合要求后，我才设置工作日上午九点运行，再核对时区和下一次执行时间。</p>
+<p>以后不需要盯这个目录了，我会暂停对应任务。否则文件早就归档，它还在按时检查，提醒也会慢慢变成噪声。</p>
+<p>我会先把这一件小事用顺。等输出不用反复纠正，再把更多重复工作交过去。</p>
+<p>如果你现在从零开始，先不要把这 16 个技巧全部配置一遍。先拿一个正在做、又容易检查的小任务练手：改一页排版，整理一张表，或者把一篇初稿改到可以发。</p>
+<p>把材料交进去，说清结果，做完后自己打开看。哪个要求需要反复提醒，就留下来变成项目规则；哪个流程确实重复，再做成 Skill 或定时任务。</p>
+<p>我想省掉的是反复解释、复制和整理的时间。至于最终文件有没有用，我还是会亲自看一眼。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/d73460ce/">https://macin.top/posts/d73460ce/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/Codex/">Codex</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/ff36750c/" title="马斯克的 Grok Bot：为 AI 准备的 Mac mini 还要买吗"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">马斯克的 Grok Bot：为 AI 准备的 Mac mini 还要买吗</div></div><div class="info-2"><div class="info-item-1">每天刷 X 找选题，最耗时间的常常是前半段：翻消息、找原文、确认是不是旧闻、把链接整理好。真正动笔时，精力已经用掉一半。</div></div></div></a><a class="pagination-related" href="/posts/26068abe/" title="深度拆解 | FDE小团队是如何搭建项目管理Agent的？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">深度拆解 | FDE小团队是如何搭建项目管理Agent的？</div></div><div class="info-2"><div class="info-item-1">我们搭建的项目经理Agent，是为了把散落在沟通里的信息自动整理成可以持续追踪的项目记录，同时给轻量任务提供一个统一、低摩擦的入口。项目是否应该继续，仍然由人判断。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/1252d021/" title="DeepSeek‑V4‑Flash 接入 Codex 保姆级教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-03</div><div class="info-item-2">DeepSeek‑V4‑Flash 接入 Codex 保姆级教程</div></div><div class="info-2"><div class="info-item-1">本教程手把手教你把 DeepSeek‑V4‑Flash 接入 Codex，整个过程简单，新手也能轻松搞定。</div></div></div></a><a class="pagination-related" href="/posts/1d841096/" title="手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国</div></div><div class="info-2"><div class="info-item-1">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国、澳洲和加拿大，可自用，也可拿去闲鱼卖。</div></div></div></a><a class="pagination-related" href="/posts/7a36c891/" title="15 分钟把 Codex 账号变 API Key｜CLIProxyAPI 教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-04</div><div class="info-item-2">15 分钟把 Codex 账号变 API Key｜CLIProxyAPI 教程</div></div><div class="info-2"><div class="info-item-1">手里有 Claude 会员，或者平时在用 Codex，想试个新的 AI 工具，它却不认你的账号，还得再单独花一笔钱？</div></div></div></a><a class="pagination-related" href="/posts/720a7efb/" title="AI 视频自动生产线：教你如何用Codex 接管图片路由、Midjourney"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-03</div><div class="info-item-2">AI 视频自动生产线：教你如何用Codex 接管图片路由、Midjourney</div></div><div class="info-2"><div class="info-item-1">这是我一个长期用的codex工作流分享，平时只要发布任务，基本上除了关键帧部分母版我需要确认，其他全程一键自动完成。</div></div></div></a><a class="pagination-related" href="/posts/cc93d8b7/" title="8000字讲透 ｜ Codex零基础入门教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">8000字讲透 ｜ Codex零基础入门教程</div></div><div class="info-2"><div class="info-item-1">第一次打开 Codex 时，我犯的错误和很多人一样：把它当成一个“更会写代码的 ChatGPT”。我在输入框里写了一句“帮我做一个网站”，然后盯着它生成文件。</div></div></div></a><a class="pagination-related" href="/posts/c713b475/" title="Windows 11 26H2 正式发布：七大重磅更新及安装指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-11</div><div class="info-item-2">Windows 11 26H2 正式发布：七大重磅更新及安装指南</div></div><div class="info-2"><div class="info-item-1">Windows 11 26H2 正式发布：桌面交互、AI 集成、搜索机制与底层安全深度优化，24H2/25H2 用户仅需 174KB 启用包升级，23H2 及以下需完整 ISO 安装。</div></div></div></a><a class="pagination-related" href="/posts/7b00b34c/" title="cubecity上班偷偷建城？这款网页版模拟城市太上头了！附 Docker"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/cubecity.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-02</div><div class="info-item-2">cubecity上班偷偷建城？这款网页版模拟城市太上头了！附 Docker</div></div><div class="info-2"><div class="info-item-1">CubeCity 网页版模拟城市游戏：从空地起步建造住宅、商业、工业建筑，布局道路管理金币人口，附 Docker 搭建教程，上班摸鱼也能建城。</div></div></div></a><a class="pagination-related" href="/posts/27f3948a/" title="docker搭建plausible网站流量分析平台(新版)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/plausible.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-27</div><div class="info-item-2">docker搭建plausible网站流量分析平台(新版)</div></div><div class="info-2"><div class="info-item-1">Docker 搭建 Plausible 网站流量分析平台（新版）：自托管 Community Edition，需 Docker + Compose，CPU 支持 SSE 4.2，建议 2GB 内存运行 ClickHouse。</div></div></div></a><a class="pagination-related" href="/posts/55577bb0/" title="最新Claude 防封号与申请虚拟卡订阅全指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/claude.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-30</div><div class="info-item-2">最新Claude 防封号与申请虚拟卡订阅全指南</div></div><div class="info-2"><div class="info-item-1">我的账号状态：注册到现在 1 年 2 个月，没被封过一次，没收到过任何警告。现在是 200 刀的 Max 账号，还另外开了一个 6 个多月的 Team 版账号，目前都安全。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#01%EF%BD%9C%E5%85%88%E6%9B%B4%E6%96%B0%EF%BC%8C%E5%86%8D%E6%89%BE%E6%8C%89%E9%92%AE%EF%BC%8C%E5%88%AB%E6%8B%BF%E6%97%A7%E6%88%AA%E5%9B%BE%E5%92%8C%E6%96%B0%E7%95%8C%E9%9D%A2%E8%BE%83%E5%8A%B2"><span class="toc-number">1.</span> <span class="toc-text">01｜先更新，再找按钮，别拿旧截图和新界面较劲</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02%EF%BD%9C%E5%85%88%E7%9C%8B%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%88%AB%E6%94%B9%E9%94%99%E6%96%87%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">02｜先看目录，别改错文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03%EF%BD%9C%E6%8A%8A%E5%9B%9B%E4%BB%B6%E4%BA%8B%E8%AF%B4%E6%B8%85%E6%A5%9A"><span class="toc-number">3.</span> <span class="toc-text">03｜把四件事说清楚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04%EF%BD%9C%E6%B2%A1%E6%83%B3%E6%B8%85%E6%A5%9A%EF%BC%8C%E5%85%88%E5%BC%80-Plan"><span class="toc-number">4.</span> <span class="toc-text">04｜没想清楚，先开 Plan</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05%EF%BD%9C%E8%83%BD%E5%9C%88%E5%87%BA%E6%9D%A5%EF%BC%8C%E5%B0%B1%E5%8F%91%E5%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">05｜能圈出来，就发图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#06%EF%BD%9C%E5%8F%91%E7%8E%B0%E6%96%B9%E5%90%91%E5%81%8F%E4%BA%86%EF%BC%8C%E6%88%91%E4%BC%9A%E5%9C%A8%E5%AE%83%E5%B7%A5%E4%BD%9C%E6%97%B6%E6%8F%92%E4%B8%80%E5%8F%A5"><span class="toc-number">6.</span> <span class="toc-text">06｜发现方向偏了，我会在它工作时插一句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#07%EF%BD%9C%E5%A4%9A%E6%AD%A5%E9%AA%A4%E4%BB%BB%E5%8A%A1%EF%BC%8C%E6%88%91%E4%BC%9A%E7%94%A8-Goal-%E5%86%99%E6%B8%85%E7%BB%88%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">07｜多步骤任务，我会用 Goal 写清终点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#08%EF%BD%9C%E5%90%8C%E4%B8%80%E4%BB%B6%E4%BA%8B%E6%8E%A5%E7%9D%80%E8%81%8A%EF%BC%8C%E5%85%B3%E9%94%AE%E5%86%B3%E5%AE%9A%E7%95%99%E6%96%87%E4%BB%B6"><span class="toc-number">8.</span> <span class="toc-text">08｜同一件事接着聊，关键决定留文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#09%EF%BD%9C%E6%80%BB%E5%9C%A8%E9%87%8D%E5%A4%8D%E7%9A%84%E8%A6%81%E6%B1%82%EF%BC%8C%E6%88%91%E4%BC%9A%E5%86%99%E8%BF%9B-AGENTS-md"><span class="toc-number">9.</span> <span class="toc-text">09｜总在重复的要求，我会写进 AGENTS.md</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10%EF%BD%9CSkill-%E6%88%91%E4%BC%9A%E6%8C%89%E5%B7%A5%E4%BD%9C%E9%80%89%EF%BC%8C%E5%B0%91%E8%A3%85%E4%B8%80%E7%82%B9%E4%B9%9F%E6%B2%A1%E5%85%B3%E7%B3%BB"><span class="toc-number">10.</span> <span class="toc-text">10｜Skill 我会按工作选，少装一点也没关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11%EF%BD%9C%E5%85%88%E7%A1%AE%E8%AE%A4%E5%B7%A5%E5%85%B7%E6%8E%A5%E9%80%9A%E4%BA%86%E6%B2%A1%E6%9C%89"><span class="toc-number">11.</span> <span class="toc-text">11｜先确认工具接通了没有</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12%EF%BD%9C%E9%81%87%E5%88%B0%E6%9D%83%E9%99%90%E6%8F%90%E7%A4%BA%EF%BC%8C%E6%88%91%E5%85%88%E7%9C%8B%E5%AE%83%E5%85%B7%E4%BD%93%E8%A6%81%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">12.</span> <span class="toc-text">12｜遇到权限提示，我先看它具体要做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14%EF%BD%9C%E5%AE%83%E8%AF%B4%E2%80%9C%E5%AE%8C%E6%88%90%E4%BA%86%E2%80%9D%EF%BC%8C%E6%88%91%E4%BC%9A%E5%85%88%E7%9C%8B%E6%94%B9%E5%8A%A8%E8%8C%83%E5%9B%B4"><span class="toc-number">13.</span> <span class="toc-text">14｜它说“完成了”，我会先看改动范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16%EF%BD%9C%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%8E%E4%B8%80%E4%BB%B6%E5%B0%8F%E4%BA%8B%E5%BC%80%E5%A7%8B%EF%BC%8C%E5%85%88%E6%89%8B%E5%8A%A8%E8%B7%91%E9%80%9A"><span class="toc-number">14.</span> <span class="toc-text">16｜自动化从一件小事开始，先手动跑通</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

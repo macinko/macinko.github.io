@@ -1,0 +1,685 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>千问 Qwen3.8 27B 本地化部署：小白保姆级教程 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近终于拿到了自己的 Linux 电脑，我开始拿它折腾本地大模型。这台机器装的是 Ubuntu 24.04，处理器是 AMD Ryzen AI MAX+ 395，配了 Radeon 8060S 和 128GB 统一内存…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="千问 Qwen3.8 27B 本地化部署：小白保姆级教程">
+<meta property="og:url" content="https://macin.top/posts/2d140538/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="最近终于拿到了自己的 Linux 电脑，我开始拿它折腾本地大模型。这台机器装的是 Ubuntu 24.04，处理器是 AMD Ryzen AI MAX+ 395，配了 Radeon 8060S 和 128GB 统一内存…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/qwen.webp">
+<meta property="article:published_time" content="2026-08-29T03:30:12.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.653Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Qwen">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/qwen.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "千问 Qwen3.8 27B 本地化部署：小白保姆级教程",
+  "url": "https://macin.top/posts/2d140538/",
+  "image": "https://macin.top/img/qwen.webp",
+  "datePublished": "2026-08-29T03:30:12.000Z",
+  "dateModified": "2026-09-05T15:22:43.653Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/2d140538/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '千问 Qwen3.8 27B 本地化部署：小白保姆级教程',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/qwen.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">千问 Qwen3.8 27B 本地化部署：小白保姆级教程</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">千问 Qwen3.8 27B 本地化部署：小白保姆级教程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.653Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/qwen/">qwen</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>17分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>最近终于拿到了自己的 Linux 电脑，我开始拿它折腾本地大模型。这台机器装的是 Ubuntu 24.04，处理器是 AMD Ryzen AI MAX+ 395，配了 Radeon 8060S 和 128GB 统一内存，硬件很适合测试大参数模型。</p>
+<p>一开始，我安装的是 **Qwen3.7 27B 的未审查版本，**体验了一把未审查的快乐！最近 <strong>Qwen3.8 27B</strong> 发布，我又重新跑了一遍完整部署。</p>
+<p>为什么还要花时间部署到本地？对我来说，理由都很实际：</p>
+<ul>
+<li>私人资料可以留在自己的电脑里；</li>
+<li>模型下载完成后，断网也能继续使用；</li>
+<li>没有网页会员的次数限制，想怎么测试都行；</li>
+<li>本地 API 可以接进脚本、知识库和其他 AI 工具；</li>
+<li>亲手跑一遍，才能知道自己的电脑能力边界在哪里。</li>
+</ul>
+<p>所以我把这次安装过程完整记录了下来。没有命令行基础也没关系，文中会解释每一个容易卡住的名词、每一条命令在做什么，以及看到什么结果才算安装成功。</p>
+<blockquote>
+<p>最后只需要一条命令，就能在自己的 Windows 或 Linux 电脑里跑起千问 Qwen3.8 27B。模型下载约 13GB，断网也能聊，文件和对话不用先传到云端。</p>
+</blockquote>
+<p>下面分成 <strong>Windows 和 Linux 两种安装方法</strong>。Windows 使用图形安装包，Linux 使用官方安装脚本；从下载模型开始，两边使用同一条命令。</p>
+<p>Linux 实机环境：</p>
+<ul>
+<li>系统：Ubuntu 24.04.4 LTS</li>
+<li>处理器：AMD Ryzen AI MAX+ 395</li>
+<li>显卡：Radeon 8060S</li>
+<li>内存：128GB 统一内存</li>
+<li>运行工具：Ollama 0.33.1</li>
+<li>模型：Julioa&#x2F;Qwen3.8-27B-UD-Q3_K_XL</li>
+</ul>
+<p>最终要运行的核心命令只有这一条：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run Julioa/Qwen3.8-27B-UD-Q3_K_XL</span><br></pre></td></tr></table></figure>
+
+<p>先别急着复制。27B 模型比普通软件大得多，安装成功和用得舒服也不是同一个标准。前面的名词解释两种系统都通用；从第 2 章开始，按 <strong>Windows</strong> 或 <strong>Linux</strong> 小标题走自己的路线即可。</p>
+<h1 id="第-1-章-你到底要装什么"><a href="#第-1-章-你到底要装什么" class="headerlink" title="第 1 章 你到底要装什么"></a>第 1 章 你到底要装什么</h1><p>第一次接触本地大模型，最容易被一串名字劝退：Linux、Ollama、27B、GGUF、Q3、ROCm。</p>
+<p>先把核心命令翻译成人话：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">让 Ollama 去下载 Julioa 发布的千问 Qwen3.8 27B 压缩模型，然后在这台电脑上启动它。</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-1-什么叫本地化部署"><a href="#1-1-什么叫本地化部署" class="headerlink" title="1.1 什么叫本地化部署"></a>1.1 什么叫本地化部署</h1><p>平时打开网页使用 AI，你输入的问题会通过网络发到服务商的服务器，答案算完后再传回来。</p>
+<p>本地化部署是把模型文件下载到自己的硬盘，再用自己的 CPU、GPU 和内存完成计算。</p>
+<p>它带来三个很直接的变化：</p>
+<ol>
+<li>模型下载完后，断网也能继续运行。</li>
+<li>日常对话和本地文档不用先上传到第三方服务器。</li>
+<li>没有按次收费，但速度、耗电和能跑多大的模型，都由自己的电脑决定。</li>
+</ol>
+<p>可以把云端模型理解成叫网约车，本地模型更像自己买车。前者省心，后者掌控感更强，也要自己负责停车位、油耗和保养。</p>
+<h1 id="1-2-千问、Qwen3-8-和-27B-分别是什么意思"><a href="#1-2-千问、Qwen3-8-和-27B-分别是什么意思" class="headerlink" title="1.2 千问、Qwen3.8 和 27B 分别是什么意思"></a>1.2 千问、Qwen3.8 和 27B 分别是什么意思</h1><p><strong>千问</strong>是模型家族的中文名，英文名是 <strong>Qwen</strong>。</p>
+<p><strong>Qwen3.8</strong> 是这次使用的模型版本名。</p>
+<p><strong>27B</strong> 代表大约 270 亿个参数。B 是 billion，也就是十亿。参数可以先理解成模型内部大量经过训练的数值旋钮；数量会影响模型规模，也会影响文件大小和运行时占用。</p>
+<p>参数更多不保证每次回答都更好，但通常会带来更高的硬件门槛。8B 模型像一只登机箱，27B 已经接近大号托运行李，电脑得先腾出位置。</p>
+<h1 id="1-3-Ollama-是什么"><a href="#1-3-Ollama-是什么" class="headerlink" title="1.3 Ollama 是什么"></a>1.3 Ollama 是什么</h1><p>模型权重只是一堆文件，自己不会弹出聊天窗口。</p>
+<p><strong>Ollama</strong> 负责三件事：</p>
+<ol>
+<li>下载和保存模型；</li>
+<li>把模型加载进内存或显存；</li>
+<li>提供终端聊天和本地 API，方便其他软件调用。</li>
+</ol>
+<p>你可以把它理解成本地大模型的启动器。类似 Steam 管理游戏，Ollama 管理模型。</p>
+<h1 id="1-4-Q3-K-XL-又是什么"><a href="#1-4-Q3-K-XL-又是什么" class="headerlink" title="1.4 Q3_K_XL 又是什么"></a>1.4 Q3_K_XL 又是什么</h1><p>原始 27B 模型很大。为了让个人电脑装得下，社区会对模型做<strong>量化</strong>。</p>
+<p>量化可以理解成压缩照片：保留主要信息，同时降低每个参数使用的精度，换来更小的文件和更低的内存占用。</p>
+<p>模型名里的 Q3 表示大约 3 bit 级别的量化，K 是一类量化方案，XL 是发布者对这个变体的命名。压得越狠，文件通常越小，模型质量也可能多损失一点。</p>
+<p>本教程选它的理由很现实：这台 128GB 统一内存的 AMD 机器能完整加载，实测运行尺寸约 29GB，还能把模型全部交给 GPU。</p>
+<h1 id="1-5-先记住四个容量"><a href="#1-5-先记住四个容量" class="headerlink" title="1.5 先记住四个容量"></a>1.5 先记住四个容量</h1><ul>
+<li>27.3B 是模型规模，约 273 亿参数。</li>
+<li>13GB 是第一次运行需要下载的文件量。</li>
+<li>29GB 是模型启动后在内存中的实测运行尺寸。</li>
+<li>262K 是最大上下文，完整数字为 262144 token。</li>
+</ul>
+<p><strong>token</strong> 是模型读写文字时使用的最小单位。它不完全等于汉字：一个汉字可能占一个或多个 token，英文单词也会被拆分。</p>
+<p><strong>上下文</strong> 是模型当前一次能看到的全部内容，包含你的问题、历史对话和贴进去的资料。上下文开得越长，额外占用的内存越多。</p>
+<h1 id="第-2-章-先看电脑能不能装"><a href="#第-2-章-先看电脑能不能装" class="headerlink" title="第 2 章 先看电脑能不能装"></a>第 2 章 先看电脑能不能装</h1><p>先花两分钟检查环境。模型下载到 90% 才发现磁盘不够，最浪费时间。</p>
+<h1 id="2-1-Windows-和-Linux-都要看这三项"><a href="#2-1-Windows-和-Linux-都要看这三项" class="headerlink" title="2.1 Windows 和 Linux 都要看这三项"></a>2.1 Windows 和 Linux 都要看这三项</h1><p><strong>第一是内存或显存容量。</strong></p>
+<p>模型启动时必须放进内存。独立显卡通常使用自己的显存；AMD Ryzen AI MAX+ 395 这类机器采用统一内存，CPU 和集成显卡可以共享同一块内存。</p>
+<p>本文这套 27B 量化模型在 Linux 实机上运行约占 29GB。64GB 比较从容，32GB 会很紧，尤其别一开始就把 262K 上下文全开。</p>
+<p><strong>第二是磁盘。</strong></p>
+<p>模型下载约 13GB，还要给临时文件、Ollama 本体和后续模型留位置。建议模型所在磁盘至少有 25GB 空闲空间；准备长期玩本地模型，留 100GB 更省心。</p>
+<p><strong>第三是 GPU 支持。</strong></p>
+<p>CPU 也能运行，只是速度通常慢很多。NVIDIA 和 AMD 显卡都可能被 Ollama 使用，具体能否加速还取决于显卡型号和驱动。</p>
+<h1 id="2-2-Windows：用-PowerShell-检查"><a href="#2-2-Windows：用-PowerShell-检查" class="headerlink" title="2.2 Windows：用 PowerShell 检查"></a>2.2 Windows：用 PowerShell 检查</h1><p>点击开始菜单，搜索 <strong>PowerShell</strong> 或 <strong>Windows Terminal</strong>，打开后逐段复制下面三组命令。</p>
+<p>先看 Windows 版本、系统位数和内存：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-CimInstance</span> Win32_OperatingSystem |</span><br><span class="line">  <span class="built_in">Select-Object</span> Caption, OSArchitecture,</span><br><span class="line">    <span class="selector-tag">@</span>&#123;Name=<span class="string">&#x27;RAM_GB&#x27;</span>;Expression=&#123;[<span class="type">math</span>]::Round(<span class="variable">$_</span>.TotalVisibleMemorySize/<span class="number">1</span>MB)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看显卡名称：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-CimInstance</span> Win32_VideoController | <span class="built_in">Select-Object</span> Name</span><br></pre></td></tr></table></figure>
+
+<p>最后看 C 盘还剩多少空间：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-PSDrive</span> C |</span><br><span class="line">  <span class="built_in">Select-Object</span> Name,</span><br><span class="line">    <span class="selector-tag">@</span>&#123;Name=<span class="string">&#x27;Free_GB&#x27;</span>;Expression=&#123;[<span class="type">math</span>]::Round(<span class="variable">$_</span>.Free/<span class="number">1</span>GB,<span class="number">1</span>)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Ollama 官方要求 <strong>Windows 10 22H2 或更新版本</strong>。OSArchitecture 看到 64-bit，RAM_GB 能确认内存，Free_GB 最好不低于 25，这条路线就可以继续。</p>
+<p>如果模型准备放在 D 盘，把最后一条命令里的 C 换成 D。后文也会说明如何改模型保存位置。</p>
+<h1 id="2-3-Linux：用终端检查"><a href="#2-3-Linux：用终端检查" class="headerlink" title="2.3 Linux：用终端检查"></a>2.3 Linux：用终端检查</h1><p>Ubuntu 中按 Ctrl + Alt + T 打开终端，再复制：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -m</span><br><span class="line"><span class="built_in">cat</span> /etc/os-release | sed -n <span class="string">&#x27;1,6p&#x27;</span></span><br><span class="line">free -h</span><br><span class="line"><span class="built_in">df</span> -h <span class="string">&quot;<span class="variable">$HOME</span>&quot;</span></span><br><span class="line">lspci | grep -Ei <span class="string">&#x27;VGA|Display|3D&#x27;</span></span><br><span class="line"><span class="built_in">ls</span> -l /dev/kfd /dev/dri/renderD* 2&gt;/dev/null</span><br><span class="line"><span class="built_in">id</span> -nG</span><br></pre></td></tr></table></figure>
+
+<p>每一行在查什么，可以先看这张 Linux 安装前质检图：</p>
+<p>x86_64 表示常见的 64 位 PC 架构。&#x2F;dev&#x2F;kfd 和 &#x2F;dev&#x2F;dri&#x2F;renderD* 是 Linux 暴露给程序的 GPU 入口；render 和 video 是允许账户访问显卡的权限组。</p>
+<p>如果最后一行没有 render 或 video，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG render,video <span class="string">&quot;<span class="variable">$USER</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后退出 Ubuntu 账户并重新登录。权限组通常要重新登录才会生效。</p>
+<p>如果系统提示 lspci: command not found，先安装它：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y pciutils</span><br></pre></td></tr></table></figure>
+
+<h2 id="sudo-是什么，密码输在哪里"><a href="#sudo-是什么，密码输在哪里" class="headerlink" title="sudo 是什么，密码输在哪里"></a>sudo 是什么，密码输在哪里</h2><p>sudo 表示临时用管理员权限执行命令。系统要求密码时，输入当前 Linux 账户的登录密码，然后按回车。</p>
+<p>终端不会显示星号、圆点，光标也可能没有变化。这是正常的安全设计。密码只输入在自己电脑的系统提示里，不要发给任何人，也不要放进截图。</p>
+<p>**这一章的过关标准：**能确认系统版本、64 位架构、内存、磁盘和显卡。Linux AMD 用户再确认 GPU 设备和权限组。</p>
+<h1 id="第-3-章-安装-Ollama"><a href="#第-3-章-安装-Ollama" class="headerlink" title="第 3 章 安装 Ollama"></a>第 3 章 安装 Ollama</h1><p>Ollama 是模型启动器。Windows 使用图形安装包，Linux 使用官方安装命令，装好以后运行模型的命令完全相同。</p>
+<h1 id="3-1-Windows：双击官方安装包"><a href="#3-1-Windows：双击官方安装包" class="headerlink" title="3.1 Windows：双击官方安装包"></a>3.1 Windows：双击官方安装包</h1><p>打开 Ollama Windows 官方下载页：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ollama.com/download/windows</span><br></pre></td></tr></table></figure>
+
+<p>下载 OllamaSetup.exe，双击并按提示完成安装。官方安装器默认装在当前用户目录，不要求管理员权限，也不要从第三方下载站找安装包。</p>
+<p>安装完成后，Ollama 会在后台运行。关闭原来的 PowerShell，再重新打开一个，执行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama <span class="literal">--version</span></span><br></pre></td></tr></table></figure>
+
+<p>能显示版本号，说明命令已经装好。再执行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl.exe <span class="literal">-s</span> http://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">11434</span>/api/version</span><br></pre></td></tr></table></figure>
+
+<p>能返回版本信息，说明后台服务也正常。如果没有响应，从开始菜单搜索并启动 <strong>Ollama</strong>，再试一次。</p>
+<h2 id="Windows-的-C-盘不够怎么办"><a href="#Windows-的-C-盘不够怎么办" class="headerlink" title="Windows 的 C 盘不够怎么办"></a>Windows 的 C 盘不够怎么办</h2><p>在开始菜单搜索“环境变量”，打开“编辑账户的环境变量”，新建：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">变量名：OLLAMA_MODELS</span><br><span class="line">变量值：D:\OllamaModels</span><br></pre></td></tr></table></figure>
+
+<p>保存后，先从系统托盘退出 Ollama，再从开始菜单重新启动。以后下载的模型就会放到新目录。</p>
+<h1 id="3-2-Linux：执行官方安装命令"><a href="#3-2-Linux：执行官方安装命令" class="headerlink" title="3.2 Linux：执行官方安装命令"></a>3.2 Linux：执行官方安装命令</h1><p>在终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://ollama.com/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>curl 负责从 Ollama 官网下载安装脚本，| sh 把脚本交给系统执行。安装时出现 sudo 密码提示，就输入当前 Linux 账户的登录密码。</p>
+<p>安装结束后检查版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama --version</span><br></pre></td></tr></table></figure>
+
+<p>再检查后台服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status ollama --no-pager</span><br></pre></td></tr></table></figure>
+
+<p>重点找：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Active: active (running)</span><br></pre></td></tr></table></figure>
+
+<p>最后测试本机接口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://127.0.0.1:11434/api/version</span><br></pre></td></tr></table></figure>
+
+<p>能返回版本信息，这一步就过关。127.0.0.1 代表当前电脑，11434 是 Ollama 默认端口，可以把端口理解成软件在电脑里的门牌号。</p>
+<p>下面是这台 Linux 电脑的安装结果，重点看版本号和后台服务状态：</p>
+<h1 id="第-4-章-下载并跑通第一次对话"><a href="#第-4-章-下载并跑通第一次对话" class="headerlink" title="第 4 章 下载并跑通第一次对话"></a>第 4 章 下载并跑通第一次对话</h1><p>从这一章开始，Windows 和 Linux 使用同一条命令。Windows 粘贴到 PowerShell，Linux 粘贴到终端。</p>
+<h1 id="4-1-复制准确的模型命令"><a href="#4-1-复制准确的模型命令" class="headerlink" title="4.1 复制准确的模型命令"></a>4.1 复制准确的模型命令</h1><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run Julioa/Qwen3.8-27B-UD-Q3_K_XL</span><br></pre></td></tr></table></figure>
+
+<p>命令各部分的意思：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ollama run                         下载并运行</span><br><span class="line">Julioa/                            模型发布者</span><br><span class="line">Qwen3.8-27B                        千问 3.8，约 270 亿参数</span><br><span class="line">UD-Q3_K_XL                         这个仓库提供的量化变体</span><br></pre></td></tr></table></figure>
+
+<p>斜杠、连字符和下划线都要保留。最稳的方法是完整复制，不要手敲，也不要把 Q3_K_XL 写成别的版本。</p>
+<h1 id="4-2-第一次运行会下载约-13GB"><a href="#4-2-第一次运行会下载约-13GB" class="headerlink" title="4.2 第一次运行会下载约 13GB"></a>4.2 第一次运行会下载约 13GB</h1><p>本地没有这个模型时，Ollama 会自动下载。窗口会显示百分比、下载速度和剩余时间，实际耗时取决于网速。</p>
+<p>网络中断后，重新执行同一条命令，Ollama 通常会接着已有文件继续下载。不用删除已经下载的部分，也别同时开多个窗口重复下载。</p>
+<h1 id="4-3-跑一个本地模型的-Hello-World"><a href="#4-3-跑一个本地模型的-Hello-World" class="headerlink" title="4.3 跑一个本地模型的 Hello World"></a>4.3 跑一个本地模型的 Hello World</h1><p>下载完成后，窗口会进入聊天状态。输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请只回复一句：千问 Qwen3.8 27B 已在这台电脑本地运行。</span><br></pre></td></tr></table></figure>
+
+<p>模型能返回中文，说明模型文件、Ollama、机器内存和终端对话都已经跑通。</p>
+<p>输入下面这行退出聊天：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bye</span><br></pre></td></tr></table></figure>
+
+<p>看到模型回答就是本地大模型的 Hello World。到这里已经能用，下一章继续确认 GPU 有没有接手计算。</p>
+<h1 id="第-5-章-确认-GPU-真的在干活"><a href="#第-5-章-确认-GPU-真的在干活" class="headerlink" title="第 5 章 确认 GPU 真的在干活"></a>第 5 章 确认 GPU 真的在干活</h1><p>模型会回答，只能证明它启动了。CPU 也能完成这件事，只是速度可能慢得多。</p>
+<h1 id="5-1-先认识-GPU、ROCm-和-offload"><a href="#5-1-先认识-GPU、ROCm-和-offload" class="headerlink" title="5.1 先认识 GPU、ROCm 和 offload"></a>5.1 先认识 GPU、ROCm 和 offload</h1><p><strong>GPU</strong> 是显卡里的计算芯片，很适合同时处理大量相似计算。</p>
+<p><strong>ROCm</strong> 是 AMD 的 GPU 计算平台，可以理解成 Ollama 和 Radeon 显卡之间的翻译员。Windows 上的部分 AMD 显卡也会使用 Vulkan 作为加速通道。</p>
+<p>日志里的 <strong>offload</strong> 指把模型计算层交给 GPU。66&#x2F;66 layers offloaded 表示 66 层全部交给显卡处理，和删除文件无关。</p>
+<h1 id="5-2-两种系统都先运行这两条"><a href="#5-2-两种系统都先运行这两条" class="headerlink" title="5.2 两种系统都先运行这两条"></a>5.2 两种系统都先运行这两条</h1><p>让模型保持运行，再开第二个 PowerShell 或终端窗口，执行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama ps</span><br></pre></td></tr></table></figure>
+
+<p>重点看 PROCESSOR 一栏：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PROCESSOR    100% GPU</span><br></pre></td></tr></table></figure>
+
+<p>100% GPU 表示模型全部放在 GPU 上运行，不代表显卡每一秒都保持 100% 满载。如果列表为空，通常是模型已经退出；重新运行模型，再立刻查询。</p>
+<p>再核对模型身份：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama show Julioa/Qwen3.8-27B-UD-Q3_K_XL</span><br></pre></td></tr></table></figure>
+
+<p>本文 Linux 实机看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parameters      27.3B</span><br><span class="line">context length  262144</span><br><span class="line">quantization    Q3_K_L</span><br></pre></td></tr></table></figure>
+
+<p>27.3B 是实际参数规模，262144 是最大上下文，Q3_K_L 是 Ollama 读到的内部量化元数据。仓库名里的 UD-Q3_K_XL 和内部元数据不同，运行时继续使用完整仓库名即可。</p>
+<h1 id="5-3-Windows-显示-CPU-怎么办"><a href="#5-3-Windows-显示-CPU-怎么办" class="headerlink" title="5.3 Windows 显示 CPU 怎么办"></a>5.3 Windows 显示 CPU 怎么办</h1><p>先更新显卡驱动和 Ollama，再从系统托盘退出 Ollama，并从开始菜单重新启动。NVIDIA 用户按官方要求使用 551.61 或更新驱动；AMD 用户安装当前 Radeon 驱动，Ollama 会按硬件情况选择 ROCm 或 Vulkan。</p>
+<p>重启后再次运行模型和 ollama ps。仍然只显示 CPU，就到 %LOCALAPPDATA%\Ollama 查看 server.log，搜索 gpu、cuda、rocm、vulkan 或 error。</p>
+<h1 id="5-4-Linux-AMD-显示-CPU-怎么办"><a href="#5-4-Linux-AMD-显示-CPU-怎么办" class="headerlink" title="5.4 Linux AMD 显示 CPU 怎么办"></a>5.4 Linux AMD 显示 CPU 怎么办</h1><p>先查设备和权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l /dev/kfd /dev/dri/renderD* 2&gt;/dev/null</span><br><span class="line"><span class="built_in">id</span> -nG</span><br></pre></td></tr></table></figure>
+
+<p>确认账户属于 render、video，并且修改权限后已经重新登录。再看 Ollama 日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">journalctl -u ollama -n 120 --no-pager | grep -Ei <span class="string">&#x27;rocm|gfx|gpu|offload|error&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>设备文件不存在，或者日志一直找不到 ROCm 时，需要按具体 AMD 显卡型号检查驱动和 Ollama 兼容说明。</p>
+<h1 id="5-5-为什么下载-13GB，运行却占到-29GB"><a href="#5-5-为什么下载-13GB，运行却占到-29GB" class="headerlink" title="5.5 为什么下载 13GB，运行却占到 29GB"></a>5.5 为什么下载 13GB，运行却占到 29GB</h1><p>硬盘里的量化权重约 13GB，启动后还要给上下文缓存留空间。</p>
+<p>这块缓存叫 <strong>KV Cache</strong>，可以理解成模型的临时草稿纸。对话越长，草稿纸越大，模型不用每次从第一句话重新计算。</p>
+<p>本文 Linux 实机打开 262K 上下文时，KV Cache 约 16GB，加上模型缓冲区约 11.7GB，最终运行尺寸接近 29GB。</p>
+<p>所以 32GB 机器即使能下载，加载超长上下文时也会很吃紧。小内存机器先把上下文降到 32768，成功率会高很多。</p>
+<p>下面两张都是 Ubuntu 24.04 实机截图。Windows 用户看同样的 PROCESSOR、参数和模型名字段，不要求窗口外观一致。</p>
+<p>这台 Linux 机器实测 66&#x2F;66 层全部交给 ROCm，ollama ps 显示 100% GPU，热机生成速度是 <strong>14.59 token&#x2F;s</strong>。速度会随硬件、提示词长度、上下文、系统负载和 Ollama 版本变化，这个数字只代表本文实机。</p>
+<h1 id="第-6-章-让网页和其他软件调用它"><a href="#第-6-章-让网页和其他软件调用它" class="headerlink" title="第 6 章 让网页和其他软件调用它"></a>第 6 章 让网页和其他软件调用它</h1><p>只想在终端聊天，可以先跳过这一章。想把模型接进网页、知识库、自动化脚本或聊天界面，就会用到 API。</p>
+<h1 id="6-1-API-是什么"><a href="#6-1-API-是什么" class="headerlink" title="6.1 API 是什么"></a>6.1 API 是什么</h1><p>API 是软件之间约定好的接口。把 Ollama 想成一家后厨，终端聊天是坐在店里点餐；API 像外卖窗口，其他程序按规定格式下单，再拿走模型返回的结果。</p>
+<p>Ollama 默认地址是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:11434</span><br></pre></td></tr></table></figure>
+
+<p>这个地址只供当前电脑访问，适合第一次部署时使用。</p>
+<h1 id="6-2-Windows：用-PowerShell-测试-API"><a href="#6-2-Windows：用-PowerShell-测试-API" class="headerlink" title="6.2 Windows：用 PowerShell 测试 API"></a>6.2 Windows：用 PowerShell 测试 API</h1><p>先把要发送的内容保存成 </p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$body</span> = <span class="selector-tag">@</span>&#123;</span><br><span class="line">  model = <span class="string">&quot;Julioa/Qwen3.8-27B-UD-Q3_K_XL&quot;</span></span><br><span class="line">  stream = <span class="variable">$false</span></span><br><span class="line">  messages = <span class="selector-tag">@</span>(</span><br><span class="line">    <span class="selector-tag">@</span>&#123;role = <span class="string">&quot;user&quot;</span>; content = <span class="string">&quot;请用一句中文确认你正在本地运行。&quot;</span>&#125;</span><br><span class="line">  )</span><br><span class="line">  options = <span class="selector-tag">@</span>&#123;num_ctx = <span class="number">32768</span>&#125;</span><br><span class="line">&#125; | <span class="built_in">ConvertTo-Json</span> <span class="literal">-Depth</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>再把它发送给 Ollama：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Invoke-RestMethod</span> <span class="literal">-Uri</span> <span class="string">&quot;http://127.0.0.1:11434/api/chat&quot;</span> <span class="literal">-Method</span> Post <span class="literal">-ContentType</span> <span class="string">&quot;application/json&quot;</span> <span class="literal">-Body</span> <span class="variable">$body</span> | <span class="built_in">ConvertTo-Json</span> <span class="literal">-Depth</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>输出中出现 “done”: true，并且 message 里有中文回答，说明 Windows 本地 API 已经跑通。</p>
+<h1 id="6-3-Linux：用终端测试-API"><a href="#6-3-Linux：用终端测试-API" class="headerlink" title="6.3 Linux：用终端测试 API"></a>6.3 Linux：用终端测试 API</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://127.0.0.1:11434/api/chat \</span><br><span class="line">  -H <span class="string">&#x27;Content-Type: application/json&#x27;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">    &quot;model&quot;: &quot;Julioa/Qwen3.8-27B-UD-Q3_K_XL&quot;,</span></span><br><span class="line"><span class="string">    &quot;stream&quot;: false,</span></span><br><span class="line"><span class="string">    &quot;messages&quot;: [</span></span><br><span class="line"><span class="string">      &#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;请用一句中文确认你正在本地运行。&quot;&#125;</span></span><br><span class="line"><span class="string">    ],</span></span><br><span class="line"><span class="string">    &quot;options&quot;: &#123;&quot;num_ctx&quot;: 32768&#125;</span></span><br><span class="line"><span class="string">  &#125;&#x27;</span> | python3 -m json.tool</span><br></pre></td></tr></table></figure>
+
+<p>同样检查 “done”: true 和 message 里的中文回答。如果系统没有 Python，删掉最后的 | python3 -m json.tool，接口仍然能正常调用，只是输出会挤在一行。</p>
+<p>num_ctx: 32768 表示这次先用 32K 上下文，能明显降低内存压力。</p>
+<h1 id="6-4-为什么先别开放公网"><a href="#6-4-为什么先别开放公网" class="headerlink" title="6.4 为什么先别开放公网"></a>6.4 为什么先别开放公网</h1><p>127.0.0.1 只允许本机访问，安全边界很清楚。</p>
+<p>有些教程会让 Ollama 监听 0.0.0.0，这样局域网甚至公网设备都可能连进来。公开服务还需要身份验证、访问控制、防火墙和日志，新手先保持默认地址。</p>
+<h1 id="第-7-章-小白最常遇到的六个问题"><a href="#第-7-章-小白最常遇到的六个问题" class="headerlink" title="第 7 章 小白最常遇到的六个问题"></a>第 7 章 小白最常遇到的六个问题</h1><h1 id="7-1-系统找不到-ollama-命令"><a href="#7-1-系统找不到-ollama-命令" class="headerlink" title="7.1 系统找不到 ollama 命令"></a>7.1 系统找不到 ollama 命令</h1><p>Windows 先关闭 PowerShell，重新打开，再执行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">where.exe ollama</span><br><span class="line">ollama <span class="literal">--version</span></span><br></pre></td></tr></table></figure>
+
+<p>Linux 也先重开终端并执行 ollama –version。仍然找不到，就重新走第 3 章对应系统的官方安装步骤。</p>
+<h1 id="7-2-无法连接-127-0-0-1-11434"><a href="#7-2-无法连接-127-0-0-1-11434" class="headerlink" title="7.2 无法连接 127.0.0.1:11434"></a>7.2 无法连接 127.0.0.1:11434</h1><p>Windows 从开始菜单启动 <strong>Ollama</strong>，然后重新执行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl.exe <span class="literal">-s</span> http://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">11434</span>/api/version</span><br></pre></td></tr></table></figure>
+
+<p>Linux 重启后台服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart ollama</span><br><span class="line"><span class="built_in">sudo</span> systemctl status ollama --no-pager</span><br></pre></td></tr></table></figure>
+
+<p>看到 active (running) 后，再测试接口。</p>
+<h1 id="7-3-Linux-输入密码时屏幕完全没变化"><a href="#7-3-Linux-输入密码时屏幕完全没变化" class="headerlink" title="7.3 Linux 输入密码时屏幕完全没变化"></a>7.3 Linux 输入密码时屏幕完全没变化</h1><p>这是 Linux 终端的正常行为。输入当前账户登录密码并按回车即可，屏幕不会显示星号。</p>
+<p>密码错误时系统会重新提示。不要把密码发进聊天窗口，也不要为了截图把密码写在命令后面。</p>
+<h1 id="7-4-模型下载一半断线"><a href="#7-4-模型下载一半断线" class="headerlink" title="7.4 模型下载一半断线"></a>7.4 模型下载一半断线</h1><p>Windows 和 Linux 都重新执行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run Julioa/Qwen3.8-27B-UD-Q3_K_XL</span><br></pre></td></tr></table></figure>
+
+<p>Ollama 通常会继续已有下载，不需要从零清空。</p>
+<h1 id="7-5-ollama-ps-显示-CPU"><a href="#7-5-ollama-ps-显示-CPU" class="headerlink" title="7.5 ollama ps 显示 CPU"></a>7.5 ollama ps 显示 CPU</h1><p>先确认模型仍在运行，再按第 5 章对应系统的检查方法处理。</p>
+<p>Windows 先更新驱动、更新 Ollama、重启 Ollama；Linux AMD 先查 &#x2F;dev&#x2F;kfd、权限组和服务日志。处理后重新运行模型，再用 ollama ps 验收。</p>
+<h1 id="7-6-一启动就吃掉接近-30GB"><a href="#7-6-一启动就吃掉接近-30GB" class="headerlink" title="7.6 一启动就吃掉接近 30GB"></a>7.6 一启动就吃掉接近 30GB</h1><p>本文实机加载了 262K 上下文，KV Cache 本身约占 16GB。API 调用时先设置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;options&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;num_ctx&quot;</span><span class="punctuation">:</span> <span class="number">32768</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>32K 上下文已经能容纳很长的普通对话，也更适合内存紧张的机器。仍然吃紧，就换更小的模型或占用更低的量化版本。</p>
+<h1 id="第-8-章-一张图完成最终验收"><a href="#第-8-章-一张图完成最终验收" class="headerlink" title="第 8 章 一张图完成最终验收"></a>第 8 章 一张图完成最终验收</h1><p>先做系统自己的服务检查：</p>
+<ul>
+<li>Windows：curl.exe -s <a target="_blank" rel="noopener external nofollow noreferrer" href="http://127.0.0.1:11434/api/version">http://127.0.0.1:11434/api/version</a> 返回版本。</li>
+<li>Linux：sudo systemctl status ollama –no-pager 显示 active (running)。</li>
+</ul>
+<p>后面六项两种系统相同：</p>
+<ul>
+<li>版本：ollama –version 能显示版本号。</li>
+<li>模型：ollama list 出现完整模型名。</li>
+<li>参数：ollama show Julioa&#x2F;Qwen3.8-27B-UD-Q3_K_XL 显示 27.3B。</li>
+<li>GPU：模型运行时，ollama ps 显示 100% GPU。</li>
+<li>对话：ollama run Julioa&#x2F;Qwen3.8-27B-UD-Q3_K_XL 后能正常回答中文。</li>
+<li>API：调用 &#x2F;api&#x2F;chat 后返回 done: true。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/2d140538/">https://macin.top/posts/2d140538/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/Qwen/">Qwen</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/7aba8919/" title="Grok bot 实测分享，工作流训练优化实录，如何打造云端小红书"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Grok bot 实测分享，工作流训练优化实录，如何打造云端小红书</div></div><div class="info-2"><div class="info-item-1">最近一直在深度使用grok bot，我发现对grok bot 不同岗位的训练还非常重要，目前如果希望他能真正做出成果。是必须深度优化的，而且非常费额度。</div></div></div></a><a class="pagination-related" href="/posts/793936a0/" title="我的跨境实战:中国人注册美国公司一定要注意这10个坑"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">我的跨境实战:中国人注册美国公司一定要注意这10个坑</div></div><div class="info-2"><div class="info-item-1">我通过注册美国公司，做了2年的亚马逊本土店，开了shopify, Etsy本土店，这方面也积累的一些经验。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/1d841096/" title="手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国</div></div><div class="info-2"><div class="info-item-1">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国、澳洲和加拿大，可自用，也可拿去闲鱼卖。</div></div></div></a><a class="pagination-related" href="/posts/d6eb02a1/" title="Mac 本地部署 Qwen3.8-27B从安装到配置完整指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/qwen.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">Mac 本地部署 Qwen3.8-27B从安装到配置完整指南</div></div><div class="info-2"><div class="info-item-1">Qwen3.8-27B 的 Ollama 页面目前标注约 18GB，支持文本和图像输入，并具备思考、工具调用和视觉能力。</div></div></div></a><a class="pagination-related" href="/posts/3f52c74b/" title="使用PE打包ISO镜像：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/nas.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">使用PE打包ISO镜像：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">使用 PE 打包 ISO 镜像教程：iStoreOS、OpenWRT 等只提供 img 镜像而虚拟机仅支持 ISO 时，用微 PE ISO 配合 UltraISO 打包转换启动镜像。</div></div></div></a><a class="pagination-related" href="/posts/f9be3020/" title="omv7插件的介绍安装：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/omv.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-22</div><div class="info-item-2">omv7插件的介绍安装：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">OMV7 插件介绍与安装：扫描日志封禁恶意 IP、磁盘故障告警等系统插件说明，附 NAS 使用前的 IP 端口与密码规划建议。</div></div></div></a><a class="pagination-related" href="/posts/c4903d3a/" title="Res-Downloader 安装与使用指南：多平台网络资源下载工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Res-Downloader 安装与使用指南：多平台网络资源下载工具</div></div><div class="info-2"><div class="info-item-1">Res-Downloader 是一款基于 Go + Wails 的跨平台资源下载工具。它通过本地代理方式实现网络抓包，自动筛选并列出可下载的视频、音频、图片等资源…</div></div></div></a><a class="pagination-related" href="/posts/e73d9848/" title="轻量文件服务器 Dufs 部署攻略！低配设备也能流畅运行"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/dufs.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-26</div><div class="info-item-2">轻量文件服务器 Dufs 部署攻略！低配设备也能流畅运行</div></div><div class="info-2"><div class="info-item-1">轻量文件服务器 Dufs 部署攻略：静态文件服务、上传下载、搜索、访问控制、WebDAV 多功能，低配设备也能流畅运行，Docker 一键部署。</div></div></div></a><a class="pagination-related" href="/posts/a0212d41/" title="BiyaPay（全球一站式资产配置平台）：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/BiyaPay.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-31</div><div class="info-item-2">BiyaPay（全球一站式资产配置平台）：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">BiyaPay是2019年成立的全球性多资产交易钱包，核心优势是将跨境汇款、多币种兑换、数字资产管理、美港股交易及虚拟支付等功能整合在同一账户体系中…</div></div></div></a><a class="pagination-related" href="/posts/c360413f/" title="debian卸载iptables安装nftables：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/debian.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-27</div><div class="info-item-2">debian卸载iptables安装nftables：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Debian 卸载 iptables 安装 nftables 教程：--purge 删除配置文件，移除 iptables-persistent，新一代防火墙框架迁移步骤详解。</div></div></div></a><a class="pagination-related" href="/posts/5d520128/" title="Address 部署与安装指南：自托管真实地址生成器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Address 部署与安装指南：自托管真实地址生成器</div></div><div class="info-2"><div class="info-item-1">Address 是一个基于 PostgreSQL 的、自托管的真实住宅地址生成器。它的地址数据来自官方开放数据、国家或地区地址登记册、地图注册建筑等，并保留了原始坐标…</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-1-%E7%AB%A0-%E4%BD%A0%E5%88%B0%E5%BA%95%E8%A6%81%E8%A3%85%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">第 1 章 你到底要装什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E5%8F%AB%E6%9C%AC%E5%9C%B0%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="toc-number">2.</span> <span class="toc-text">1.1 什么叫本地化部署</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-2-%E5%8D%83%E9%97%AE%E3%80%81Qwen3-8-%E5%92%8C-27B-%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="toc-number">3.</span> <span class="toc-text">1.2 千问、Qwen3.8 和 27B 分别是什么意思</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-3-Ollama-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">4.</span> <span class="toc-text">1.3 Ollama 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-4-Q3-K-XL-%E5%8F%88%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">1.4 Q3_K_XL 又是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-5-%E5%85%88%E8%AE%B0%E4%BD%8F%E5%9B%9B%E4%B8%AA%E5%AE%B9%E9%87%8F"><span class="toc-number">6.</span> <span class="toc-text">1.5 先记住四个容量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-2-%E7%AB%A0-%E5%85%88%E7%9C%8B%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8D%E8%83%BD%E8%A3%85"><span class="toc-number">7.</span> <span class="toc-text">第 2 章 先看电脑能不能装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-1-Windows-%E5%92%8C-Linux-%E9%83%BD%E8%A6%81%E7%9C%8B%E8%BF%99%E4%B8%89%E9%A1%B9"><span class="toc-number">8.</span> <span class="toc-text">2.1 Windows 和 Linux 都要看这三项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-Windows%EF%BC%9A%E7%94%A8-PowerShell-%E6%A3%80%E6%9F%A5"><span class="toc-number">9.</span> <span class="toc-text">2.2 Windows：用 PowerShell 检查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-3-Linux%EF%BC%9A%E7%94%A8%E7%BB%88%E7%AB%AF%E6%A3%80%E6%9F%A5"><span class="toc-number">10.</span> <span class="toc-text">2.3 Linux：用终端检查</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sudo-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E5%AF%86%E7%A0%81%E8%BE%93%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">10.1.</span> <span class="toc-text">sudo 是什么，密码输在哪里</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-3-%E7%AB%A0-%E5%AE%89%E8%A3%85-Ollama"><span class="toc-number">11.</span> <span class="toc-text">第 3 章 安装 Ollama</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-1-Windows%EF%BC%9A%E5%8F%8C%E5%87%BB%E5%AE%98%E6%96%B9%E5%AE%89%E8%A3%85%E5%8C%85"><span class="toc-number">12.</span> <span class="toc-text">3.1 Windows：双击官方安装包</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-%E7%9A%84-C-%E7%9B%98%E4%B8%8D%E5%A4%9F%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">12.1.</span> <span class="toc-text">Windows 的 C 盘不够怎么办</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-2-Linux%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%AE%98%E6%96%B9%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="toc-number">13.</span> <span class="toc-text">3.2 Linux：执行官方安装命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-4-%E7%AB%A0-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E8%B7%91%E9%80%9A%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%AF%B9%E8%AF%9D"><span class="toc-number">14.</span> <span class="toc-text">第 4 章 下载并跑通第一次对话</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-1-%E5%A4%8D%E5%88%B6%E5%87%86%E7%A1%AE%E7%9A%84%E6%A8%A1%E5%9E%8B%E5%91%BD%E4%BB%A4"><span class="toc-number">15.</span> <span class="toc-text">4.1 复制准确的模型命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-2-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E4%BC%9A%E4%B8%8B%E8%BD%BD%E7%BA%A6-13GB"><span class="toc-number">16.</span> <span class="toc-text">4.2 第一次运行会下载约 13GB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-3-%E8%B7%91%E4%B8%80%E4%B8%AA%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E7%9A%84-Hello-World"><span class="toc-number">17.</span> <span class="toc-text">4.3 跑一个本地模型的 Hello World</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-5-%E7%AB%A0-%E7%A1%AE%E8%AE%A4-GPU-%E7%9C%9F%E7%9A%84%E5%9C%A8%E5%B9%B2%E6%B4%BB"><span class="toc-number">18.</span> <span class="toc-text">第 5 章 确认 GPU 真的在干活</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-1-%E5%85%88%E8%AE%A4%E8%AF%86-GPU%E3%80%81ROCm-%E5%92%8C-offload"><span class="toc-number">19.</span> <span class="toc-text">5.1 先认识 GPU、ROCm 和 offload</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-2-%E4%B8%A4%E7%A7%8D%E7%B3%BB%E7%BB%9F%E9%83%BD%E5%85%88%E8%BF%90%E8%A1%8C%E8%BF%99%E4%B8%A4%E6%9D%A1"><span class="toc-number">20.</span> <span class="toc-text">5.2 两种系统都先运行这两条</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-3-Windows-%E6%98%BE%E7%A4%BA-CPU-%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">21.</span> <span class="toc-text">5.3 Windows 显示 CPU 怎么办</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-4-Linux-AMD-%E6%98%BE%E7%A4%BA-CPU-%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">22.</span> <span class="toc-text">5.4 Linux AMD 显示 CPU 怎么办</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-5-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8B%E8%BD%BD-13GB%EF%BC%8C%E8%BF%90%E8%A1%8C%E5%8D%B4%E5%8D%A0%E5%88%B0-29GB"><span class="toc-number">23.</span> <span class="toc-text">5.5 为什么下载 13GB，运行却占到 29GB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-6-%E7%AB%A0-%E8%AE%A9%E7%BD%91%E9%A1%B5%E5%92%8C%E5%85%B6%E4%BB%96%E8%BD%AF%E4%BB%B6%E8%B0%83%E7%94%A8%E5%AE%83"><span class="toc-number">24.</span> <span class="toc-text">第 6 章 让网页和其他软件调用它</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-1-API-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">25.</span> <span class="toc-text">6.1 API 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-2-Windows%EF%BC%9A%E7%94%A8-PowerShell-%E6%B5%8B%E8%AF%95-API"><span class="toc-number">26.</span> <span class="toc-text">6.2 Windows：用 PowerShell 测试 API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-3-Linux%EF%BC%9A%E7%94%A8%E7%BB%88%E7%AB%AF%E6%B5%8B%E8%AF%95-API"><span class="toc-number">27.</span> <span class="toc-text">6.3 Linux：用终端测试 API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-4-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%88%E5%88%AB%E5%BC%80%E6%94%BE%E5%85%AC%E7%BD%91"><span class="toc-number">28.</span> <span class="toc-text">6.4 为什么先别开放公网</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-7-%E7%AB%A0-%E5%B0%8F%E7%99%BD%E6%9C%80%E5%B8%B8%E9%81%87%E5%88%B0%E7%9A%84%E5%85%AD%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">29.</span> <span class="toc-text">第 7 章 小白最常遇到的六个问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-1-%E7%B3%BB%E7%BB%9F%E6%89%BE%E4%B8%8D%E5%88%B0-ollama-%E5%91%BD%E4%BB%A4"><span class="toc-number">30.</span> <span class="toc-text">7.1 系统找不到 ollama 命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-2-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5-127-0-0-1-11434"><span class="toc-number">31.</span> <span class="toc-text">7.2 无法连接 127.0.0.1:11434</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-3-Linux-%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E6%97%B6%E5%B1%8F%E5%B9%95%E5%AE%8C%E5%85%A8%E6%B2%A1%E5%8F%98%E5%8C%96"><span class="toc-number">32.</span> <span class="toc-text">7.3 Linux 输入密码时屏幕完全没变化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-4-%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E4%B8%80%E5%8D%8A%E6%96%AD%E7%BA%BF"><span class="toc-number">33.</span> <span class="toc-text">7.4 模型下载一半断线</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-5-ollama-ps-%E6%98%BE%E7%A4%BA-CPU"><span class="toc-number">34.</span> <span class="toc-text">7.5 ollama ps 显示 CPU</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-6-%E4%B8%80%E5%90%AF%E5%8A%A8%E5%B0%B1%E5%90%83%E6%8E%89%E6%8E%A5%E8%BF%91-30GB"><span class="toc-number">35.</span> <span class="toc-text">7.6 一启动就吃掉接近 30GB</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC-8-%E7%AB%A0-%E4%B8%80%E5%BC%A0%E5%9B%BE%E5%AE%8C%E6%88%90%E6%9C%80%E7%BB%88%E9%AA%8C%E6%94%B6"><span class="toc-number">36.</span> <span class="toc-text">第 8 章 一张图完成最终验收</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

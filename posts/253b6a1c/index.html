@@ -1,0 +1,589 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>万字长文｜Hugging Face从入门到精通：好用实用，值得收藏 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="找开源模型时，经常会点进同一个网站：Hugging Face。它最有用的地方，是把模型、数据和能直接体验的应用放在一起。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="万字长文｜Hugging Face从入门到精通：好用实用，值得收藏">
+<meta property="og:url" content="https://macin.top/posts/253b6a1c/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="找开源模型时，经常会点进同一个网站：Hugging Face。它最有用的地方，是把模型、数据和能直接体验的应用放在一起。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/huggingface.webp">
+<meta property="article:published_time" content="2026-09-01T14:47:56.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.647Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Hugging Face">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/huggingface.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "万字长文｜Hugging Face从入门到精通：好用实用，值得收藏",
+  "url": "https://macin.top/posts/253b6a1c/",
+  "image": "https://macin.top/img/huggingface.webp",
+  "datePublished": "2026-09-01T14:47:56.000Z",
+  "dateModified": "2026-09-05T15:22:43.647Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/253b6a1c/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '万字长文｜Hugging Face从入门到精通：好用实用，值得收藏',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/huggingface.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">万字长文｜Hugging Face从入门到精通：好用实用，值得收藏</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">万字长文｜Hugging Face从入门到精通：好用实用，值得收藏</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.647Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/tool/">tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>万字长文｜Hugging Face从入门到精通</p>
+<p>找开源模型时，经常会点进同一个网站：Hugging Face。它最有用的地方，是把模型、数据和能直接体验的应用放在一起。看到一个感兴趣的 AI 效果，你可以顺着介绍找到演示，试过之后，再决定要不要把模型下载到自己的电脑上。</p>
+<p>但第一次打开它，确实不太容易下手。满屏英文，模型名字后面跟着一串数字，还有 Datasets、Spaces、GGUF、LoRA。想找个能用的东西，点进去却像进了文件夹。</p>
+<h1 id="一、为什么值得用-Hugging-Face？"><a href="#一、为什么值得用-Hugging-Face？" class="headerlink" title="一、为什么值得用 Hugging Face？"></a>一、为什么值得用 Hugging Face？</h1><p>用现成的 AI 产品，主要是在它提供的功能里选择。你输入一句话，它给你一张图；如果想换掉背后的模型，或者下载到自己的电脑上，产品未必提供这样的入口。</p>
+<p><strong>我看重的是，模型可以自己挑，用法也有得选</strong>。有网页应用就先试效果，合适再找下载版本；拿不准时，还能回到原始说明里查。</p>
+<p>同样是“把一张图片变成视频”，这里可能有不同团队的模型、别人做好的在线演示，以及适合本地软件的下载版本。你可以先试效果，再决定用哪一个。</p>
+<p>模型页可能连着演示和论文，数据集页可能列出用它训练过的模型。一个效果引起兴趣后，可以顺着这些链接找到来源，看看它是怎么做出来的。</p>
+<p>不写代码，也可以用别人做好的网页应用，或者把模型交给支持它的图形软件。想试新能力、下载开源资源、找某种图片风格时，这些选择尤其有用。</p>
+<p>这里的资源由不同作者发布，使用许可、硬件要求和演示费用各不相同，具体看项目说明。</p>
+<h1 id="二、打开首页，先认这五个位置"><a href="#二、打开首页，先认这五个位置" class="headerlink" title="二、打开首页，先认这五个位置"></a>二、打开首页，先认这五个位置</h1><p>打开 Hugging Face 首页](<a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/)%EF%BC%8C%E5%85%88%E7%9C%8B%E6%9C%80%E4%B8%8A%E9%9D%A2%E4%B8%80%E8%A1%8C%E3%80%82">https://huggingface.co/)，先看最上面一行。</a></p>
+<p><strong>① 搜索框</strong>：已经知道名字，就来这里找。可以搜模型，也可以搜数据集、作者或组织。别人给你一个完整名称，直接复制过来，比自己猜关键词省事。</p>
+<p><strong>② Models</strong>：模型区。你想找 Qwen、DeepSeek 这样的模型，或者需要下载某个绘图模型，主要来这里。</p>
+<p><strong>③ Datasets</strong>：数据集区。里面放的是整理好的数据，比如图片和说明文字、问题和答案、带分类标签的照片。</p>
+<p><strong>④ Spaces</strong>：应用区。别人把 AI 做成了网页工具，打开就能找到输入框、上传区等操作界面。想先试效果，从这里找。</p>
+<p><strong>⑤ 更多菜单</strong>：点开后能找到论文、课程和收藏入口，位置见截图中的标记。</p>
+<p>比如想玩 AI 修图，可以先去 Spaces 找修图应用。觉得效果不错，再从应用介绍里找模型，看看有没有适合自己电脑使用的版本。</p>
+<p>接着点开图里的“更多菜单”。</p>
+<p><strong>Collections 是收藏集合，Daily Papers 是论文，Learn 是课程</strong>。</p>
+<p>英文不熟，可以用浏览器的网页翻译。按钮名称最好同时记住英文，方便对照截图找位置。</p>
+<h1 id="三、先去-Spaces，玩一个能直接打开的-AI-应用"><a href="#三、先去-Spaces，玩一个能直接打开的-AI-应用" class="headerlink" title="三、先去 Spaces，玩一个能直接打开的 AI 应用"></a>三、先去 Spaces，玩一个能直接打开的 AI 应用</h1><p>点顶部的 Spaces，进入 </p>
+<p>AI 应用目录](<a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/spaces)%E3%80%82">https://huggingface.co/spaces)。</a></p>
+<p>页面上的每张卡片基本对应一个应用，卡片里有名字、简单介绍和发布者。点开卡片就能进入应用，模型下载是另一项操作。</p>
+<p>图里的几个位置这样用：</p>
+<ul>
+<li><strong>① 顶部的大搜索框</strong>：描述你想让 AI 做什么。</li>
+<li><strong>② 用途分类</strong>：比如 Image Generation 是生成图片，Video Generation 是生成视频，Text Generation 是生成文字。</li>
+<li><strong>③ Filter by name</strong>：按名称查找。已经知道某个 Space 叫什么，用这里更直接。</li>
+<li><strong>④ 应用卡片</strong>：点开，进入实际应用。</li>
+</ul>
+<p>可以先找一个小工具，比如去背景、放大图片。任务具体，试完就知道有没有用。</p>
+<h2 id="1-搜索时，尽量用英文关键词"><a href="#1-搜索时，尽量用英文关键词" class="headerlink" title="1. 搜索时，尽量用英文关键词"></a>1. 搜索时，尽量用英文关键词</h2><p>这里的项目名、标签和介绍大量使用英文。中文不是完全不能搜，但换成常见英文词，通常更容易找到相关内容。</p>
+<p>搜到结果后，点开介绍看看它具体做什么。同样叫“图片编辑”，有的擅长换背景，有的擅长局部修改，有的只是展示研究结果。</p>
+<p>同一个关键词下面出现许多相似卡片也很正常。它们可能采用同一个模型，也可能是别人复制后做了改动。不要只看名字相像就当作同一个应用，顺手看一眼发布者。</p>
+<h2 id="2-以抠图应用为例，看懂打开后的页面"><a href="#2-以抠图应用为例，看懂打开后的页面" class="headerlink" title="2. 以抠图应用为例，看懂打开后的页面"></a>2. 以抠图应用为例，看懂打开后的页面</h2><p>打开 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/spaces/Xenova/remove-background-web">Xenova 的 Remove Background Web</a>，这是一个去掉图片背景的应用。</p>
+<p><strong>① App</strong> 是当前的应用页面；旁边的 Files 和 Community 分别通向项目文件和社区讨论。</p>
+<p><strong>② Click to upload image</strong> 是上传图片，点它选择要处理的文件。别的应用里可能写 Upload 或 Drop image here，也是把图片放进来的位置。</p>
+<p><strong>③ try example</strong> 是试用作者准备的示例。可以先点它，熟悉操作后再放自己的图片。</p>
+<p><strong>④ RMBG V1.4 model</strong> 是它背后的模型链接。顺着这里点进去，就能从应用找到它用的模型。</p>
+<p>这个应用说明自己在浏览器本地运行；其他 Space 可能把图片发到服务器，或者调用外部服务，处理方式要分别看。第一次体验用普通示例图就好，身份证、客户合同、未公开的商品图先别上传。</p>
+<h2 id="3-换一个应用，哪些按钮还是通用的？"><a href="#3-换一个应用，哪些按钮还是通用的？" class="headerlink" title="3. 换一个应用，哪些按钮还是通用的？"></a>3. 换一个应用，哪些按钮还是通用的？</h2><p>不同 Space 的界面会有差别，但常用按钮的名称比较接近：</p>
+<p>有的应用选完图片就自动处理，有的还要点 Run。先找到输入区、开始按钮和结果区就好。</p>
+<p>Advanced Settings 是高级设置，刚开始用默认值即可。需要调整时，一次改一项，方便比较效果。</p>
+<p>试工具时，可以先用示例看清操作顺序，再换一张不含敏感信息的图片。比如试抠图，看看边缘是否完整、背景有没有残留；试图片放大，看看文字和细节有没有被改错。结果符合需求，再找 Download 保存，不必为了一张图把所有设置都研究一遍。</p>
+<h2 id="4-应用打不开时，先看运行状态"><a href="#4-应用打不开时，先看运行状态" class="headerlink" title="4. 应用打不开时，先看运行状态"></a>4. 应用打不开时，先看运行状态</h2><p>Space 卡片或页面上经常会显示运行状态。Running 表示应用在运行；Sleeping 表示休眠，唤醒可能需要一点时间；Building 表示正在准备运行环境；Runtime error 表示运行出了问题。</p>
+<p>Runtime error 这类问题通常要由维护者处理，你可以先换一个同类应用。还有些应用会排队、限制使用次数或要求额外授权，具体看页面提示。公开演示的运行条件会变，常用工具最好多留一个备选。</p>
+<h1 id="四、去-Models，找到你真正需要的模型"><a href="#四、去-Models，找到你真正需要的模型" class="headerlink" title="四、去 Models，找到你真正需要的模型"></a>四、去 Models，找到你真正需要的模型</h1><p>应用负责让你操作，模型负责提供某种 AI 能力。一个模型可以被做成不同的应用，一个应用也可能同时使用几个模型。</p>
+<p>现在点顶部的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/models">Models</a>。</p>
+<p>右边是搜索结果，左边是筛选条件，可以按名称、任务和使用软件缩小范围。</p>
+<p><strong>① 名称搜索框</strong>。输入模型名称即可查找。图里搜索的是 Qwen3-0.6B-GGUF，结果里会出现不同发布者提供的相关版本。</p>
+<p><strong>② Tasks</strong>。意思是任务，也就是这个模型拿来做什么。Text Generation 是文字生成，Text-to-Image 是文字生成图片，Image-to-Text 是根据图片输出文字。</p>
+<p><strong>③ Apps</strong>。按使用软件筛选。比如准备在 LM Studio 里用模型，可以先选对应的筛选项，再核对具体模型的兼容性。</p>
+<p><strong>④ 搜索结果里的完整名称</strong>。它通常分成两部分，斜杠前面是发布者，后面是项目名。图中的 unsloth&#x2F;Qwen3-0.6B-GGUF，发布者是 unsloth，项目名是 Qwen3-0.6B-GGUF。</p>
+<p>搜索结果里名字相似的模型，用途可能完全不同。下载前看完整名称和任务标签，别把做图片理解的模型当成绘图模型。</p>
+<h2 id="名称后面的一串字母，先认最有用的几个"><a href="#名称后面的一串字母，先认最有用的几个" class="headerlink" title="名称后面的一串字母，先认最有用的几个"></a>名称后面的一串字母，先认最有用的几个</h2><p>模型名字经常带着用途、规模和格式信息，下面几个词最常见。</p>
+<p><strong>Base</strong> 通常表示基础模型。要直接聊天，还得看它有没有针对对话做过调整，或是否提供了相应的使用说明。</p>
+<p><strong>Instruct、Chat</strong> 常用来表示已经针对指令或对话做过调整的版本。不过模型作者的命名并不完全统一，最后还是以说明为准。有些适合聊天的模型，也不一定带这两个词。</p>
+<p><strong>0.6B、7B、14B</strong> 这类数字通常和参数规模有关。B 表示十亿，7B 就是大约七十亿参数。先把它理解为估计模型规模的线索：规模越大，往往越吃电脑资源，但不保证你的具体任务一定做得更好。</p>
+<p><strong>GGUF</strong> 是一种模型文件格式，经常出现在本地运行的教程里。遇到这种文件，先确认使用的软件是否支持它，以及是否支持这个具体模型。</p>
+<p><strong>LoRA</strong> 常见于经过特定训练的附加权重。比如让绘图模型更擅长某种风格。它通常需要搭配适合的基础模型，不能把它当成一个完整聊天软件打开。</p>
+<p>选模型时，把用途、使用软件和电脑配置放在一起考虑。比如准备在本地聊天软件里用，就先筛软件支持的对话模型，再从合适的大小里挑，不必挨个研究全部结果。</p>
+<p>Trending、下载量和点赞数可以用来发现项目，但不能代替对用途和效果的判断。</p>
+<h1 id="五、点进一个模型页，先看这五处"><a href="#五、点进一个模型页，先看这五处" class="headerlink" title="五、点进一个模型页，先看这五处"></a>五、点进一个模型页，先看这五处</h1><p>点开 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/unsloth/Qwen3-0.6B-GGUF">unsloth&#x2F;Qwen3-0.6B-GGUF</a>，就进入了模型详情页。</p>
+<p><strong>① 发布者</strong>：这里是 Unsloth，提供的是 Qwen3 的 GGUF 版本。名字里虽然有 Qwen，文件却由 Unsloth 发布，来源要看斜杠前面的账号。</p>
+<p>社区作者会转换文件格式、做量化或微调，方便其他人使用。这样的版本也很有用，只是要看清谁做了哪些处理，以及原始模型来自哪里。</p>
+<p><strong>② Model card</strong>：模型卡。你可以直接把它叫“模型说明书”。通常会介绍用途、效果、来源、怎么用，以及哪些情况不适合用。</p>
+<p><strong>③ Files and versions</strong>：文件和版本。点开后是文件列表，模型下载入口就在这里。</p>
+<p><strong>④ Community</strong>：社区讨论。有人会问兼容性、效果和下载问题，也可能有作者的补充说明。遇到同一个模型在你使用的软件里打不开，先看看这里有没有相同情况。</p>
+<p><strong>⑤ License</strong>：使用许可。个人学习和放进商业项目，是两件不同的事。准备对外使用前，读清模型许可；如果模型又引用了其他基础模型，也要继续核对相应条件。</p>
+<h2 id="模型说明很长，应该从哪里读？"><a href="#模型说明很长，应该从哪里读？" class="headerlink" title="模型说明很长，应该从哪里读？"></a>模型说明很长，应该从哪里读？</h2><p>先看它承诺完成什么任务，再看示例和限制。</p>
+<p>想用它聊中文，就看有没有中文对话样例。做商品图则要分清生成、编辑和背景替换：从文字画出一件商品，与保留原商品只换背景，对模型的要求不同。</p>
+<p>说明里出现下面这些词时，可以顺着找对应内容：</p>
+<p>看到大段程序可以跳过去，找 Demo、图形软件用法和下载说明。只有程序用法、没有现成界面的项目，可以先收藏。模型页里的 GitHub &#x2F; Code 通常通向源代码，想直接体验，优先找演示入口。</p>
+<p>模型页右边有时还有在线试用区域或相关 Spaces，可以直接点进去体验。没有这些入口时，通常要按作者的说明在其他工具里使用，单靠模型下载页不能开始聊天。</p>
+<h1 id="六、模型怎么下载？下载完又怎么用？"><a href="#六、模型怎么下载？下载完又怎么用？" class="headerlink" title="六、模型怎么下载？下载完又怎么用？"></a>六、模型怎么下载？下载完又怎么用？</h1><p><strong>模型文件通常不是安装包，下载完不能靠双击就开始聊天</strong>。</p>
+<p>你需要一个支持它的软件。聊天模型、绘图模型、视频模型，对应的工具可能不同。选好了软件，再去挑它支持的模型，往往比先下一个几十 GB 的文件更省事。</p>
+<h2 id="1-从模型页进入文件列表"><a href="#1-从模型页进入文件列表" class="headerlink" title="1. 从模型页进入文件列表"></a>1. 从模型页进入文件列表</h2><p>还在刚才的模型页面，点 Files and versions。</p>
+<p>列表里既有说明、配置，也有模型文件。这个 GGUF 仓库提供了同一模型的多种处理版本，选择适合的软件和电脑配置的一份即可；其他仓库是否需要多个文件，要看各自的说明。</p>
+<p>在列表里找到 Qwen3-0.6B-Q4<em>K</em>M.gguf，也可以用 Go to file 搜索这个文件名。点文件名，进入它的详情页。</p>
+<p><strong>① Download 是下载按钮， ② 是当前文件名， ③ 是文件大小</strong>。下载前，对照后两项确认文件。</p>
+<p>这份文件显示约 397 MB，指的是当前文件的体积。整个仓库有多大、运行需要多少内存，要分别查看。</p>
+<p>如果页面提示文件太大、无法展示，只是说网页不能预览它，下载入口仍然可用。点 Download 下载当前文件即可，旁边带 CLI 的选项可以略过。</p>
+<h2 id="2-为什么同一个模型有那么多版本？"><a href="#2-为什么同一个模型有那么多版本？" class="headerlink" title="2. 为什么同一个模型有那么多版本？"></a>2. 为什么同一个模型有那么多版本？</h2><p>文件大小的一部分差别来自“量化”：用更省空间的方式保存模型里的数值，通常能减轻文件和运行负担，但可能损失一些效果。</p>
+<p>Q4、Q5、Q8 是常见标记。同一模型、相近方案下，较高精度通常更占资源。拿不准时，按使用软件或模型作者的建议选。</p>
+<p>有些文件名会注明第几份、总共几份，表示模型被拆成了多个部分。这种情况要按说明把所需分片下全，不能只挑其中一份。</p>
+<p><strong>我会优先从支持这个模型的图形软件里下载</strong>。软件通常能一起处理文件和存放位置，省去核对分片、寻找目录的麻烦。只有需要指定文件时，再从网页手动选。</p>
+<h2 id="3-把模型交给本地软件"><a href="#3-把模型交给本地软件" class="headerlink" title="3. 把模型交给本地软件"></a>3. 把模型交给本地软件</h2><p>回到模型说明页，找到右上角的 Use this model。</p>
+<p><strong>① 点 Use this model</strong>，展开使用方式。 <strong>② 找 Local Apps，也就是本地应用</strong>。这张图里能看到 LM Studio。已经安装了相应软件的人，可以通过这个入口尝试把模型交给软件打开。</p>
+<p>这个入口需要电脑上已经安装相应软件。点击后没有反应，可以检查软件是否安装，以及浏览器有没有拦截打开外部应用。</p>
+<p>也可以直接打开 LM Studio 的模型搜索页，输入完整模型名称，或粘贴 Hugging Face 模型页链接，再选软件支持的版本下载。</p>
+<p>这些操作适用于 LM Studio 支持的本地语言模型。图片和视频模型，需要另找对应的工具。</p>
+<h2 id="4-怎么知道电脑能不能带得动？"><a href="#4-怎么知道电脑能不能带得动？" class="headerlink" title="4. 怎么知道电脑能不能带得动？"></a>4. 怎么知道电脑能不能带得动？</h2><p>硬盘只负责存放文件，运行模型还要占用内存或显存，聊天长度、图片尺寸也会影响资源需求。因此，看到一个 4 GB 的文件，还得查软件和模型说明里的运行要求，光看硬盘剩余空间不够。</p>
+<p>优先看使用软件给出的兼容性信息、模型说明中的硬件建议，从较小的版本试起。如果还不清楚，就先用对应 Space 体验效果，不急着下载。</p>
+<h1 id="七、Datasets：先看样本，再决定下载什么"><a href="#七、Datasets：先看样本，再决定下载什么" class="headerlink" title="七、Datasets：先看样本，再决定下载什么"></a>七、Datasets：先看样本，再决定下载什么</h1><p>点顶部的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/datasets">Datasets</a></p>
+<p>，就是数据集目录。</p>
+<p>数据集就是一批按照一定方式整理的材料，可以是照片、文字、表格或视频，旁边还可能配有解释、答案或者分类。</p>
+<p>一张叶子的图片，配上“健康”或“某种病害”的标签，就是一个训练样本。一个问题配上一个回答，也是一个样本。很多这样的样本整理在一起，就形成了数据集。</p>
+<p><strong>① 名称搜索框</strong>：知道数据集叫什么，就直接找名字。 <strong>② Modalities</strong>：数据类型。Image 是图片，Text 是文字，Video 是视频，Tabular 是表格。想找图片素材，先选 Image；想看问答材料，通常先从 Text 和相关任务筛选入手。 <strong>③ Languages</strong>：语言。找中文问答材料时，可以先按语言筛选。 <strong>④ Viewer</strong>：列表上的这个标记提示你，通常可以在网页里预览数据。不必先把整个数据集下载到电脑上。</p>
+<h2 id="1-打开一个数据集，就像先翻几页样本"><a href="#1-打开一个数据集，就像先翻几页样本" class="headerlink" title="1. 打开一个数据集，就像先翻几页样本"></a>1. 打开一个数据集，就像先翻几页样本</h2><p>打开 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/datasets/AI-Lab-Makerere/beans">Makerere AI Lab 的 beans 数据集</a></p>
+<p>。里面是豆类作物的叶片图片，配有相应分类。</p>
+<p>① Dataset card 是数据说明； ② Data Studio 用来展开查看数据； ③ Files and versions 是数据文件。</p>
+<p>中间的表格展示实际样本：image 列是图片，labels 列是分类标签。横着看同一行，就能找到这张图片对应的分类。</p>
+<p><strong>④ Split</strong> 用来切换不同部分。常见的 train 是训练数据，validation 是训练过程中的验证数据，test 是最终测试数据。可以把它们理解成学习材料、练习检查和单独的考试材料。</p>
+<p><strong>⑤ 图片和标签</strong> 要对照着看。这个分类任务既需要图片，也需要正确的分类标签，模型才能从样本中学习两者的关系。</p>
+<p>换到商品图片任务，样本可能是商品图配品类、属性或描述。找数据时，可以据此检查内容和标注是否符合自己的用途。</p>
+<h2 id="2-Data-Studio-怎么用？"><a href="#2-Data-Studio-怎么用？" class="headerlink" title="2. Data Studio 怎么用？"></a>2. Data Studio 怎么用？</h2><p>点开 Data Studio，会进入更适合浏览数据的页面。根据数据本身是否支持，你可以翻页、搜索文字、筛选内容，查看一些基本统计。</p>
+<p>例如一个文字数据集有问题和答案两列，你就能先读几条，看看问题是不是完整、答案是不是有用。如果是图片数据集，就先看看分辨率、画面类型、是否有重复，以及文字描述有没有明显错误。</p>
+<p>预览也有打不开的时候：可能需要先同意访问条件，可能格式没被识别，也可能还在处理。这时回到 Dataset card 看访问说明，再到文件页确认有哪些数据。</p>
+<h2 id="3-看完样本，怎么判断值不值得下载？"><a href="#3-看完样本，怎么判断值不值得下载？" class="headerlink" title="3. 看完样本，怎么判断值不值得下载？"></a>3. 看完样本，怎么判断值不值得下载？</h2><p><strong>看数据集，我更在意几条实际样本的质量，之后才看总量</strong>。准备做中文产品问答，就看问题是否相关、答案是否准确、来源能否核对。内容合适，再查图片、文章等材料的使用条件，公开展示并不意味着可以随意商用。</p>
+<p>确认合适后，到 Files and versions 找作者说明里的数据文件。不同数据集的文件组织和格式不同，按 Dataset card 的下载说明选，不必把整个仓库都下载。</p>
+<p>暂时不训练，也可以参考别人整理材料的方式。比如把“问题、答案、来源”分别保存，让每条回答都能对应到依据。</p>
+<h1 id="八、想找特定风格，可以再看看微调版本和-LoRA"><a href="#八、想找特定风格，可以再看看微调版本和-LoRA" class="headerlink" title="八、想找特定风格，可以再看看微调版本和 LoRA"></a>八、想找特定风格，可以再看看微调版本和 LoRA</h1><p>想让图片接近某种风格，让回答遵循固定格式，就会遇到 Fine-tuning，也就是微调。它是在已有模型的基础上，用适合的样本继续训练，让表现朝某个目标调整。</p>
+<p>在 Hugging Face 上，可以先找别人做好的版本。打开模型卡，留意 Base model，确认它从哪个基础模型改来；有些页面还会显示 Model tree，点开能看相关衍生模型，再比较它们的用途。</p>
+<p>绘图教程里常见的 LoRA，是一类相对较小的附加权重文件，通常要搭配指定的基础模型使用。下载前看三件事：适配哪个模型、有没有 Trigger words（触发词）、作者建议怎样设置强度。只拿到 LoRA 文件，还没有拿到整套可用的模型。</p>
+<p>把基础模型和 LoRA 的页面一起收藏，备注搭配关系，比只保存一张效果图实用。实际加载和调强度，要在支持它们的绘图软件里操作。</p>
+<p>现成版本满足不了需求，再考虑自己微调。先准备有权使用、符合目标的样本，找支持该模型的训练工具；训练完成后，用没参与训练的新例子检查效果。</p>
+<h1 id="九、用-Collections，把有用的资源存好"><a href="#九、用-Collections，把有用的资源存好" class="headerlink" title="九、用 Collections，把有用的资源存好"></a>九、用 Collections，把有用的资源存好</h1><p>一个图片处理项目，可能用到模型、在线演示、配套数据和论文。分别存进浏览器书签，过一阵子还要回想它们是什么关系。</p>
+<p>Hugging Face 的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/collections">Collections</a></p>
+<p> 很适合把这些材料按主题放在一起。</p>
+<p>它可以收进模型、数据集、Space 和论文，还能给条目补充备注。比如做一个“图片处理”集合，把抠图应用、放大工具、相关模型放在一起；做一个“本地中文聊天”集合，收进准备使用的模型和说明。</p>
+<h2 id="1-先看别人怎么整理"><a href="#1-先看别人怎么整理" class="headerlink" title="1. 先看别人怎么整理"></a>1. 先看别人怎么整理</h2><p>从首页更多菜单点 Collections，或通过模型说明里的链接进入作者整理的集合，例如 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/collections/unsloth/qwen3">Unsloth 的 Qwen3 集合</a>。</p>
+<p>① 顶部的名称和说明 告诉你这个集合收什么； ② 每一张资源卡片 都能继续点开； ③ Note 是整理者写的备注； ④ 右侧搜索框 可以在集合里找名字。</p>
+<p>像这个集合，主要收的是同一系列的不同模型版本。先看发布者整理好的列表，能少漏掉相关资源；具体用哪一个，再点进模型卡比较。</p>
+<h2 id="2-把资源加入自己的集合"><a href="#2-把资源加入自己的集合" class="headerlink" title="2. 把资源加入自己的集合"></a>2. 把资源加入自己的集合</h2><p>回到模型页面，找到右侧的三个点。</p>
+<p><strong>① 点开三个点 ② 选 Add to collection</strong>，就是加入收藏集合。之后按页面提示选择已有集合，或者创建一个新的集合。</p>
+<p>页面上的 like 则更像“喜欢”或点赞。想系统整理资料，还是 Collections 更直观。</p>
+<p>集合名称按用途起，比如“修图工具”“本地模型”“图片风格”，以后更好找。</p>
+<p>备注可以写得很具体：“用于去背景”“搭配哪个软件”“准备试哪个版本”。下次打开集合，一眼就知道为什么存了它。</p>
+<p>保存前看一下集合的可见性。公开集合里的备注也能被别人看到，客户需求和未公开的项目计划不适合写在里面。</p>
+<h1 id="十、Papers：从论文找到模型和应用"><a href="#十、Papers：从论文找到模型和应用" class="headerlink" title="十、Papers：从论文找到模型和应用"></a>十、Papers：从论文找到模型和应用</h1><p>从首页更多菜单，点 Daily Papers，进入 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/papers">论文页面</a>。</p>
+<p>① 搜索框 可以找论文和研究主题； ② Daily、Weekly、Monthly 是日、周、月的浏览入口； ③ 点论文标题 进入详情； ④ 旁边的数字和箭头 是社区投票。</p>
+<p>投票能告诉你社区正在关注什么，不能证明一篇论文已经经过完整验证，更不能直接当成“哪个模型最强”的排名。</p>
+<p>看到一个图片编辑演示，介绍里给了论文名，就可以来这里找出处，再顺着论文找项目主页、模型和演示链接。</p>
+<h2 id="打开论文后，看哪些内容"><a href="#打开论文后，看哪些内容" class="headerlink" title="打开论文后，看哪些内容"></a>打开论文后，看哪些内容</h2><p>先看标题和摘要，弄清楚作者想解决什么问题。</p>
+<p>再看效果图和对比图，留意作者用了什么输入、在哪种任务上比较。某项测试更好，不等于所有场景都更好。</p>
+<p>接着找 Project、GitHub、Models、Datasets、Spaces 这些相关入口。有的论文页把它们放在按钮或侧栏里，有的需要点进项目主页才有。平台上的关联也可能由社区补充，应该再核对作者身份与说明。</p>
+<p>论文公开的材料各不相同：可能只有文章，可能有代码但没有模型文件，也可能有演示但暂时无法运行。想体验效果，就找可用的 Demo 或受支持的模型版本；暂时没有，可以先收藏论文。</p>
+<p>摘要可以借助翻译工具阅读，重点找三件事：它做到了什么，需要怎样的输入，哪些情况不适用。</p>
+<p>如果让 AI 帮你读论文，尽量把真实论文或摘要交给它，再要求它指出依据。只给一个标题，让它凭记忆发挥，很容易听到一段像模像样、却对不上原文的介绍。</p>
+<p>感兴趣的论文可以和对应模型、Space 放进同一个 Collection。之后想重新试它的效果，不用再从论文标题开始找。</p>
+<h1 id="十一、Learn：有兴趣，再选一门课"><a href="#十一、Learn：有兴趣，再选一门课" class="headerlink" title="十一、Learn：有兴趣，再选一门课"></a>十一、Learn：有兴趣，再选一门课</h1><p>首页更多菜单里的 Learn，打开的是 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/learn">Hugging Face 课程目录</a>。</p>
+<p>① LLM Course 是大语言模型课程； ② Context Course 面向编程智能体的上下文组织； ③ 往下滚动，还有其他方向的课程卡片。</p>
+<p>对聊天模型感兴趣，可以看 LLM Course；想了解智能体怎么使用工具，看 Agents Course；喜欢 AI 绘图，可以找 Diffusion Course。先读课程介绍和目录，挑与自己需求有关的章节。</p>
+<p>不少课程的实操涉及编程。只想了解原理，可以读概念章节；准备动手做项目，再按课程要求补基础。语言选项里有中文就切换，没有也可以用网页翻译。</p>
+<p>Learn 适合按主题学，顶部的 Docs 则适合查具体功能。想知道某个按钮怎么用，查 Docs；想继续理解模型怎么工作，再去 Learn。</p>
+<p>想给图片去掉背景，就从 Spaces 找一个工具；想在电脑上运行模型，就去 Models 找兼容的版本。试过觉得合适，再把应用、模型和说明存进同一个集合。下次有相同需求，直接打开它。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/253b6a1c/">https://macin.top/posts/253b6a1c/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Hugging-Face/">Hugging Face</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6a7d934c/" title="MEXC虚拟卡开卡全攻略！0开卡费 10%返现 大陆护照可申请 |"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/MEXC.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">MEXC虚拟卡开卡全攻略！0开卡费 10%返现 大陆护照可申请 |</div></div><div class="info-2"><div class="info-item-1">EXC抹茶交易所U卡，继Bitget Wallet、BYBIT、Gate等U卡后又一交易所U卡，开卡活动期间可获高达10%返现（最低4%），返现比例非常高。</div></div></div></a><a class="pagination-related" href="/posts/6255a979/" title="llmfit 是一个强大的命令行工具，它能自动检测你的硬件配置"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">llmfit 是一个强大的命令行工具，它能自动检测你的硬件配置</div></div><div class="info-2"><div class="info-item-1">llmfit 是一个强大的命令行工具，它能自动检测你的硬件配置（CPU、内存、GPU 及显存），然后从数百个开源大语言模型中，精准推荐最适合你设备运行的模型及量化版本。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/92636a0e/" title="小白入门：Hugging Face vs GitHub 测评"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/huggingface.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-01</div><div class="info-item-2">小白入门：Hugging Face vs GitHub 测评</div></div><div class="info-2"><div class="info-item-1">四大维度详细测评（满分 10 分）</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%80%BC%E5%BE%97%E7%94%A8-Hugging-Face%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">一、为什么值得用 Hugging Face？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%89%93%E5%BC%80%E9%A6%96%E9%A1%B5%EF%BC%8C%E5%85%88%E8%AE%A4%E8%BF%99%E4%BA%94%E4%B8%AA%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">二、打开首页，先认这五个位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%88%E5%8E%BB-Spaces%EF%BC%8C%E7%8E%A9%E4%B8%80%E4%B8%AA%E8%83%BD%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%E7%9A%84-AI-%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">三、先去 Spaces，玩一个能直接打开的 AI 应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%90%9C%E7%B4%A2%E6%97%B6%EF%BC%8C%E5%B0%BD%E9%87%8F%E7%94%A8%E8%8B%B1%E6%96%87%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">3.1.</span> <span class="toc-text">1. 搜索时，尽量用英文关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%A5%E6%8A%A0%E5%9B%BE%E5%BA%94%E7%94%A8%E4%B8%BA%E4%BE%8B%EF%BC%8C%E7%9C%8B%E6%87%82%E6%89%93%E5%BC%80%E5%90%8E%E7%9A%84%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.2.</span> <span class="toc-text">2. 以抠图应用为例，看懂打开后的页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8D%A2%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8%EF%BC%8C%E5%93%AA%E4%BA%9B%E6%8C%89%E9%92%AE%E8%BF%98%E6%98%AF%E9%80%9A%E7%94%A8%E7%9A%84%EF%BC%9F"><span class="toc-number">3.3.</span> <span class="toc-text">3. 换一个应用，哪些按钮还是通用的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%BA%94%E7%94%A8%E6%89%93%E4%B8%8D%E5%BC%80%E6%97%B6%EF%BC%8C%E5%85%88%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="toc-number">3.4.</span> <span class="toc-text">4. 应用打不开时，先看运行状态</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8E%BB-Models%EF%BC%8C%E6%89%BE%E5%88%B0%E4%BD%A0%E7%9C%9F%E6%AD%A3%E9%9C%80%E8%A6%81%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">四、去 Models，找到你真正需要的模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E7%A7%B0%E5%90%8E%E9%9D%A2%E7%9A%84%E4%B8%80%E4%B8%B2%E5%AD%97%E6%AF%8D%EF%BC%8C%E5%85%88%E8%AE%A4%E6%9C%80%E6%9C%89%E7%94%A8%E7%9A%84%E5%87%A0%E4%B8%AA"><span class="toc-number">4.1.</span> <span class="toc-text">名称后面的一串字母，先认最有用的几个</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%82%B9%E8%BF%9B%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9E%8B%E9%A1%B5%EF%BC%8C%E5%85%88%E7%9C%8B%E8%BF%99%E4%BA%94%E5%A4%84"><span class="toc-number">5.</span> <span class="toc-text">五、点进一个模型页，先看这五处</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E%E5%BE%88%E9%95%BF%EF%BC%8C%E5%BA%94%E8%AF%A5%E4%BB%8E%E5%93%AA%E9%87%8C%E8%AF%BB%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">模型说明很长，应该从哪里读？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%A8%A1%E5%9E%8B%E6%80%8E%E4%B9%88%E4%B8%8B%E8%BD%BD%EF%BC%9F%E4%B8%8B%E8%BD%BD%E5%AE%8C%E5%8F%88%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">六、模型怎么下载？下载完又怎么用？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E9%A1%B5%E8%BF%9B%E5%85%A5%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8"><span class="toc-number">6.1.</span> <span class="toc-text">1. 从模型页进入文件列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8C%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9E%8B%E6%9C%89%E9%82%A3%E4%B9%88%E5%A4%9A%E7%89%88%E6%9C%AC%EF%BC%9F"><span class="toc-number">6.2.</span> <span class="toc-text">2. 为什么同一个模型有那么多版本？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8A%8A%E6%A8%A1%E5%9E%8B%E4%BA%A4%E7%BB%99%E6%9C%AC%E5%9C%B0%E8%BD%AF%E4%BB%B6"><span class="toc-number">6.3.</span> <span class="toc-text">3. 把模型交给本地软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8D%E8%83%BD%E5%B8%A6%E5%BE%97%E5%8A%A8%EF%BC%9F"><span class="toc-number">6.4.</span> <span class="toc-text">4. 怎么知道电脑能不能带得动？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81Datasets%EF%BC%9A%E5%85%88%E7%9C%8B%E6%A0%B7%E6%9C%AC%EF%BC%8C%E5%86%8D%E5%86%B3%E5%AE%9A%E4%B8%8B%E8%BD%BD%E4%BB%80%E4%B9%88"><span class="toc-number">7.</span> <span class="toc-text">七、Datasets：先看样本，再决定下载什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%89%93%E5%BC%80%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E9%9B%86%EF%BC%8C%E5%B0%B1%E5%83%8F%E5%85%88%E7%BF%BB%E5%87%A0%E9%A1%B5%E6%A0%B7%E6%9C%AC"><span class="toc-number">7.1.</span> <span class="toc-text">1. 打开一个数据集，就像先翻几页样本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Data-Studio-%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">7.2.</span> <span class="toc-text">2. Data Studio 怎么用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9C%8B%E5%AE%8C%E6%A0%B7%E6%9C%AC%EF%BC%8C%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E5%80%BC%E4%B8%8D%E5%80%BC%E5%BE%97%E4%B8%8B%E8%BD%BD%EF%BC%9F"><span class="toc-number">7.3.</span> <span class="toc-text">3. 看完样本，怎么判断值不值得下载？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%83%B3%E6%89%BE%E7%89%B9%E5%AE%9A%E9%A3%8E%E6%A0%BC%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%86%8D%E7%9C%8B%E7%9C%8B%E5%BE%AE%E8%B0%83%E7%89%88%E6%9C%AC%E5%92%8C-LoRA"><span class="toc-number">8.</span> <span class="toc-text">八、想找特定风格，可以再看看微调版本和 LoRA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E7%94%A8-Collections%EF%BC%8C%E6%8A%8A%E6%9C%89%E7%94%A8%E7%9A%84%E8%B5%84%E6%BA%90%E5%AD%98%E5%A5%BD"><span class="toc-number">9.</span> <span class="toc-text">九、用 Collections，把有用的资源存好</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E7%9C%8B%E5%88%AB%E4%BA%BA%E6%80%8E%E4%B9%88%E6%95%B4%E7%90%86"><span class="toc-number">9.1.</span> <span class="toc-text">1. 先看别人怎么整理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%8A%8A%E8%B5%84%E6%BA%90%E5%8A%A0%E5%85%A5%E8%87%AA%E5%B7%B1%E7%9A%84%E9%9B%86%E5%90%88"><span class="toc-number">9.2.</span> <span class="toc-text">2. 把资源加入自己的集合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E3%80%81Papers%EF%BC%9A%E4%BB%8E%E8%AE%BA%E6%96%87%E6%89%BE%E5%88%B0%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%BA%94%E7%94%A8"><span class="toc-number">10.</span> <span class="toc-text">十、Papers：从论文找到模型和应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E8%AE%BA%E6%96%87%E5%90%8E%EF%BC%8C%E7%9C%8B%E5%93%AA%E4%BA%9B%E5%86%85%E5%AE%B9"><span class="toc-number">10.1.</span> <span class="toc-text">打开论文后，看哪些内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81Learn%EF%BC%9A%E6%9C%89%E5%85%B4%E8%B6%A3%EF%BC%8C%E5%86%8D%E9%80%89%E4%B8%80%E9%97%A8%E8%AF%BE"><span class="toc-number">11.</span> <span class="toc-text">十一、Learn：有兴趣，再选一门课</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,751 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Auto Paper Digest (APD) 是一个自动化AI论文处理流水线 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Auto Paper Digest (APD) 是一个自动化AI论文处理流水线，它能从Hugging Face抓取热门论文、下载PDF、通过NotebookLM生成视频讲解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Auto Paper Digest (APD) 是一个自动化AI论文处理流水线">
+<meta property="og:url" content="https://macin.top/posts/aebfef26/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="Auto Paper Digest (APD) 是一个自动化AI论文处理流水线，它能从Hugging Face抓取热门论文、下载PDF、通过NotebookLM生成视频讲解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-02T06:40:33.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.595Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Auto Paper Digest">
+<meta property="article:tag" content="下载">
+<meta property="article:tag" content="爬虫">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="视频">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Auto Paper Digest (APD) 是一个自动化AI论文处理流水线",
+  "url": "https://macin.top/posts/aebfef26/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-02T06:40:33.000Z",
+  "dateModified": "2026-09-05T15:22:43.595Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/aebfef26/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Auto Paper Digest (APD) 是一个自动化AI论文处理流水线',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">Auto Paper Digest (APD) 是一个自动化AI论文处理流水线</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Auto Paper Digest (APD) 是一个自动化AI论文处理流水线</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.595Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/tool/">tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><h1 id="Auto-Paper-Digest-APD-详细部署教程"><a href="#Auto-Paper-Digest-APD-详细部署教程" class="headerlink" title="Auto Paper Digest (APD) 详细部署教程"></a>Auto Paper Digest (APD) 详细部署教程</h1><p>Auto Paper Digest (APD) 是一个自动化AI论文处理流水线，它能从Hugging Face抓取热门论文、下载PDF、通过NotebookLM生成视频讲解，并最终发布到HuggingFace Dataset和抖音平台。以下是完整的部署与使用教程。</p>
+<hr>
+<h2 id="📋-目录"><a href="#📋-目录" class="headerlink" title="📋 目录"></a>📋 目录</h2><ol>
+<li>前提准备</li>
+<li>安装步骤</li>
+<li>配置环境变量</li>
+<li>登录认证</li>
+<li>核心工作流：三阶段操作</li>
+<li>按日处理（可选）</li>
+<li>高级功能与缓存机制</li>
+<li>命令大全与常用参数</li>
+<li>故障排除</li>
+<li>架构与目录结构</li>
+</ol>
+<hr>
+<h2 id="🔧-前提准备"><a href="#🔧-前提准备" class="headerlink" title="🔧 前提准备"></a>🔧 前提准备</h2><p>在开始之前，请确保你的系统满足以下要求：</p>
+<ul>
+<li><strong>Python 3.11+</strong></li>
+<li><strong>Git</strong></li>
+<li><strong>HuggingFace账号</strong>（用于发布视频和创建门户网站）</li>
+<li><strong>Google账号</strong>（用于登录NotebookLM）</li>
+<li><strong>抖音创作者账号</strong>（可选，用于发布到抖音）</li>
+</ul>
+<hr>
+<h2 id="🚀-安装步骤"><a href="#🚀-安装步骤" class="headerlink" title="🚀 安装步骤"></a>🚀 安装步骤</h2><h3 id="1-克隆仓库"><a href="#1-克隆仓库" class="headerlink" title="1. 克隆仓库"></a>1. 克隆仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/brianxiadong/auto-paper-digest.git</span><br><span class="line"><span class="built_in">cd</span> auto-paper-digest</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-安装Python依赖"><a href="#2-安装Python依赖" class="headerlink" title="2. 安装Python依赖"></a>2. 安装Python依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这会以可编辑模式安装项目及其所有依赖。</p>
+<h3 id="3-安装Playwright浏览器"><a href="#3-安装Playwright浏览器" class="headerlink" title="3. 安装Playwright浏览器"></a>3. 安装Playwright浏览器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">playwright install chromium</span><br></pre></td></tr></table></figure>
+
+
+
+<p>APD使用Playwright进行浏览器自动化操作（如登录NotebookLM和抖音），因此必须安装Chromium。</p>
+<hr>
+<h2 id="⚙️-配置环境变量"><a href="#⚙️-配置环境变量" class="headerlink" title="⚙️ 配置环境变量"></a>⚙️ 配置环境变量</h2><h3 id="1-复制配置模板"><a href="#1-复制配置模板" class="headerlink" title="1. 复制配置模板"></a>1. 复制配置模板</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> .env.example .<span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-编辑-env-文件"><a href="#2-编辑-env-文件" class="headerlink" title="2. 编辑 .env 文件"></a>2. 编辑 <code>.env</code> 文件</h3><p>使用任意文本编辑器打开 <code>.env</code>，填入以下关键信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HF_TOKEN=hf_你的HuggingFace访问令牌</span><br><span class="line">HF_USERNAME=你的HuggingFace用户名</span><br><span class="line">HF_DATASET_NAME=paper-digest-videos   # 可自定义数据集名称</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="如何获取HuggingFace-Token？"><a href="#如何获取HuggingFace-Token？" class="headerlink" title="如何获取HuggingFace Token？"></a>如何获取HuggingFace Token？</h3><ol>
+<li>登录 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/">HuggingFace官网</a></li>
+<li>点击右上角头像 → <strong>Settings</strong> → <strong>Access Tokens</strong></li>
+<li>点击 <strong>New token</strong>，选择 <strong>Write</strong> 权限，生成并复制令牌</li>
+</ol>
+<hr>
+<h2 id="🔑-登录认证"><a href="#🔑-登录认证" class="headerlink" title="🔑 登录认证"></a>🔑 登录认证</h2><p>APD需要登录两个平台，登录状态会被持久化保存，后续使用无需重复登录。</p>
+<h3 id="1-登录Google（用于NotebookLM）"><a href="#1-登录Google（用于NotebookLM）" class="headerlink" title="1. 登录Google（用于NotebookLM）"></a>1. 登录Google（用于NotebookLM）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd login</span><br></pre></td></tr></table></figure>
+
+
+
+<p>浏览器会自动打开NotebookLM登录页面，请完成Google账号登录。会话状态会保存在本地 <code>data/profiles/</code> 目录中。</p>
+<h3 id="2-登录抖音（可选，用于发布视频）"><a href="#2-登录抖音（可选，用于发布视频）" class="headerlink" title="2. 登录抖音（可选，用于发布视频）"></a>2. 登录抖音（可选，用于发布视频）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd douyin-login</span><br></pre></td></tr></table></figure>
+
+
+
+<p>浏览器会打开抖音创作者中心，使用抖音APP扫码登录即可。</p>
+<hr>
+<h2 id="📖-核心工作流：三阶段操作"><a href="#📖-核心工作流：三阶段操作" class="headerlink" title="📖 核心工作流：三阶段操作"></a>📖 核心工作流：三阶段操作</h2><p>APD的核心流程分为三个阶段，分别对应三条命令。<strong>建议按顺序执行</strong>。</p>
+<h3 id="Phase-1-上传论文并触发视频生成"><a href="#Phase-1-上传论文并触发视频生成" class="headerlink" title="Phase 1: 上传论文并触发视频生成"></a>Phase 1: 上传论文并触发视频生成</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd upload --week 2026-01 --headful --max 10</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>该命令会自动完成</strong>：</p>
+<ul>
+<li>获取HuggingFace指定周的论文列表</li>
+<li>从arXiv下载论文PDF（已下载的会跳过）</li>
+<li>将PDF上传到NotebookLM</li>
+<li>在NotebookLM中触发视频生成（<strong>不等待完成</strong>）</li>
+</ul>
+<p><strong>参数说明</strong>：</p>
+<ul>
+<li><code>--week 2026-01</code>：指定处理2026年第1周的论文（格式为 <code>YYYY-WW</code>）</li>
+<li><code>--headful</code>：显示浏览器窗口，方便观察操作过程（建议首次使用添加）</li>
+<li><code>--max 10</code>：最多处理10篇论文</li>
+</ul>
+<h3 id="Phase-2-下载生成的视频"><a href="#Phase-2-下载生成的视频" class="headerlink" title="Phase 2: 下载生成的视频"></a>Phase 2: 下载生成的视频</h3><p>视频生成通常需要几分钟时间，请耐心等待后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd download-video --week 2026-01 --headful</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>缓存机制</strong>：已下载的视频会自动跳过，如需强制重新下载，添加 <code>--force</code> 参数。</p>
+<h3 id="Phase-3a-发布到HuggingFace"><a href="#Phase-3a-发布到HuggingFace" class="headerlink" title="Phase 3a: 发布到HuggingFace"></a>Phase 3a: 发布到HuggingFace</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd publish --week 2026-01</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>该命令会</strong>：</p>
+<ul>
+<li>上传视频文件到HuggingFace Dataset</li>
+<li>更新 <code>metadata.json</code> 文件</li>
+<li>生成Markdown格式的周报摘要</li>
+</ul>
+<h3 id="Phase-3b-发布到抖音（可选）"><a href="#Phase-3b-发布到抖音（可选）" class="headerlink" title="Phase 3b: 发布到抖音（可选）"></a>Phase 3b: 发布到抖音（可选）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd publish-douyin --week 2026-01 --headful</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>该命令会</strong>：</p>
+<ul>
+<li>自动上传视频到抖音创作者平台</li>
+<li>填写视频标题（使用论文标题）</li>
+<li>添加话题标签（如 #AI #论文解读）</li>
+<li>自动点击发布</li>
+</ul>
+<blockquote>
+<p>💡 <strong>建议</strong>：首次使用抖音发布时添加 <code>--headful</code> 参数，观察发布过程是否正常。</p>
+</blockquote>
+<hr>
+<h2 id="📅-按日处理（可选）"><a href="#📅-按日处理（可选）" class="headerlink" title="📅 按日处理（可选）"></a>📅 按日处理（可选）</h2><p>除了按周处理，APD也支持按具体日期处理论文：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取指定日期的论文</span></span><br><span class="line">apd fetch --<span class="built_in">date</span> 2026-01-08 --max 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传并生成视频</span></span><br><span class="line">apd upload --<span class="built_in">date</span> 2026-01-08 --headful --max 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载视频</span></span><br><span class="line">apd download-video --<span class="built_in">date</span> 2026-01-08 --headful</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发布到抖音</span></span><br><span class="line">apd publish-douyin --<span class="built_in">date</span> 2026-01-08 --headful</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>⚠️ <strong>注意</strong>：周末和节假日通常没有论文更新，系统会提示错误而非继续处理。</p>
+</blockquote>
+<h3 id="文件夹结构区分"><a href="#文件夹结构区分" class="headerlink" title="文件夹结构区分"></a>文件夹结构区分</h3><ul>
+<li>按周处理：<code>data/pdfs/weekly/2026-01/</code>、<code>data/videos/weekly/2026-01/</code></li>
+<li>按日处理：<code>data/pdfs/daily/2026-01-08/</code>、<code>data/videos/daily/2026-01-08/</code></li>
+</ul>
+<hr>
+<h2 id="🧠-高级功能与缓存机制"><a href="#🧠-高级功能与缓存机制" class="headerlink" title="🧠 高级功能与缓存机制"></a>🧠 高级功能与缓存机制</h2><h3 id="状态追踪与断点续传"><a href="#状态追踪与断点续传" class="headerlink" title="状态追踪与断点续传"></a>状态追踪与断点续传</h3><p>APD使用SQLite数据库（<code>data/apd.db</code>）追踪每篇论文的处理状态：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NEW → PDF_OK → NBLM_OK → VIDEO_OK</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可通过以下命令查看状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apd status --week 2026-01           <span class="comment"># 查看所有论文状态</span></span><br><span class="line">apd status --week 2026-01 --status ERROR   <span class="comment"># 查看处理失败的论文</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果处理中断，重新运行命令即可从断点继续，无需重头开始。</p>
+<h3 id="缓存机制详解"><a href="#缓存机制详解" class="headerlink" title="缓存机制详解"></a>缓存机制详解</h3><table>
+<thead>
+<tr>
+<th align="left">缓存类型</th>
+<th align="left">机制</th>
+<th align="left">强制刷新参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>PDF缓存</strong></td>
+<td align="left">SHA256校验，相同文件自动跳过</td>
+<td align="left"><code>--force</code></td>
+</tr>
+<tr>
+<td align="left"><strong>视频缓存</strong></td>
+<td align="left">文件名前缀匹配（<code>{paper_id}_*.mp4</code>）</td>
+<td align="left"><code>--force</code></td>
+</tr>
+<tr>
+<td align="left"><strong>发布缓存</strong></td>
+<td align="left"><code>metadata.json</code>记录已发布论文</td>
+<td align="left">重复发布自动跳过</td>
+</tr>
+</tbody></table>
+<h3 id="门户网站"><a href="#门户网站" class="headerlink" title="门户网站"></a>门户网站</h3><p>视频发布后，可通过Gradio门户网站在线观看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://huggingface.co/spaces/你的用户名/paper-digest</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="📚-命令大全与常用参数"><a href="#📚-命令大全与常用参数" class="headerlink" title="📚 命令大全与常用参数"></a>📚 命令大全与常用参数</h2><h3 id="所有命令一览"><a href="#所有命令一览" class="headerlink" title="所有命令一览"></a>所有命令一览</h3><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>apd login</code></td>
+<td align="left">Google登录（NotebookLM）</td>
+</tr>
+<tr>
+<td align="left"><code>apd douyin-login</code></td>
+<td align="left">抖音登录</td>
+</tr>
+<tr>
+<td align="left"><code>apd fetch</code></td>
+<td align="left">仅获取论文列表</td>
+</tr>
+<tr>
+<td align="left"><code>apd download</code></td>
+<td align="left">仅下载PDF</td>
+</tr>
+<tr>
+<td align="left"><code>apd upload</code></td>
+<td align="left"><strong>Phase 1</strong>：获取+下载+上传+触发生成</td>
+</tr>
+<tr>
+<td align="left"><code>apd download-video</code></td>
+<td align="left"><strong>Phase 2</strong>：下载视频</td>
+</tr>
+<tr>
+<td align="left"><code>apd publish</code></td>
+<td align="left"><strong>Phase 3a</strong>：发布到HuggingFace</td>
+</tr>
+<tr>
+<td align="left"><code>apd publish-douyin</code></td>
+<td align="left"><strong>Phase 3b</strong>：发布到抖音</td>
+</tr>
+<tr>
+<td align="left"><code>apd digest</code></td>
+<td align="left">生成本地周报</td>
+</tr>
+<tr>
+<td align="left"><code>apd run</code></td>
+<td align="left">完整一键流程（需等待视频生成）</td>
+</tr>
+<tr>
+<td align="left"><code>apd status</code></td>
+<td align="left">查看论文处理状态</td>
+</tr>
+</tbody></table>
+<h3 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h3><table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>--week, -w</code></td>
+<td align="left">指定周ID（如 <code>2026-01</code>），默认当前周</td>
+</tr>
+<tr>
+<td align="left"><code>--date</code></td>
+<td align="left">指定日期（如 <code>2026-01-08</code>）</td>
+</tr>
+<tr>
+<td align="left"><code>--max, -m</code></td>
+<td align="left">最大论文数量</td>
+</tr>
+<tr>
+<td align="left"><code>--headful</code></td>
+<td align="left">显示浏览器窗口（调试用）</td>
+</tr>
+<tr>
+<td align="left"><code>--force, -f</code></td>
+<td align="left">强制重新处理（忽略缓存）</td>
+</tr>
+<tr>
+<td align="left"><code>--debug</code></td>
+<td align="left">开启调试日志</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="🔧-故障排除"><a href="#🔧-故障排除" class="headerlink" title="🔧 故障排除"></a>🔧 故障排除</h2><h3 id="1-登录问题"><a href="#1-登录问题" class="headerlink" title="1. 登录问题"></a>1. 登录问题</h3><p>如果登录状态失效或出现认证错误，重新执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apd login</span><br><span class="line">apd douyin-login</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-视频未生成"><a href="#2-视频未生成" class="headerlink" title="2. 视频未生成"></a>2. 视频未生成</h3><p>视频生成通常需要几分钟，请稍后重试下载命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apd download-video --week 2026-01 --headful</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-NotebookLM界面变化"><a href="#3-NotebookLM界面变化" class="headerlink" title="3. NotebookLM界面变化"></a>3. NotebookLM界面变化</h3><p>如果NotebookLM界面更新导致自动化失败，可查看截图辅助调试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> data/profiles/screenshots/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-HuggingFace-Token无效"><a href="#4-HuggingFace-Token无效" class="headerlink" title="4. HuggingFace Token无效"></a>4. HuggingFace Token无效</h3><p>检查 <code>.env</code> 文件配置是否正确：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> .<span class="built_in">env</span></span><br><span class="line"><span class="comment"># 确认 HF_TOKEN 和 HF_USERNAME 已正确填写</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="🏗️-架构与目录结构"><a href="#🏗️-架构与目录结构" class="headerlink" title="🏗️ 架构与目录结构"></a>🏗️ 架构与目录结构</h2><h3 id="系统架构图"><a href="#系统架构图" class="headerlink" title="系统架构图"></a>系统架构图</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                      Auto Paper Digest                      │</span><br><span class="line">├─────────────────────────────────────────────────────────────┤</span><br><span class="line">│  Phase 1: Upload    Phase 2: Download    Phase 3: Publish  │</span><br><span class="line">│  ┌─────────┐  ┌─────────┐  ┌──────────┐  ┌────────────┐  │</span><br><span class="line">│  │HF Papers│─▶│ arXiv   │─▶│NotebookLM│─▶│HF Dataset  │  │</span><br><span class="line">│  │         │  │ PDFs    │  │ Videos   │  │  + Douyin  │  │</span><br><span class="line">│  └─────────┘  └─────────┘  └──────────┘  └────────────┘  │</span><br><span class="line">│       │            │            │              │          │</span><br><span class="line">│       └────────────┴────────────┴──────────────┘          │</span><br><span class="line">│                     SQLite Database                        │</span><br><span class="line">│            (NEW → PDF_OK → NBLM_OK → VIDEO_OK)            │</span><br><span class="line">└─────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="核心目录结构"><a href="#核心目录结构" class="headerlink" title="核心目录结构"></a>核心目录结构</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">auto-paper-digest/</span><br><span class="line">├── apd/                    # 主程序包</span><br><span class="line">│   ├── cli.py              # 命令行入口</span><br><span class="line">│   ├── db.py               # SQLite数据库操作</span><br><span class="line">│   ├── hf_fetcher.py       # HuggingFace论文抓取</span><br><span class="line">│   ├── pdf_downloader.py   # arXiv PDF下载</span><br><span class="line">│   ├── nblm_bot.py         # NotebookLM自动化</span><br><span class="line">│   ├── douyin_bot.py       # 抖音自动化</span><br><span class="line">│   ├── publisher.py        # HuggingFace发布</span><br><span class="line">│   └── ...</span><br><span class="line">├── portal/                 # HuggingFace Spaces门户网站</span><br><span class="line">│   └── app.py              # Gradio应用</span><br><span class="line">├── data/</span><br><span class="line">│   ├── apd.db              # SQLite状态数据库</span><br><span class="line">│   ├── pdfs/               # PDF缓存目录</span><br><span class="line">│   ├── videos/             # 视频缓存目录</span><br><span class="line">│   └── profiles/           # 浏览器登录态</span><br><span class="line">├── .env                    # 环境变量配置</span><br><span class="line">└── pyproject.toml          # 项目配置与依赖</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="🎯-快速上手总结"><a href="#🎯-快速上手总结" class="headerlink" title="🎯 快速上手总结"></a>🎯 快速上手总结</h2><p>对于首次使用，建议按照以下顺序操作：</p>
+<ol>
+<li><p><strong>克隆项目</strong> → <code>git clone ... &amp;&amp; cd auto-paper-digest</code></p>
+</li>
+<li><p><strong>安装依赖</strong> → <code>pip install -e . &amp;&amp; playwright install chromium</code></p>
+</li>
+<li><p><strong>配置环境</strong> → <code>cp .env.example .env</code> 并填入HF Token</p>
+</li>
+<li><p><strong>登录认证</strong> → <code>apd login</code> 和 <code>apd douyin-login</code></p>
+</li>
+<li><p><strong>三阶段运行</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apd upload --week 当前周 --headful --max 5</span><br><span class="line"><span class="comment"># 等待5-10分钟</span></span><br><span class="line">apd download-video --week 当前周 --headful</span><br><span class="line">apd publish --week 当前周</span><br><span class="line">apd publish-douyin --week 当前周 --headful   <span class="comment"># 可选</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>查看门户</strong> → 访问 <code>https://huggingface.co/spaces/你的用户名/paper-digest</code></p>
+</li>
+</ol>
+<p>完成以上步骤，你就能拥有一个自动化的AI论文视频解读流水线</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/aebfef26/">https://macin.top/posts/aebfef26/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%8B%E8%BD%BD/">下载</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E9%A2%91/">视频</a><a class="post-meta__tags" href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a><a class="post-meta__tags" href="/tags/Auto-Paper-Digest/">Auto Paper Digest</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/49464ab2/" title="Robinhood 链完整工具图-新人从0到上手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/robinhood.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Robinhood 链完整工具图-新人从0到上手</div></div><div class="info-2"><div class="info-item-1">手机端下载欧易钱包之后，手动添加 Robinhood 链，同时安装浏览器插件（Chrome 插件市场搜 OKX Wallet 即可）。</div></div></div></a><a class="pagination-related" href="/posts/68faa2c6/" title="MEXC VVIP 养卡攻略：从普通养到精英，返现 4%→10%"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/MEXC.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">MEXC VVIP 养卡攻略：从普通养到精英，返现 4%→10%</div></div><div class="info-2"><div class="info-item-1">👉 哪些任务可以先做？ 👉 平时做什么可以累积分数？ 👉 为什么 M-Score 会突然掉？ 👉 怎么从 350 分一路养到 800+？</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/5e44889b/" title="HomeTube：为家庭媒体服务器设计的友好型视频下载器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-26</div><div class="info-item-2">HomeTube：为家庭媒体服务器设计的友好型视频下载器</div></div><div class="info-2"><div class="info-item-1">所有配置通过环境变量或 .env 文件管理。强烈建议先复制 .env.sample 为 .env 并修改。</div></div></div></a><a class="pagination-related" href="/posts/99e45b78/" title="Y2A-Auto 是一个全自动化的视频搬运工具：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">Y2A-Auto 是一个全自动化的视频搬运工具：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">Y2A-Auto 是一个全自动化的视频搬运工具，它能将 YouTube 视频下载、提取字幕、AI 翻译、内容审核后，自动上传到 AcFun 和 Bilibili。</div></div></div></a><a class="pagination-related" href="/posts/2737df13/" title="CR TubeGet - 全网视频下载工具：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tubeget.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-01</div><div class="info-item-2">CR TubeGet - 全网视频下载工具：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">CR TubeGet 全网视频下载工具 v1.9.5，支持下载主流网站视频，提供免费版与 Pro 版，下载速度快、操作简单，附网盘链接与使用手册。</div></div></div></a><a class="pagination-related" href="/posts/80793645/" title="视频下载软件 Downie 4 for Mac：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/downie.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-30</div><div class="info-item-2">视频下载软件 Downie 4 for Mac：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">Downie 4 for Mac v4.10.5 已授权版：超级易用的 Mac 视频下载工具，支持 YouTube、Vimeo 等 170+ 视频网站，支持国内优酷土豆，自定义文件名格式。</div></div></div></a><a class="pagination-related" href="/posts/1ad61cc0/" title="Bili.Copilot：开源 B 站客户端，支持 AI 总结与视频下载"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bilibili.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-09</div><div class="info-item-2">Bili.Copilot：开源 B 站客户端，支持 AI 总结与视频下载</div></div><div class="info-2"><div class="info-item-1">Bili.Copilot 开源的 B 站第三方 Windows 桌面客户端，支持 AI 总结与对话、内置视频下载与混流工具，基于 Windows App SDK 构建，功能丰富体验流畅。</div></div></div></a><a class="pagination-related" href="/posts/3179abfc/" title="Fluent-M3U8：基于 PySide6 的跨平台 M3U8&#x2F;MPD 视频下载器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-01</div><div class="info-item-2">Fluent-M3U8：基于 PySide6 的跨平台 M3U8&#x2F;MPD 视频下载器</div></div><div class="info-2"><div class="info-item-1">Fluent-M3U8 是一款基于PySide6和QFluentWidgets构建的跨平台M3U8/MPD视频下载器</div></div></div></a><a class="pagination-related" href="/posts/c7fd2c9/" title="video_spider：短视频去水印下载工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/video_spider.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">video_spider：短视频去水印下载工具</div></div><div class="info-2"><div class="info-item-1">video_spider 短视频去水印工具：支持抖音、皮皮虾、火山、微视、微博等主流平台，提供链接快速获取无水印视频版本。</div></div></div></a><a class="pagination-related" href="/posts/97f4bad2/" title="MediaGo 跨平台的视频下载工具：好用实用，值得收藏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-24</div><div class="info-item-2">MediaGo 跨平台的视频下载工具：好用实用，值得收藏</div></div><div class="info-2"><div class="info-item-1">如果你是 Claude Code、Cursor 等 AI 编程助手的用户，可以安装 MediaGo Skill，让 AI 帮你下载视频。</div></div></div></a><a class="pagination-related" href="/posts/a9698a5e/" title="Mocreak：免费的办公增强工具，一键部署正版 Windows 和 Office"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Mocreak：免费的办公增强工具，一键部署正版 Windows 和 Office</div></div><div class="info-2"><div class="info-item-1">Mocreak 是一款完全免费、无广告、绿色、无毒的办公增强工具，可一键自动化下载、安装、部署正版 Windows 和 Office（支持 2016/2019/2021/2024）。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Auto-Paper-Digest-APD-%E8%AF%A6%E7%BB%86%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">Auto Paper Digest (APD) 详细部署教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8B-%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text">📋 目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%A7-%E5%89%8D%E6%8F%90%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">🔧 前提准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9A%80-%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.</span> <span class="toc-text">🚀 安装步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%8B%E9%9A%86%E4%BB%93%E5%BA%93"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 克隆仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85Python%E4%BE%9D%E8%B5%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 安装Python依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85Playwright%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 安装Playwright浏览器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.</span> <span class="toc-text">⚙️ 配置环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A4%8D%E5%88%B6%E9%85%8D%E7%BD%AE%E6%A8%A1%E6%9D%BF"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 复制配置模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BC%96%E8%BE%91-env-%E6%96%87%E4%BB%B6"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 编辑 .env 文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96HuggingFace-Token%EF%BC%9F"><span class="toc-number">1.4.3.</span> <span class="toc-text">如何获取HuggingFace Token？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%91-%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81"><span class="toc-number">1.5.</span> <span class="toc-text">🔑 登录认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%99%BB%E5%BD%95Google%EF%BC%88%E7%94%A8%E4%BA%8ENotebookLM%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 登录Google（用于NotebookLM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%99%BB%E5%BD%95%E6%8A%96%E9%9F%B3%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%8C%E7%94%A8%E4%BA%8E%E5%8F%91%E5%B8%83%E8%A7%86%E9%A2%91%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. 登录抖音（可选，用于发布视频）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%96-%E6%A0%B8%E5%BF%83%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E4%B8%89%E9%98%B6%E6%AE%B5%E6%93%8D%E4%BD%9C"><span class="toc-number">1.6.</span> <span class="toc-text">📖 核心工作流：三阶段操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Phase-1-%E4%B8%8A%E4%BC%A0%E8%AE%BA%E6%96%87%E5%B9%B6%E8%A7%A6%E5%8F%91%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="toc-number">1.6.1.</span> <span class="toc-text">Phase 1: 上传论文并触发视频生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Phase-2-%E4%B8%8B%E8%BD%BD%E7%94%9F%E6%88%90%E7%9A%84%E8%A7%86%E9%A2%91"><span class="toc-number">1.6.2.</span> <span class="toc-text">Phase 2: 下载生成的视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Phase-3a-%E5%8F%91%E5%B8%83%E5%88%B0HuggingFace"><span class="toc-number">1.6.3.</span> <span class="toc-text">Phase 3a: 发布到HuggingFace</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Phase-3b-%E5%8F%91%E5%B8%83%E5%88%B0%E6%8A%96%E9%9F%B3%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">1.6.4.</span> <span class="toc-text">Phase 3b: 发布到抖音（可选）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%85-%E6%8C%89%E6%97%A5%E5%A4%84%E7%90%86%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">📅 按日处理（可选）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84%E5%8C%BA%E5%88%86"><span class="toc-number">1.7.1.</span> <span class="toc-text">文件夹结构区分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E4%B8%8E%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="toc-number">1.8.</span> <span class="toc-text">🧠 高级功能与缓存机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA%E4%B8%8E%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0"><span class="toc-number">1.8.1.</span> <span class="toc-text">状态追踪与断点续传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.8.2.</span> <span class="toc-text">缓存机制详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99"><span class="toc-number">1.8.3.</span> <span class="toc-text">门户网站</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9A-%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.9.</span> <span class="toc-text">📚 命令大全与常用参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E5%91%BD%E4%BB%A4%E4%B8%80%E8%A7%88"><span class="toc-number">1.9.1.</span> <span class="toc-text">所有命令一览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.9.2.</span> <span class="toc-text">常用参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%A7-%E6%95%85%E9%9A%9C%E6%8E%92%E9%99%A4"><span class="toc-number">1.10.</span> <span class="toc-text">🔧 故障排除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%99%BB%E5%BD%95%E9%97%AE%E9%A2%98"><span class="toc-number">1.10.1.</span> <span class="toc-text">1. 登录问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%86%E9%A2%91%E6%9C%AA%E7%94%9F%E6%88%90"><span class="toc-number">1.10.2.</span> <span class="toc-text">2. 视频未生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-NotebookLM%E7%95%8C%E9%9D%A2%E5%8F%98%E5%8C%96"><span class="toc-number">1.10.3.</span> <span class="toc-text">3. NotebookLM界面变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-HuggingFace-Token%E6%97%A0%E6%95%88"><span class="toc-number">1.10.4.</span> <span class="toc-text">4. HuggingFace Token无效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8F%97%EF%B8%8F-%E6%9E%B6%E6%9E%84%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.11.</span> <span class="toc-text">🏗️ 架构与目录结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="toc-number">1.11.1.</span> <span class="toc-text">系统架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.11.2.</span> <span class="toc-text">核心目录结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%80%BB%E7%BB%93"><span class="toc-number">1.12.</span> <span class="toc-text">🎯 快速上手总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

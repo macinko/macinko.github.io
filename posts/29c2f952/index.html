@@ -1,0 +1,746 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>10个你可能不知道的 Gemini 隐藏功能！真的很好用 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="地区限制、设备限制、语言限制、账号灰度，以及 Google AI &#x2F; Workspace 订阅要求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10个你可能不知道的 Gemini 隐藏功能！真的很好用">
+<meta property="og:url" content="https://macin.top/posts/29c2f952/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="地区限制、设备限制、语言限制、账号灰度，以及 Google AI &#x2F; Workspace 订阅要求。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/gemini.webp">
+<meta property="article:published_time" content="2026-08-26T14:12:04.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.589Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Gemini">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/gemini.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "10个你可能不知道的 Gemini 隐藏功能！真的很好用",
+  "url": "https://macin.top/posts/29c2f952/",
+  "image": "https://macin.top/img/gemini.webp",
+  "datePublished": "2026-08-26T14:12:04.000Z",
+  "dateModified": "2026-09-05T15:22:43.589Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/29c2f952/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '10个你可能不知道的 Gemini 隐藏功能！真的很好用',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/gemini.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">10个你可能不知道的 Gemini 隐藏功能！真的很好用</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">10个你可能不知道的 Gemini 隐藏功能！真的很好用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.589Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/gemini/">gemini</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p><strong>如果你现在还只会打开 Gemini 聊天框问问题，那至少浪费了一半 Google AI 的价值。</strong></p>
+<p>Gemini 已经被塞进：</p>
+<p>Google Drive、翻译、相册、地图、Chrome、YouTube、Gmail……</p>
+<p>很多功能甚至不用研究 Prompt。</p>
+<p><strong>点一下、说句话，就能直接干活。</strong></p>
+<p>不过先纠正一个网上很常见的说法：</p>
+<blockquote>
+<p>这些功能“全部永久免费”。</p>
+</blockquote>
+<p><strong>不准确。</strong></p>
+<p>不少基础能力确实可以免费使用，但部分功能存在：</p>
+<p><strong>地区限制、设备限制、语言限制、账号灰度，以及 Google AI &#x2F; Workspace 订阅要求。</strong></p>
+<p>下面只讲已经能被 Google 官方资料确认的功能。</p>
+<h2 id="01｜Google-Drive：手机直接变扫描仪"><a href="#01｜Google-Drive：手机直接变扫描仪" class="headerlink" title="01｜Google Drive：手机直接变扫描仪"></a>01｜Google Drive：手机直接变扫描仪</h2><p>以后遇到：</p>
+<p>合同、书本、纸质资料、发票、学习笔记，</p>
+<p>不一定需要额外装扫描 App。</p>
+<p>直接打开 Google Drive：</p>
+<p><strong>右下角相机 → 对准文件 → 扫描。</strong></p>
+<p>它可以：</p>
+<ul>
+<li>自动识别文档边缘</li>
+<li>自动&#x2F;手动拍摄</li>
+<li>裁切、旋转</li>
+<li>调整颜色</li>
+<li>清除污点、手指等干扰</li>
+<li>连续扫描多页</li>
+<li>保存为 PDF 或 JPG</li>
+</ul>
+<p>Google 官方还明确写了：</p>
+<p>扫描后的文件可以保存为<strong>可搜索 PDF</strong>。</p>
+<p>所以一个很实用的流程是：</p>
+<p>纸质资料 ↓ Google Drive 扫描 ↓ 保存 PDF ↓ 导入 Gemini Notebook ↓ 总结 &#x2F; 提问 &#x2F; 做学习资料</p>
+<h2 id="02｜Google-Translate：已经开始变成-AI-语言陪练"><a href="#02｜Google-Translate：已经开始变成-AI-语言陪练" class="headerlink" title="02｜Google Translate：已经开始变成 AI 语言陪练"></a>02｜Google Translate：已经开始变成 AI 语言陪练</h2><p>Google 翻译现在不只是：</p>
+<blockquote>
+<p>中文 → 英文</p>
+</blockquote>
+<p>它已经加入：</p>
+<p><strong>Practice｜练习<br>练习｜训练</strong></p>
+<p>你可以先设置：</p>
+<p><strong>语言水平 + 学习目标</strong></p>
+<p>然后让它动态生成训练内容。</p>
+<p>比如：</p>
+<blockquote>
+<p>我要去国外出差，练商务英语。</p>
+</blockquote>
+<blockquote>
+<p>我要练机场对话。</p>
+</blockquote>
+<blockquote>
+<p>我要练日常 Small Talk。</p>
+</blockquote>
+<p>Practice 会生成对应的：</p>
+<p><strong>听力 + 口语练习。</strong></p>
+<p>Google 官方确认，这套功能由 Gemini 能力驱动，会根据水平生成场景，还会针对口语练习提供反馈。</p>
+<p>2026 年 Google 又加入了专门的 AI 发音练习。</p>
+<p>但注意：</p>
+<p><strong>不是所有国家和语言组合都有 Practice。</strong></p>
+<p>目前仍在逐步扩展。</p>
+<p>所以最简单的方法就是：</p>
+<p><strong>更新 Google Translate → 看首页有没有“练习 &#x2F; Practice”。</strong></p>
+<p>没有不代表你操作错了。</p>
+<h2 id="03｜Google-Photos：不用-PS-就能删路人、做贴纸"><a href="#03｜Google-Photos：不用-PS-就能删路人、做贴纸" class="headerlink" title="03｜Google Photos：不用 PS 就能删路人、做贴纸"></a>03｜Google Photos：不用 PS 就能删路人、做贴纸</h2><p>这个功能非常适合做自媒体的人。</p>
+<p>打开：</p>
+<p><strong>Google Photos → 照片 → 编辑</strong></p>
+<p>搜索：</p>
+<p><strong>Magic Eraser<br>魔法清除器</strong></p>
+<p>圈住：</p>
+<p>路人、杂物、电线杆、背景干扰，</p>
+<p>Google Photos 会自动尝试删除并补全背景。</p>
+<p>而且 Magic Eraser、Photo Unblur 等一批 AI 编辑工具，Google 已经向符合设备要求的 Google Photos 用户开放，<strong>不要求必须订阅 Google One</strong>。</p>
+<p>还有一个很容易被忽略的功能：</p>
+<p>长按主体 → 直接生成贴纸</p>
+<p>人物、宠物、物体都可以。</p>
+<p>Android 当前要求大多数情况下：</p>
+<p><strong>最新版 Google Photos + 至少 4GB RAM。</strong></p>
+<p>iPhone &#x2F; iPad 则要求：</p>
+<p><strong>iOS 17+。<br>iOS 17 及以上版本。</strong></p>
+<p><strong>做公众号、小红书、X 配图时，这个功能非常省事。</strong></p>
+<h2 id="04｜Google-Maps：先让-Gemini-帮你把评论看完"><a href="#04｜Google-Maps：先让-Gemini-帮你把评论看完" class="headerlink" title="04｜Google Maps：先让 Gemini 帮你把评论看完"></a>04｜Google Maps：先让 Gemini 帮你把评论看完</h2><p>以前找一家餐厅：</p>
+<p>搜索 ↓ 看评分 ↓ 翻几十条评论 ↓ 判断值不值得去</p>
+<p>现在 Maps 已经可以利用 Gemini：</p>
+<p><strong>总结地点评论、提炼大家喜欢什么、回答关于地点的问题。</strong></p>
+<p>比如：</p>
+<blockquote>
+<p>这家店大家最推荐什么？</p>
+</blockquote>
+<blockquote>
+<p>环境安静吗？</p>
+</blockquote>
+<blockquote>
+<p>有没有户外座位？</p>
+</blockquote>
+<blockquote>
+<p>适合多人聚餐吗？</p>
+</blockquote>
+<p>Google 已经正式推出：</p>
+<p><strong>Ask Maps。<br>使用 Ask Maps。</strong></p>
+<p>它会结合 Maps 的地点信息和社区评论回答复杂问题。</p>
+<p>不过 Ask Maps 目前仍有地区限制。</p>
+<p>2026 年这一版本首先向：</p>
+<p><strong>美国和印度</strong></p>
+<p>的 Android &#x2F; iOS 用户推出。</p>
+<p>更实用的是导航中的 Gemini</p>
+<p>正在导航时可以直接问：</p>
+<blockquote>
+<p>沿途有没有评分高的餐厅？</p>
+</blockquote>
+<blockquote>
+<p>最近的充电站在哪里？</p>
+</blockquote>
+<blockquote>
+<p>我的 ETA 是多少？</p>
+</blockquote>
+<p>Gemini 导航已经扩展到：</p>
+<p><strong>开车、步行和骑行。</strong></p>
+<p>其中步行和骑行版已在 Gemini 可用地区逐步全球推出。</p>
+<p><strong>这比停车以后再重新搜索地图方便得多。</strong></p>
+<h2 id="05｜Gemini-Live：直接跟-AI-打“语音电话”"><a href="#05｜Gemini-Live：直接跟-AI-打“语音电话”" class="headerlink" title="05｜Gemini Live：直接跟 AI 打“语音电话”"></a>05｜Gemini Live：直接跟 AI 打“语音电话”</h2><p>打开 Gemini App：</p>
+<p><strong>Live → 开始说话。</strong></p>
+<p>不用：<br>不需要：</p>
+<p>说一句 ↓ 发送 ↓ 等回答 ↓ 再输入</p>
+<p>而是直接连续聊。</p>
+<p>比如：</p>
+<blockquote>
+<p>陪我模拟一次面试。</p>
+</blockquote>
+<blockquote>
+<p>帮我练英语。</p>
+</blockquote>
+<blockquote>
+<p>我准备做一道菜，一步一步指导我。</p>
+</blockquote>
+<blockquote>
+<p>我讲一个商业想法，你不断追问我的漏洞。</p>
+</blockquote>
+<p>Google 官方支持 Gemini Live 连续语音对话。</p>
+<p><strong>真正有意思的是：Live 不只能“听”，还能“看”。</strong></p>
+<h2 id="06｜Gemini-Live：把摄像头和手机屏幕直接共享给-AI"><a href="#06｜Gemini-Live：把摄像头和手机屏幕直接共享给-AI" class="headerlink" title="06｜Gemini Live：把摄像头和手机屏幕直接共享给 AI"></a>06｜Gemini Live：把摄像头和手机屏幕直接共享给 AI</h2><p>进入 Live 后可以：</p>
+<p>① 打开摄像头</p>
+<p>对准现实世界里的东西，然后直接问。</p>
+<p>比如自行车坏了：</p>
+<blockquote>
+<p>这个零件叫什么？</p>
+</blockquote>
+<blockquote>
+<p>我应该先检查哪里？</p>
+</blockquote>
+<p>看到设备接口：</p>
+<blockquote>
+<p>这几个接口分别有什么用？</p>
+</blockquote>
+<p>看到一页说明书：</p>
+<blockquote>
+<p>这里到底在说什么？</p>
+</blockquote>
+<p>Google 官方确认：</p>
+<p><strong>Gemini Live 支持实时共享摄像头画面。</strong></p>
+<p>② 共享手机屏幕</p>
+<p>这个对小白更实用。</p>
+<p>比如某个 App 报错：</p>
+<p>Gemini Live ↓ 共享屏幕 ↓ “这个报错是什么意思？” ↓ “下一步应该点哪里？”</p>
+<p>Gemini 可以根据你正在显示的手机界面继续解释。</p>
+<p>Google 官方已经支持完整屏幕共享。</p>
+<p>特别适合：</p>
+<p><strong>学习陌生 App、找设置入口、处理报错、远程教父母操作手机。</strong></p>
+<p>但一定注意：</p>
+<p><strong>共享的是整个屏幕。</strong></p>
+<p>输入：</p>
+<p>密码、银行卡、验证码、身份证件</p>
+<p>之前建议先停止共享。</p>
+<h2 id="07｜Chrome：5000-字长网页，先让-Gemini-读"><a href="#07｜Chrome：5000-字长网页，先让-Gemini-读" class="headerlink" title="07｜Chrome：5000 字长网页，先让 Gemini 读"></a>07｜Chrome：5000 字长网页，先让 Gemini 读</h2><p>刷到一篇特别长的：</p>
+<p>技术文章、研究报告、教程、新闻，</p>
+<p>不用急着收藏吃灰。</p>
+<p>Gemini in Chrome 可以直接理解你正在看的网页。</p>
+<p>然后问：</p>
+<blockquote>
+<p>总结这篇文章。</p>
+</blockquote>
+<blockquote>
+<p>给我提炼 5 个重点。</p>
+</blockquote>
+<blockquote>
+<p>作者最终结论是什么？</p>
+</blockquote>
+<blockquote>
+<p>这篇内容里哪些地方最值得执行？</p>
+</blockquote>
+<p>Google 2026 年已经把 Gemini in Chrome 带到 Android，它可以：</p>
+<p><strong>总结当前网页、回答页面问题、解释复杂内容。</strong></p>
+<p>截至 <strong>2026 年 8 月 18 日</strong>，Google 宣布 Gemini in Chrome 已向美国 Android 用户全面开放。</p>
+<p>其他地区也在陆续扩大，但并非全球所有账号都有。</p>
+<p>另外注意一个区别：</p>
+<p><strong>总结网页 ≠ Auto Browse。</strong></p>
+<p>Auto Browse 可以替你执行网页任务，但目前属于 Google AI Pro &#x2F; Ultra 等更高级能力，并不是普通免费功能。</p>
+<h2 id="08｜YouTube：长视频不用硬啃了"><a href="#08｜YouTube：长视频不用硬啃了" class="headerlink" title="08｜YouTube：长视频不用硬啃了"></a>08｜YouTube：长视频不用硬啃了</h2><p>这条网上有很多教程写得太夸张。</p>
+<p>Google 官方目前能明确确认的是：</p>
+<p><strong>Gemini Apps 可以查找 YouTube 视频，并针对视频内容继续提问和总结。</strong></p>
+<p>例如：</p>
+<p>打开 Gemini ↓ 让 Gemini 找到目标视频 ↓ “总结第一个视频” ↓ 继续追问核心观点</p>
+<p>官方帮助页直接提供的示例就是：</p>
+<blockquote>
+<p>找到视频 → Summarize the first video。<br>找到视频后 → 对第一个视频进行总结。</p>
+</blockquote>
+<p>因此你可以继续问：</p>
+<blockquote>
+<p>视频最重要的 5 个观点是什么？</p>
+</blockquote>
+<blockquote>
+<p>他关于 AI Agent 的结论是什么？</p>
+</blockquote>
+<blockquote>
+<p>有哪些具体案例？</p>
+</blockquote>
+<h2 id="09｜Gmail：免费版已经能自动总结长邮件"><a href="#09｜Gmail：免费版已经能自动总结长邮件" class="headerlink" title="09｜Gmail：免费版已经能自动总结长邮件"></a>09｜Gmail：免费版已经能自动总结长邮件</h2><p>这里上一篇写得还不够准确。</p>
+<p>现在要分两种情况。</p>
+<p>第一种：长邮件线程自动摘要</p>
+<p>Google 当前明确表示：</p>
+<p><strong>AI Overview conversation summaries 已向全球 Gmail 用户开放。<br>AI 概述对话摘要现已对全球 Gmail 用户开放使用。</strong></p>
+<p>包括：</p>
+<p>工作账号、学校账号和个人 Google 账号。</p>
+<p>打开长邮件线程后，可以看到：</p>
+<p><strong>Summarize this email<br>请总结这封邮件的内容。</strong></p>
+<p>让 AI 自动提炼：</p>
+<ul>
+<li>邮件核心内容</li>
+<li>关键回复</li>
+<li>待办事项</li>
+</ul>
+<p>但需要开启 Gmail &#x2F; Workspace 的 Smart features。</p>
+<p><strong>这部分不是必须买 Google AI Pro 才能用。</strong></p>
+<p>第二种：Ask Gemini &#x2F; 高级邮件助手</p>
+<p>例如直接让 Gemini：</p>
+<blockquote>
+<p>找出上周所有未读邮件。</p>
+</blockquote>
+<blockquote>
+<p>我的航班几点？</p>
+</blockquote>
+<blockquote>
+<p>总结某个人最近发来的邮件。</p>
+</blockquote>
+<blockquote>
+<p>根据邮件创建日历事件。</p>
+</blockquote>
+<p>这些完整的 Gemini in Gmail Side Panel 能力，目前通常要求：</p>
+<p><strong>符合条件的 Google Workspace &#x2F; Google AI 方案。</strong></p>
+<p>Help me write 也需要区分：</p>
+<p>个人 Gmail 的免费开放目前存在<strong>美国和语言限制</strong>，并不是全球所有个人 Gmail 账户都有。</p>
+<h2 id="10｜NotebookLM-已经正式改名-Gemini-Notebook"><a href="#10｜NotebookLM-已经正式改名-Gemini-Notebook" class="headerlink" title="10｜NotebookLM 已经正式改名 Gemini Notebook"></a>10｜NotebookLM 已经正式改名 Gemini Notebook</h2><p>这一点更新非常快。</p>
+<p><strong>2026 年 7 月 16 日，Google 正式宣布 NotebookLM 更名为 Gemini Notebook。</strong></p>
+<p>它仍然是独立的 AI 研究&#x2F;知识库产品，只是和 Gemini 生态整合得更深。</p>
+<p>免费版目前可以导入非常多资料类型，例如：</p>
+<ul>
+<li>PDF<br>PDF 格式</li>
+<li>Word<br>单词</li>
+<li>Markdown</li>
+<li>PowerPoint</li>
+<li>CSV<br>CSV 格式</li>
+<li>网页</li>
+<li>图片</li>
+<li>音频</li>
+<li>EPUB</li>
+<li>Google Docs<br>谷歌文档</li>
+<li>Google Slides<br>谷歌幻灯片</li>
+<li>公开 YouTube 视频 等等。</li>
+</ul>
+<p>免费用户当前一个 Notebook 最多：</p>
+<p><strong>50 个 Sources<br>50 个来源</strong></p>
+<p>单个 Source：<br>单个来源：</p>
+<p><strong>最高 500,000 words<br>最多 500,000 字</strong></p>
+<p>上传文件：</p>
+<p><strong>最高 200MB。</strong></p>
+<p>然后可以继续生成：</p>
+<p><strong>Audio Overview、Video Overview、Flashcards、Quiz、Mind Map、Infographic、Slide Deck 等内容。<br>音频概览、视频概览、闪卡、小测验、思维导图、信息图、幻灯片展示等表现形式。</strong></p>
+<p>手机上的 Gemini Notebook 功能少怎么办？</p>
+<p>这里也要纠正一个网上流传的技巧：</p>
+<blockquote>
+<p>Safari &#x2F; Chrome → 添加到主屏幕 → 自动解锁“完整版”。</p>
+</blockquote>
+<p><strong>不对。</strong></p>
+<p>“添加到主屏幕”只是创建网页快捷方式。</p>
+<p>不会：</p>
+<p><strong>会员功能、改变你的套餐，也不会突破 Google 的权限限制。</strong></p>
+<p>真正的区别是：</p>
+<p><strong>移动 App 和网页版目前确实存在功能差异。</strong></p>
+<p>Google 官方帮助页仍然明确提醒，移动 App 某些来源类型和 Studio 能力有限；如果 App 找不到某项功能，可以直接改用浏览器网页版。</p>
+<p>所以正确操作是：</p>
+<p>App 找不到功能 ↓ 打开浏览器 ↓ 进入 Gemini Notebook 网页版 ↓ 查看网页版是否提供</p>
+<p>不是所谓的“PWA 解锁”。</p>
+<h1 id="最后总结"><a href="#最后总结" class="headerlink" title="最后总结"></a>最后总结</h1><p>这 10 个功能真正有价值的地方，不是：</p>
+<p><strong>Google 又塞了 10 个 AI 按钮。</strong></p>
+<p>而是 Gemini 已经慢慢进入你的正常工作流：</p>
+<p>纸质资料 → Google Drive 语言学习 → Google Translate 图片处理 → Google Photos 出行 → Google Maps 语音交流 → Gemini Live 现实&#x2F;手机界面 → Camera + Screen Share 网页阅读 → Chrome 长视频 → YouTube + Gemini 邮件 → Gmail 个人知识库 → Gemini Notebook</p>
+<p><strong>AI 真正开始好用，不是你每天打开 AI 聊天框的次数越来越多，而是很多原本需要切换 App、复制粘贴、手动整理的步骤开始消失。</strong></p>
+<p>最后再提醒：</p>
+<p><strong>这些能力并不是“全球、所有设备、所有账号、全部永久免费”。</strong></p>
+<p>Google 现在大量采用：</p>
+<p><strong>免费基础能力 + 地区灰度 + 设备要求 + 订阅增强</strong></p>
+<p>的模式上线功能。</p>
+<p>所以照着教程找不到按钮时：</p>
+<p><strong>先更新 App，再检查地区、语言、设备和账号资格。</strong></p>
+<p>不要第一反应就是自己操作错了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/29c2f952/">https://macin.top/posts/29c2f952/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Gemini/">Gemini</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/ba8d14ab/" title="WorkBuddy 从 0 到 1：一篇讲透安装、任务、Skills、MCP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/workbuddy.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">WorkBuddy 从 0 到 1：一篇讲透安装、任务、Skills、MCP</div></div><div class="info-2"><div class="info-item-1">几分钟后，屏幕上出现一篇结构完整、措辞得体的文字。复制，修改，发送。看起来挺方便，但好像也没有特别不一样。</div></div></div></a><a class="pagination-related" href="/posts/95bbb1bf/" title="VmShell/ToToTel开学季香港CMIN2/英国AI/美国AI服务器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">VmShell/ToToTel开学季香港CMIN2/英国AI/美国AI服务器</div></div><div class="info-2"><div class="info-item-1">CMIN2.HK CMIN2.HK 三网大陆优化 1Gbps 和美国 10Gbps 的国际带宽，特别适合面向中国大陆及东南亚市场的用户；</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/45bf9f82/" title="为什么挂了梯子还是提示地区不支持？手把手教你解除 Gemini"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/gemini.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-01</div><div class="info-item-2">为什么挂了梯子还是提示地区不支持？手把手教你解除 Gemini</div></div><div class="info-2"><div class="info-item-1">很多朋友在使用 Gemini 时会遇到一个怪现象：明明代理节点已经切换到了美国，网页却依然提示“您所在的地区暂不支持使用”。</div></div></div></a><a class="pagination-related" href="/posts/cde2e353/" title="Gemini 12个月免费会员怎么拿？Pixel认证全流程解析"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/gemini.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-24</div><div class="info-item-2">Gemini 12个月免费会员怎么拿？Pixel认证全流程解析</div></div><div class="info-2"><div class="info-item-1">如果你刚好符合 Google 这次活动的资格，理论上可以直接拿到 12个月的 Gemini Pro 权益。不过这类 Google 活动有个特点：同一个活动，不同账号、地区、网络环境…</div></div></div></a><a class="pagination-related" href="/posts/b79653ef/" title="cloudflare中转gemini api到openai格式,配置chatbox客户端"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/gemini.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-03</div><div class="info-item-2">cloudflare中转gemini api到openai格式,配置chatbox客户端</div></div><div class="info-2"><div class="info-item-1">Cloudflare 中转 Gemini API 到 OpenAI 格式：Workers 部署代理（PublicAffairs/openai-gemini），配置 ChatBox 客户端免费使用 Gemini 模型。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#01%EF%BD%9CGoogle-Drive%EF%BC%9A%E6%89%8B%E6%9C%BA%E7%9B%B4%E6%8E%A5%E5%8F%98%E6%89%AB%E6%8F%8F%E4%BB%AA"><span class="toc-number">1.</span> <span class="toc-text">01｜Google Drive：手机直接变扫描仪</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02%EF%BD%9CGoogle-Translate%EF%BC%9A%E5%B7%B2%E7%BB%8F%E5%BC%80%E5%A7%8B%E5%8F%98%E6%88%90-AI-%E8%AF%AD%E8%A8%80%E9%99%AA%E7%BB%83"><span class="toc-number">2.</span> <span class="toc-text">02｜Google Translate：已经开始变成 AI 语言陪练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03%EF%BD%9CGoogle-Photos%EF%BC%9A%E4%B8%8D%E7%94%A8-PS-%E5%B0%B1%E8%83%BD%E5%88%A0%E8%B7%AF%E4%BA%BA%E3%80%81%E5%81%9A%E8%B4%B4%E7%BA%B8"><span class="toc-number">3.</span> <span class="toc-text">03｜Google Photos：不用 PS 就能删路人、做贴纸</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04%EF%BD%9CGoogle-Maps%EF%BC%9A%E5%85%88%E8%AE%A9-Gemini-%E5%B8%AE%E4%BD%A0%E6%8A%8A%E8%AF%84%E8%AE%BA%E7%9C%8B%E5%AE%8C"><span class="toc-number">4.</span> <span class="toc-text">04｜Google Maps：先让 Gemini 帮你把评论看完</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05%EF%BD%9CGemini-Live%EF%BC%9A%E7%9B%B4%E6%8E%A5%E8%B7%9F-AI-%E6%89%93%E2%80%9C%E8%AF%AD%E9%9F%B3%E7%94%B5%E8%AF%9D%E2%80%9D"><span class="toc-number">5.</span> <span class="toc-text">05｜Gemini Live：直接跟 AI 打“语音电话”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#06%EF%BD%9CGemini-Live%EF%BC%9A%E6%8A%8A%E6%91%84%E5%83%8F%E5%A4%B4%E5%92%8C%E6%89%8B%E6%9C%BA%E5%B1%8F%E5%B9%95%E7%9B%B4%E6%8E%A5%E5%85%B1%E4%BA%AB%E7%BB%99-AI"><span class="toc-number">6.</span> <span class="toc-text">06｜Gemini Live：把摄像头和手机屏幕直接共享给 AI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#07%EF%BD%9CChrome%EF%BC%9A5000-%E5%AD%97%E9%95%BF%E7%BD%91%E9%A1%B5%EF%BC%8C%E5%85%88%E8%AE%A9-Gemini-%E8%AF%BB"><span class="toc-number">7.</span> <span class="toc-text">07｜Chrome：5000 字长网页，先让 Gemini 读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#08%EF%BD%9CYouTube%EF%BC%9A%E9%95%BF%E8%A7%86%E9%A2%91%E4%B8%8D%E7%94%A8%E7%A1%AC%E5%95%83%E4%BA%86"><span class="toc-number">8.</span> <span class="toc-text">08｜YouTube：长视频不用硬啃了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#09%EF%BD%9CGmail%EF%BC%9A%E5%85%8D%E8%B4%B9%E7%89%88%E5%B7%B2%E7%BB%8F%E8%83%BD%E8%87%AA%E5%8A%A8%E6%80%BB%E7%BB%93%E9%95%BF%E9%82%AE%E4%BB%B6"><span class="toc-number">9.</span> <span class="toc-text">09｜Gmail：免费版已经能自动总结长邮件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10%EF%BD%9CNotebookLM-%E5%B7%B2%E7%BB%8F%E6%AD%A3%E5%BC%8F%E6%94%B9%E5%90%8D-Gemini-Notebook"><span class="toc-number">10.</span> <span class="toc-text">10｜NotebookLM 已经正式改名 Gemini Notebook</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">最后总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

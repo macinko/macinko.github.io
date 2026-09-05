@@ -1,0 +1,527 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="很多宝宝觉得我是不是又发U卡教程了？那你就错啦！很多老友宝宝都知道dtcapy，因为我一直有安利。没有收任何推广费用，纯纯是真的好用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币">
+<meta property="og:url" content="https://macin.top/posts/ac523047/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="很多宝宝觉得我是不是又发U卡教程了？那你就错啦！很多老友宝宝都知道dtcapy，因为我一直有安利。没有收任何推广费用，纯纯是真的好用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/dtcpay.webp">
+<meta property="article:published_time" content="2026-09-02T06:51:37.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.634Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="dtcpay">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/dtcpay.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币",
+  "url": "https://macin.top/posts/ac523047/",
+  "image": "https://macin.top/img/dtcpay.webp",
+  "datePublished": "2026-09-02T06:51:37.000Z",
+  "dateModified": "2026-09-05T15:22:43.634Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/ac523047/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/dtcpay.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">dtcpay 实测：持 MPI 牌照数字钱包，稳定币兑多国法币</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.634Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/">global</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/bank/">bank</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>很多宝宝觉得我是不是又发U卡教程了？那你就错啦！很多老友宝宝都知道dtcapy，因为我一直有安利。没有收任何推广费用，纯纯是真的好用。</p>
+<p>在合规性上，dtcpay 与市场上常见的“U 卡”或简单虚拟卡产品有明显区别。普通 U 卡往往只是把稳定币充值、换汇和刷卡消费包装在一起，背后的合规主体、资金流向和监管框架并不透明；而 dtcpay 的运营主体 Digital Treasures Center Pte. Ltd. 是新加坡金融管理局 MAS 登记的 <strong>Major Payment Institution</strong>，牌照范围覆盖账户发行、本地汇款、跨境汇款、商户收单、电子货币发行及数字支付代币服务。除新加坡外，dtcpay 还在澳大利亚、加拿大、香港、卢森堡和美国等司法管辖区取得或登记了相关支付、汇款、数字货币、电子货币及公司服务资质。因此，它更接近一家受监管的数字支付基础设施服务商，而不是灰色通道式的加密卡产品。对于需要长期使用稳定币支付、跨境结算或企业收款的用户来说，持牌主体、监管透明度和服务边界，才是判断这类平台是否可靠的核心。</p>
+<h2 id="一、什么是dtcpay？"><a href="#一、什么是dtcpay？" class="headerlink" title="一、什么是dtcpay？"></a><strong>一、什么是dtcpay？</strong></h2><p>dtcpay 是一家总部位于新加坡的数字支付服务商，运营主体为 <strong>Digital Treasures Center Pte. Ltd.</strong>，成立于 2019 年。公司主要围绕稳定币、法币兑换、商户收款、跨境支付和卡片消费等场景提供支付基础设施，服务对象覆盖企业商户、高净值用户以及需要进行跨境资金流转的客户群体。</p>
+<p>在监管资质方面，Digital Treasures Center Pte. Ltd. 已被新加坡金融管理局 MAS 列为 <strong>Major Payment Institution</strong>。其牌照范围包括账户发行服务、本地汇款服务、跨境汇款服务、商户收单服务、电子货币发行服务，以及数字支付代币服务。这意味着 dtcpay 并非单一的加密支付工具，而是以新加坡持牌支付机构身份，切入稳定币与传统支付体系之间的连接场景。</p>
+<p>从产品能力来看，dtcpay 的核心是把稳定币和法币放在同一个支付与兑换界面中处理。目前其公开支持的法币包括 <strong>USD、SGD、HKD、GBP、EUR</strong>，共 <strong>5 种主要法币以及多种其他国家法币</strong>。在数字资产方面，其支持中心列出的币种包括 <strong>USDT、USDC、FDUSD 和WUSD</strong> ，支持网络包括 <strong>Ethereum、BSC、Tron、Base 和 Solana</strong>。这类配置更偏向支付和结算，而不是交易所式的多币种投机交易。以及加密货币兑多币种法币兑换。</p>
+<p>在商户收款场景中，dtcpay 提供 POS+、PayByLink、Checkout 等产品。线下门店可以通过 POS+ 接受稳定币、银行卡及本地支付方式；远程收款则可以通过 PayByLink 生成付款链接，并通过邮件、WhatsApp 等渠道发送给客户。对商户而言，这类产品的价值在于降低跨境收款门槛，同时让客户可以选择稳定币、银行卡或其他支付方式完成付款。</p>
+<p>跨境汇款和资金汇出是 dtcpay 的另一个重点。其 Global Pay 产品主打全球付款能力，公开资料显示支持向 <strong>100 多个国家和地区</strong>进行转账，并支持主要稳定币和法币。公开费用表中列明的法币提现费用包括 <strong>SGD 和 USD</strong>；数字资产提现费用覆盖 <strong>USDT、USDC、ETH 和 BTC</strong>。因此，在文章中可以把它概括为：dtcpay 的汇出能力以跨境法币付款和稳定币出入金为核心，覆盖范围超过 100 个国家，但具体可用币种和通道会受账户类型、地区和合规要求影响。</p>
+<p>dtcpay 还推出了 Digital Treasures Card，用于连接稳定币余额与日常消费场景。该卡可将稳定币转换为新加坡元用于消费，并依托 Visa 网络在全球范围使用。公开信息显示，该卡可在 <strong>220 个国家和地区、超过 1.5 亿个 Visa 受理点</strong>使用；同时，卡片消费可参考 Visa 的实时汇率，覆盖 <strong>150 多种货币</strong>。这使 dtcpay 的业务不只停留在企业端收款，也延伸到稳定币消费、旅行支付和多币种支出管理。</p>
+<p>总体来看，dtcpay 的定位可以概括为：一家新加坡 MAS 持牌的数字支付机构，通过稳定币、法币兑换、商户收单、跨境汇款和卡片消费，把链上资产与传统支付网络连接起来。它的优势不在于支持最多的加密资产种类，而在于围绕支付和结算场景，提供相对完整的合规基础设施。</p>
+<h2 id="二、我真实体验讲解"><a href="#二、我真实体验讲解" class="headerlink" title="二、我真实体验讲解"></a>二、<strong>我真实体验讲解</strong></h2><p>我是在 <strong>2025 年 6 月</strong> 开始接触 dtcpay 这个产品的。坦白说，最开始对它了解并不多，甚至一开始也不是冲着“持牌支付机构”这些听起来很正式的标签去的。最早吸引我的原因有点简单：一方面是自己当时有个“集卡”的小爱好，看到 dtcpay Card 这种新加坡背景的卡产品，自然会想研究一下；另一方面，dtcpay 当时还提供全球 72 个国家和地区、每月 10GB 的 eSIM 流量权益，这对经常出行、需要海外网络的人来说，确实很有吸引力。</p>
+<p>但真正让我决定注册并深入使用的，还是它背后的资金功能。dtcpay 支持加密货币和法币之间的兑换，也支持资金汇出。加密圈的宝宝们应该都懂，出金从来不是一条好走的路：交易所、银行卡、第三方通道、风控、到账时间、账户安全，每一步都可能让人提心吊胆。尤其是在稳定币使用越来越普遍之后，大家真正需要的并不只是“一张能刷的卡”，而是一个相对合规、路径清晰、能把链上资产和现实支付连接起来的工具。也正是因为这些原因，我后来开始注册并实际体验 dtcpay。</p>
+<p>（温馨提示：一定要合规的加密货币哦，非法有问题的可能会被追责哦！！！）</p>
+<p>\1. <strong>开户和 KYC：它的门槛明显比普通 U 卡高</strong></p>
+<p>真正开始注册 dtcpay 之后，我第一感觉就是：它和市面上很多“邮箱注册、充值就能刷”的 U 卡产品不太一样。普通 U 卡通常更强调低门槛和快速开通，有些产品甚至只需要邮箱、手机号或简单身份信息就能开始使用；但 dtcpay 的开户流程明显更接近一个正规金融账户的审核逻辑。</p>
+<p>以个人账户为例，用户需要先填写开户申请表，随后完成线上身份验证。对于非新加坡公民来说，通常需要准备护照；如果是新加坡公民，则需要 National ID。此外，还需要提供近 3 个月内的银行流水，以及近 3 个月内的住址证明，例如水电账单、通信账单或税务文件等。这些材料并不是为了“增加麻烦”，而是典型的 KYC 和资金合规审查要求。</p>
+<p>如果是企业账户，审核材料会更多。除了基础的公司注册文件外，还可能需要提供组织架构图、公司章程、董事会决议或授权书、董事和股东登记信息，以及董事、最终受益人和授权人的身份证明、住址证明、手机号和邮箱等资料。同时，企业还需要提供资金来源证明和近 3 个月银行流水。也就是说，dtcpay 在开户阶段就会对账户主体、实际控制人、资金来源和使用目的进行比较完整的核验。</p>
+<p>从使用体验上看，这个过程确实没有普通 U 卡那么“丝滑”。如果只是想快速开一张卡、充点 U、马上消费，dtcpay 的开户门槛会显得偏高，资料准备也更繁琐。但换个角度看，这恰恰也是它和灰色通道类产品的区别：它不是一个简单的卡片壳子，而是一个在新加坡 MAS 监管框架下运行的持牌支付账户。开户前需要完成 KYC、提交银行流水和住址证明，本质上是在确认用户身份、资金来源和合规边界。</p>
+<p>所以，我更愿意把 dtcpay 理解为“合法合规的数字钱包稳定币支付账户”，而不是单纯的 U 卡。它牺牲了一部分开通速度和匿名性，换来的是更清晰的账户主体、更完整的合规流程，以及更适合长期使用的资金路径。对于只追求快的人来说，这可能是缺点；但对于真正关心出入金安全、账户稳定性和资金合规性的用户来说，这反而是它值得关注的地方。</p>
+<p>\2. <strong>个人用户如何注册dtcpay</strong></p>
+<p>个人注册一般可以按这几步走：</p>
+<p>1）IOS用户和安卓用户可以去应用商店搜索 dtcpay，然后下载。</p>
+<p>2）选择 立即注册。</p>
+<p>3）输入你的邮箱。（建议使用海外邮箱）</p>
+<p>4）到你的邮箱里进行邮件验证。</p>
+<p>5）设置登陆密码。</p>
+<p>6）输入手机号收取验证码。</p>
+<p>7）准备并上传个人 KYC 材料。（我使用的是护照）</p>
+<p>8）提供近 3 个月内的住址证明，例如水电账单、通信账单、税务文件等。（要求的海外地址证明，中国地区不支持。）</p>
+<p>9）完成身份验证和材料提交后，等待平台审核。审核通过后，个人账户才可以正式使用相关功能。</p>
+<p>dtcpay 的个人注册并不复杂，但门槛明显高于普通 U 卡。它不是邮箱注册后就能立刻充值消费，而是需要先提交开户申请，再完成线上身份验证，并提供护照或 National ID、近 3 个月银行流水和住址证明。这个过程确实更繁琐，但也让它更像一个正规持牌支付账户（数字钱包），而不是单纯的加密卡工具。</p>
+<p>\3. <strong>入金的真实路径</strong></p>
+<p>在完成账户注册和 KYC 之后，真正开始使用 dtcpay 的第一步，通常就是入金。以我自己的体验来看，dtcpay 的加密货币入金并不是简单复制一个地址就直接转账，而是更偏合规支付账户的操作逻辑：需要先选择稳定币和网络，再根据来源类型完成对应设置。</p>
+<p>目前 dtcpay 支持的稳定币入金方式主要包括 USDT、USDC、WUSD、FDUSD 四种；支持的充值网络包括 Ethereum、BSC、Tron、Base、Solana 五条公链。用户可以选择从交易所同名账户入金，也可以通过个人钱包地址入金。我第一次操作时，选择的是 白名单私人钱包地址入金，也就是先把自己的链上钱包地址添加到 dtcpay，再从这个钱包向 dtcpay 账户充值。</p>
+<p>以 dtcpay 手机 App 为例，操作路径大致如下：</p>
+<p>1）打开 dtcpay App，进入首页，点击 存款。</p>
+<p>2）在存款类型中选择 稳定币。</p>
+<p>3）在来源方式里点击 私人钱包。</p>
+<p>4）选择要充值的稳定币币种，例如 USDT、USDC、WUSD 或 FDUSD。</p>
+<p>5）选择对应的公链网络，例如 Ethereum、BSC、Base 或 Solana。</p>
+<p>6）输入或粘贴你的个人钱包地址。</p>
+<p>7）添加为 白名单地址，等待系统确认。</p>
+<p>这里一定要注意两点。</p>
+<p>第一，稳定币币种和公链网络必须完全对应。比如你选择的是 USDT，就要确认自己后续转出的也是 USDT；选择的是 Base 网络，就不能从 Solana 或 BSC 网络转入。链选错的话，轻则不到账，重则资产可能无法找回。</p>
+<p>第二，白名单地址最好只填写你自己长期使用、确认无误的钱包地址。因为 dtcpay 这类持牌支付账户通常会更重视资金来源和地址关联，频繁更换地址、使用来源不清晰的钱包，后续可能会增加风控或审核成本。</p>
+<p>我第一次入金时的感受是，这个流程比普通钱包或交易所充值多了一步“白名单地址”的设置，刚开始会觉得稍微麻烦，但从安全角度看也有好处：它能减少填错地址、误转陌生地址的风险，也让账户资金来源更清晰。对于长期使用 dtcpay 做稳定币兑换、出金或卡片消费的人来说，提前把常用钱包地址设置好，后面入金会顺手很多。</p>
+<p>如果用交易所同名入金，也是相同的方式。大家可以参考上面的流程即可！</p>
+<p>\4. <strong>USDT 兑换法币：汇率不是最极致，但胜在路径清晰</strong></p>
+<p>2026.07.02 dtcpay兑换费率</p>
+<p>汇率: 1USDT &#x3D; 0.993 USD</p>
+<p>汇率: 1USDT &#x3D; 6.687052656 CNH</p>
+<p>汇率: 1USDT &#x3D; 1.2765390354 SGD</p>
+<p>汇率: 1USDT &#x3D; 0.864879168 EUR</p>
+<p>汇率: 1USDT &#x3D; 7.734568356 HKD</p>
+<p>还有还能多币种我就不一一说明了，宝宝们自己探索吧！</p>
+<p>在实际使用 dtcpay 的过程中，我觉得dtcpay的 USDT 兑换法币汇率只能算中规中矩，并不是市场上最极致、最漂亮的价格。如果单纯拿它和一些场外兑换商、私人换汇渠道去比，可能会觉得 dtcpay 的报价没有那么“香”。但问题在于，出金这件事从来不能只看表面汇率。</p>
+<p>加密圈的宝宝们都知道，USDT 出金最怕的不是少赚一点汇差，而是遇到资金来源不明、银行卡风控、到账不稳定，甚至后续被要求解释流水。很多场外渠道看起来汇率更好，但中间隐藏的风险、时间成本和沟通成本，其实并不低。尤其是当金额稍微大一点，或者需要长期稳定使用时，所谓“便宜一点”的渠道，未必真的划算。</p>
+<p>dtcpay 的优势不在于给你一个全市场最低的兑换价格，而在于它提供的是一个相对清晰、可追踪、合规框架下的出金路径。用户可以在账户内完成稳定币和法币之间的兑换，再通过平台支持的方式进行汇出。这个过程虽然会有一定汇差或费用，但换来的是更稳定的流程、更明确的账户主体，以及更低的不确定性。</p>
+<p>换句话说，dtcpay 的汇率可以理解为“安全出金成本”的一部分。就像银行换汇、跨境汇款、支付机构结算都会有点差和手续费一样，持牌机构也需要承担合规、风控、清算、运营和牌照成本。它不可能完全按照零利润价格提供服务，这一点是可以理解的。</p>
+<p>所以我对这部分的看法是：如果你只追求极限汇率，dtcpay 未必是最便宜的选择；但如果你更在意出金路径是否清晰、资金流向是否更稳定、账户使用是否更长期，那么这部分汇差是可以接受的。毕竟在加密资产出金这件事上，有时候“少省一点钱”，反而是在给自己的资金安全买一层确定性。</p>
+<p>\5. <strong>出金实测：USDT 兑换 USD 后汇入美国银行账户</strong></p>
+<p>接下来我想重点讲一下大家最关心的出金问题。</p>
+<p>因为我平时基本都在海外生活，所以很多时候并不会频繁把钱提现到银行账户，而是直接放在卡里日常消费。吃饭、购物、出行这些场景，能刷卡就直接刷卡，反而省去了来回折腾的麻烦。不过偶尔遇到需要把资金转进银行账户的情况，出金体验就变得很重要了。</p>
+<p>前段时间，我申请了美国华美银行的账户，就顺手测试了一下 dtcpay 的出金流程。当时的操作路径是：先在 dtcpay 里把 USDT 兑换成 USD，然后再通过电汇汇到自己的美国银行账户。这里需要说一下，USD 电汇费用是 <strong>25 美金</strong>，乍一看不算特别便宜，但如果把它放在“安全出金”这个场景里，我觉得还是可以接受的。毕竟比起外面一些不透明的换汇渠道，能通过一个持牌平台把钱规规矩矩汇到自己名下的银行账户，心里会踏实很多。</p>
+<p>这次比较让我满意的是汇款速度。我当时是周五提交的汇款申请，中间刚好碰上周末，电汇系统本身可能也不工作。到了周一，dtcpay 就发来邮件提示款项已经汇出。也就是说，扣掉周末不算，基本上可以理解为 <strong>1 个工作日完成汇出</strong>。这个速度在电汇里算是很不错的，至少没有那种提交之后石沉大海、只能干等的焦虑感。</p>
+<p>目前这笔钱已经安全进入美国银行账户，资金状态也一切正常。我自己的感受是，dtcpay 的出金不一定是成本最低的，但整个路径比较清楚：USDT 换成 USD，再从 dtcpay 汇到本人银行账户。费用摆在明面上，流程也有邮件通知，到账后资金也比较稳定。对于经常在海外生活、偶尔需要把稳定币变成银行账户余额的人来说，这一点还是值得点赞的。</p>
+<p>\6. <strong>dtcpay卡片消费：海外刷卡方便，国内也能接日常支付</strong></p>
+<p>dtcpay Card的体验，我觉得更像是“稳定币账户 + Visa 卡消费”的组合。它看起来和普通 U 卡有点像，都是把账户里的余额拿来消费，但真正用下来会发现，它的逻辑并不完全一样。普通 U 卡更多是充值后直接刷，而 dtcpay Card 背后连接的是 dtcpay 账户体系，前面有开户、KYC、入金、兑换和账户审核这些流程，所以它更像是在持牌支付账户上叠加了一张消费卡。</p>
+<p>卡片申请是在 dtcpay App 里完成的，操作上比较直观。我实际看到的是，每个人可以申请 3 张实体卡；虚拟卡也可以在 App 里申请，审核通过后就能直接用于线上消费，不过虚拟卡具体可申请数量建议以 App 内显示为准。实体卡到手后，除了正常插卡、刷卡消费，也可以使用 contactless tap-to-pay，也就是常说的 NFC 感应支付。平时在海外超市、餐厅、便利店、地铁或支持 Visa 感应付款的地方，拿卡轻轻一贴就能完成支付，体验上和普通国际银行卡差不多。</p>
+<p>在海外使用时，dtcpay Card 的优势会更明显一些。因为很多国家的 Visa 接受度很高，日常吃饭、买东西、订酒店、线上付款都比较顺。对于像我这种经常在海外生活的人来说，很多时候甚至不需要专门把钱提现到银行账户，直接把余额放在卡里消费就够用了。尤其是小额日常支出，用卡会比反复出金、换汇、转账更省心。</p>
+<p>数字钱包这块，dtcpay Card 也支持绑定 Apple Pay、Google Pay 等移动支付方式，能不能成功绑定还是以 App 和实际设备地区为准。绑定之后，出门不带实体卡也可以用手机完成支付。对经常旅行的人来说，这一点很实用，尤其是实体卡不在身边、或者临时需要线上付款的时候，虚拟卡和手机钱包会方便很多。</p>
+<p>国内消费方面，我觉得它比很多境外卡更友好的一点是，可以绑定微信、支付宝后直接消费。这样在国内吃饭、打车、买东西的时候，不一定非要找支持外卡 POS 的地方，而是可以走大家最熟悉的微信和支付宝场景。实际体验上，它不像传统外币卡那样有很强的“境外卡使用感”，反而更接近日常移动支付。</p>
+<p>所以如果只看“能不能刷”，dtcpay Card 确实有点像 U 卡；但如果看整体体验，它更像一个可以把稳定币余额延伸到日常消费场景里的支付工具。海外可以刷 Visa、NFC 感应支付、绑定 Apple Pay 或 Google Pay；国内可以绑定微信和支付宝使用。对经常跨境生活、手里又有稳定币资产的人来说，这张卡最大的价值不是噱头，而是把“链上资产”变成了更接近日常生活的支付能力。</p>
+<p>\7. <strong>其实dtcpay体验感最好的不是产品</strong></p>
+<p>这一年多用下来，我最有安全感的地方之一，就是他们 WhatsApp 上的客服一直都很在线。平时不管是开户资料哪里不会填、卡片怎么申请、入金怎么操作，还是后面换汇、电汇出金遇到看不懂的地方，我基本都会直接去问客服。很多时候其实问题不大，但因为涉及钱，自己心里难免会有点紧张，这时候有人能及时回你、把步骤讲清楚，体验真的差很多。</p>
+<p>我印象比较深的是，他们不是那种冷冰冰复制粘贴的客服。你问一个具体问题，他们会顺着你的情况去解释；如果你没听懂，再继续问，他们也不会不耐烦。包括有时候我是帮其他地方的朋友问申请问题，情况可能还不一样，客服也会一条一条耐心回复，告诉你该准备什么、下一步怎么做。</p>
+<p>尤其是汇款这种事情，第一次操作的时候难免会担心：是不是填错了？钱什么时候出去？中间会不会卡住？这些问题我都问过客服，对方也都会很快回应。虽然客服不能替你做决定，但他们能把流程、状态和注意事项解释清楚，这一点就已经很让人安心了。</p>
+<p>所以对我来说，dtcpay 的客服不是一个“附加项”，而是整个使用体验里很重要的一部分。毕竟这是一个和入金、出金、卡片消费都有关的产品，出问题时能不能找到人、对方愿不愿意认真帮你解决，真的很关键。至少这一年多用下来，我对他们客服的印象是：回复快、态度好、有耐心，而且是真的愿意帮你把问题处理明白。</p>
+<p>三、注册dtcpay可以免费获取6个月免费全球eSIM流量</p>
+<p>除了入金、出金和卡片消费，我觉得 dtcpay 还有一个很实用的小权益，就是 eSIM 流量。最开始接触 dtcpay 的时候，我其实也有一部分原因是被这个权益吸引的：全球 72 个国家和地区，每月 5GB 流量。一共连续送6个月。对于经常在海外生活或者旅行的人来说，这种流量权益真的很方便。</p>
+<p>有时候刚落地一个国家，还没来得及买当地电话卡，或者只是短暂停留几天，不想专门折腾实体卡，eSIM 就很省事。开通后直接用手机切换网络，查地图、叫车、回消息、临时处理支付问题，基本都够用。它不一定是 dtcpay 最核心的功能，但作为卡片和账户之外的附加权益，确实让整个使用体验更完整。</p>
+<p>我自己觉得，dtcpay 比较有意思的地方就在这里：它不只是解决“怎么把 USDT 花出去”这一个问题，而是把海外生活里常见的几个需求放在了一起，比如稳定币入金、法币兑换、卡片消费、跨境出金，再加上 eSIM 流量。对经常跨境生活的人来说，这些功能组合在一起，会比单独一张卡更实用。</p>
+<p><strong>四、最后叨叨一句</strong></p>
+<p>所以如果要用一句话总结我这一年多的体验，dtcpay 不是最便宜、也不是门槛最低的工具，但它在合规、安全、出金路径、卡片消费和客服体验上，确实给了我比较稳定的使用感。对于长期在海外生活、又经常接触稳定币的用户来说，它是一个值得认真了解的选择。我们选择的是一家真正意义上的支付钱包，而不是什么U卡商。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/ac523047/">https://macin.top/posts/ac523047/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dtcpay/">dtcpay</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/28fa8876/" title="别再把 YouTube 当看片软件：几种搜索方法找资源"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/youtube.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">别再把 YouTube 当看片软件：几种搜索方法找资源</div></div><div class="info-2"><div class="info-item-1">很多人翻出去以后，YouTube 的用法还是和 B 站差不多：看测评、刷 Shorts、听歌、追几个喜欢的博主</div></div></div></a><a class="pagination-related" href="/posts/693d2586/" title="WebTorrent 是一个支持浏览器和 Node.js 的流式 Torrent 客户端"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">WebTorrent 是一个支持浏览器和 Node.js 的流式 Torrent 客户端</div></div><div class="info-2"><div class="info-item-1">WebTorrent 是一个支持浏览器和 Node.js 的流式 Torrent 客户端，完全用 JavaScript 编写，利用 WebRTC 实现浏览器端的点对点传输，无需任何插件或安装。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/85697b6b/" title="快上车！新加坡 MAS 持牌 dtcpay免费送：5 张可换号VISA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/dtcpay.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">快上车！新加坡 MAS 持牌 dtcpay免费送：5 张可换号VISA</div></div><div class="info-2"><div class="info-item-1">dtcpay 是一家总部位于新加坡的数字支付服务商，成立于 2019 年。它与市面上常见的、监管背景模糊的“U 卡”有着本质区别。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AFdtcpay%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">一、什么是dtcpay？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%88%91%E7%9C%9F%E5%AE%9E%E4%BD%93%E9%AA%8C%E8%AE%B2%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">二、我真实体验讲解</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="很多人第一次打开 GitHub，只是想跟着 AI 安装一个工具。AI 或安装教程甩来一个仓库链接，点进去以后，Code、Issues、Pull requests、Actions、main、commits、branches…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库">
+<meta property="og:url" content="https://macin.top/posts/ee15cf78/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="很多人第一次打开 GitHub，只是想跟着 AI 安装一个工具。AI 或安装教程甩来一个仓库链接，点进去以后，Code、Issues、Pull requests、Actions、main、commits、branches…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/github.webp">
+<meta property="article:published_time" content="2026-09-03T02:14:51.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.647Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="GitHub">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/github.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库",
+  "url": "https://macin.top/posts/ee15cf78/",
+  "image": "https://macin.top/img/github.webp",
+  "datePublished": "2026-09-03T02:14:51.000Z",
+  "dateModified": "2026-09-05T15:22:43.647Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/ee15cf78/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/github.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">万字长文｜GitHub 从入门到精通，一次走通找项目、建仓库</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.647Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">10.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>34分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>很多人第一次打开 GitHub，只是想跟着 AI 安装一个工具。AI 或安装教程甩来一个仓库链接，点进去以后，Code、Issues、Pull requests、Actions、main、commits、branches 和 tags 同时铺在眼前。原本只想找到下载按钮，几分钟后却连该下载哪个文件、源码能不能直接运行都拿不准。</p>
+<p>2026 年 5 月，我在介绍 github-publisher 时留过一句话。</p>
+<blockquote>
+<p>不了解 GitHub 也没关系，后面我有时间也会专门花时间去讲解一下 GitHub 出一篇文章。</p>
+</blockquote>
+<p>这句话一直欠着没兑现。我做这个 Skill 时，很多人已经能让 AI 写脚本、做网站、整理 Skill，分享成果和使用开源项目时却常被 GitHub 卡住。按钮可以交给 AI 帮忙点，仓库是否可信、文件该从哪里拿、一次修改会推到哪里，仍然要自己看懂。</p>
+<p>这件事拖了几个月，现在终于来补上。</p>
+<p>我重新建了一个公开仓库 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xiaomoBoy/github-first-project">github-first-project</a></p>
+<p>，从网页提交 README 开始，又在电脑上添加页面，接着开 Issue、建分支、发 Pull Request、跑 Actions、上线 Pages，最后发布 v1.0.0。教程里的失败也来自这次真实操作。第一次自动检查找不到文件，确实亮了红灯；修复以后重新运行，才变成绿灯。</p>
+<p>这篇文章会带你完成两件事。先学会读懂别人的仓库，知道项目能不能用、应该从哪里下载。然后把自己的第一个项目放上 GitHub，让它可以更新、协作、自动检查，也能通过一个公开网址访问。</p>
+<p>标题里写了从入门到精通。这里的精通有一个很实际的范围。你能独立处理个人项目和常见的开源协作，遇到普通报错知道先查什么，也知道涉及权限、密钥和历史修改时应该停下来确认。复杂的 Git 历史重写、大型团队权限和企业治理，不在这一篇里展开。</p>
+<h2 id="本文导读"><a href="#本文导读" class="headerlink" title="本文导读"></a>本文导读</h2><p><strong>01｜先看懂别人的仓库</strong></p>
+<p>第一章先分清 Git 和 GitHub，第二、三章再认识作者、README、文件、提交、分支和标签。看完这三章，你会知道一个项目值不值得下载，也能在 ZIP、Clone 和 Release 之间选对入口。</p>
+<p><strong>02｜发布自己的第一个仓库</strong></p>
+<p>第四章先用浏览器创建仓库和提交 README，第五、六章再把项目拉到电脑，走完 status、add、commit 和 push。每一步都会告诉你完成以后应该看到什么。</p>
+<p><strong>03｜走通一次真实协作</strong></p>
+<p>第七章用 Issue、任务分支和 Pull Request 完成一项修改。第八章再把视角移到别人的项目，讲清 Fork、上游仓库和跨仓库 PR 的关系。</p>
+<p><strong>04｜补齐交付和安全</strong></p>
+<p>第九章处理 README、.gitignore、License 和敏感信息。第十章接上 Actions、Pages 与 Release，让仓库可以自动检查、公开访问并交付版本。</p>
+<p><strong>05｜遇到问题知道先查哪里</strong></p>
+<p>第十一章集中处理权限、同步、冲突、大文件和密钥泄露。只想解决眼前报错，可以直接从最后一章的表格开始查。</p>
+<h1 id="一、GitHub-能替普通人做什么"><a href="#一、GitHub-能替普通人做什么" class="headerlink" title="一、GitHub 能替普通人做什么"></a>一、GitHub 能替普通人做什么</h1><h2 id="1-Git-负责记录，GitHub-负责连接"><a href="#1-Git-负责记录，GitHub-负责连接" class="headerlink" title="1. Git 负责记录，GitHub 负责连接"></a>1. Git 负责记录，GitHub 负责连接</h2><p>很多人第一次接触 GitHub，是因为某个 AI 工具的安装教程给了一个仓库地址。点进去能看到文件，也能下载，于是很容易把 GitHub 理解成一个代码网盘。</p>
+<p>它确实能存文件，但文件只是表面。GitHub 真正有用的地方，是它把项目内容、每次修改、问题讨论、协作过程和发布版本放在了同一个位置。</p>
+<p>这里要先分清两个名字。</p>
+<p>Git 是安装在电脑上的版本管理工具。它负责观察文件变化，记录某次提交包含哪些修改，也能让你回到以前的版本。即使电脑没有联网，Git 仍然可以在本地工作。</p>
+<p>GitHub 是承载远端仓库的平台。它让另一台电脑拿到同一份项目，也让其他人查看、讨论和提交修改。后面要用到的 Issue、Pull Request、Actions、Pages 和 Release，都属于 GitHub 提供的能力。</p>
+<p>可以暂时把 Git 理解成电脑里的版本记录，把 GitHub 理解成联网以后共同使用的项目页面。这个比喻只帮助你区分职责。真正操作时，我们还是看工作区、提交和远端仓库之间发生了什么。</p>
+<p>Repository 常缩写成 repo，中文通常叫仓库。一个仓库里会放项目文件、使用说明、配置和完整的提交历史。仓库不一定是程序，也可以是一套文档、一个静态网站、一组自动化脚本，甚至是一套你自己维护的 Skill。</p>
+<h2 id="2-不会写代码，也有三种常见用法"><a href="#2-不会写代码，也有三种常见用法" class="headerlink" title="2. 不会写代码，也有三种常见用法"></a>2. 不会写代码，也有三种常见用法</h2><ul>
+<li><strong>找项目。</strong> 不少 AI 工具、模型启动器、自动化脚本和数据同步方案都把 GitHub 当作发布入口。README 里有安装方法，Issues 里能查已知问题，Releases 里常放正式版本。</li>
+<li><strong>保存成果。</strong> 文档、Skill、脚本和个人网站都能放进仓库。Git 留下修改历史，GitHub 把提交同步到远端，换电脑后还能继续。它比一排 最终版、最终版2、真的最终版 更容易追踪。</li>
+<li><strong>参与协作。</strong> 发现问题可以开 Issue，改好文档或代码可以发 Pull Request。不会写程序，也能修错字、补中文说明或整理复现步骤。</li>
+</ul>
+<p>这也是 AI 时代 GitHub 越来越难绕开的原因。优秀开源项目集中在这里，很多数据同步和自动化方案依赖 Git，AI 帮你生成的文件也需要一个可以审查、回退和分享的位置。AI 能降低操作门槛，但仓库是否可信、许可是否允许、密钥是否安全，仍然需要你自己判断。</p>
+<h2 id="3-读完以后的完成标准"><a href="#3-读完以后的完成标准" class="headerlink" title="3. 读完以后的完成标准"></a>3. 读完以后的完成标准</h2><p>学完这篇文章，你应该可以完成下面这些事。</p>
+<ul>
+<li>打开陌生仓库后，能找到 README、维护记录、License 和 Release</li>
+<li>根据目的选择 Download ZIP、clone 或正式发布包</li>
+<li>在网页创建仓库并完成第一次提交</li>
+<li>在电脑上走完 status、add、commit、push 和 pull</li>
+<li>用 Issue、分支和 Pull Request 完成一次修改</li>
+<li>看懂 Actions 的成功与失败，并用 Pages 和 Release 交付结果</li>
+</ul>
+<p>这些对象看起来多，真正跑完一次以后，它们会落在同一条路径上。接下来先从最常见的仓库首页开始。</p>
+<h1 id="二、第一次打开仓库，先看懂这六组入口"><a href="#二、第一次打开仓库，先看懂这六组入口" class="headerlink" title="二、第一次打开仓库，先看懂这六组入口"></a>二、第一次打开仓库，先看懂这六组入口</h1><p>第一次看 GitHub 仓库，不要急着把每个英文按钮都学完。先回答三个问题。这个项目是谁发布的，它解决什么问题，我下一步要找的是说明、文件还是正式版本。</p>
+<h2 id="1-作者名-仓库名-先告诉你项目归谁"><a href="#1-作者名-仓库名-先告诉你项目归谁" class="headerlink" title="1. 作者名&#x2F;仓库名 先告诉你项目归谁"></a>1. 作者名&#x2F;仓库名 先告诉你项目归谁</h2><p>仓库页面左上方通常会显示 作者名&#x2F;仓库名。比如 xiaomoBoy&#x2F;github-publisher，斜杠前面是账号或组织，后面是仓库名称。</p>
+<p>同名项目可能由不同账号发布，下载可执行文件、安装插件或运行脚本前，最好把作者和仓库名一起核对。名称附近的 Public 表示公开可见，Private 只对获得权限的人开放。公开不等于可以随意修改或商用，具体范围还要看 License。</p>
+<h2 id="2-README-是第一份使用说明"><a href="#2-README-是第一份使用说明" class="headerlink" title="2. README 是第一份使用说明"></a>2. README 是第一份使用说明</h2><p>进入仓库首页以后，页面下半部分经常会直接展开 README。它通常叫 README.md，可以把它理解成项目说明书。</p>
+<p>一份能用的 README 应该说明项目用途、安装方法、使用方式、支持环境和反馈入口。英文很长时，先找 Installation、Usage、Requirements、Examples、FAQ 和 License。浏览器翻译和 AI 可以帮忙，命令里的文件名、版本号和参数仍要回原文核对。</p>
+<p>README 只有一句口号，没有安装条件和使用示例，最近也看不到维护记录时，先别运行。Star 再多也补不上缺失的说明。</p>
+<h2 id="3-文件列表不要逐个点"><a href="#3-文件列表不要逐个点" class="headerlink" title="3. 文件列表不要逐个点"></a>3. 文件列表不要逐个点</h2><p>README 上方是文件列表。初学者容易从第一项点到最后一项，最后看见一堆配置文件，还是不知道入口在哪里。</p>
+<p>先认几组常见名字会更省时间。</p>
+<ul>
+<li>README.md 和 LICENSE 分别放说明与许可</li>
+<li>src&#x2F;、scripts&#x2F;、examples&#x2F; 常放源码、辅助脚本和示例</li>
+<li>docs&#x2F; 或 references&#x2F; 常放文档和参考资料</li>
+<li>.github&#x2F; 常放协作配置，package.json、pyproject.toml、requirements.txt 常说明依赖和运行环境</li>
+</ul>
+<p>这些是常见约定，不是强制标准。真正入口还是以 README 为准。遇到一个只有源码、没有说明的项目，先把它当成需要研究的材料，不要把它当成双击就能运行的软件。</p>
+<h2 id="4-Commits、Branches、Tags-看的不是同一件事"><a href="#4-Commits、Branches、Tags-看的不是同一件事" class="headerlink" title="4. Commits、Branches、Tags 看的不是同一件事"></a>4. Commits、Branches、Tags 看的不是同一件事</h2><p>Commits 保存每次修改，能看到谁在什么时候改了哪些文件。Branches 让不同修改暂时分开，默认分支通常叫 main。Tags 给某个提交留下固定名字，常用来标记 v1.0.0 这样的版本。</p>
+<p>第一次使用别人的项目，通常不用研究所有分支。先看默认分支，再看 Releases 有没有正式版本。只有 README 明确要求使用某个开发分支时，才切过去。</p>
+<h2 id="5-Issues、Pull-requests、Actions-分别负责什么"><a href="#5-Issues、Pull-requests、Actions-分别负责什么" class="headerlink" title="5. Issues、Pull requests、Actions 分别负责什么"></a>5. Issues、Pull requests、Actions 分别负责什么</h2><ul>
+<li>Issues 记录问题、建议和待办。安装失败时先搜错误关键词，新建问题时写清系统、软件版本、复现步骤和报错。</li>
+<li>Pull requests 常缩写成 PR，用来提交一组修改并请求合并。讨论、检查结果和文件差异都在这里。</li>
+<li>Actions 执行自动检查、测试或部署。绿色对勾表示通过，红色叉号表示至少有一步失败，原因要进日志查看。</li>
+</ul>
+<h2 id="6-Stars、Forks-和热度只能作为线索"><a href="#6-Stars、Forks-和热度只能作为线索" class="headerlink" title="6. Stars、Forks 和热度只能作为线索"></a>6. Stars、Forks 和热度只能作为线索</h2><p>Star 很像收藏，也能反映项目受到多少关注。Fork 表示有多少关联副本被创建。它们可以帮助你发现热门项目，却不能单独证明安全和质量。</p>
+<p>一个仓库 Star 很多，可能已经很久没有维护。Fork 很多，也可能只是教程要求大家点过。下载前更有价值的信息，是最近提交时间、README 是否完整、Release 是否持续更新、Issues 里有没有大量相同故障，以及许可证是否清楚。</p>
+<p>看到这里，你已经能读懂仓库首页的主要区域。下一步才是下载。</p>
+<h1 id="三、下载之前多看三眼"><a href="#三、下载之前多看三眼" class="headerlink" title="三、下载之前多看三眼"></a>三、下载之前多看三眼</h1><p>GitHub 上的下载有几条路。选错以后最常见的结果，是拿到一堆源码却不知道怎么运行，或者把 ZIP 当成可以持续更新的本地仓库。</p>
+<h2 id="1-Download-ZIP-适合只拿当前文件"><a href="#1-Download-ZIP-适合只拿当前文件" class="headerlink" title="1. Download ZIP 适合只拿当前文件"></a>1. Download ZIP 适合只拿当前文件</h2><p>在仓库首页点击 Code，再选 Download ZIP，可以下载当前分支的一份压缩包。</p>
+<p>它适合一次性查看文档、拿几张素材，或者下载不需要继续跟踪的简单项目。解压以后能看到文件，但里面没有可供你正常使用的完整 Git 历史。作者以后更新，电脑里的 ZIP 也不会自己变化。</p>
+<p>ZIP 只是文件打包方式。它不保证项目可以直接运行。打开之前仍然要看 README 里的安装条件。</p>
+<h2 id="2-Clone-适合继续跟踪和修改"><a href="#2-Clone-适合继续跟踪和修改" class="headerlink" title="2. Clone 适合继续跟踪和修改"></a>2. Clone 适合继续跟踪和修改</h2><p>Clone 会把仓库和版本数据复制到电脑。以后可以用 Git 查看变化、拉取更新，也可以把自己的提交推回 GitHub。</p>
+<p>Code 菜单里通常能看到 HTTPS、SSH 和 GitHub CLI 等入口。这里先知道 clone 适合长期使用，登录方式放到第六章再选。</p>
+<p>如果你准备跟着项目更新、修改代码、让 AI 在本地继续开发，clone 通常比 ZIP 更合适。</p>
+<h2 id="3-Release-适合拿作者正式交付的版本"><a href="#3-Release-适合拿作者正式交付的版本" class="headerlink" title="3. Release 适合拿作者正式交付的版本"></a>3. Release 适合拿作者正式交付的版本</h2><p>很多桌面软件会在 Releases 页面提供安装包。macOS 可能看到 .dmg，Windows 可能看到 .exe 或 .msi，也可能提供压缩后的可执行文件。</p>
+<p>GitHub 还会自动给每个 Release 提供 Source code 归档。它们是这个版本对应的源码 ZIP 和 tar.gz，不等于作者主动上传的安装包。</p>
+<p>我们这次发布的 v1.0.0 没有额外上传应用安装包，所以页面里只有 GitHub 自动生成的两个源码归档。这个结果反而很适合说明差别。看到 Assets 时先读文件名和版本说明，不要凭体积猜哪个能运行。</p>
+<h2 id="4-真正要多看的三眼"><a href="#4-真正要多看的三眼" class="headerlink" title="4. 真正要多看的三眼"></a>4. 真正要多看的三眼</h2><p>第一眼看发布者和维护状态。</p>
+<p>确认作者账号与项目来源，看看最近一次提交和最近一个 Release 是什么时候。长期不更新不一定不能用，但你要确认它是否支持当前系统和依赖版本。</p>
+<p>第二眼看说明与已知问题。</p>
+<p>README 写的是正常路径，Issues 往往能看到真实使用中的故障。如果首页写着支持 macOS，Issues 里却有很多最新版无法启动的报告，就要继续看维护者有没有回应。</p>
+<p>第三眼看 License 和安全提示。</p>
+<p>准备二次修改、公开分发或商业使用时，先确认许可证。项目让你复制命令到终端时，也要知道命令准备下载什么、修改哪里、会不会要求管理员权限。</p>
+<h2 id="5-AI-可以帮你读，但最后三件事自己确认"><a href="#5-AI-可以帮你读，但最后三件事自己确认" class="headerlink" title="5. AI 可以帮你读，但最后三件事自己确认"></a>5. AI 可以帮你读，但最后三件事自己确认</h2><p>你可以把 README 交给 AI，让它整理安装条件，也可以让它解释目录和报错。更稳妥的问法，是让 AI 指出每个结论来自说明里的哪一段，再回到原文核对。</p>
+<p>最后三件事不要直接外包给 AI。</p>
+<ul>
+<li>下载地址是不是项目官方入口</li>
+<li>License 是否允许你的具体用途</li>
+<li>即将执行的命令会获得什么权限</li>
+</ul>
+<p>AI 可能读错旧文档，也可能忽略仓库刚出现的安全提醒。确认完这三项，再下载和执行。</p>
+<h1 id="四、只用浏览器，建好第一个仓库"><a href="#四、只用浏览器，建好第一个仓库" class="headerlink" title="四、只用浏览器，建好第一个仓库"></a>四、只用浏览器，建好第一个仓库</h1><p>接下来开始建立自己的项目。前半段完全在浏览器里完成，不需要先安装 Git。</p>
+<h2 id="1-注册、验证邮箱和保存账号恢复入口"><a href="#1-注册、验证邮箱和保存账号恢复入口" class="headerlink" title="1. 注册、验证邮箱和保存账号恢复入口"></a>1. 注册、验证邮箱和保存账号恢复入口</h2><p>打开 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/">GitHub</a></p>
+<p>，点击 Sign up，按页面要求填写邮箱、密码和用户名，再完成邮箱验证。</p>
+<p>用户名会出现在仓库地址里，也会成为公开身份的一部分。用于长期创作时，最好选一个愿意持续使用的名字。邮箱如果不想公开，可以在 GitHub 邮箱设置里使用隐私地址，并在后面的 Git 配置里保持一致。</p>
+<p>账号建好后，建议在设置中开启双重验证。常见方式是认证器应用生成的一次性验证码。恢复代码只保存在密码管理器或其他安全位置，不要放进仓库、截图和聊天记录。</p>
+<p>这篇文章不展示真实二维码和恢复代码。账号安全截图如果无法完全避开秘密，宁可不放。</p>
+<h2 id="2-新建-github-first-project"><a href="#2-新建-github-first-project" class="headerlink" title="2. 新建 github-first-project"></a>2. 新建 github-first-project</h2><p>点击右上角加号，选择 New repository，进入新建仓库页面。</p>
+<p>仓库名填写 github-first-project。描述可以写成一句容易看懂的话，例如 My first GitHub practice project。</p>
+<p>Visibility 决定可见范围。本文需要演示 Pages、Issue 和 Release，所以选择 Public。真实工作里如果包含私人笔记、客户资料、内部文档或还没检查的 AI 生成文件，先用 Private 更安全。</p>
+<p>初始化时勾选 README。.gitignore 可以按项目类型选择，暂时没有特定语言也可以后面再加。License 选择 MIT 只为了完成本次公开演示，它不一定适合所有项目。</p>
+<p>点击 Create repository 后，能进入仓库首页并看到 README.md，说明第一个仓库已经建好。</p>
+<h2 id="3-在网页里改-README，完成第一次-commit"><a href="#3-在网页里改-README，完成第一次-commit" class="headerlink" title="3. 在网页里改 README，完成第一次 commit"></a>3. 在网页里改 README，完成第一次 commit</h2><p>打开 README.md，点击编辑按钮，在原有标题下补一句项目说明。预览确认排版以后，点击 Commit changes。</p>
+<p>GitHub 会让你填写提交信息。不要只写 update。这次可以写 docs: add project introduction，读起来就知道修改的是文档，内容是补充项目介绍。</p>
+<p>提交完成以后返回首页。README 多了一行，Commits 里的数量也会增加。这个可见变化说明你已经完成了一次 commit。</p>
+<p>网页提交和后面在终端执行 git commit 的结果属于同一种版本记录。区别只在于操作入口。GitHub 网页替你完成了选文件和提交，本地 Git 会把这几个动作拆开显示。</p>
+<h2 id="4-在网页创建分支并提交修改"><a href="#4-在网页创建分支并提交修改" class="headerlink" title="4. 在网页创建分支并提交修改"></a>4. 在网页创建分支并提交修改</h2><p>点击当前分支名 main，输入一个新分支名，例如 docs&#x2F;web-edit，按页面提示创建分支。</p>
+<p>切换成功后，页面上的分支名会变。此时编辑 README 并提交，修改会留在新分支，main 暂时不受影响。</p>
+<p>分支的价值就在这里。你可以隔离一组尚未确认的改动，检查完成后再合并。第一次练习不用同时建很多分支，一项清楚的任务配一个分支就够了。</p>
+<p>到这一步，你已经在浏览器里拥有了仓库、README、提交和分支。接下来需要补上 Git 的最小工作模型。</p>
+<h1 id="五、Git-怎样记住每一次修改"><a href="#五、Git-怎样记住每一次修改" class="headerlink" title="五、Git 怎样记住每一次修改"></a>五、Git 怎样记住每一次修改</h1><p>Git 的命令很多，新手阶段先掌握四个位置就够用。</p>
+<h2 id="1-四个位置已经够用"><a href="#1-四个位置已经够用" class="headerlink" title="1. 四个位置已经够用"></a>1. 四个位置已经够用</h2><p>工作区是你正在编辑的项目目录。git add 把选中的修改放进暂存区，git commit 将它保存为本地版本，git push 再把本地提交送到 GitHub。四个位置和三个动作可以直接看下面这张图。</p>
+<p>这条路能解释大多数新手疑问。文件明明改了，GitHub 上为什么没有变化，因为改动还在工作区。已经 commit 了，网页为什么没更新，因为提交还在本地。push 提示没有新内容，可能是改动根本没有形成新的 commit。</p>
+<h2 id="2-一次修改怎样走过四个位置"><a href="#2-一次修改怎样走过四个位置" class="headerlink" title="2. 一次修改怎样走过四个位置"></a>2. 一次修改怎样走过四个位置</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m &quot;docs: update README&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>第一条先看变化。新文件通常出现在 Untracked files 下，加入暂存区后会移到 Changes to be committed。commit 成功后，本地已经有了版本；GitHub 网页出现新提交，才说明 push 也完成了。</p>
+<h2 id="3-GitHub-页面上的-commit-从哪里来"><a href="#3-GitHub-页面上的-commit-从哪里来" class="headerlink" title="3. GitHub 页面上的 commit 从哪里来"></a>3. GitHub 页面上的 commit 从哪里来</h2><p>第四章在网页修改 README 时，GitHub 已经直接在远端创建了 commit。本地操作时，commit 先产生在电脑，再通过 push 发送到 GitHub。</p>
+<p>每次 commit 最好只处理一组相关修改。修一个说明错字和重写整个页面放在同一个提交里，后面很难审查，也不容易单独撤回。</p>
+<p>提交信息写清动作和对象即可。docs: add usage instructions 比 改一下 更有价值。几个月后查看历史时，你不用点开差异就能大致知道发生了什么。</p>
+<h1 id="六、把仓库拉到电脑，再把修改推回去"><a href="#六、把仓库拉到电脑，再把修改推回去" class="headerlink" title="六、把仓库拉到电脑，再把修改推回去"></a>六、把仓库拉到电脑，再把修改推回去</h1><p>下面以 macOS 为主线。Windows 可以安装 Git for Windows，并在 Git Bash 里使用相同的 Git 命令。编辑器和路径显示会有差别，仓库里的版本逻辑相同。</p>
+<h2 id="1-安装-Git，只做一次身份设置"><a href="#1-安装-Git，只做一次身份设置" class="headerlink" title="1. 安装 Git，只做一次身份设置"></a>1. 安装 Git，只做一次身份设置</h2><p>先运行 git –version。看到版本号就可以继续；没有安装时，从 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://git-scm.com/downloads">Git 官网</a></p>
+<p> 选择当前系统版本。Windows 安装 Git for Windows 时，初学阶段保留默认选项通常就够用。</p>
+<p>第一次使用需要设置提交身份。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;你的提交署名&quot;</span><br><span class="line">git config --global user.email &quot;与你的 GitHub 账号关联的提交邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p>把第一行改成你的提交署名，它可以是真名或昵称，并不要求与 GitHub 用户名相同。两项都会写进未来的提交记录，</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.github.com/en/get-started/git-basics/setting-your-username-in-git">GitHub 官方说明</a></p>
+<p>也明确区分了 Git 署名与 GitHub 用户名。邮箱介意公开时，先到 GitHub 邮箱设置里复制隐私地址。它们不是登录密码，也不负责给电脑授权。</p>
+<h2 id="2-HTTPS、GitHub-CLI-和-SSH-怎么选"><a href="#2-HTTPS、GitHub-CLI-和-SSH-怎么选" class="headerlink" title="2. HTTPS、GitHub CLI 和 SSH 怎么选"></a>2. HTTPS、GitHub CLI 和 SSH 怎么选</h2><p>GitHub 不再接受把账号密码直接当作 Git 远端密码。现在常见的是 HTTPS 配合凭据管理、GitHub CLI 浏览器登录，或者 SSH 密钥。</p>
+<p>想少处理密钥，可以安装 GitHub CLI，运行 gh auth login 后按提示用浏览器登录，再用 gh auth status 检查当前账号。</p>
+<p>经常在同一台电脑推送，也可以配置 SSH。把公钥添加到 GitHub 账号后，运行 ssh -T <a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#x63;&#x6f;&#109;" rel="external nofollow noreferrer">git@github.com</a> 测试。第一次连接可能出现主机指纹确认，先和 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">GitHub 公布的指纹</a></p>
+<p>核对，再输入 yes。</p>
+<p>看到 GitHub 识别出用户名就说明连接可用。私钥内容始终不能粘贴到网页、仓库或聊天里。</p>
+<p>这次真实操作还遇到一个细节。仓库最初通过 HTTPS 连接，现有 GitHub CLI 授权没有包含修改工作流所需的范围，推送 .github&#x2F;workflows 时被拒绝。切换到电脑已经配置好的 SSH 后，工作流才正常推送。这个经历不代表每个人都必须用 SSH，只说明遇到权限报错时要核对当前登录方式和授权范围。</p>
+<h2 id="3-克隆自己的仓库"><a href="#3-克隆自己的仓库" class="headerlink" title="3. 克隆自己的仓库"></a>3. 克隆自己的仓库</h2><p>先在电脑上选一个专门放练习项目的目录，再复制仓库 Code 菜单里的地址。HTTPS 可以用 git clone </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/">https://github.com/</a></p>
+<p>你的用户名&#x2F;github-first-project.git，SSH 使用 git clone <a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#99;&#x6f;&#109;" rel="external nofollow noreferrer">git@github.com</a>:你的用户名&#x2F;github-first-project.git，GitHub CLI 则是 gh repo clone 你的用户名&#x2F;github-first-project。三种方式选一种即可，并把示例用户名换成自己的账号。</p>
+<p>克隆完成后进入目录并检查状态。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd github-first-project</span><br><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+<p>看到当前位于 main，并且 working tree clean，说明本地仓库已经准备好。不要在一个不相关的大目录里直接运行 Git 初始化，先确认终端当前路径确实是这个练习项目。</p>
+<h2 id="4-新增-index-html，走完第一次本地提交"><a href="#4-新增-index-html，走完第一次本地提交" class="headerlink" title="4. 新增 index.html，走完第一次本地提交"></a>4. 新增 index.html，走完第一次本地提交</h2><p>用编辑器在仓库根目录创建 index.html，写入一个最小页面。</p>
+<p>htmlbars</p>
+<figure class="highlight htmlbars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;zh-CN&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>My First GitHub Project<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello GitHub<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>这是我的第一个 GitHub 项目。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add index.html</span><br><span class="line">git status</span><br><span class="line">git commit -m &quot;feat: add first project page&quot;</span><br><span class="line">git push origin main</span><br></pre></td></tr></table></figure>
+
+<p>第一次 status 会把 index.html 列为未跟踪文件，git add 后再检查，它应该出现在待提交区域。</p>
+<p>commit 保存本地版本，push 把它同步到 GitHub。提交成功后工作区会恢复干净。</p>
+<p>打开 GitHub 仓库，文件列表里出现 index.html，Commits 里出现刚才的提交信息，说明第一次本地修改已经同步成功。</p>
+<p>下面这张图是项目完成后的同步复核。先看提交历史，再运行 git push origin main。终端返回 Everything up-to-date，最后的状态也显示本地 main 与远端一致。</p>
+<h2 id="5-push-前先-pull，什么时候真的需要"><a href="#5-push-前先-pull，什么时候真的需要" class="headerlink" title="5. push 前先 pull，什么时候真的需要"></a>5. push 前先 pull，什么时候真的需要</h2><p>很多教程把 git pull 写成 push 前固定动作。它的真正用途，是把远端已有的新提交拿到本地。</p>
+<p>刚 clone 完成，只有你在一台电脑上修改，远端期间也没有变化，可以直接 push。多人协作、换设备编辑，或者你刚在 GitHub 网页改过文件，本地就可能落后。</p>
+<p>不确定时先获取远端状态。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin</span><br><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+<p>如果状态提示本地分支落后，再执行 git pull origin main。</p>
+<p>Git 能自动合并就会完成同步。同一位置被两边修改时会出现冲突，先处理冲突再 push。不要一看到拒绝就强推，强推可能覆盖远端历史。</p>
+<h1 id="七、Issue、分支和-PR-怎样组成一次协作"><a href="#七、Issue、分支和-PR-怎样组成一次协作" class="headerlink" title="七、Issue、分支和 PR 怎样组成一次协作"></a>七、Issue、分支和 PR 怎样组成一次协作</h1><p>前面完成的是个人提交。现在把一次修改按协作方式重新走一遍。</p>
+<h2 id="1-先开-Issue，把要做的事写清楚"><a href="#1-先开-Issue，把要做的事写清楚" class="headerlink" title="1. 先开 Issue，把要做的事写清楚"></a>1. 先开 Issue，把要做的事写清楚</h2><p>进入仓库的 Issues，点击 New issue，标题写 给页面增加使用说明。</p>
+<p>正文不用写得很长，至少包含当前情况和预期结果。例如 README 还没有说明怎样打开页面，希望补充本地查看方式和 Pages 地址。</p>
+<p>一条清楚的 Issue 能让后续分支和 PR 都围绕同一个目标。报错类 Issue 还要补上系统版本、操作步骤和完整错误信息。密钥、邮箱和私人路径要先处理。</p>
+<p>这次演示创建的是 Issue #1。任务完成后，它被标记为 completed。</p>
+<h2 id="2-从最新-main-建分支"><a href="#2-从最新-main-建分支" class="headerlink" title="2. 从最新 main 建分支"></a>2. 从最新 main 建分支</h2><p>回到本地，先更新 main，再创建任务分支。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git switch main</span><br><span class="line">git pull origin main</span><br><span class="line">git switch -c docs/add-usage</span><br></pre></td></tr></table></figure>
+
+<p>分支名用 docs&#x2F;add-usage，一眼就能看出这次修改属于文档，目标是补充用法。</p>
+<p>建分支以前先更新 main，可以减少后面合并时的差异。修文档和改功能属于两项无关任务时，分别建立分支，不要全塞进一个 PR。</p>
+<h2 id="3-提交并-push-分支"><a href="#3-提交并-push-分支" class="headerlink" title="3. 提交并 push 分支"></a>3. 提交并 push 分支</h2><p>在 README 中加入使用说明，保存后用 git status 和 git diff 确认只改了需要的内容，再提交并推送分支。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add README.md</span><br><span class="line">git commit -m &quot;docs: add usage instructions&quot;</span><br><span class="line">git push -u origin docs/add-usage</span><br></pre></td></tr></table></figure>
+
+<p>参数 -u 会建立本地分支与远端分支的跟踪关系。以后仍在这个分支时，通常可以直接运行 git push。</p>
+<h2 id="4-创建-Pull-Request，先看-diff"><a href="#4-创建-Pull-Request，先看-diff" class="headerlink" title="4. 创建 Pull Request，先看 diff"></a>4. 创建 Pull Request，先看 diff</h2><p>分支推送后，GitHub 仓库首页通常会出现 Compare &amp; pull request。进入创建页面时，base 选择 main，compare 选择 docs&#x2F;add-usage。</p>
+<p>标题说明这次修改做了什么，描述写清修改内容和检查方法。需要关联同仓库 Issue 时，可以在 PR 描述里写 Closes #1。</p>
+<p>PR 合并到默认分支后，GitHub 才会自动关闭对应问题；跨仓库问题需要写成 Closes 作者名&#x2F;仓库名#1。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue?apiVersion=2022-11-28">官方文档</a></p>
+<p>列出了完整规则。</p>
+<p>这次实操中，PR 合并后 Issue #1 没有按预期关闭，最后由我手动标记完成。教程保留这个结果，也提醒你合并后回到 Issue 页面检查状态。</p>
+<p>创建以前先看 Files changed。确认没有误删文件，没有混入编辑器缓存、本地配置和敏感信息。需要提前讨论方案时，可以先建 Draft PR，等内容准备好再转成正式审查。</p>
+<h2 id="5-自己也要做一次-review"><a href="#5-自己也要做一次-review" class="headerlink" title="5. 自己也要做一次 review"></a>5. 自己也要做一次 review</h2><p>个人仓库只有自己维护，也值得走一次 review。先看文件数量，一个只改 README 的任务突然出现十几个文件，通常说明提交范围有问题。再看绿色新增和红色删除，检查误删、拼写、无关格式变化与私人信息。最后看自动检查是否通过，它只能验证写进规则的内容，不能替你判断说明是否准确。</p>
+<h2 id="6-合并、关闭-Issue、删除分支"><a href="#6-合并、关闭-Issue、删除分支" class="headerlink" title="6. 合并、关闭 Issue、删除分支"></a>6. 合并、关闭 Issue、删除分支</h2><p>检查完成后点击 Merge pull request，再确认合并。回到 main 查看 README，新增说明已经出现，说明修改进入主分支。</p>
+<p>接着回 Issue 检查状态，再删除已经合并的 docs&#x2F;add-usage 分支。删除分支不会删除已经合并的提交，也不会让 PR 讨论消失。本地需要继续工作时，切回 main、拉取最新内容，再删除旧任务分支即可。</p>
+<p>到这里，一条完整的 GitHub flow 已经跑完。Issue 说明任务，分支隔离修改，commit 保存过程，PR 承担检查和合并。</p>
+<h1 id="八、修改别人的项目，为什么要先-Fork"><a href="#八、修改别人的项目，为什么要先-Fork" class="headerlink" title="八、修改别人的项目，为什么要先 Fork"></a>八、修改别人的项目，为什么要先 Fork</h1><p>自己的仓库可以直接 push。别人的公开仓库通常只给维护者写权限，这时 clone 和 fork 的区别就很重要。</p>
+<h2 id="1-Clone-和-Fork-解决不同权限问题"><a href="#1-Clone-和-Fork-解决不同权限问题" class="headerlink" title="1. Clone 和 Fork 解决不同权限问题"></a>1. Clone 和 Fork 解决不同权限问题</h2><p>Clone 是把仓库复制到电脑。它给你本地文件和历史，不会自动给你向原仓库 push 的权限。</p>
+<p>Fork 会在自己的 GitHub 账号下创建一份关联仓库。你可以把修改推到自己的 fork，再向原仓库提交 PR。</p>
+<p>原作者仓库、你的 fork 和本地电脑之间的关系，可以直接看下面这张图。</p>
+<p>这里的 origin 和 upstream 是常见远端名称。它们只是本地别名，真正指向哪个地址可以用 git remote -v 检查。</p>
+<h2 id="2-一次标准贡献路径"><a href="#2-一次标准贡献路径" class="headerlink" title="2. 一次标准贡献路径"></a>2. 一次标准贡献路径</h2><p>先读仓库的 README、License 和 CONTRIBUTING。维护者可能规定分支命名、测试方式和 PR 模板，也可能明确不接受某类修改。</p>
+<p>确认任务后点击 Fork，在自己账号下生成副本，然后 clone 自己的 fork，并把原作者仓库添加为 upstream。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/你的用户名/目标仓库.git</span><br><span class="line">cd 目标仓库</span><br><span class="line">git remote add upstream https://github.com/原作者/目标仓库.git</span><br><span class="line">git fetch upstream</span><br><span class="line">git switch main</span><br><span class="line">git merge upstream/main</span><br><span class="line">git switch -c docs/fix-guide</span><br></pre></td></tr></table></figure>
+
+<p>这组命令先准备本地仓库，再把 main 同步到上游最新状态，最后创建修改分支。后面的 add、commit 和 push 与第七章相同，不再重复列一遍。完成后在 GitHub 创建跨仓库 PR，base 指向原作者仓库的目标分支，compare 指向你的 fork 和修改分支。</p>
+<h2 id="3-第一次贡献从文档和小修正开始"><a href="#3-第一次贡献从文档和小修正开始" class="headerlink" title="3. 第一次贡献从文档和小修正开始"></a>3. 第一次贡献从文档和小修正开始</h2><p>第一次参与开源，优先选边界清楚的小任务。文档错字、失效链接、明确标记为 good first issue 的问题，都比直接重写核心功能更容易获得有效反馈。</p>
+<p>贡献前先搜索已有 Issue 和 PR，避免重复劳动。修改后写清原因和验证方式，不要为了留下贡献记录制造没有实际价值的格式变化。</p>
+<p>维护者可能要求修改，也可能拒绝 PR。公开协作的重点是让项目得到合适的改进，PR 是否合并要尊重项目规则。</p>
+<h1 id="九、一个能交给别人用的仓库还缺什么"><a href="#九、一个能交给别人用的仓库还缺什么" class="headerlink" title="九、一个能交给别人用的仓库还缺什么"></a>九、一个能交给别人用的仓库还缺什么</h1><p>项目能在自己电脑运行，不代表已经适合交给别人。陌生人看不到你的操作背景，只能依靠仓库里的文件理解和判断。</p>
+<h2 id="1-README-先回答五个问题"><a href="#1-README-先回答五个问题" class="headerlink" title="1. README 先回答五个问题"></a>1. README 先回答五个问题</h2><p>一份够用的 README 先回答五个问题。</p>
+<ul>
+<li>项目做什么，解决哪种实际问题</li>
+<li>最短的开始方式，包括依赖、安装和运行入口</li>
+<li>一个读者可以照着完成的使用示例</li>
+<li>出问题以后去哪里求助</li>
+<li>谁在维护，项目目前处于实验、暂停还是稳定状态</li>
+</ul>
+<p>README 不需要第一天就写成长篇文档。先让一个没参与项目的人可以按说明跑起来，再随着真实问题补充。</p>
+<h2 id="2-gitignore-保护的是不该进入版本历史的文件"><a href="#2-gitignore-保护的是不该进入版本历史的文件" class="headerlink" title="2. .gitignore 保护的是不该进入版本历史的文件"></a>2. .gitignore 保护的是不该进入版本历史的文件</h2><p>.gitignore 用来忽略缓存、构建产物、本地配置和临时文件。常见例子包括 .DS_Store、node_modules&#x2F;、Python 缓存和本地 .env。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">node_modules/</span><br><span class="line">__pycache__/</span><br><span class="line">.env</span><br></pre></td></tr></table></figure>
+
+<p>已经提交过的文件，后来写进 .gitignore 不会自动停止跟踪。以 .DS_Store 为例，可以运行 git rm –cached .DS_Store，再提交这次变化。这个动作只处理当前跟踪状态，旧提交中的内容仍然存在。</p>
+<p>.gitignore 也不是密钥保险箱。真正的 Token、API Key 和私钥不应该先写进项目再依赖忽略规则补救。使用环境变量、密码管理器或 GitHub Secrets，才是更稳妥的路径。</p>
+<h2 id="3-Public-和开源中间还隔着-License"><a href="#3-Public-和开源中间还隔着-License" class="headerlink" title="3. Public 和开源中间还隔着 License"></a>3. Public 和开源中间还隔着 License</h2><p>公开仓库让别人可以查看和 fork。没有 License 时，默认版权仍然保留，别人并不会自动获得复制、修改和分发许可。</p>
+<p>本文演示选择 MIT License，是因为它条款相对简洁，也适合这个最小示例。采用它通常需要保留版权和许可声明。项目涉及公司代码、第三方素材、模型权重、数据集或商业授权时，不能照抄教程里的选择。</p>
+<p>看别人的项目也一样。README 写着免费，不等于许可证允许所有用途。准备发布二次作品前，要核对仓库实际 License 和依赖项目的许可。</p>
+<h2 id="4-项目长大以后再补文档"><a href="#4-项目长大以后再补文档" class="headerlink" title="4. 项目长大以后再补文档"></a>4. 项目长大以后再补文档</h2><p>项目开始有人使用以后，再按真实问题补文档。CONTRIBUTING 说明怎样贡献，SECURITY 提供安全问题报告渠道，CHANGELOG 记录版本变化。个人练习项目不必第一天把模板全部建齐，长期没人维护的空模板反而会误导读者。</p>
+<h2 id="5-公开前做一次安全扫描"><a href="#5-公开前做一次安全扫描" class="headerlink" title="5. 公开前做一次安全扫描"></a>5. 公开前做一次安全扫描</h2><p>发布前先搜索容易泄露的内容。</p>
+<ul>
+<li>API Key、Token、密码和私钥</li>
+<li>个人邮箱、绝对路径和设备名</li>
+<li>客户文件、内部地址和未公开数据</li>
+<li>数据库、备份包、模型和大体积媒体</li>
+</ul>
+<p>再看 git status 和即将提交的 diff，确认文件范围。AI 生成的项目尤其需要这一步，因为它可能顺手创建调试日志、示例密钥或本地配置。</p>
+<p>我做 github-publisher 时，把敏感信息扫描、仓库内容检查和推送前确认放进了流程。工具可以减少遗漏，最终公开范围仍然要由人确认。</p>
+<h1 id="十、让项目自动检查、上线并发布版本"><a href="#十、让项目自动检查、上线并发布版本" class="headerlink" title="十、让项目自动检查、上线并发布版本"></a>十、让项目自动检查、上线并发布版本</h1><p>仓库结构稳定以后，可以让 GitHub 自动完成重复检查，再把静态页面发布成网站。</p>
+<h2 id="1-Actions-先做一件有用的小事"><a href="#1-Actions-先做一件有用的小事" class="headerlink" title="1. Actions 先做一件有用的小事"></a>1. Actions 先做一件有用的小事</h2><p>GitHub Actions 的工作流文件放在 .github&#x2F;workflows&#x2F;。这次创建 check.yml，只检查 README 和页面文件是否存在。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Check</span> <span class="string">project</span> <span class="string">files</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">  <span class="attr">pull_request:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">check-files:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v7</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">required</span> <span class="string">files</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          test -f README.md</span></span><br><span class="line"><span class="string">          test -f index.html</span></span><br></pre></td></tr></table></figure>
+
+<p>on 说明什么时候运行，这里选择 push 和 pull request。jobs 下面是一组任务，runs-on 指定 GitHub 提供的运行环境，steps 按顺序拉取仓库并检查文件。</p>
+<p>第一次接触 Actions，先让一项确实有用的小检查跑通，再逐步增加内容。本文更新时，actions&#x2F;checkout 官方示例已经使用 v7，因此上面的可复制配置也换成了 v7。</p>
+<h2 id="2-看懂绿灯和失败日志"><a href="#2-看懂绿灯和失败日志" class="headerlink" title="2. 看懂绿灯和失败日志"></a>2. 看懂绿灯和失败日志</h2><p>为了确认失败路径是否真实可见，第一次工作流检查的是并不存在的 MISSING.md。提交后进入 Actions，运行结果亮起红灯。</p>
+<p>展开失败步骤后，日志显示命令返回 exit code 1。它没有告诉我们一大段玄学原因，核心问题就是目标文件不存在。</p>
+<p>这次运行还提示旧版 Checkout 所用运行环境即将弃用。实操当时从 v4 升到了 v5，所以截图中仍会看到 v5；当前可复制版本已经按 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/actions/checkout/blob/main/README.md">Checkout 官方说明</a></p>
+<p>更新为 v7。教程里的配置会过期，警告信息值得读完。</p>
+<p>第二次把检查目标改成真实存在的 README.md 与 index.html，新运行顺利通过。</p>
+<p>红灯的处理顺序很简单。先点进失败运行，再展开红色步骤，找到第一条真正失败的命令，然后回到对应文件修复。不要只反复点击重新运行，同一份内容通常还会得到同一个结果。</p>
+<h2 id="3-用-Pages-把-index-html-发成网站"><a href="#3-用-Pages-把-index-html-发成网站" class="headerlink" title="3. 用 Pages 把 index.html 发成网站"></a>3. 用 Pages 把 index.html 发成网站</h2><p>进入仓库 Settings，找到 Pages。在 Build and deployment 中选择从分支发布，再选择 main 和仓库根目录。</p>
+<p>保存以后，GitHub 会开始部署。第一次出现地址可能需要等待一会儿。页面显示成功后访问公开网址，确认标题和正文与仓库中的 index.html 一致。</p>
+<p>这次实操得到的地址是 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://xiaomoboy.github.io/github-first-project/">https://xiaomoboy.github.io/github-first-project/</a></p>
+<p>。</p>
+<p>Pages 适合 HTML、CSS、JavaScript 组成的静态内容，例如项目说明、作品页和文档站。它不能直接运行需要常驻服务器、数据库或私密后端环境的完整应用。</p>
+<h2 id="4-打标签并发布-v1-0-0"><a href="#4-打标签并发布-v1-0-0" class="headerlink" title="4. 打标签并发布 v1.0.0"></a>4. 打标签并发布 v1.0.0</h2><p>项目得到一个可以对外说明的阶段结果后，可以发布 Release。</p>
+<p>进入 Releases，点击 Draft a new release，新建标签 v1.0.0。标题也可以写 v1.0.0，说明里列出这版已经完成的内容，例如静态页面、使用说明、自动文件检查和 Pages 地址。</p>
+<p>标签负责给当前提交一个固定名字。Release 在标签基础上增加版本说明和可选附件。两者有关联，承担的用途不同。</p>
+<p>发布以后回到 Release 页面，检查标签、目标提交、说明和 Assets。需要交付安装包时，由作者主动上传经过验证的文件。GitHub 自动生成的 Source code 归档不能替代安装包说明。</p>
+<p>到这一步，github-first-project 已经有 Actions 绿灯、公开 Pages 地址和 v1.0.0。一个最小项目从文件走到了可以检查和交付的状态。</p>
+<h1 id="十一、最常见的五种翻车怎样救"><a href="#十一、最常见的五种翻车怎样救" class="headerlink" title="十一、最常见的五种翻车怎样救"></a>十一、最常见的五种翻车怎样救</h1><p>Git 的报错看起来很长，先抓住错误类型，再决定第一步。下面这张表可以先存着。</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>先检查什么</th>
+<th>第一处理动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Permission denied 或 403</td>
+<td>当前账号、仓库权限、远端地址、登录方式</td>
+<td>确认身份和权限，不要反复输入账号密码</td>
+</tr>
+<tr>
+<td>push 被拒，远端有新提交</td>
+<td>本地是否落后、远端改了什么</td>
+<td>先 fetch，再决定怎样同步</td>
+</tr>
+<tr>
+<td>合并冲突</td>
+<td>哪些文件的同一位置被两边修改</td>
+<td>打开冲突文件，保留最终内容后重新提交</td>
+</tr>
+<tr>
+<td>文件过大或仓库变重</td>
+<td>大文件类型、是否应该进入版本历史</td>
+<td>从提交中移出，按用途选择 Release 或 Git LFS</td>
+</tr>
+<tr>
+<td>密钥已经推送</td>
+<td>密钥还能不能被使用</td>
+<td>立即撤销并轮换，再处理仓库历史</td>
+</tr>
+</tbody></table>
+<h2 id="1-Permission-denied-或-403"><a href="#1-Permission-denied-或-403" class="headerlink" title="1. Permission denied 或 403"></a>1. Permission denied 或 403</h2><p>先运行 git remote -v，确认远端地址，再检查当前账号是否有写权限。HTTPS 要看 GitHub CLI 或凭据管理器里的账号和授权范围，SSH 则用 ssh -T <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#x69;&#116;&#104;&#x75;&#x62;&#x2e;&#x63;&#111;&#x6d;" rel="external nofollow noreferrer">git@github.com</a> 检查公钥是否加到了正确账号。</p>
+<p>本文实操在推送工作流文件时遇到过权限不足，切换到已经授权的 SSH 连接后才完成。求助时提供报错文本即可，个人访问令牌不能发进聊天，泄露后应立即撤销。</p>
+<h2 id="2-push-被拒，提示远端有你没有的提交"><a href="#2-push-被拒，提示远端有你没有的提交" class="headerlink" title="2. push 被拒，提示远端有你没有的提交"></a>2. push 被拒，提示远端有你没有的提交</h2><p>这通常发生在你从另一台电脑提交过，或者刚在 GitHub 网页修改了文件。</p>
+<p>先获取远端信息并查看当前状态。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin</span><br><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+<p>看清两边变化以后，再运行 git pull origin main。如果自动合并成功，检查结果后继续 push。出现冲突就进入下一节处理。</p>
+<p>不要在不了解差异时使用强推。个人仓库也可能被另一台设备或自动化任务更新，覆盖以后很难找回现场。</p>
+<h2 id="3-合并冲突"><a href="#3-合并冲突" class="headerlink" title="3. 合并冲突"></a>3. 合并冲突</h2><p>冲突表示 Git 发现同一位置存在两套修改，无法替你选择最终内容。打开冲突文件会看到类似标记。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">本地内容</span><br><span class="line">=======</span><br><span class="line">远端内容</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</span><br></pre></td></tr></table></figure>
+
+<p>阅读上下文，保留最终需要的内容，并删除三组标记。确认文件可以正常使用后，对实际冲突文件运行 git add 文件名，再执行 git commit。</p>
+<p>冲突不等于仓库损坏。没看内容就整段接受一边，或者为了让提示消失直接删文件，才容易把需要的修改一起丢掉。</p>
+<h2 id="4-文件太大或仓库越来越重"><a href="#4-文件太大或仓库越来越重" class="headerlink" title="4. 文件太大或仓库越来越重"></a>4. 文件太大或仓库越来越重</h2><p>Git 擅长跟踪文本变化。视频、模型、数据库和压缩备份每次修改都可能把新副本写进历史。</p>
+<p>GitHub 网页单文件上传上限是 25 MiB；普通 Git 提交超过 50 MiB 会收到警告，超过 100 MiB 会被拦截。更大的版本文件要使用 Git LFS，供用户下载的安装包也可以放进 Release。具体限制可查看 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github">GitHub 大文件说明</a></p>
+<p>。</p>
+<p>只在当前目录删除大文件，不代表它已经从旧提交消失。准备清理历史时先备份并确认影响范围，尤其不要直接在多人仓库重写历史。</p>
+<h2 id="5-密钥已经推上去了"><a href="#5-密钥已经推上去了" class="headerlink" title="5. 密钥已经推上去了"></a>5. 密钥已经推上去了</h2><p>先撤销并轮换密钥，让旧密钥立即失效。然后把程序改为从环境变量或 GitHub Secrets 读取凭据，确认新密钥没有再次进入日志和截图。最后再评估怎样清理仓库历史。公开内容可能已经被 clone、缓存或索引，删除文件和 commit 也不能保证外部副本消失。</p>
+<p>GitHub 的 Push protection 能拦截一部分已识别的密钥，仍然不能代替提交前检查。账号应开启双重验证，重要服务只给必要权限，并设置合理的有效期。</p>
+<h2 id="6-先保住什么"><a href="#6-先保住什么" class="headerlink" title="6. 先保住什么"></a>6. 先保住什么</h2><p>遇到故障时先保账号、凭据和远端历史。对强推、rebase 和历史清理没有把握，就先备份仓库，记下当前分支、远端地址和错误信息。分支多一个、提交信息不够漂亮都可以以后整理，密钥仍然有效或远端可能被覆盖时，应先停下普通操作。</p>
+<h1 id="结尾｜以后再遇到-GitHub，按这条路走"><a href="#结尾｜以后再遇到-GitHub，按这条路走" class="headerlink" title="结尾｜以后再遇到 GitHub，按这条路走"></a>结尾｜以后再遇到 GitHub，按这条路走</h1><p>以后打开陌生仓库，先看发布者、README、维护记录、License 和 Release，再决定下载 ZIP、clone，还是寻找正式安装包。保存自己的项目时，网页提交适合简单修改，长期维护再把仓库 clone 到电脑。</p>
+<p>我做 github-publisher，是想让完全不懂 GitHub 的人也能借助 AI 发布 Skill。AI 可以执行命令，仓库来源、授权范围、提交内容和密钥安全仍要由人判断。知道一次修改正处于工作区、本地提交还是远端仓库，你就不用靠背命令处理 GitHub。</p>
+<p>下次再打开 GitHub，先确认自己要读项目、拿文件、保存修改，还是交付一个版本。找到眼前这一步，入口就不会那么乱了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/ee15cf78/">https://macin.top/posts/ee15cf78/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><a class="post-meta__tags" href="/tags/GitHub/">GitHub</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/1f553d0b/" title="ccteam 将你已有的多个 AI 编程助手编成一支可协作的团队"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ccteam 将你已有的多个 AI 编程助手编成一支可协作的团队</div></div><div class="info-2"><div class="info-item-1">ccteam 是一个开源工具，它能将你已有的多个 AI 编程助手（如 Claude Code、Codex、Grok、Kimi 等）编成一支可协作的团队。</div></div></div></a><a class="pagination-related" href="/posts/19924a6e/" title="Skill Recorder：录制屏幕操作生成可复用 AI 代理 Skill"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/microsoft.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Skill Recorder：录制屏幕操作生成可复用 AI 代理 Skill</div></div><div class="info-2"><div class="info-item-1">Skill Recorder 是微软发布的一款桌面应用，它能录制你的屏幕操作过程，然后利用 GitHub Copilot CLI 将操作过程重构为清晰的意图（Intent）和有序步骤，最终生成可供 AI…</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/e7984b5f/" title="BrowserAct 解决 AI 代理在自动化网页操作中遇到的反爬机制"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/BrowserAct.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-23</div><div class="info-item-2">BrowserAct 解决 AI 代理在自动化网页操作中遇到的反爬机制</div></div><div class="info-2"><div class="info-item-1">BrowserAct 主要解决 AI 代理在自动化网页操作中遇到的反爬机制、多任务隔离和状态管理等问题。</div></div></div></a><a class="pagination-related" href="/posts/a9698a5e/" title="Mocreak：免费的办公增强工具，一键部署正版 Windows 和 Office"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Mocreak：免费的办公增强工具，一键部署正版 Windows 和 Office</div></div><div class="info-2"><div class="info-item-1">Mocreak 是一款完全免费、无广告、绿色、无毒的办公增强工具，可一键自动化下载、安装、部署正版 Windows 和 Office（支持 2016/2019/2021/2024）。</div></div></div></a><a class="pagination-related" href="/posts/cc586e6d/" title="Nanobrowser 详细部署教程：从零开始配置你的AI网页自动化助手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-05</div><div class="info-item-2">Nanobrowser 详细部署教程：从零开始配置你的AI网页自动化助手</div></div><div class="info-2"><div class="info-item-1">Nanobrowser 是一款开源、免费的Chrome扩展，通过多智能体协作实现AI驱动的网页自动化。</div></div></div></a><a class="pagination-related" href="/posts/83117e21/" title="闲鱼超级管家：开源免费，支持自动回复、发货与多账号管理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/xianyu.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-27</div><div class="info-item-2">闲鱼超级管家：开源免费，支持自动回复、发货与多账号管理</div></div><div class="info-2"><div class="info-item-1">闲鱼超级管家 是一个开源免费的闲鱼自动化运营管理平台，支持智能自动回复、多规格自动发货、多账号管理、AI智能议价等核心功能。</div></div></div></a><a class="pagination-related" href="/posts/2b141f83/" title="GitHub-Store：开源应用商店，一键安装 GitHub 应用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/github.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-19</div><div class="info-item-2">GitHub-Store：开源应用商店，一键安装 GitHub 应用</div></div><div class="info-2"><div class="info-item-1">GitHub-Store 免费开源应用商店：浏览发现并一键安装 GitHub 发布的应用，智能发现热门/最近更新板块，仅显示有有效资产的仓库并按平台排序。</div></div></div></a><a class="pagination-related" href="/posts/2226b778/" title="用 NAS 搭建闲鱼自动赚钱机器！多账号自动回复 + 智能发货"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/goofish.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-25</div><div class="info-item-2">用 NAS 搭建闲鱼自动赚钱机器！多账号自动回复 + 智能发货</div></div><div class="info-2"><div class="info-item-1">用 NAS 搭建闲鱼自动回复管理系统：多用户多账号管理、智能回复、自动发货确认、商品管理，JWT 认证与数据隔离，闲鱼自动赚钱机器。</div></div></div></a><a class="pagination-related" href="/posts/f8169370/" title="n8n 工作流自动化平台部署教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/n8n.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">n8n 工作流自动化平台部署教程</div></div><div class="info-2"><div class="info-item-1">n8n 是一个"fair-code"（源码可见）的工作流自动化平台，允许您通过视觉化画布构建复杂的自动化流程，连接超过 1500+ 应用和服务。它原生支持AI能力…</div></div></div></a><a class="pagination-related" href="/posts/b2627afc/" title="wai-play：AI 自动玩网页游戏找 Bug"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">wai-play：AI 自动玩网页游戏找 Bug</div></div><div class="info-2"><div class="info-item-1">wai-play 让 AI 自动玩网页游戏找 Bug：像真人一样开浏览器操作，走完流程后打分、列问题、附截图或 20 秒录像为证据，还能告诉你怎么改。</div></div></div></a><a class="pagination-related" href="/posts/148170f6/" title="火宝短剧 (Huobao Drama) 基于 AI 的一站式短剧生成平台"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-29</div><div class="info-item-2">火宝短剧 (Huobao Drama) 基于 AI 的一站式短剧生成平台</div></div><div class="info-2"><div class="info-item-1">火宝短剧 (Huobao Drama) 基于 AI 的一站式短剧生成平台。它能够将您的一句话创意，自动化地转化为完整的短剧视频</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E5%AF%BC%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">本文导读</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81GitHub-%E8%83%BD%E6%9B%BF%E6%99%AE%E9%80%9A%E4%BA%BA%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">一、GitHub 能替普通人做什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Git-%E8%B4%9F%E8%B4%A3%E8%AE%B0%E5%BD%95%EF%BC%8CGitHub-%E8%B4%9F%E8%B4%A3%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.1.</span> <span class="toc-text">1. Git 负责记录，GitHub 负责连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%8D%E4%BC%9A%E5%86%99%E4%BB%A3%E7%A0%81%EF%BC%8C%E4%B9%9F%E6%9C%89%E4%B8%89%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">2. 不会写代码，也有三种常见用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AF%BB%E5%AE%8C%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%8C%E6%88%90%E6%A0%87%E5%87%86"><span class="toc-number">2.3.</span> <span class="toc-text">3. 读完以后的完成标准</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%89%93%E5%BC%80%E4%BB%93%E5%BA%93%EF%BC%8C%E5%85%88%E7%9C%8B%E6%87%82%E8%BF%99%E5%85%AD%E7%BB%84%E5%85%A5%E5%8F%A3"><span class="toc-number">3.</span> <span class="toc-text">二、第一次打开仓库，先看懂这六组入口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BD%9C%E8%80%85%E5%90%8D-%E4%BB%93%E5%BA%93%E5%90%8D-%E5%85%88%E5%91%8A%E8%AF%89%E4%BD%A0%E9%A1%B9%E7%9B%AE%E5%BD%92%E8%B0%81"><span class="toc-number">3.1.</span> <span class="toc-text">1. 作者名&#x2F;仓库名 先告诉你项目归谁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-README-%E6%98%AF%E7%AC%AC%E4%B8%80%E4%BB%BD%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">3.2.</span> <span class="toc-text">2. README 是第一份使用说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8%E4%B8%8D%E8%A6%81%E9%80%90%E4%B8%AA%E7%82%B9"><span class="toc-number">3.3.</span> <span class="toc-text">3. 文件列表不要逐个点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Commits%E3%80%81Branches%E3%80%81Tags-%E7%9C%8B%E7%9A%84%E4%B8%8D%E6%98%AF%E5%90%8C%E4%B8%80%E4%BB%B6%E4%BA%8B"><span class="toc-number">3.4.</span> <span class="toc-text">4. Commits、Branches、Tags 看的不是同一件事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Issues%E3%80%81Pull-requests%E3%80%81Actions-%E5%88%86%E5%88%AB%E8%B4%9F%E8%B4%A3%E4%BB%80%E4%B9%88"><span class="toc-number">3.5.</span> <span class="toc-text">5. Issues、Pull requests、Actions 分别负责什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Stars%E3%80%81Forks-%E5%92%8C%E7%83%AD%E5%BA%A6%E5%8F%AA%E8%83%BD%E4%BD%9C%E4%B8%BA%E7%BA%BF%E7%B4%A2"><span class="toc-number">3.6.</span> <span class="toc-text">6. Stars、Forks 和热度只能作为线索</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%8B%E8%BD%BD%E4%B9%8B%E5%89%8D%E5%A4%9A%E7%9C%8B%E4%B8%89%E7%9C%BC"><span class="toc-number">4.</span> <span class="toc-text">三、下载之前多看三眼</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Download-ZIP-%E9%80%82%E5%90%88%E5%8F%AA%E6%8B%BF%E5%BD%93%E5%89%8D%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.</span> <span class="toc-text">1. Download ZIP 适合只拿当前文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Clone-%E9%80%82%E5%90%88%E7%BB%A7%E7%BB%AD%E8%B7%9F%E8%B8%AA%E5%92%8C%E4%BF%AE%E6%94%B9"><span class="toc-number">4.2.</span> <span class="toc-text">2. Clone 适合继续跟踪和修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Release-%E9%80%82%E5%90%88%E6%8B%BF%E4%BD%9C%E8%80%85%E6%AD%A3%E5%BC%8F%E4%BA%A4%E4%BB%98%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">4.3.</span> <span class="toc-text">3. Release 适合拿作者正式交付的版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%9C%9F%E6%AD%A3%E8%A6%81%E5%A4%9A%E7%9C%8B%E7%9A%84%E4%B8%89%E7%9C%BC"><span class="toc-number">4.4.</span> <span class="toc-text">4. 真正要多看的三眼</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-AI-%E5%8F%AF%E4%BB%A5%E5%B8%AE%E4%BD%A0%E8%AF%BB%EF%BC%8C%E4%BD%86%E6%9C%80%E5%90%8E%E4%B8%89%E4%BB%B6%E4%BA%8B%E8%87%AA%E5%B7%B1%E7%A1%AE%E8%AE%A4"><span class="toc-number">4.5.</span> <span class="toc-text">5. AI 可以帮你读，但最后三件事自己确认</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8F%AA%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%8C%E5%BB%BA%E5%A5%BD%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">四、只用浏览器，建好第一个仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%B3%A8%E5%86%8C%E3%80%81%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E5%92%8C%E4%BF%9D%E5%AD%98%E8%B4%A6%E5%8F%B7%E6%81%A2%E5%A4%8D%E5%85%A5%E5%8F%A3"><span class="toc-number">5.1.</span> <span class="toc-text">1. 注册、验证邮箱和保存账号恢复入口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%96%B0%E5%BB%BA-github-first-project"><span class="toc-number">5.2.</span> <span class="toc-text">2. 新建 github-first-project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%9C%A8%E7%BD%91%E9%A1%B5%E9%87%8C%E6%94%B9-README%EF%BC%8C%E5%AE%8C%E6%88%90%E7%AC%AC%E4%B8%80%E6%AC%A1-commit"><span class="toc-number">5.3.</span> <span class="toc-text">3. 在网页里改 README，完成第一次 commit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9C%A8%E7%BD%91%E9%A1%B5%E5%88%9B%E5%BB%BA%E5%88%86%E6%94%AF%E5%B9%B6%E6%8F%90%E4%BA%A4%E4%BF%AE%E6%94%B9"><span class="toc-number">5.4.</span> <span class="toc-text">4. 在网页创建分支并提交修改</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Git-%E6%80%8E%E6%A0%B7%E8%AE%B0%E4%BD%8F%E6%AF%8F%E4%B8%80%E6%AC%A1%E4%BF%AE%E6%94%B9"><span class="toc-number">6.</span> <span class="toc-text">五、Git 怎样记住每一次修改</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9B%9B%E4%B8%AA%E4%BD%8D%E7%BD%AE%E5%B7%B2%E7%BB%8F%E5%A4%9F%E7%94%A8"><span class="toc-number">6.1.</span> <span class="toc-text">1. 四个位置已经够用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%80%E6%AC%A1%E4%BF%AE%E6%94%B9%E6%80%8E%E6%A0%B7%E8%B5%B0%E8%BF%87%E5%9B%9B%E4%B8%AA%E4%BD%8D%E7%BD%AE"><span class="toc-number">6.2.</span> <span class="toc-text">2. 一次修改怎样走过四个位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-GitHub-%E9%A1%B5%E9%9D%A2%E4%B8%8A%E7%9A%84-commit-%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="toc-number">6.3.</span> <span class="toc-text">3. GitHub 页面上的 commit 从哪里来</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%8A%8A%E4%BB%93%E5%BA%93%E6%8B%89%E5%88%B0%E7%94%B5%E8%84%91%EF%BC%8C%E5%86%8D%E6%8A%8A%E4%BF%AE%E6%94%B9%E6%8E%A8%E5%9B%9E%E5%8E%BB"><span class="toc-number">7.</span> <span class="toc-text">六、把仓库拉到电脑，再把修改推回去</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85-Git%EF%BC%8C%E5%8F%AA%E5%81%9A%E4%B8%80%E6%AC%A1%E8%BA%AB%E4%BB%BD%E8%AE%BE%E7%BD%AE"><span class="toc-number">7.1.</span> <span class="toc-text">1. 安装 Git，只做一次身份设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-HTTPS%E3%80%81GitHub-CLI-%E5%92%8C-SSH-%E6%80%8E%E4%B9%88%E9%80%89"><span class="toc-number">7.2.</span> <span class="toc-text">2. HTTPS、GitHub CLI 和 SSH 怎么选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%85%8B%E9%9A%86%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%93%E5%BA%93"><span class="toc-number">7.3.</span> <span class="toc-text">3. 克隆自己的仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%96%B0%E5%A2%9E-index-html%EF%BC%8C%E8%B5%B0%E5%AE%8C%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%9C%AC%E5%9C%B0%E6%8F%90%E4%BA%A4"><span class="toc-number">7.4.</span> <span class="toc-text">4. 新增 index.html，走完第一次本地提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-push-%E5%89%8D%E5%85%88-pull%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%9C%9F%E7%9A%84%E9%9C%80%E8%A6%81"><span class="toc-number">7.5.</span> <span class="toc-text">5. push 前先 pull，什么时候真的需要</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81Issue%E3%80%81%E5%88%86%E6%94%AF%E5%92%8C-PR-%E6%80%8E%E6%A0%B7%E7%BB%84%E6%88%90%E4%B8%80%E6%AC%A1%E5%8D%8F%E4%BD%9C"><span class="toc-number">8.</span> <span class="toc-text">七、Issue、分支和 PR 怎样组成一次协作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E5%BC%80-Issue%EF%BC%8C%E6%8A%8A%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B%E5%86%99%E6%B8%85%E6%A5%9A"><span class="toc-number">8.1.</span> <span class="toc-text">1. 先开 Issue，把要做的事写清楚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%8E%E6%9C%80%E6%96%B0-main-%E5%BB%BA%E5%88%86%E6%94%AF"><span class="toc-number">8.2.</span> <span class="toc-text">2. 从最新 main 建分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8F%90%E4%BA%A4%E5%B9%B6-push-%E5%88%86%E6%94%AF"><span class="toc-number">8.3.</span> <span class="toc-text">3. 提交并 push 分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA-Pull-Request%EF%BC%8C%E5%85%88%E7%9C%8B-diff"><span class="toc-number">8.4.</span> <span class="toc-text">4. 创建 Pull Request，先看 diff</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%87%AA%E5%B7%B1%E4%B9%9F%E8%A6%81%E5%81%9A%E4%B8%80%E6%AC%A1-review"><span class="toc-number">8.5.</span> <span class="toc-text">5. 自己也要做一次 review</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%90%88%E5%B9%B6%E3%80%81%E5%85%B3%E9%97%AD-Issue%E3%80%81%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF"><span class="toc-number">8.6.</span> <span class="toc-text">6. 合并、关闭 Issue、删除分支</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%BF%AE%E6%94%B9%E5%88%AB%E4%BA%BA%E7%9A%84%E9%A1%B9%E7%9B%AE%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%88-Fork"><span class="toc-number">9.</span> <span class="toc-text">八、修改别人的项目，为什么要先 Fork</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Clone-%E5%92%8C-Fork-%E8%A7%A3%E5%86%B3%E4%B8%8D%E5%90%8C%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98"><span class="toc-number">9.1.</span> <span class="toc-text">1. Clone 和 Fork 解决不同权限问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%80%E6%AC%A1%E6%A0%87%E5%87%86%E8%B4%A1%E7%8C%AE%E8%B7%AF%E5%BE%84"><span class="toc-number">9.2.</span> <span class="toc-text">2. 一次标准贡献路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%B4%A1%E7%8C%AE%E4%BB%8E%E6%96%87%E6%A1%A3%E5%92%8C%E5%B0%8F%E4%BF%AE%E6%AD%A3%E5%BC%80%E5%A7%8B"><span class="toc-number">9.3.</span> <span class="toc-text">3. 第一次贡献从文档和小修正开始</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E4%B8%80%E4%B8%AA%E8%83%BD%E4%BA%A4%E7%BB%99%E5%88%AB%E4%BA%BA%E7%94%A8%E7%9A%84%E4%BB%93%E5%BA%93%E8%BF%98%E7%BC%BA%E4%BB%80%E4%B9%88"><span class="toc-number">10.</span> <span class="toc-text">九、一个能交给别人用的仓库还缺什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-README-%E5%85%88%E5%9B%9E%E7%AD%94%E4%BA%94%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">10.1.</span> <span class="toc-text">1. README 先回答五个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-gitignore-%E4%BF%9D%E6%8A%A4%E7%9A%84%E6%98%AF%E4%B8%8D%E8%AF%A5%E8%BF%9B%E5%85%A5%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">10.2.</span> <span class="toc-text">2. .gitignore 保护的是不该进入版本历史的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Public-%E5%92%8C%E5%BC%80%E6%BA%90%E4%B8%AD%E9%97%B4%E8%BF%98%E9%9A%94%E7%9D%80-License"><span class="toc-number">10.3.</span> <span class="toc-text">3. Public 和开源中间还隔着 License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%A1%B9%E7%9B%AE%E9%95%BF%E5%A4%A7%E4%BB%A5%E5%90%8E%E5%86%8D%E8%A1%A5%E6%96%87%E6%A1%A3"><span class="toc-number">10.4.</span> <span class="toc-text">4. 项目长大以后再补文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%85%AC%E5%BC%80%E5%89%8D%E5%81%9A%E4%B8%80%E6%AC%A1%E5%AE%89%E5%85%A8%E6%89%AB%E6%8F%8F"><span class="toc-number">10.5.</span> <span class="toc-text">5. 公开前做一次安全扫描</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E8%AE%A9%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%8A%A8%E6%A3%80%E6%9F%A5%E3%80%81%E4%B8%8A%E7%BA%BF%E5%B9%B6%E5%8F%91%E5%B8%83%E7%89%88%E6%9C%AC"><span class="toc-number">11.</span> <span class="toc-text">十、让项目自动检查、上线并发布版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Actions-%E5%85%88%E5%81%9A%E4%B8%80%E4%BB%B6%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E4%BA%8B"><span class="toc-number">11.1.</span> <span class="toc-text">1. Actions 先做一件有用的小事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9C%8B%E6%87%82%E7%BB%BF%E7%81%AF%E5%92%8C%E5%A4%B1%E8%B4%A5%E6%97%A5%E5%BF%97"><span class="toc-number">11.2.</span> <span class="toc-text">2. 看懂绿灯和失败日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%94%A8-Pages-%E6%8A%8A-index-html-%E5%8F%91%E6%88%90%E7%BD%91%E7%AB%99"><span class="toc-number">11.3.</span> <span class="toc-text">3. 用 Pages 把 index.html 发成网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%89%93%E6%A0%87%E7%AD%BE%E5%B9%B6%E5%8F%91%E5%B8%83-v1-0-0"><span class="toc-number">11.4.</span> <span class="toc-text">4. 打标签并发布 v1.0.0</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%9C%80%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BA%94%E7%A7%8D%E7%BF%BB%E8%BD%A6%E6%80%8E%E6%A0%B7%E6%95%91"><span class="toc-number">12.</span> <span class="toc-text">十一、最常见的五种翻车怎样救</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Permission-denied-%E6%88%96-403"><span class="toc-number">12.1.</span> <span class="toc-text">1. Permission denied 或 403</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-push-%E8%A2%AB%E6%8B%92%EF%BC%8C%E6%8F%90%E7%A4%BA%E8%BF%9C%E7%AB%AF%E6%9C%89%E4%BD%A0%E6%B2%A1%E6%9C%89%E7%9A%84%E6%8F%90%E4%BA%A4"><span class="toc-number">12.2.</span> <span class="toc-text">2. push 被拒，提示远端有你没有的提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%90%88%E5%B9%B6%E5%86%B2%E7%AA%81"><span class="toc-number">12.3.</span> <span class="toc-text">3. 合并冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7%E6%88%96%E4%BB%93%E5%BA%93%E8%B6%8A%E6%9D%A5%E8%B6%8A%E9%87%8D"><span class="toc-number">12.4.</span> <span class="toc-text">4. 文件太大或仓库越来越重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AF%86%E9%92%A5%E5%B7%B2%E7%BB%8F%E6%8E%A8%E4%B8%8A%E5%8E%BB%E4%BA%86"><span class="toc-number">12.5.</span> <span class="toc-text">5. 密钥已经推上去了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%85%88%E4%BF%9D%E4%BD%8F%E4%BB%80%E4%B9%88"><span class="toc-number">12.6.</span> <span class="toc-text">6. 先保住什么</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE%EF%BD%9C%E4%BB%A5%E5%90%8E%E5%86%8D%E9%81%87%E5%88%B0-GitHub%EF%BC%8C%E6%8C%89%E8%BF%99%E6%9D%A1%E8%B7%AF%E8%B5%B0"><span class="toc-number">13.</span> <span class="toc-text">结尾｜以后再遇到 GitHub，按这条路走</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

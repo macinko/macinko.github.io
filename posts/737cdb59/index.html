@@ -1,0 +1,867 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="不需要懂乐理，不需要会编曲，甚至不需要看得懂代码。这篇文章带你用 ComfyUI 和 MiniMax Music 3，从打开软件开始…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手">
+<meta property="og:url" content="https://macin.top/posts/737cdb59/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="不需要懂乐理，不需要会编曲，甚至不需要看得懂代码。这篇文章带你用 ComfyUI 和 MiniMax Music 3，从打开软件开始…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/minimax.webp">
+<meta property="article:published_time" content="2026-09-04T08:43:01.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.649Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="ComfyUI">
+<meta property="article:tag" content="MiniMax">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/minimax.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手",
+  "url": "https://macin.top/posts/737cdb59/",
+  "image": "https://macin.top/img/minimax.webp",
+  "datePublished": "2026-09-04T08:43:01.000Z",
+  "dateModified": "2026-09-05T15:22:43.649Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/737cdb59/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/minimax.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">从0到第一首 AI 歌：ComfyUI + MiniMax Music 3 完全上手</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.649Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/minimax/">minimax</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>17分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p><strong>COMFYUI 新手实战 · 音频篇</strong></p>
+<p>不需要懂乐理，不需要会编曲，甚至不需要看得懂代码。这篇文章带你用 ComfyUI 和 MiniMax Music 3，从打开软件开始，做出一首<strong>有前奏、有主歌、有副歌、有尾奏的完整歌曲</strong>——最长可以到五分钟。全程可复制粘贴，跟着做就能出声。</p>
+<ul>
+<li>⏱ 阅读约 20 分钟</li>
+<li>🎯 面向零基础</li>
+<li>🎵 案例：MiniMax Music 3</li>
+<li>💻 实测环境：RTX 4070 Laptop 8GB &#x2F; 16GB 内存</li>
+</ul>
+<h2 id="开篇：你能做出什么"><a href="#开篇：你能做出什么" class="headerlink" title="开篇：你能做出什么"></a>开篇：你能做出什么</h2><p>先给你一个具体的目标感。读完这篇教程并动手做一遍，你会得到这样一首歌：</p>
+<ul>
+<li><strong>完整结构</strong>：前奏 → 主歌 → 预副歌 → 副歌 → 桥段 → 尾奏，一段不缺，而不是十秒钟的循环片段。</li>
+<li><strong>有人声</strong>：能唱出来的歌词，带旋律、气口和情绪，不是纯伴奏。</li>
+<li><strong>编曲会推进</strong>：主歌安静、副歌进鼓、桥段留白——乐器是随时间变化的，不是从头到尾一个样。</li>
+<li><strong>成品直接能听</strong>：32 kHz &#x2F; 16-bit 立体声，ComfyUI 直接帮你存成 MP3，拖进播放器就响。</li>
+</ul>
+<p><strong>✓ 这不是纸上谈兵</strong></p>
+<p>本教程的案例步骤已在 <strong>RTX 4070 Laptop（8GB 显存）+ 16GB 内存</strong> 的普通笔记本上实测跑通，累计产出过二十余首完整歌曲。文末会专门告诉你 8GB 显存该怎么调参才不崩。</p>
+<p>最关键的是：<strong>你不需要买任何Token，MiniMax Music 3 是开源模型，ComfyUI 是免费开源的，全部在你自己电脑上跑，完全本地部署</strong></p>
+<h2 id="1-先搞懂：ComfyUI-到底是什么"><a href="#1-先搞懂：ComfyUI-到底是什么" class="headerlink" title="1. 先搞懂：ComfyUI 到底是什么"></a>1. 先搞懂：ComfyUI 到底是什么</h2><p>1.1 它不是一个”按钮软件”</p>
+<p>很多人第一次打开 ComfyUI 会懵：满屏的方块和连线，像电路板。这很正常——因为 ComfyUI 的本质是<strong>让你亲手搭一条流水线</strong>。</p>
+<p>打个比方：</p>
+<p><strong>🍱 一键式工具（比如各类在线生成器）</strong> 像去餐厅点菜：你说”来首抒情歌”，厨房做好端上来。方便，但你控制不了盐放多少、火候几分。</p>
+<p><strong>🧩 ComfyUI</strong> 像自己进厨房：食材（模型）、步骤（节点）、顺序（连线）全部摆在你面前，你想改哪一步就改哪一步。</p>
+<p>ComfyUI 的画面由三类东西组成：</p>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>是什么</th>
+<th>你要对它做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>节点（Node）</td>
+<td>一个个彩色方块，每个负责一件事（加载模型、写提示词、采样、保存文件）</td>
+<td>看懂它是干什么的，需要时改它里面的参数</td>
+</tr>
+<tr>
+<td>连线（Link）</td>
+<td>方块之间的线，表示”数据从哪流到哪”</td>
+<td>一般不用动；线断了才需要接回去</td>
+</tr>
+<tr>
+<td>工作流（Workflow）</td>
+<td>整套节点+连线，就是一条完整的生产流程</td>
+<td>可以直接用官方现成的模板，不用从零画</td>
+</tr>
+</tbody></table>
+<p>1.2 所以新手也能上手</p>
+<p>看到这里你可能想：”我连节点都看不懂，怎么搭？”</p>
+<p><strong>答案是：你根本不需要自己搭。</strong></p>
+<p>ComfyUI 内置了<strong>官方模板库</strong>——各种常见任务（出图、出视频、出音乐）都有现成的、经过验证的工作流。你要做的只是：</p>
+<ol>
+<li><strong>打开模板库</strong>，找到对应的模板</li>
+<li><strong>按提示下载模型</strong>（模板会告诉你缺什么，甚至能一键下）</li>
+<li><strong>改几个文本框</strong>（填你的想法、歌词）</li>
+<li><strong>按运行</strong>，等它出成品</li>
+</ol>
+<p>本教程的案例（MiniMax Music 3）就有现成模板。所以你今天要掌握的核心技能其实是 「怎么填好那两个文本框」**——也就是怎么写描述和歌词。这才是决定成品好坏的关键，也是本文最核心的部分。</p>
+<p><strong>💡 记住这个心法</strong></p>
+<p>用 ComfyUI 不需要会”编程”，需要的是<strong>理解每一步在做什么</strong>。掌握了这个，你换任何一个模型（画图、做视频）都能快速上手——因为套路是通用的</p>
+<p>注意事项</p>
+<h2 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2. 环境准备"></a>2. 环境准备</h2><p>2.1 安装 Comfy Desktop</p>
+<p>去 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.comfy.org/download">comfy.org&#x2F;download</a></p>
+<p> 下载 <strong>Comfy Desktop</strong>，一路下一步装完即可。</p>
+<p><strong>✓ 为什么推荐 Desktop 版</strong></p>
+<p>装 Desktop 会自动把 Python、ComfyUI 本体、依赖环境全部配好，<strong>你不需要单独装 Python 或捣鼓命令行</strong>。Desktop 是个”多实例管理器”，里面跑的才是 ComfyUI 引擎。</p>
+<p><strong>硬件要求</strong>（官方）：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>最低</th>
+<th>推荐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统</td>
+<td>Windows 10+ &#x2F; macOS 13+</td>
+<td>Windows 11</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>8 GB</td>
+<td>16 GB 起步（跑音乐&#x2F;视频时内存比显存更容易成为瓶颈）</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>有 N 卡即可</td>
+<td>8GB 够跑本教程全部内容</td>
+</tr>
+<tr>
+<td>硬盘</td>
+<td>每个实例 5 GB</td>
+<td>留 50GB+ 放模型（MiniMax 三件套约 15GB）</td>
+</tr>
+</tbody></table>
+<p>2.2 准备模型三件套</p>
+<p>MiniMax Music 3 在 ComfyUI 里由三个文件组成，缺一不可。官方把它们打包放在 Hugging Face 的 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/Comfy-Org/MiniMax-Music-3">Comfy-Org&#x2F;MiniMax-Music-3</a></p>
+<p> 仓库。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">📂 ComfyUI/</span><br><span class="line">├── 📂 models/</span><br><span class="line">│   ├── 📂 diffusion_models/</span><br><span class="line">│   │   ├── minimax_music3_dit_fp16.safetensors          ← 主模型（生成音乐，约 10GB）</span><br><span class="line">│   │   └── minimax_music3_dit_int8_convrot.safetensors  ← 量化版（显存紧张时用它）</span><br><span class="line">│   ├── 📂 text_encoders/</span><br><span class="line">│   │   └── minimax_music3_text_encoder_pruned_int8_convrot.safetensors  ← 文本编码器</span><br><span class="line">│   └── 📂 vae/</span><br><span class="line">│       └── minimax_music3_dav.safetensors               ← 音频解码器（把潜变量变成声音）</span><br></pre></td></tr></table></figure>
+
+<p>两个 diffusion model 该下哪个？</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>适合谁</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>…dit_fp16</td>
+<td>显存 ≥12GB</td>
+<td>质量最好，速度最快，但最吃显存</td>
+</tr>
+<tr>
+<td>…dit_int8_convrot</td>
+<td>显存 8GB（本教程实测环境）</td>
+<td>量化压缩过，显存占用明显降低，音质损失很小</td>
+</tr>
+</tbody></table>
+<p><strong>⚠ 实测提醒</strong></p>
+<p>如果你的卡是 <strong>8GB 显存</strong>，强烈建议下载 int8 那个版本。本文实测机器装的是 fp16 版，靠第 6 章的 tiled_decode 分块解码才稳住——如果你还没下，直接下 int8 会省心得多。</p>
+<p>文件放哪里？</p>
+<p>如果你用的是 Comfy Desktop，模型通常放在<strong>共享目录</strong>（所有实例共用，避免重复下载）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Windows:  %LOCALAPPDATA%\Comfy-Desktop\ComfyUI-Shared\models\</span><br><span class="line">（本教程实测机器把它改到了 D:\Comfy-Desktop\ComfyUI-Shared\models\）</span><br></pre></td></tr></table></figure>
+
+<p>放进对应子目录后，回到 ComfyUI 界面按 R 键刷新，模型名才会出现在下拉列表里。</p>
+<p><strong>✓ 更省事的办法</strong></p>
+<p>其实你<strong>不用手动下模型</strong>。直接去模板库加载 MiniMax Music 3 工作流，界面会自动检测到缺模型，并给出一键下载。手动下载只是给你一个备选方案。</p>
+<h2 id="3-认识今天的主角：MiniMax-Music-3"><a href="#3-认识今天的主角：MiniMax-Music-3" class="headerlink" title="3. 认识今天的主角：MiniMax Music 3"></a>3. 认识今天的主角：MiniMax Music 3</h2><p>3.1 它能做什么</p>
+<p>MiniMax Music 3 是 MiniMax（稀宇科技）开源的音乐生成模型。它的定位很明确：<strong>生成一首完整的歌，而不是一段循环</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>具体表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>完整歌曲</td>
+<td>最长 5 分钟（300 秒），可包含前奏、主歌、预副歌、副歌、桥段、器乐间奏、尾奏</td>
+</tr>
+<tr>
+<td>双输入控制</td>
+<td>你给「音乐描述」+「歌词」，它按你的要求作曲演唱</td>
+</tr>
+<tr>
+<td>长程一致性</td>
+<td>5 分钟的歌里，旋律主题、节奏、人声音色、编曲推进能保持连贯</td>
+</tr>
+<tr>
+<td>表现力人声</td>
+<td>自然的人声合成，可控制音色、唱法、和声层次</td>
+</tr>
+<tr>
+<td>输出规格</td>
+<td>32 kHz &#x2F; 16-bit 立体声（ComfyUI 中保存为 MP3）</td>
+</tr>
+</tbody></table>
+<p>它背后的架构（了解即可）</p>
+<p>MiniMax Music 3 用的是”分层”设计，可以粗略理解为三个人分工：</p>
+<ul>
+<li><strong>8B 全局 LLM</strong>——负责”这首歌整体长什么样”：结构走向、情绪推进。<em>它是从 Qwen3-8B 初始化来的</em>，所以对中文文本的理解底子不错。</li>
+<li><strong>0.6B 局部 LLM</strong>——负责每一帧的声音细节：咬字、音色、质感。</li>
+<li><strong>Flow Matching + Flow-VAE</strong>——把上面两位的”想法”真正合成成 32kHz 的音频波形。</li>
+</ul>
+<p>3.2 诚实的边界（重要）</p>
+<p>教程不说缺点就是耍流氓。以下是官方 README 明确写出的限制，以及实测的体验，请务必心里有数：</p>
+<p><strong>⚠ 四条必须知道的实话</strong></p>
+<ol>
+<li><strong>段落标签不是”命令”</strong>。官方原话是：段落标签和描述提供的是<em>生成性控制，而非严格的符号保证</em>。也就是说，你写了 [Chorus]，它大概率会给你一个副歌，但速度、调性、具体乐器<strong>不保证每次都严格照办</strong>。</li>
+<li><strong>中文演唱需要实测</strong>。模型对中文文本的理解有底子（Qwen3 血统），但官方公开的 26 首演示曲<strong>全部是英文西方曲风</strong>（流行、摇滚、R&amp;B、嘻哈、乡村、灵魂、放克、布鲁斯、波萨诺瓦、都市）。中文人声的实际表现建议你自己试一首再判断，别指望一发入魂。</li>
+<li><strong>文本有长度上限</strong>：提示词最多 5000 tokens；音频最多 9000 声学帧（对应约 5 分钟）。别写长篇大论。</li>
+<li><strong>它不是”编曲软件”</strong>。想要精确到”第 17 秒进鼓”这种级别的控制，它做不到。它的强项是<em>给你一个有模有样的完整成品</em>。</li>
+</ol>
+<p>接受这些边界后，我们开始动手——这才是真正有意思的部分。</p>
+<h2 id="4-实战：做出你的第一首歌"><a href="#4-实战：做出你的第一首歌" class="headerlink" title="4. 实战：做出你的第一首歌"></a>4. 实战：做出你的第一首歌</h2><p>4.1 第一步：加载官方模板</p>
+<ol>
+<li><strong>确保 ComfyUI 是最新版</strong>。模板库随版本更新，版本太旧会找不到模板或报节点缺失。</li>
+<li><strong>打开模板库</strong>：菜单栏 → 工作流 → 浏览模板（Templates）。</li>
+<li><strong>找到音频分类</strong> → 选择 <strong>MiniMax Music 3 Text to Music</strong>。</li>
+<li><strong>按弹窗提示下载模型</strong>。模板会检测你缺哪些文件，跟着点就行。</li>
+<li><strong>加载成功后</strong>，画布上会出现一条现成的工作流。</li>
+</ol>
+<p><strong>💡 如果提示”节点缺失”</strong></p>
+<p>两个常见原因：① 你的 ComfyUI 不是最新版 → 去更新；② 启动时有些节点导入失败 → 查看启动日志。更新后重启一般都能解决。</p>
+<p><strong>示例：</strong></p>
+<p>4.2 第二步：认识这条工作流</p>
+<p>官方模板加载出来后，整条流水线其实只有四个环节，非常好懂：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">文本编码器（读你的描述和歌词）</span><br><span class="line">        ↓  把文字变成模型能懂的条件</span><br><span class="line">扩散模型（MiniMax Music 3 主体，作曲+编曲+人声）</span><br><span class="line">        ↓  在&quot;潜空间&quot;里把音乐画出来</span><br><span class="line">音频 VAE（解码器）</span><br><span class="line">        ↓  把潜变量还原成真正的声音波形</span><br><span class="line">保存音频 → MP3 文件</span><br></pre></td></tr></table></figure>
+
+<p>你要操作的，只有<strong>最前面那两个文本框</strong>和<strong>中间那几个参数</strong>。后面的节点基本不用碰。</p>
+<p>4.3 第三步：写 Caption（音乐描述）——决定”好不好听”</p>
+<p>这是<strong>整篇教程最重要的一节</strong>。Caption 就是告诉模型”这首歌应该是什么样”。</p>
+<p>官方强烈建议用<strong>结构化三段式</strong>来写，即把描述拆成三块：</p>
+<table>
+<thead>
+<tr>
+<th>段落</th>
+<th>写什么</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global Metadata（全局元数据）</td>
+<td>流派、BPM、调性、音阶、情绪推进、聆听场景、制作风格</td>
+<td>Mandopop ballad, 72 BPM, F major…</td>
+</tr>
+<tr>
+<td>Vocal Details（人声细节）</td>
+<td>人声性别、音色、演唱风格、和声、人声效果</td>
+<td>female, soft and breathy, subtle vibrato…</td>
+</tr>
+<tr>
+<td>Arrangement（编曲）</td>
+<td>主&#x2F;次乐器、律动、低音、打击乐、织体、空间效果</td>
+<td>solo piano, brushed drums entering at chorus…</td>
+</tr>
+</tbody></table>
+<p><strong>✓ 官方原话</strong></p>
+<p>「描述越具体，结果越接近预期」。而且结构化描述能让模型<strong>不仅遵循整体风格，还会跟随歌曲随时间的推进</strong>——这才是它能做出”完整歌”的关键。</p>
+<p>可直接复制的模板（中文抒情流行）</p>
+<p><strong>Caption —— 复制粘贴即可用，按需改括号里的内容</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[Global Metadata]</span><br><span class="line">Genre: Mandopop ballad (华语抒情流行), BPM 72, Key: F major</span><br><span class="line">Emotional arc: quiet loneliness → gentle warmth → restrained release</span><br><span class="line">Listening scene: late-night headphone listening, rainy window</span><br><span class="line">Production: warm analog warmth, intimate close-mic, light tape saturation</span><br><span class="line"></span><br><span class="line">[Vocal Details]</span><br><span class="line">Gender: female, timbre: soft and slightly breathy</span><br><span class="line">Delivery: intimate and controlled, subtle vibrato at phrase endings</span><br><span class="line">Harmony: sparse doubled vocals in chorus, soft high harmony in final chorus</span><br><span class="line">Vocal FX: light reverb, gentle compression, minimal delay</span><br><span class="line"></span><br><span class="line">[Arrangement]</span><br><span class="line">Primary: solo piano, warm upright bass</span><br><span class="line">Secondary: subtle string pad, soft brushed drums entering at chorus</span><br><span class="line">Groove: slow and steady, gentle push in chorus</span><br><span class="line">Bass: warm and rounded</span><br><span class="line">Texture: sparse in verse, fuller in chorus</span><br><span class="line">Spatial: intimate and close, wide reverb tail on chorus</span><br></pre></td></tr></table></figure>
+
+<p><strong>⚠ 写描述的两个坑</strong></p>
+<ul>
+<li><strong>别写成长篇故事</strong>。官方建议”简短具体的提示词比冗长的故事效果更好”。用关键词短语，别写”在一个雨夜，她想起了…”这种散文。</li>
+<li><strong>别把歌词写进 Caption</strong>。歌词有专门的输入框。Caption 只管”音乐长什么样”，歌词管”唱什么词”。</li>
+</ul>
+<p>4.4 第四步：写 Lyrics（歌词）——决定”歌在唱什么”</p>
+<p>歌词用<strong>段落标签</strong>来控制歌曲结构。可用的标签有：</p>
+<p>[Intro] · [Verse] · [Pre-Chorus] · [Chorus] · [Post-Chorus] · [Bridge] · [Instrumental] · [Solo] · [Outro]</p>
+<p><strong>⚠ 最关键的一条规则</strong></p>
+<p><strong>标签是唯一的结构指令；歌词文本本身只传达情绪，不传达结构。</strong></p>
+<p>换句话说：你写 [Chorus]，模型就知道”这里是副歌，该上强度了”；但你在歌词里写”这里是副歌”，模型<strong>看不懂</strong>。结构只能靠标签。</p>
+<p>可直接复制的模板（中文歌词）</p>
+<p><strong>Lyrics —— 复制粘贴即可用</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">[Intro]</span><br><span class="line">（钢琴轻起，雨声）</span><br><span class="line"></span><br><span class="line">[Verse]</span><br><span class="line">窗外的雨还没停</span><br><span class="line">我把灯留到天明</span><br><span class="line">你说过的那句话</span><br><span class="line">还在耳边转个不停</span><br><span class="line"></span><br><span class="line">[Pre-Chorus]</span><br><span class="line">如果我还能回头</span><br><span class="line">是不是就不必走</span><br><span class="line"></span><br><span class="line">[Chorus]</span><br><span class="line">把风留给你 把雨留给我</span><br><span class="line">把最后的温柔 留在转身以后</span><br><span class="line">你别替我担心 我会好好的</span><br><span class="line">只是偶尔 还会想起你的手</span><br><span class="line"></span><br><span class="line">[Verse]</span><br><span class="line">旧钥匙还在口袋</span><br><span class="line">却打不开那扇门</span><br><span class="line">你走以后下了雪</span><br><span class="line">覆盖了来时的路</span><br><span class="line"></span><br><span class="line">[Chorus]</span><br><span class="line">把风留给你 把雨留给我</span><br><span class="line">把最后的温柔 留在转身以后</span><br><span class="line">你别替我担心 我会好好的</span><br><span class="line">只是偶尔 还会想起你的手</span><br><span class="line"></span><br><span class="line">[Bridge]</span><br><span class="line">（器乐留白，弦乐渐起）</span><br><span class="line"></span><br><span class="line">[Chorus]</span><br><span class="line">把风留给你 把雨留给我</span><br><span class="line">我终于学会 一个人走到最后</span><br><span class="line"></span><br><span class="line">[Outro]</span><br><span class="line">（钢琴渐弱，雨声渐隐）</span><br></pre></td></tr></table></figure>
+
+<p><strong>✓ 歌词写法要点</strong></p>
+<ul>
+<li><strong>副歌要重复出现</strong>——这是”歌”和”片段”最大的区别。同一个 [Chorus] 块多放几次，模型会把它当成真正的副歌来对待。</li>
+<li><strong>括号里可以写演奏提示</strong>，比如 （钢琴轻起）、（器乐留白），模型会当作氛围参考。</li>
+<li><strong>想要纯音乐</strong>：歌词框留空或只放 [Instrumental]，就得到无人声的伴奏。</li>
+</ul>
+<p>4.5 第五步：调参数与运行</p>
+<p>工作流上只有三个参数需要你操心：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>怎么设</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>max_duration</td>
+<td>目标歌曲时长（秒）</td>
+<td>模板默认 60 秒；模型上限约 300 秒（5 分钟）。歌越长，耗时和显存占用越多</td>
+</tr>
+<tr>
+<td>seed</td>
+<td>随机种子</td>
+<td>固定种子 &#x3D; 能复现同一首歌；换种子 &#x3D; 换一个结果。不满意就换种子重跑</td>
+</tr>
+<tr>
+<td>tiled_decode</td>
+<td>分块解码音频</td>
+<td>8GB 显存必须开（详见第 6 章）。会降低显存占用，代价是略慢、分块接缝处有小概率瑕疵</td>
+</tr>
+</tbody></table>
+<p><strong>✓ 新手第一次跑的建议配置</strong></p>
+<ul>
+<li>max_duration &#x3D; <strong>60</strong>（先用默认，出成品快，方便试手感）</li>
+<li>tiled_decode &#x3D; <strong>开启</strong>（8GB 显存保险）</li>
+<li>seed &#x3D; 随便一个数，先跑一遍看看</li>
+</ul>
+<p>运行与取件</p>
+<ol>
+<li><strong>按 <code>Ctrl + Enter</code></strong> 运行（想中断就 Ctrl + Alt + Enter）。</li>
+<li><strong>耐心等</strong>。60 秒的歌在 8GB 笔记本上通常需要几分钟——这段时间它在后台一点点把音乐”画”出来。</li>
+<li><strong>去取成品</strong>。默认保存在：</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ComfyUI/output/audio/audio_minimax_music3.mp3</span><br></pre></td></tr></table></figure>
+
+<p>（如果你改过 SaveAudioAdvanced 节点的文件名，就按你设的名字找。多次生成会自动编号成 _00001、_00002…）</p>
+<p><strong>⚠ 一个新手必踩的坑：赶紧改文件名</strong></p>
+<p>默认文件名是 audio_minimax_music3_00001.mp3 这种，跑十次你就分不清哪首是哪首了。</p>
+<p><strong>听完觉得能留的，立刻重命名成歌名</strong>（比如《把风留给你.mp3》）。这是血泪教训——跑多了之后，你对着一堆编号文件是真的会忘记哪首好听</p>
+<h2 id="🎵-从-0-到第一首-AI-歌，只需要-8-步"><a href="#🎵-从-0-到第一首-AI-歌，只需要-8-步" class="headerlink" title="🎵 从 0 到第一首 AI 歌，只需要 8 步"></a>🎵 从 0 到第一首 AI 歌，只需要 8 步</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ComfyUI</span><br><span class="line">  ↓</span><br><span class="line">加载 MiniMax Music 3 官方模板</span><br><span class="line">  ↓</span><br><span class="line">下载模型</span><br><span class="line">  ↓</span><br><span class="line">填写 Caption</span><br><span class="line">  ↓</span><br><span class="line">填写 Lyrics</span><br><span class="line">  ↓</span><br><span class="line">设置 60s + tiled_decode+名称</span><br><span class="line">  ↓</span><br><span class="line">Ctrl + Enter 生成</span><br><span class="line">  ↓</span><br><span class="line">换 Seed 抽卡 → 挑最好的一首</span><br></pre></td></tr></table></figure>
+
+<p>1.【歌曲描述】caption，对应之前截图中的Theme 英文部分。用于填写曲风、乐器、情感及避开的元素（如：acoustic guitar，quiet hear tbreak，Avoid EDM）</p>
+<p>2.【歌词】lyrics：专门用来填写歌词和结构标签（如[Verse]、[Chorus]）</p>
+<p>3.【时长限制】max_duration 理论300秒以内，也就是5分钟，（看360未验证）</p>
+<p>4.【不用动，默认】unet_name，clip_name，vae_name</p>
+<p>5.【小显存开启】tiled_decode </p>
+<p>6.【文件名称】filename_prefix，取名，不然容易忘</p>
+<p>7.【不用动，默认】format原始音频信号压缩打包指定的 MP3 格式(3种格式flac,mp3,opus)，quality：MP3 文件的压缩质量（V0 代表最高动态码率）</p>
+<h2 id="5-进阶：从”能听”到”好听”"><a href="#5-进阶：从”能听”到”好听”" class="headerlink" title="5. 进阶：从”能听”到”好听”"></a>5. 进阶：从”能听”到”好听”</h2><p>5.1 提示词技巧三条</p>
+<ol>
+<li><strong>严格按三段式写描述</strong>。Global Metadata &#x2F; Vocal Details &#x2F; Arrangement 一个都不能省。实测下来，三段式比”一段话糊在一起”的服从度高很多。</li>
+<li><strong>歌词里狠狠用段落标签</strong>。标签是模型唯一认的结构指令，多用 [Pre-Chorus]、[Bridge] 这种，歌曲层次会明显丰富。</li>
+<li><strong>平衡时长与资源</strong>。歌越长越吃显存和时间。低显存想做长歌：用 INT8 模型 + 开启分块解码。</li>
+</ol>
+<p>5.2 去官方示例里”偷师”</p>
+<p>MiniMax 官方在 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://minimax-ai.github.io/music3-demo/">music3-demo</a></p>
+<p> 放了<strong>11 种流派、26 首示例曲目</strong>，每首都附有<strong>按三段式写好的完整结构化描述</strong>。</p>
+<p>这是最好的学习材料：找到你喜欢的风格，看它的 Caption 是怎么写的，照着那个结构改成你自己的内容。</p>
+<p>5.3 让 AI 帮你扩写描述（省力技巧）</p>
+<p>如果你懒得写那么长的三段式，MiniMax 官方提供了一个<strong>提示词重写技能</strong>：把你的简短想法自动扩写成标准的结构化描述。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add MiniMax-AI/MiniMax-Music3 --skill music-caption-rewriter</span><br></pre></td></tr></table></figure>
+
+<p>装好后在支持的编程助手里调用 $music-caption-rewriter，给它一句话描述（比如”安静的深夜华语抒情，女声，钢琴为主”），它就返回标准的 Global Metadata &#x2F; Vocal Details &#x2F; Arrangement 三段，直接粘进 ComfyUI。</p>
+<p>5.4 换种子：AI 音乐最重要的工作流</p>
+<p><strong>✓ 专业玩家怎么做</strong></p>
+<p>同一套描述和歌词，<strong>连续换 5～10 个种子各跑一遍</strong>，然后挑最好的那首留下。</p>
+<p>这是 AI 音乐（和 AI 绘图）最核心的工作方式——<strong>不要指望一次就中，要靠”抽卡 + 筛选”</strong>。</p>
+<p>找到满意的之后，<strong>一定要把种子记下来</strong>，这样以后想微调（比如只改一句歌词）还能回到同一首歌的基础上。</p>
+<h2 id="6-8GB-显存生存指南"><a href="#6-8GB-显存生存指南" class="headerlink" title="6. 8GB 显存生存指南"></a>6. 8GB 显存生存指南</h2><p>如果你跟我一样用的是 8GB 显存的笔记本（RTX 4070 Laptop 这类），这一节是为你写的。</p>
+<p>6.1 三个保命开关</p>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>怎么做</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开 tiled_decode</td>
+<td>在工作流里把该选项打开</td>
+<td>最关键。以重叠分块方式解码音频 VAE，大幅降低显存占用。代价：略慢，分块边界有小概率出现接缝</td>
+</tr>
+<tr>
+<td>用 INT8 模型</td>
+<td>下载 minimax_music3_dit_int8_convrot.safetensors 替代 fp16</td>
+<td>显存占用明显下降，音质损失很小</td>
+</tr>
+<tr>
+<td>控制时长</td>
+<td>先用 60 秒试，稳定了再往 120 &#x2F; 180 &#x2F; 300 秒加</td>
+<td>时长是最直接影响显存和时间的参数</td>
+</tr>
+</tbody></table>
+<p><strong>💡 高显存用户反过来做</strong></p>
+<p>如果你有 12GB+ 显存，官方建议<strong>关闭 tiled_decode</strong> 以获得最佳质量（无缝接、更快）。</p>
+<p>6.2 别忘了：内存才是隐形瓶颈,【内存直接炸了】</p>
+<p><strong>⚠ 实测教训</strong></p>
+<p>跑 AI 生成时，<strong>8GB 显存往往不是最先扛不住的，16GB 内存才是</strong>。</p>
+<p>曾经实测过：开着浏览器（几十个标签页）+ 微信 + 各种后台，<strong>16GB 内存只剩不到 1GB 空闲</strong>，这时候跑生成任务轻则慢如蜗牛，重则直接卡死崩溃，而且报错信息往往很不明显，让你以为是模型坏了。</p>
+<p><strong>跑之前：关掉不用的浏览器窗口和大型软件，给系统留出足够空闲内存</strong></p>
+<h2 id="7-避坑指南"><a href="#7-避坑指南" class="headerlink" title="7. 避坑指南"></a>7. 避坑指南</h2><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+<th>怎么办</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模板库里找不到 MiniMax 工作流</td>
+<td>ComfyUI 版本太旧</td>
+<td>更新 ComfyUI 到最新版</td>
+</tr>
+<tr>
+<td>加载后提示节点缺失</td>
+<td>① 版本不是最新 ② 启动时节点导入失败</td>
+<td>更新 ComfyUI；查看启动日志定位失败的节点</td>
+</tr>
+<tr>
+<td>模型下拉列表里没有模型名</td>
+<td>文件放错目录，或没刷新</td>
+<td>确认放在 models&#x2F;diffusion_models 等对应子目录，然后按 R 刷新</td>
+</tr>
+<tr>
+<td>跑到一半爆显存&#x2F;崩溃</td>
+<td>显存或内存不够</td>
+<td>开 tiled_decode；换 INT8 模型；缩短时长；关浏览器腾内存</td>
+</tr>
+<tr>
+<td>生成的歌结构不对（没副歌、太短）</td>
+<td>歌词标签没写对，或标签不被严格保证</td>
+<td>确认用了 [Chorus] 等标签；接受模型有随机性，换种子重跑</td>
+</tr>
+<tr>
+<td>出来的不是你要的风格</td>
+<td>Caption 太笼统</td>
+<td>改用三段式结构化描述，写清流派、BPM、人声、乐器</td>
+</tr>
+<tr>
+<td>找不到成品文件</td>
+<td>不知道输出路径</td>
+<td>去 ComfyUI&#x2F;output&#x2F;audio&#x2F; 找，默认名 audio_minimax_music3.mp3（多次生成会自动编号）</td>
+</tr>
+<tr>
+<td>文件太多分不清哪首是哪首</td>
+<td>没及时改名</td>
+<td>听完立刻重命名为歌名，别攒着</td>
+</tr>
+</tbody></table>
+<h2 id="8-下一步"><a href="#8-下一步" class="headerlink" title="8. 下一步"></a>8. 下一步</h2><p>当你跑通第一首歌，接下来可以往这几个方向走：</p>
+<p>🎼 把歌做长</p>
+<p>从 60 秒逐步加到 180、300 秒，体验它”完整歌曲结构”的真正实力——前奏、桥段、尾奏一个不落。</p>
+<p>🎤 换风格玩</p>
+<p>官方演示有 11 种流派。把 Caption 换成摇滚、R&amp;B、放克、波萨诺瓦，同一个模型完全是另一个声音。</p>
+<p>🖼 AI 绘图</p>
+<p>ComfyUI 的主场其实是画图。装上 Z-Image Turbo 或 FLUX 系列，用同样的”模板+改提示词”套路，给你的歌配封面。</p>
+<p>🎬 AI 视频</p>
+<p>再进一步可以跑 Wan 2.2 做视频。但要做好心理准备：<strong>视频对显存和内存的压榨远高于音乐</strong>，8GB 卡只能从低分辨率短时长起步。</p>
+<p>最后，最重要的一个习惯</p>
+<p><strong>✓ 保存你的工作流</strong></p>
+<p>调出满意的效果后，<strong>把工作流保存下来</strong>（Comfy Desktop 还会自动帮你做快照）。这样下次想再做类似的歌，直接打开就能跑，不用重新调一遍。</p>
+<p><strong>同时记下种子值</strong>——那是你能复现同一首歌的唯一钥匙。</p>
+<p><strong>祝你写出第一首让自己起鸡皮疙瘩的歌</strong></p>
+<p>本教程基于 ComfyUI 官方文档与 MiniMax Music 3 官方仓库整理，并在 RTX 4070 Laptop（8GB）&#x2F; 16GB 内存环境实测。 模型权重遵循 MiniMax-Music3 社区许可证，商用前请查阅许可条款。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/737cdb59/">https://macin.top/posts/737cdb59/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/ComfyUI/">ComfyUI</a><a class="post-meta__tags" href="/tags/MiniMax/">MiniMax</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6a680e2e/" title="中国代理IP是如何运作的：新手入门指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">中国代理IP是如何运作的：新手入门指南</div></div><div class="info-2"><div class="info-item-1">每一台联网的设备都会获得一个地址。它叫做IP地址，作用有点像信封上的寄件人地址。当你打开一个网站时，你的请求会带上这个地址，网站的回应也按这个地址送回来。</div></div></div></a><a class="pagination-related" href="/posts/ce984f92/" title="Aspire Hosting：$4.95/月 4核8G 100GB SSD，KVM 迈阿密/德国"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Aspire Hosting：$4.95/月 4核8G 100GB SSD，KVM 迈阿密/德国</div></div><div class="info-2"><div class="info-item-1">Cloud 8GB – Summer SALE 迈阿密 vCPU：4 内存：8 GB 空间：100 GB SSD 流量：3 TB / 月（1Gbps端口，双向计算） IPv4：1 $4.95/月</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/823c740a/" title="从零开始用 ComfyUI 跑 MiniMax H3：本地安装、云端和视频工作流"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/minimax.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-26</div><div class="info-item-2">从零开始用 ComfyUI 跑 MiniMax H3：本地安装、云端和视频工作流</div></div><div class="info-2"><div class="info-item-1">ComfyUI 看起来像一块接满电线的电路板，新手非常劝退，但连连看大家应该都玩过，道理都是一样的。而对于官方的默认工作流，甚至不需要任何连节点的操作，直接用就行了。</div></div></div></a><a class="pagination-related" href="/posts/e6671f22/" title="8G 显存也能玩转无审查AI 视频？开源模型 Sulphur 2"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/comfyui.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-23</div><div class="info-item-2">8G 显存也能玩转无审查AI 视频？开源模型 Sulphur 2</div></div><div class="info-2"><div class="info-item-1">8G 显存也能本地部署开源无审查 AI 视频模型 Sulphur 2，被称为"开源白嫖版 Sora"。本文提供 ComfyUI 部署全攻略与显存优化方案，含安装包与升级方法。</div></div></div></a><a class="pagination-related" href="/posts/12dcc77b/" title="MiniMax H3 本地部署教程：Turbo LoRA 加速与 ComfyUI 配置指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/minimax.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-11</div><div class="info-item-2">MiniMax H3 本地部署教程：Turbo LoRA 加速与 ComfyUI 配置指南</div></div><div class="info-2"><div class="info-item-1">MiniMax H3 本地部署教程：高效率开源 AI 视频生成模型，详解 ComfyUI 客户端、自定义节点、模型权重及 Turbo LoRA 加速模块配置，实现高质量图生视频。</div></div></div></a><a class="pagination-related" href="/posts/c68a33b7/" title="LTX 2.3 部署教程：低显存优化与 ComfyUI 音视频生成配置指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ltx.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-11</div><div class="info-item-2">LTX 2.3 部署教程：低显存优化与 ComfyUI 音视频生成配置指南</div></div><div class="info-2"><div class="info-item-1">LTX 2.3 本地部署教程：Lightricks 新一代开源音视频生成模型，支持本地同步生成视频与匹配音频，通过 FP8、GGUF 等量化方案显存需求最低降至 8GB，附 ComfyUI 配置指南。</div></div></div></a><a class="pagination-related" href="/posts/a773e7bc/" title="ComfyUI 本地大模型当导演，从此看片不求人：实测可用，开箱即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/comfyui.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-28</div><div class="info-item-2">ComfyUI 本地大模型当导演，从此看片不求人：实测可用，开箱即用</div></div><div class="info-2"><div class="info-item-1">你可以把它理解成 AI 绘画界的乐高：每个功能是一块积木，用线把它们连起来，就成了一条完整的生产流水线。</div></div></div></a><a class="pagination-related" href="/posts/b443030f/" title="squad 是一个轻量级的多 AI 智能体终端协作工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-27</div><div class="info-item-2">squad 是一个轻量级的多 AI 智能体终端协作工具</div></div><div class="info-2"><div class="info-item-1">squad 是一个轻量级的多 AI 智能体终端协作工具。它让 Claude Code、Gemini CLI、Codex CLI、OpenCode 等 AI 工具在不同终端里通过简单的 CLI 命令 + 本地 SQLite…</div></div></div></a><a class="pagination-related" href="/posts/f4c65fca/" title="Awesome GPT-Image-2：工业级提示词引擎与模板库"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Awesome GPT-Image-2：工业级提示词引擎与模板库</div></div><div class="info-2"><div class="info-item-1">总结：这是目前 GPT-Image-2 领域较系统的提示词资源库之一，重点不在「堆案例」，而在于把案例提炼成可复用、可自动化的结构化提示词…</div></div></div></a><a class="pagination-related" href="/posts/5f884e2b/" title="Topaz DeNoise AI 3.7.2软件下载及安装：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/denoise.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-01</div><div class="info-item-2">Topaz DeNoise AI 3.7.2软件下载及安装：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Topaz DeNoise AI 3.7.2 下载安装教程：首个 AI 驱动的降噪工具，消除噪点恢复清晰细节，光线不足的照片也能变像素完美，效果堪比镜头升级。</div></div></div></a><a class="pagination-related" href="/posts/7966933e/" title="Pluely 极轻量、注重隐私的 AI 助手桌面应用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-24</div><div class="info-item-2">Pluely 极轻量、注重隐私的 AI 助手桌面应用</div></div><div class="info-2"><div class="info-item-1">重要提醒：根据官方说明，Pluely v1 及后续版本已转为闭源，以应对源代码被克隆和滥用的问题。目前提供的是已编译的二进制安装包，核心功能免费，并附带付费的专业版计划。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E7%AF%87%EF%BC%9A%E4%BD%A0%E8%83%BD%E5%81%9A%E5%87%BA%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">开篇：你能做出什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E6%90%9E%E6%87%82%EF%BC%9AComfyUI-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">1. 先搞懂：ComfyUI 到底是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">3.</span> <span class="toc-text">2. 环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AE%A4%E8%AF%86%E4%BB%8A%E5%A4%A9%E7%9A%84%E4%B8%BB%E8%A7%92%EF%BC%9AMiniMax-Music-3"><span class="toc-number">4.</span> <span class="toc-text">3. 认识今天的主角：MiniMax Music 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%9E%E6%88%98%EF%BC%9A%E5%81%9A%E5%87%BA%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E9%A6%96%E6%AD%8C"><span class="toc-number">5.</span> <span class="toc-text">4. 实战：做出你的第一首歌</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%B5-%E4%BB%8E-0-%E5%88%B0%E7%AC%AC%E4%B8%80%E9%A6%96-AI-%E6%AD%8C%EF%BC%8C%E5%8F%AA%E9%9C%80%E8%A6%81-8-%E6%AD%A5"><span class="toc-number">6.</span> <span class="toc-text">🎵 从 0 到第一首 AI 歌，只需要 8 步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%BF%9B%E9%98%B6%EF%BC%9A%E4%BB%8E%E2%80%9D%E8%83%BD%E5%90%AC%E2%80%9D%E5%88%B0%E2%80%9D%E5%A5%BD%E5%90%AC%E2%80%9D"><span class="toc-number">7.</span> <span class="toc-text">5. 进阶：从”能听”到”好听”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-8GB-%E6%98%BE%E5%AD%98%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97"><span class="toc-number">8.</span> <span class="toc-text">6. 8GB 显存生存指南</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97"><span class="toc-number">9.</span> <span class="toc-text">7. 避坑指南</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="toc-number">10.</span> <span class="toc-text">8. 下一步</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务">
+<meta property="og:url" content="https://macin.top/posts/1a8063f0/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/pi.webp">
+<meta property="article:published_time" content="2026-09-05T08:05:38.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.646Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Pi Agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/pi.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务",
+  "url": "https://macin.top/posts/1a8063f0/",
+  "image": "https://macin.top/img/pi.webp",
+  "datePublished": "2026-09-05T08:05:38.000Z",
+  "dateModified": "2026-09-05T15:22:43.646Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/1a8063f0/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/pi.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">万字长文 | Pi Agent 零基础实操：从打开终端到完成第一个真实任务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.646Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/agent/">agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">11.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>35分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>我最近一直在想，普通人第一次接触终端 Agent，最应该学会的到底是什么。</p>
+<p>网上很容易找到一长串命令。有人一上来就讲模型、上下文、扩展和自动化，看完似乎懂了不少，真把终端打开，光标一闪，又不知道第一句话该写什么。更麻烦的情况是，Agent 回了一句“已经完成”，人也跟着放心了，文件究竟写到了哪里，原材料有没有被改，里面漏了什么，全都没看。</p>
+<p>所以这篇教程只做一件完整的事。</p>
+<p>我会在一个独立练习文件夹里放入一份虚构的会议记录，让 Pi 读取它，生成一份行动清单。任务结束后，我不用 Pi 自己的总结作证明，直接回到命令行检查原文件、输出文件、负责人和日期。这个例子不炫技，却把以后处理文档、整理资料、修改代码都会遇到的几件事串在了一起。</p>
+<p>这次测试使用 macOS、iTerm 和 Pi 0.80.10。Windows 的安装与路径写法会有差异，我没有拿字符替换冒充 Windows 实测。官网命令、登录方式和 Package 数量也会继续变化，本文涉及动态信息的地方都以 2026 年 8 月 26 日的页面和本机结果为准。</p>
+<p>如果你会打开软件、复制文字、找到电脑里的文件，就可以跟着做。终端里第一次出现的符号不用全背，先把这一趟走通。</p>
+<h2 id="本文导读"><a href="#本文导读" class="headerlink" title="本文导读"></a>本文导读</h2><p><strong>01｜认识 Pi</strong></p>
+<p>先看 Pi 能替普通人读写哪些文件、执行哪些操作，也讲清本地 Agent 和本地模型的区别。</p>
+<p><strong>02｜安装与界面</strong></p>
+<p>从独立练习目录开始，完成安装、版本确认和登录，再认清输入区、工具事件、状态栏与模型设置。</p>
+<p><strong>03｜第一个真实任务</strong></p>
+<p>用 @ 引用一份会议记录，把材料、动作、限制和验收写进提示词，让 Pi 生成可以打开的行动清单。</p>
+<p><strong>04｜独立验收</strong></p>
+<p>回到命令行核对校验值、输出文件、负责人和截止日期，再用 AGENTS.md、会话与上下文命令管理后续任务。</p>
+<p><strong>05｜扩展与安全</strong></p>
+<p>分清 Skill、Extension 和 Pi Package，理解 Project Trust 与沙箱的边界，最后给出一条适合新手的升级路线。</p>
+<h1 id="一、Pi-能帮普通人做什么"><a href="#一、Pi-能帮普通人做什么" class="headerlink" title="一、Pi 能帮普通人做什么"></a>一、Pi 能帮普通人做什么</h1><p>Pi 是一个运行在终端里的 Agent。你在某个文件夹里启动它，它可以围绕当前任务读取文件、写入文件、修改内容，也可以执行本机命令。它回复你的方式仍然像聊天，可它能继续动手，把结果落到电脑里。</p>
+<p>这句话里有两个地方需要先讲清。</p>
+<p>第一个是“本地”。Pi 这个程序运行在你的电脑上，能接触什么文件、能执行什么命令，和你从哪里启动它、当前用户拥有什么权限有关。负责理解和生成内容的模型仍可能来自云端服务。本地 Agent 和本地模型是两件不同的事。</p>
+<p>第二个是“能动手”。普通聊天工具也能根据一段会议记录写出行动清单，你还要复制结果、新建文件、选择位置、粘贴保存。Pi 可以直接读取 input&#x2F;项目会议记录.md，再把整理结果写进 output&#x2F;行动清单.md。任务复杂一些时，它还能继续检查目录、调用脚本，或者根据前一步的结果调整下一步。</p>
+<p>这种工作方式很适合目标清楚、材料已经放在电脑里的任务。整理会议纪要、批量修改文件名、检查一组配置、从几份资料里提取固定字段，都能从同一条思路开始。</p>
+<p>普通人判断一件事适不适合交给 Pi，可以先看它能不能拆成文件和动作。你手里有一份材料，希望它读完后生成另一个文件，这类任务最容易起步。你有一批名称混乱的图片，希望它先列出改名方案，确认后再执行，也适合。只说“帮我把工作做好”，Pi 既不知道要用哪份材料，也不知道什么结果算完成，第一步就会飘。</p>
+<p>Pi 更适合愿意学一点终端基础的人。你不需要先会编程，但至少要愿意看路径，知道当前目录在哪里，遇到命令时肯停下来确认它会影响哪些文件。完全不想接触这些内容，带有完整图形界面和确认按钮的 Agent 会更轻松。这里没有高低之分，只是使用习惯不同。</p>
+<p>它也会带来真实后果。Pi 能替你写文件，也就可能写错文件。它能执行命令，错误命令同样会在电脑上发生。第一次使用时，我没有在自己的文章目录或代码项目里试，而是单独建了一个练习目录，只放虚构材料。</p>
+<p>你暂时不用把终端学成一门课。先认识当前目录、文件路径和几个基础命令，已经够完成本文的练习。等你亲手看到一个输入文件怎样变成可以打开、可以核对的输出文件，再去理解模型和扩展，顺序会轻松很多。</p>
+<h1 id="二、安装、确认版本与登录"><a href="#二、安装、确认版本与登录" class="headerlink" title="二、安装、确认版本与登录"></a>二、安装、确认版本与登录</h1><h2 id="1-先给第一次练习单独建个文件夹"><a href="#1-先给第一次练习单独建个文件夹" class="headerlink" title="1. 先给第一次练习单独建个文件夹"></a>1. 先给第一次练习单独建个文件夹</h2><p>终端 Agent 最容易被忽略的一步，发生在启动以前。</p>
+<p>你要先决定让它从哪个文件夹开始工作。第一次别直接进入桌面、下载目录或正式项目。那些地方通常混着很多无关文件，一旦任务范围写得含糊，排查起来很麻烦。</p>
+<p>我这次建立了一个名为 Pi-Agent-零基础实操-demo 的目录，里面再分成 input 和 output。前者只放原始材料，后者只收结果。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/Downloads/Pi-Agent-零基础实操-demo/input</span><br><span class="line">mkdir -p ~/Downloads/Pi-Agent-零基础实操-demo/output</span><br><span class="line">cd ~/Downloads/Pi-Agent-零基础实操-demo</span><br></pre></td></tr></table></figure>
+
+<p>执行完以后，可以输入 pwd 查看当前目录，再用 ls 看里面是否已经出现 input 和 output。看到这两个目录，这一步才算结束。</p>
+<p>pwd 会打印当前所在位置。ls 会列出当前位置里的文件和文件夹。以后 Pi 读错材料，先查这两个地方，经常比修改提示词更快。当前目录如果仍停在用户主目录，可以重新运行 cd ~&#x2F;Downloads&#x2F;Pi-Agent-零基础实操-demo。终端提示符里显示的路径也能提供线索，不过不同主题的显示方式不一样，命令输出更可靠。</p>
+<p>我把原始材料和结果分开，还有一个很现实的原因。任务开始前，output 通常是空的。做完以后，多出来的文件一眼就能看见。需要重新执行时，可以先看旧结果，再决定保存成 v2 或移走，不会顺手覆盖输入。</p>
+<p>这里使用的是 macOS 写法。Windows 用户需要按自己使用的 PowerShell、Windows Terminal 或 WSL 环境建立目录，路径也不能照抄。本文后面的真实截图全部来自 macOS。</p>
+<h2 id="2-安装命令从官网复制"><a href="#2-安装命令从官网复制" class="headerlink" title="2. 安装命令从官网复制"></a>2. 安装命令从官网复制</h2><p>截至 2026 年 8 月 26 日，Pi 官方 Quickstart 给出的 npm 安装命令如下。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g --ignore-scripts @earendil-works/pi-coding-agent</span><br></pre></td></tr></table></figure>
+
+<p>-g 表示全局安装。完成以后，你可以在不同目录直接运行 pi。当前官网命令还带有 –ignore-scripts，复制时要把整行一起带上，不要根据旧教程自行删改。</p>
+<p>如果终端提示 npm: command not found，说明电脑还没有可用的 Node.js 和 npm 环境，或者终端没有找到它们。先去 Node.js 官网完成安装，重新打开终端，再分别检查下面两个命令。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node --version</span><br><span class="line">npm --version</span><br></pre></td></tr></table></figure>
+
+<p>如果安装时遇到权限错误，也先停下来确认 Node.js 是怎样安装的、npm 的全局目录放在哪里。网上随手找到的 sudo 命令可能暂时越过报错，也可能把后面的文件权限弄得更乱。新手阶段不用急着用管理员权限硬冲。</p>
+<h2 id="3-再用版本号确认一次"><a href="#3-再用版本号确认一次" class="headerlink" title="3. 再用版本号确认一次"></a>3. 再用版本号确认一次</h2><p>安装过程没有报错，只能说明安装程序走完了。接着要确认终端现在能不能直接找到 Pi。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi --version</span><br></pre></td></tr></table></figure>
+
+<p>我在本机重新执行，返回的是 0.80.10。这也是本文所有界面和命令的测试版本。你的数字更新一些很正常，只要它直接返回版本号，没有出现 command not found，Pi 就已经能从终端启动。</p>
+<p>版本差异会影响命令、界面和默认行为。以后看别人的教程，先找作者使用的版本，再和自己的版本对一下。很多看起来像操作错误的问题，只是两边版本不同。</p>
+<h2 id="4-登录有两条路"><a href="#4-登录有两条路" class="headerlink" title="4. 登录有两条路"></a>4. 登录有两条路</h2><p>进入刚才的练习目录后，运行下面这行。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi</span><br></pre></td></tr></table></figure>
+
+<p>第一次使用需要完成认证。官方文档给了两类入口。</p>
+<p>一种是在 Pi 里输入 &#x2F;login，选择它支持的订阅服务。截至本次核对，官方页面列出了 Claude Pro&#x2F;Max、ChatGPT Plus&#x2F;Pro 的 Codex 登录和 GitHub Copilot 等入口。名单以后可能变化，以你当时看到的登录页面为准。</p>
+<p>另一种是使用模型提供方的 API Key，按对应文档写入环境变量或认证文件。教程里只会出现占位符，不应该把真实 Key 放进截图、文章或聊天记录。</p>
+<p>已经有受支持订阅，可以先走 &#x2F;login。平时习惯按 API 用量付费，就配置对应提供方的 Key。选一条能明确核对账号和计费来源的路径即可。两套认证一起堆上去，后面发现模型或账单不符合预期，又要回头猜它到底用了哪一套。</p>
+<p>当浏览器打开登录页以后，账号选择、验证码和授权确认都由你本人完成。Pi 不需要知道你的密码，教程作者也没有理由让你把凭据复制出来。</p>
+<p>登录没有成功时，先看 Pi 显示的是取消、超时、账号无权限，还是缺少 API Key。几种原因要分开处理。订阅登录卡在浏览器，就重新检查授权页面和回跳状态。API 模式报错，则核对提供方、变量名和 Key 是否属于同一服务。不要为了消除一条报错，把密钥同时复制到多处文件里。</p>
+<p>认证能用以后，也不代表每个模型都已经可用。账号订阅、API 余额、区域和提供方策略都可能影响模型列表。先选一个当前能调用的模型完成小任务，模型选择器里暂时看不到的选项，等确认账号支持范围后再处理。</p>
+<p>完成认证，再回到终端。接下来先别急着发任务，我们花几分钟认清界面。</p>
+<h1 id="三、第一次打开-Pi，先看懂四个区域"><a href="#三、第一次打开-Pi，先看懂四个区域" class="headerlink" title="三、第一次打开 Pi，先看懂四个区域"></a>三、第一次打开 Pi，先看懂四个区域</h1><p>终端界面刚出现时，很多人会下意识盯着满屏英文看。其实第一次只要认四块。</p>
+<h2 id="1-顶部启动区"><a href="#1-顶部启动区" class="headerlink" title="1. 顶部启动区"></a>1. 顶部启动区</h2><p>最上面会显示版本和一些常用提示。Pi 还会列出已经加载的 Context、主题、Skill 或 Extension。截图里能看到 AGENTS.md 出现在 [Context] 下面，这说明项目规则已经进入当前会话。</p>
+<p>这个提示只证明文件被加载了。它没有给项目增加系统级隔离，后面讲安全时还会回来处理这件事。</p>
+<p>启动时如果看到某个 Package 有更新，也不用立刻处理。更新提示只是告诉你本机已有包出现新版本。正在做教程或正式任务时，先保持环境稳定，等工作结束再决定是否更新，问题会更容易定位。</p>
+<h2 id="2-中间消息区"><a href="#2-中间消息区" class="headerlink" title="2. 中间消息区"></a>2. 中间消息区</h2><p>你发送的要求、Pi 的回复、工具调用、执行结果和错误都会出现在中间。</p>
+<p>以后判断它有没有真正读文件，可以找 read 事件。判断它有没有尝试写文件，可以找 write 事件。命令报错、文件不存在、权限不足，也会在这里留下信息。</p>
+<p>最后那句自然语言总结很好读，却只代表 Pi 对过程的归纳。它写着“任务完成”，不等于结果一定正确。工具事件和最终文件都要继续看。</p>
+<p>工具事件还有一个用途，可以帮助你发现任务正在变大。你只让它整理一个 Markdown，它却开始搜索目录外的文件，或者连续运行与你的目标无关的命令，这时就该停下来。模型的文字解释可能很顺，工具列表更能告诉你电脑上正在发生什么。</p>
+<p>报错也不用怕。红色错误信息先看最后几行，通常会出现文件不存在、权限不足、命令找不到或网络失败。把报错对象找出来，再决定改路径、补环境还是重试。整段错误全部丢回模型，有时能得到解释，自己先认出是哪一类问题，以后会更快。</p>
+<h2 id="3-下方输入区"><a href="#3-下方输入区" class="headerlink" title="3. 下方输入区"></a>3. 下方输入区</h2><p>光标所在的位置就是输入区。普通文字、@文件 和斜杠命令都从这里输入。写完以后按 Enter 才会提交。</p>
+<p>Pi 还在工作时，你可以再次提交消息。普通 Enter 会把它作为当前工作的补充信息，也就是 steering message。Alt+Enter 会把消息留到当前工作全部结束后再发，属于 follow-up。第一次使用不必刻意练这两个队列，知道“追加一句话”和“等它做完再说”存在差别就够了。</p>
+<p>想停止当前输出，可以按 Escape。遇到路径选错、任务范围突然变大或 Pi 准备执行不合适的动作时，先中断，比直接关掉整个终端更清楚。</p>
+<h2 id="4-底部状态栏"><a href="#4-底部状态栏" class="headerlink" title="4. 底部状态栏"></a>4. 底部状态栏</h2><p>状态栏通常会显示当前目录、会话、token 或成本信息、上下文占用、当前模型和思考级别。数字不少，第一次只看三项。</p>
+<p>先看目录。它应该落在我们建立的练习目录里。</p>
+<p>再看模型。你要知道本次任务交给了谁。</p>
+<p>最后看上下文。它快满时，Pi 对早期内容的处理会受影响，需要压缩或开新会话。</p>
+<p>截图里当前模型是 deepseek-v4-flash，思考级别是 low。这是本机测试时的选择，不是通用排行榜。</p>
+<p>文件整理、格式转换和要求清楚的小任务，可以先用较低思考级别。材料多、规则有冲突、修改风险较高时，再提高。模型更强或思考时间更长，都不能替代最后的验收。</p>
+<p>你可以输入 &#x2F;model 打开模型选择，也可以用 Ctrl+L。Shift+Tab 用来循环思考级别。不同终端可能占用快捷键，按键没有反应时，输入 &#x2F; 查看当前版本的补全菜单，再用 &#x2F;hotkeys 或官方 Keybindings 核对。</p>
+<p>模型和思考级别最好一次只改一个。任务结果不理想，同时换模型、提高思考级别、重写提示词，下一次变好了，你也不知道是哪一项起作用。先保留模型，补清材料和验收。要求已经明确，任务仍涉及复杂取舍，再提高思考级别。这样试两三次，很快就能找到适合自己任务的设置。</p>
+<p>这里还有一个我实测时碰到的小坑。在 0.80.10 中，&#x2F;help 不是内置斜杠命令，它会被当成一条普通问题交给模型。想看内置命令，直接在输入区键入 &#x2F;。想看命令行帮助，退出 Pi 后运行 pi –help。这个差别能省下一次没必要的模型调用。</p>
+<h1 id="四、完成第一个可以验收的真实任务"><a href="#四、完成第一个可以验收的真实任务" class="headerlink" title="四、完成第一个可以验收的真实任务"></a>四、完成第一个可以验收的真实任务</h1><p>界面认识到这里，开始动手。</p>
+<p>这次任务很小。输入是一份会议记录，输出是一张行动清单。它同时有三个人、三个日期和三条风险提醒，足够检查 Pi 有没有漏字段。</p>
+<h2 id="1-准备输入文件"><a href="#1-准备输入文件" class="headerlink" title="1. 准备输入文件"></a>1. 准备输入文件</h2><p>在 input 目录新建 项目会议记录.md，写入下面这些内容。</p>
+<p>markdown</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 项目启动会记录</span></span><br><span class="line"></span><br><span class="line">日期：2026-08-26</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 官网说明页由小林整理，截止日期为 2026-08-28。需要先核对安装命令是否仍然有效。</span><br><span class="line"><span class="bullet">-</span> 教程截图由小周制作，截止日期为 2026-08-30。需要隐藏账号、私人路径和凭据。</span><br><span class="line"><span class="bullet">-</span> 发布前检查由小陈负责，截止日期为 2026-09-01。需要确认文中命令和截图能够逐项对应。</span><br><span class="line"></span><br><span class="line">补充说明：本次只制作练习文件，不修改其他目录，不发送或上传任何内容。</span><br></pre></td></tr></table></figure>
+
+<p>材料短有一个好处。你不需要相信任何自动评分，肉眼就能看出结果有没有漏掉小林、小周、小陈，日期和提醒也能逐条对回去。</p>
+<p>我还故意让三条事项的句式保持相近。整理工具最常见的一类错误，是把主题抓住了，却把约束字段当成次要内容压缩掉。它可能保留三项工作，只写负责人，不写日期；也可能把三条风险合成一句“发布前注意核对”。输出看起来很整齐，真正拿去执行时，人仍然不知道谁在什么时候完成什么。</p>
+<p>练习材料里的日期和人名都是虚构的。它没有客户资料、账号、商业数据，也不会因为截图公开而泄露真实项目。第一次学习文件工具，材料越容易核对、后果越低，越适合观察它怎样工作。</p>
+<p>在运行任务以前，我还给输入文件算了一次 SHA-256 校验值。可以把它理解成文件当前内容的一枚指纹。哪怕只改一个字符，新的值通常也会不同。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shasum -a 256 input/项目会议记录.md</span><br></pre></td></tr></table></figure>
+
+<p>本次执行前保存的结果如下。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e1d5fce2a192e31aa5bbc676c93621f58f12f52f4b76c4ba7580c6f4fe594eca  input/项目会议记录.md</span><br></pre></td></tr></table></figure>
+
+<p>先把这个值留好，任务结束后再算一次。</p>
+<h2 id="2-用-把文件交给-Pi"><a href="#2-用-把文件交给-Pi" class="headerlink" title="2. 用 @ 把文件交给 Pi"></a>2. 用 @ 把文件交给 Pi</h2><p>回到 Pi，在输入区键入下面的路径。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@input/项目会议记录.md</span><br></pre></td></tr></table></figure>
+
+<p>Pi 会根据当前目录搜索文件，并显示候选项。</p>
+<p>这里要看完整相对路径。文件夹里如果有两个同名文件，只盯着最后的文件名，很容易选到 output 中的旧结果。确认候选项来自 input，再继续写任务。</p>
+<p>@ 解决的是材料指向。它告诉 Pi 这次要用哪一个文件，没有替你写清输出要求，也没有限制 Pi 的系统权限。</p>
+<h2 id="3-把任务写成能检查的要求"><a href="#3-把任务写成能检查的要求" class="headerlink" title="3. 把任务写成能检查的要求"></a>3. 把任务写成能检查的要求</h2><p>我这次提交的提示词如下。</p>
+<blockquote>
+<p>读取 input&#x2F;项目会议记录.md，整理成 output&#x2F;行动清单.md。必须保留每个事项、负责人、截止日期和风险提醒；不要修改 input 中的原文件，不要访问当前练习目录以外的内容。完成后列出新增和修改的文件，并说明我应该怎样验收。</p>
+</blockquote>
+<p>这段话可以拆成四部分。</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>本次任务写了什么</th>
+<th>以后可以怎样换</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>材料</td>
+<td>input&#x2F;项目会议记录.md</td>
+<td>换成自己的原始文件</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>整理并写入行动清单</td>
+<td>写清处理动作和输出路径</td>
+</tr>
+<tr>
+<td>限制</td>
+<td>不改输入，不出练习目录</td>
+<td>写清禁止修改、发送或访问的范围</td>
+</tr>
+<tr>
+<td>验收</td>
+<td>保留事项、人员、日期和提醒</td>
+<td>改成能够逐项检查的条件</td>
+</tr>
+</tbody></table>
+<p>很多失败任务缺的是一个能落地的要求。</p>
+<p>“帮我整理一下”没有说明材料身份，Pi 不知道哪些是原始资料，哪些是旧结果。“做得专业一点”没有明确动作，专业可以是改格式、补内容，也可能是大幅改写。“千万别出错”也没法验收，换成负责人和日期一项不能漏，任务结束后就有了检查标准。</p>
+<p>输出路径也要写。让结果统一进入 output，你能很快看出新增了什么，不用到处找文件。</p>
+<p>这四部分的顺序不必固定，内容不能省得只剩一句口号。材料告诉 Pi 依据在哪里，动作决定它要做什么，限制划出这次工作的范围，验收把完成条件变成可以核对的事实。</p>
+<p>限制也要写得贴近风险。“不要做危险操作”很难执行，每个人对危险的理解都不同。“不要修改 input，不要访问目录外内容，不要发送或上传”就清楚多了。涉及真实项目时，还可以禁止删除和安装依赖。Git 提交与对外发送也要按任务单独授权。</p>
+<p>验收条件要和材料一一对应。原文有三位负责人和三个日期，输出就检查这六项。表格有 200 行，先核原始行数和汇总金额。网页改版要看指定页面和不同窗口宽度。验收条件写得越具体，任务完成后越少靠感觉。</p>
+<p>提示词里的“不要访问练习目录以外的内容”仍然只是一条工作约束。它很有必要，却没有在操作系统层面锁住 Pi。真正的权限边界会在第八章讲清。</p>
+<h2 id="4-盯住工具事件"><a href="#4-盯住工具事件" class="headerlink" title="4. 盯住工具事件"></a>4. 盯住工具事件</h2><p>提交以后，Pi 先调用 read 读取输入文件，再调用 write 创建输出文件。我的真实运行结果里出现了这行信息。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Successfully wrote 281 bytes to output/行动清单.md</span><br></pre></td></tr></table></figure>
+
+<p>这时已经有了两层信息。</p>
+<p>第一层是 Pi 的文字回复。它会说明自己做了什么。</p>
+<p>第二层是工具事件。这里能看见它尝试读取哪个文件、写到哪里、工具有没有返回错误。</p>
+<p>还差第三层，也就是文件系统里的真实结果。write 成功说明文件写出去了，路径仍可能选错，内容也可能漏项。我们下一步脱离 Pi 的总结，自己查。</p>
+<p>如果这里出现读取失败，不要马上扩大目录权限。先看文件名有没有打错、Pi 的当前目录对不对、@ 选中的候选项是不是输入文件。</p>
+<p>如果它准备覆盖 input 中的文件，按 Escape 停止。回到提示词里明确输出路径，再重新执行。第一次练习的意义就在于让这些错误发生在一份虚构材料上。</p>
+<p>还有一种情况值得停下来。Pi 读取完文件后，先给出一段计划，计划里出现了安装第三方工具、访问网络或扫描其他目录，而原任务只需要整理 Markdown。这些动作可能有合理理由，也可能已经超出需求。你可以追问它为什么需要这一步，要求先用现有工具完成，或者把任务缩回单文件处理。</p>
+<p>观察工具不要求你读懂底层代码。新手先认动作和对象。read 后面是哪一个文件，write 要写到哪里，Shell 命令的目标路径是什么。三件事能对上，已经能挡住不少误操作。</p>
+<h2 id="5-回到命令行独立验收"><a href="#5-回到命令行独立验收" class="headerlink" title="5. 回到命令行独立验收"></a>5. 回到命令行独立验收</h2><p>任务结束后，我检查了五件事。</p>
+<p>第一件是重新计算输入文件的 SHA-256。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shasum -a 256 input/项目会议记录.md</span><br></pre></td></tr></table></figure>
+
+<p>执行后的值仍然是这一串。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e1d5fce2a192e31aa5bbc676c93621f58f12f52f4b76c4ba7580c6f4fe594eca  input/项目会议记录.md</span><br></pre></td></tr></table></figure>
+
+<p>两次一致，说明这次任务没有改动原始材料。</p>
+<p>第二件是确认输出文件真实存在。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test -f output/行动清单.md &amp;&amp; echo PASS</span><br></pre></td></tr></table></figure>
+
+<p>第三件是打开文件，检查三位负责人。第四件是核对三个截止日期。最后再看三条风险提醒有没有被压缩掉。</p>
+<p>Pi 最后生成的文件如下。</p>
+<p>markdown</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 行动清单</span></span><br><span class="line"></span><br><span class="line">来源：<span class="code">`input/项目会议记录.md`</span>（会议日期：2026-08-26）</span><br><span class="line"></span><br><span class="line">| 事项 | 负责人 | 截止日期 | 风险提醒 |</span><br><span class="line">| --- | --- | --- | --- |</span><br><span class="line">| 官网说明页整理 | 小林 | 2026-08-28 | 需先核对安装命令是否仍然有效 |</span><br><span class="line">| 教程截图制作 | 小周 | 2026-08-30 | 需隐藏账号、私人路径和凭据 |</span><br><span class="line">| 发布前检查 | 小陈 | 2026-09-01 | 需确认文中命令和截图能够逐项对应 |</span><br><span class="line"></span><br><span class="line"><span class="section">## 注意事项</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 本次只制作练习文件，不修改其他目录，不发送或上传任何内容。</span><br></pre></td></tr></table></figure>
+
+<p>本次验收全部通过。</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入文件执行前后校验值一致</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>output&#x2F;行动清单.md 存在</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>三位负责人完整</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>三个截止日期完整</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>三条风险提醒完整</td>
+<td>PASS</td>
+</tr>
+</tbody></table>
+<p>这一步是全文最想留下的习惯。</p>
+<p>Pi 的回复、工具事件和最终文件各自证明一件事。回复说明它怎样理解过程，工具事件记录它尝试做过什么，文件检查告诉你结果现在是什么样。三层合起来，任务才有一条能复核的证据链。</p>
+<p>以后处理表格，可以核对原始行数、汇总金额和异常项。修改代码，可以查看差异、运行测试、打开实际页面。整理文章，可以检查原文有没有被覆盖、配图能否显示、链接能否打开。任务会变，验收这个动作不用变。</p>
+<p>如果校验值变了，也先别急着认定文件坏了。打开差异，确认是不是换行、编码或自己在执行期间做过编辑。校验值只回答内容是否完全一致，没有告诉你哪里变了。需要定位变化，还要继续比较文件内容。</p>
+<p>输出文件存在也只是最低要求。空文件、写错格式、字段缺失都会通过“存在”检查。本次同时核对人名、日期和风险提醒，就是为了避免一个绿色 PASS 把后面的内容问题遮住。</p>
+<p>真正工作中可以把验收分成两轮。第一轮由 Pi 按提示词自查，发现明显漏项就先修。第二轮由人使用独立命令、原始材料或实际页面复核。两轮使用的依据不同，结果更可信。</p>
+<h1 id="五、让-Pi-理解文件和项目规则"><a href="#五、让-Pi-理解文件和项目规则" class="headerlink" title="五、让 Pi 理解文件和项目规则"></a>五、让 Pi 理解文件和项目规则</h1><p>一次任务跑通以后，下一步是减少重复说明。Pi 提供了几种不同入口，分别处理材料、命令和长期规则。它们名字接近，作用并不相同。</p>
+<h2 id="1-文件-用来明确材料"><a href="#1-文件-用来明确材料" class="headerlink" title="1. @文件 用来明确材料"></a>1. @文件 用来明确材料</h2><p>第四章已经用过 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/@input">@input</a></p>
+<p>&#x2F;项目会议记录.md。当项目变大，同名文件会越来越多，候选列表里要继续看完整路径。</p>
+<p>如果输入和旧结果同时存在，可以把文件身份直接写进要求。</p>
+<blockquote>
+<p>读取 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/@input">@input</a></p>
+<p>&#x2F;项目会议记录.md。它是本次唯一原始材料。不要把 output 中的旧文件当成事实来源。先列出准备使用的输入文件，再开始整理。</p>
+</blockquote>
+<p>一次引用多个文件时，也要讲清各自用途。一个负责提供事实，一个只是格式参考，这两种材料不能混在一起。只把文件全选上，再让模型自己猜，最后很难知道错误从哪里来的。</p>
+<h2 id="2-和-都会执行本机命令"><a href="#2-和-都会执行本机命令" class="headerlink" title="2. ! 和 !! 都会执行本机命令"></a>2. ! 和 !! 都会执行本机命令</h2><p>Pi 的输入区可以直接运行 Shell 命令。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!pwd</span><br></pre></td></tr></table></figure>
+
+<p>单个感叹号会执行命令，并把输出发送给模型。你可以先运行 !pwd，再让 Pi 根据结果判断当前目录是否正确。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!!pwd</span><br></pre></td></tr></table></figure>
+
+<p>两个感叹号也会执行命令，输出只给你看，不进入模型上下文。适合查看一段无需交给模型继续分析的信息。</p>
+<p>两个感叹号没有增加安全保护。删除文件、安装程序、上传内容或覆盖数据的命令，照样会真实执行。区别只在于命令输出是否进入模型上下文。</p>
+<p>新手可以先用没有破坏性的命令练习，例如 pwd、ls 和查看版本。来源不明、自己看不懂的命令先别执行。Agent 给出的命令也要看一遍目标路径，尤其是包含删除、递归和管理员权限的操作。</p>
+<h2 id="3-用-AGENTS-md-保存长期规则"><a href="#3-用-AGENTS-md-保存长期规则" class="headerlink" title="3. 用 AGENTS.md 保存长期规则"></a>3. 用 AGENTS.md 保存长期规则</h2><p>每次都写“输入只读、结果放到 output、不要修改其他目录”，很快会烦。可以把这类长期规则放进练习目录的 AGENTS.md。</p>
+<p>markdown</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Pi 零基础教程练习规则</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 只处理当前练习目录中的文件。</span><br><span class="line"><span class="bullet">-</span> <span class="code">`input/`</span> 只读，不得修改或覆盖。</span><br><span class="line"><span class="bullet">-</span> 新结果统一保存到 <span class="code">`output/`</span>。</span><br><span class="line"><span class="bullet">-</span> 输出使用简体中文 Markdown。</span><br><span class="line"><span class="bullet">-</span> 完成后列出新增和修改的文件，并说明如何验收。</span><br></pre></td></tr></table></figure>
+
+<p>Pi 会从全局位置、父目录和当前目录加载 Context 文件。当前目录里还可以使用 AGENTS.override.md 替代同目录的普通规则文件。刚入门不用搭复杂的继承关系，只要在启动区确认 [Context] 下加载的是你预期的文件。</p>
+<p>这一套加载方式允许大项目把通用规则放在上层目录，具体子目录再补局部要求。例如上层要求输出简体中文，练习目录再规定 input 只读。Pi 会把它们一起放进上下文。出现 AGENTS.override.md 时，该文件会替代同目录的普通 AGENTS.md，适合临时覆盖这一层规则。</p>
+<p>规则发生冲突时，不要期待模型永远替你猜对。把距离当前任务最近、最具体的要求写清楚，必要时删除过期规则。启动区显示加载了多个 Context，也值得逐个看名字，避免父目录里一份旧规则悄悄影响现在的任务。</p>
+<p>项目规则适合保存长期稳定的约束。每次任务的材料、目标和输出文件名仍然要在当前提示词里写。把所有东西都塞进 AGENTS.md，时间一长又会变成一份没人敢改的大说明书。</p>
+<h2 id="4-规则改完以后输入-reload"><a href="#4-规则改完以后输入-reload" class="headerlink" title="4. 规则改完以后输入 &#x2F;reload"></a>4. 规则改完以后输入 &#x2F;reload</h2><p>已经打开 Pi，再修改 AGENTS.md，可以在输入区执行 &#x2F;reload。</p>
+<p>Pi 会重新加载快捷键、Extension、Skill、提示模板、主题和 Context 文件。看到 Reloaded 以及对应的 context files 提示，说明新资源已经进入当前环境。</p>
+<p>重新加载不会撤销已经发生的文件修改，也不会自动重跑上一项任务。规则影响后面的行为，之前写错的文件仍要单独恢复或修正。</p>
+<p>&#x2F;reload 也会重新加载 Skill 和 Extension。正在编辑这些资源时，这很方便。与此同时，Extension 属于会运行的代码，重新加载之前要确认改动内容。一个拼写错误可能只是加载失败，一段高权限逻辑则可能改变后面的工具行为。</p>
+<p>如果你刚加的是高风险规则，比如允许批量改名或运行部署命令，我更建议开一条新会话，先用几个虚构文件测试。规则被成功加载，只证明 Pi 看到了它，还没有证明每一种输入下都会按你的预期行动。</p>
+<p>到这里，四个入口可以分开记。</p>
+<ul>
+<li>@ 负责指出材料。</li>
+<li>! 和 !! 负责执行本地命令，区别在输出是否交给模型。</li>
+<li>AGENTS.md 保存项目长期规则。</li>
+<li>&#x2F;reload 重新加载资源。</li>
+</ul>
+<p>分清这四件事以后，Pi 才开始从一次性聊天工具变成一个可以长期配合的工作环境。</p>
+<h1 id="六、会话、模型和上下文怎样管理"><a href="#六、会话、模型和上下文怎样管理" class="headerlink" title="六、会话、模型和上下文怎样管理"></a>六、会话、模型和上下文怎样管理</h1><p>第一次关闭终端时，很多人会担心刚才的对话是不是没了。Pi 默认会保存会话，之后可以继续，也可以从中间分出另一条路线。</p>
+<h2 id="1-继续刚才的会话"><a href="#1-继续刚才的会话" class="headerlink" title="1. 继续刚才的会话"></a>1. 继续刚才的会话</h2><p>官方默认把会话按工作目录保存在 ~&#x2F;.pi&#x2F;agent&#x2F;sessions&#x2F;。为了让本次教程的材料集中在练习目录，我启动时使用了 –session-dir sessions，真实会话因此保存在练习目录的 sessions 下面。</p>
+<p>退出 Pi 后，可以使用下面几个入口。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pi -c</span><br><span class="line">pi -r</span><br><span class="line">pi --no-session</span><br></pre></td></tr></table></figure>
+
+<p>pi -c 继续当前目录最近一次会话。pi -r 打开历史会话选择。pi –no-session 开一条不保存的临时会话。</p>
+<p>会话文件保存的是消息和运行过程，它可能包含文件路径、提示词、工具输出，以及任务中出现的业务内容。练习目录可以保留，真实项目要按资料敏感程度管理。不要因为它长得像普通 JSONL，就随手上传到公开仓库。</p>
+<p>临时会话适合一次性测试。需要下次继续、需要追查工具过程或准备从中间分支时，应保留会话。选择是否保存，本质上是在便利和留存范围之间做决定。</p>
+<p>已经在 Pi 里面，可以使用 &#x2F;resume。选择前要看会话对应的工作目录和名称。最近的一条未必属于你现在要做的项目。</p>
+<h2 id="2-回退和分支有不同用途"><a href="#2-回退和分支有不同用途" class="headerlink" title="2. 回退和分支有不同用途"></a>2. 回退和分支有不同用途</h2><p>&#x2F;tree 会打开当前会话的树结构。前半段方向正确，后面走偏时，可以跳回早期节点，从那里继续。</p>
+<p>&#x2F;fork 会从较早的一条用户消息建立新的分支会话。原来的路线留着，你可以在新分支试另一种方案。</p>
+<p>&#x2F;clone 会把当前活动分支复制成新的会话文件。它更像保存当前路线的一份副本，本文只把它当补充入口。</p>
+<p>可以把 &#x2F;resume 理解成重新打开一本笔记，&#x2F;tree 是翻回同一本笔记的旧节点，&#x2F;fork 是从某一页复印一本新的继续写。知道差别以后，你不必为了试第二种方案先毁掉第一种。</p>
+<h2 id="3-上下文快满时使用-compact"><a href="#3-上下文快满时使用-compact" class="headerlink" title="3. 上下文快满时使用 &#x2F;compact"></a>3. 上下文快满时使用 &#x2F;compact</h2><p>模型一次能处理的上下文有上限。任务越长，前面累积的消息和工具结果越多，状态栏中的占用会逐渐上升。</p>
+<p>&#x2F;compact 会把较早内容总结成更短的记录，为后续对话腾出空间。原会话文件里的树结构和条目仍然保留，它没有直接删除整个聊天历史。</p>
+<p>压缩也会丢失细节。真正重要的要求，例如输入只读、结果放到哪个目录、哪些字段绝对不能漏，最好写进当前提示词或 AGENTS.md。只在几十轮以前随口说过一次，压缩以后还能不能被准确保留，很难靠猜。</p>
+<h2 id="4-结果不好时先找问题落在哪"><a href="#4-结果不好时先找问题落在哪" class="headerlink" title="4. 结果不好时先找问题落在哪"></a>4. 结果不好时先找问题落在哪</h2><p>很多人看到结果不满意，第一反应是换更贵的模型。先把现象分开，通常更省时间。</p>
+<table>
+<thead>
+<tr>
+<th>你看到的现象</th>
+<th>优先处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>格式基本正确，明确字段漏了</td>
+<td>补全提示词和验收条件</td>
+</tr>
+<tr>
+<td>对话很长，早期要求开始丢失</td>
+<td>&#x2F;compact 或新开会话</td>
+</tr>
+<tr>
+<td>规则之间有冲突，需要多步取舍</td>
+<td>提高思考级别</td>
+</tr>
+<tr>
+<td>当前模型缺少所需能力，质量持续不足</td>
+<td>再考虑换模型</td>
+</tr>
+<tr>
+<td>目录或会话选错</td>
+<td>立即停止，回到正确位置</td>
+</tr>
+</tbody></table>
+<p>模型选择很重要，但路径错了，模型越能干，改错的文件可能越多。验收要求没写清，换模型以后也可能只是得到一份更流畅的漏项结果。</p>
+<h1 id="七、Skill、Extension-和-Pi-Package"><a href="#七、Skill、Extension-和-Pi-Package" class="headerlink" title="七、Skill、Extension 和 Pi Package"></a>七、Skill、Extension 和 Pi Package</h1><p>打开 Pi 的 Package Catalog，会看到大量包。新手很容易把 Skill、Extension 和 Package 混成一件事，然后连续安装。先把它们拆开。</p>
+<h2 id="1-Skill-是一套专项工作说明"><a href="#1-Skill-是一套专项工作说明" class="headerlink" title="1. Skill 是一套专项工作说明"></a>1. Skill 是一套专项工作说明</h2><p>Skill 通常围绕某一类任务组织工作流程、设置说明、辅助脚本和参考资料。Pi 启动时先发现它的名称与描述，任务匹配时再读取完整的 SKILL.md。这样不用把所有 Skill 全部塞进每一次对话。</p>
+<p>我这次制作教程截图，就把真实界面占比、红框怎样聚焦、什么时候无需标注、成品怎样验收写进了项目 Skill。下一次处理同类截图，可以继续沿用这套规则。</p>
+<p>Skill 虽然常以 Markdown 开头，也不能因此当成天然安全。里面可以指导模型运行命令，还可能带着脚本和依赖。安装前至少要打开看一遍，弄清它会要求 Pi 做什么。</p>
+<h2 id="2-Extension-会直接改变-Pi-的行为"><a href="#2-Extension-会直接改变-Pi-的行为" class="headerlink" title="2. Extension 会直接改变 Pi 的行为"></a>2. Extension 会直接改变 Pi 的行为</h2><p>Extension 是运行在 Pi 进程里的 TypeScript 或 JavaScript 模块。它可以注册工具、命令、快捷键和界面组件，也能监听运行事件。</p>
+<p>如果你想增加一个专用工具、把命令送进容器执行、改造状态栏，Extension 更合适。它的权限也更深。代码与 Pi 进程使用同一份本机权限，来源和行为都需要审查。</p>
+<p>零基础阶段先不用急着写或安装 Extension。内置的读取、写入、编辑和 Shell 工具已经足够完成不少真实任务。等你能看懂每次工具调用，知道怎样恢复错误，再去扩展行为会稳很多。</p>
+<h2 id="3-Pi-Package-是分发这些资源的容器"><a href="#3-Pi-Package-是分发这些资源的容器" class="headerlink" title="3. Pi Package 是分发这些资源的容器"></a>3. Pi Package 是分发这些资源的容器</h2><p>Pi Package 可以把 Extension、Skill、提示模板和主题组合起来，通过 npm、git 或本地路径分发。</p>
+<p>我先运行 pi list 盘点本机，没有新增，也没有更新，实际看到三个用户包。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm:pi-web-access</span><br><span class="line">npm:pi-powerline-footer</span><br><span class="line">npm:pi-lens</span><br></pre></td></tr></table></figure>
+
+<p>这份清单只说明本机已经装了什么，不代表我在本文里推荐这三个包。官网目录的条目数也一直在变化，截图记录的是拍摄当时的页面，不能拿来当长期不变的结论。</p>
+<p>准备安装第三方包以前，我会先问五个问题。</p>
+<ol>
+<li>发布者是谁，源代码能不能查看。</li>
+<li>包里包含 Skill、Extension、提示模板还是主题。</li>
+<li>Extension 注册了什么工具和命令。</li>
+<li>它需要哪些凭据、网络和目录权限。</li>
+<li>这件事能不能先用内置能力完成。</li>
+</ol>
+<p>官方安装形式可以写成 pi install npm:<package>。看到命令先别急着复制。Pi Package 可能获得完整的系统访问能力，安装来源和代码内容比目录里的介绍文案更值得看。</p>
+<p>三者放在一起，可以这样理解。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>里面主要是什么</th>
+<th>适合解决什么</th>
+<th>最先检查什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Skill</td>
+<td>工作说明、脚本和参考资料</td>
+<td>固化一类任务的做法</td>
+<td>指令与脚本是否安全</td>
+</tr>
+<tr>
+<td>Extension</td>
+<td>运行中的代码和新能力</td>
+<td>改变工具、命令或界面</td>
+<td>代码会以什么权限运行</td>
+</tr>
+<tr>
+<td>Pi Package</td>
+<td>多种资源的分发组合</td>
+<td>安装和分享一整套能力</td>
+<td>包含内容、来源与权限</td>
+</tr>
+</tbody></table>
+<p>Package 可以装着 Skill 和 Extension，三者因此经常同时出现。分工看懂以后，你会先盘点、再审查、最后才安装。</p>
+<h1 id="八、Pi-的安全边界和入门升级路线"><a href="#八、Pi-的安全边界和入门升级路线" class="headerlink" title="八、Pi 的安全边界和入门升级路线"></a>八、Pi 的安全边界和入门升级路线</h1><p>Pi 已经能读文件、写文件、执行 Shell，还能加载 Extension。走到这里，安全不能只剩一句“重要文件记得备份”。</p>
+<h2 id="1-Project-Trust-没有提供沙箱"><a href="#1-Project-Trust-没有提供沙箱" class="headerlink" title="1. Project Trust 没有提供沙箱"></a>1. Project Trust 没有提供沙箱</h2><p>Pi 的 Project Trust 控制是否加载项目本地的设置、资源、Package 和 Extension。它可以拦住一个陌生项目在你确认以前自动加载本地扩展，这很有用。</p>
+<p>它没有限制模型启动后能要求内置工具做什么，也没有把当前目录变成一个系统级围栏。</p>
+<p>Pi 会沿用启动它的当前用户权限。这个账号能够读取、覆盖或删除的文件，Pi 的内置工具通常也能在相同权限下操作。Extension 运行在同一个进程里，边界同样要按本机权限来理解。</p>
+<p>假设你从练习目录启动 Pi，当前账号仍然能读取下载目录、文档目录和其他项目。Pi 不会因为提示符停在练习目录，就自动失去访问那些位置的能力。当前目录主要提供工作起点和相对路径，操作系统权限才决定最后能不能打开或修改文件。</p>
+<p>Project Trust 处理的是另一类风险。陌生项目里可能自带设置、Context、Package 或 Extension。你还没审查这些资源以前，Trust 可以阻止 Pi 直接加载。通过信任检查以后，Pi 仍然按当前用户权限运行。它解决“要不要加载这个项目自带的东西”，没有替你建立一台隔离电脑。</p>
+<p>所以第四章那句“不要访问当前练习目录以外的内容”依然值得写。它让模型知道任务范围，也方便我们在工具事件里发现偏离。它没有把目录外的文件变成不可访问。</p>
+<h2 id="2-不可信和无人值守任务需要外部隔离"><a href="#2-不可信和无人值守任务需要外部隔离" class="headerlink" title="2. 不可信和无人值守任务需要外部隔离"></a>2. 不可信和无人值守任务需要外部隔离</h2><p>官方安全文档明确写了 Pi 没有内置沙箱。准备处理不可信仓库、生成后直接执行的代码、长时间无人观察的任务，可以把整个 Pi 进程放进容器、虚拟机、micro-VM、远程沙箱或受策略控制的环境。</p>
+<p>隔离环境也要控制挂载和凭据。只挂任务需要的目录，只提供最低限度的账号权限。可写挂载仍然能改宿主文件，重要材料可以只读挂载，或者复制进隔离环境，任务结束后只取出需要的结果。</p>
+<p>容器也不能只看名字。把整个主目录以可写方式挂进去，再把所有 API Key 一起传入，Pi 能接触的范围仍然很大。有效隔离需要同时缩小文件、网络和凭据范围。任务只要处理一份代码副本，就挂这份副本；只要调用一个测试账号，就不要带生产账号。</p>
+<p>无人值守任务的风险还多了一层。人不在屏幕前，无法在工具路径跑偏时按 Escape，也看不到模型为了修一个问题连续尝试了多少动作。先把任务在低风险环境手动跑通，记录输入、输出和验收，再考虑交给定时或后台流程。</p>
+<p>日常低风险任务也有几条很朴素的做法。</p>
+<ul>
+<li>给练习和正式任务划分独立目录。</li>
+<li>原始材料保留副本，输出进入单独文件夹。</li>
+<li>删除、覆盖、安装、上传和发布以前停下来确认目标。</li>
+<li>第三方 Skill、Extension 和 Package 先看来源与内容。</li>
+<li>任务结束后检查真实文件，不把完成提示当验收报告。</li>
+</ul>
+<p>这些办法不能代替沙箱，却能减少很多由路径、范围和误操作造成的问题。</p>
+<h2 id="3-新手可以按五级往上走"><a href="#3-新手可以按五级往上走" class="headerlink" title="3. 新手可以按五级往上走"></a>3. 新手可以按五级往上走</h2><p>第一天不用把 Package、Extension 和自动化全装上。能力越多，排错位置也越多。</p>
+<p>第一级先稳定完成单文件任务。会进入正确目录，会引用材料，会指定输出，再独立检查结果。</p>
+<p>第二级建立项目规则。把输入只读、输出位置和验收方式写进 AGENTS.md，先在练习目录验证。</p>
+<p>第三级学会管理长会话。知道怎样 &#x2F;resume、&#x2F;tree、&#x2F;fork 和 &#x2F;compact，一个项目不必永远挤在一条对话里。</p>
+<p>第四级开始复用 Skill。把反复出现的流程整理成专项说明，也审查里面的脚本和依赖。</p>
+<p>第五级再做隔离和自动化。不可信、批量或无人值守的任务进入容器或虚拟机，之后再考虑怎样组合 Extension 和 Package。</p>
+<p>你今天做到第一级就够了。</p>
+<h2 id="4-Pi、Codex-和-Claude-Code-怎样选"><a href="#4-Pi、Codex-和-Claude-Code-怎样选" class="headerlink" title="4. Pi、Codex 和 Claude Code 怎样选"></a>4. Pi、Codex 和 Claude Code 怎样选</h2><p>这篇不做三款工具的跑分。它们更新很快，账号环境和使用习惯也会直接改变体验。</p>
+<p>喜欢终端、本地文件和高度自定义，希望自己组合 Skill、Extension 与 Package，可以先体验 Pi。</p>
+<p>已经深度使用 OpenAI 和 Codex 的账号与工作流，希望继续沿用现有任务环境，可以先从 Codex 入手。</p>
+<p>平时主要使用 Anthropic 和 Claude 生态，希望沿用相应模型与终端协作方式，可以比较 Claude Code。</p>
+<p>选择以后，真正要学的仍然是同几件事。工具从哪个目录启动，它有什么权限，上下文怎样管理，结果怎样验收。宣传页上的能力列表很长，最终落到你电脑里的文件，还是要自己打开。</p>
+<p>这次练习结束时，我手里有一份没有被改动的会议记录、一份真实生成的行动清单，还有一条能重复执行的验收过程。我知道 Pi 做了什么，也知道哪些地方没有被提示词真正锁住。</p>
+<p>做到这一步，才算从“会和 Agent 说话”走到了“能让 Agent 干活”。</p>
+<h1 id="关键资料"><a href="#关键资料" class="headerlink" title="关键资料"></a>关键资料</h1><ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/">Pi 官网</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/quickstart">Pi Quickstart</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/usage">Pi 使用说明</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/keybindings">Pi 快捷键</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/skills">Pi Skills</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/extensions">Pi Extensions</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/packages">Pi Packages</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/session-format">Pi 会话格式</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/compaction">Pi 上下文压缩</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pi.dev/docs/latest/security">Pi 安全说明</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/1a8063f0/">https://macin.top/posts/1a8063f0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Pi-Agent/">Pi Agent</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/8ba8286f/" title="Unity MCP 是一个为 Unity 引擎设计的 AI 游戏开发助手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Unity MCP 是一个为 Unity 引擎设计的 AI 游戏开发助手</div></div><div class="info-2"><div class="info-item-1">Unity MCP 是一个为 Unity 引擎设计的 AI 游戏开发助手</div></div></div></a><a class="pagination-related" href="/posts/811eb7c6/" title="Codex 的 hook 能异步跑了，还能直接调 MCP 工具，让 AI 守规矩终于不靠自觉！"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Codex 的 hook 能异步跑了，还能直接调 MCP 工具，让 AI 守规矩终于不靠自觉！</div></div><div class="info-2"><div class="info-item-1">Codex 的 hook 能异步跑了，还能直接调 MCP 工具，让 AI 守规矩终于不靠自觉！</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E5%AF%BC%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">本文导读</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Pi-%E8%83%BD%E5%B8%AE%E6%99%AE%E9%80%9A%E4%BA%BA%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">一、Pi 能帮普通人做什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85%E3%80%81%E7%A1%AE%E8%AE%A4%E7%89%88%E6%9C%AC%E4%B8%8E%E7%99%BB%E5%BD%95"><span class="toc-number">3.</span> <span class="toc-text">二、安装、确认版本与登录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%85%88%E7%BB%99%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BB%83%E4%B9%A0%E5%8D%95%E7%8B%AC%E5%BB%BA%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">3.1.</span> <span class="toc-text">1. 先给第一次练习单独建个文件夹</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E4%BB%8E%E5%AE%98%E7%BD%91%E5%A4%8D%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">2. 安装命令从官网复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%86%8D%E7%94%A8%E7%89%88%E6%9C%AC%E5%8F%B7%E7%A1%AE%E8%AE%A4%E4%B8%80%E6%AC%A1"><span class="toc-number">3.3.</span> <span class="toc-text">3. 再用版本号确认一次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%99%BB%E5%BD%95%E6%9C%89%E4%B8%A4%E6%9D%A1%E8%B7%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. 登录有两条路</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%89%93%E5%BC%80-Pi%EF%BC%8C%E5%85%88%E7%9C%8B%E6%87%82%E5%9B%9B%E4%B8%AA%E5%8C%BA%E5%9F%9F"><span class="toc-number">4.</span> <span class="toc-text">三、第一次打开 Pi，先看懂四个区域</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A1%B6%E9%83%A8%E5%90%AF%E5%8A%A8%E5%8C%BA"><span class="toc-number">4.1.</span> <span class="toc-text">1. 顶部启动区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%AD%E9%97%B4%E6%B6%88%E6%81%AF%E5%8C%BA"><span class="toc-number">4.2.</span> <span class="toc-text">2. 中间消息区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%8B%E6%96%B9%E8%BE%93%E5%85%A5%E5%8C%BA"><span class="toc-number">4.3.</span> <span class="toc-text">3. 下方输入区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%BA%95%E9%83%A8%E7%8A%B6%E6%80%81%E6%A0%8F"><span class="toc-number">4.4.</span> <span class="toc-text">4. 底部状态栏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%8C%E6%88%90%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E9%AA%8C%E6%94%B6%E7%9A%84%E7%9C%9F%E5%AE%9E%E4%BB%BB%E5%8A%A1"><span class="toc-number">5.</span> <span class="toc-text">四、完成第一个可以验收的真实任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%87%86%E5%A4%87%E8%BE%93%E5%85%A5%E6%96%87%E4%BB%B6"><span class="toc-number">5.1.</span> <span class="toc-text">1. 准备输入文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%94%A8-%E6%8A%8A%E6%96%87%E4%BB%B6%E4%BA%A4%E7%BB%99-Pi"><span class="toc-number">5.2.</span> <span class="toc-text">2. 用 @ 把文件交给 Pi</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8A%8A%E4%BB%BB%E5%8A%A1%E5%86%99%E6%88%90%E8%83%BD%E6%A3%80%E6%9F%A5%E7%9A%84%E8%A6%81%E6%B1%82"><span class="toc-number">5.3.</span> <span class="toc-text">3. 把任务写成能检查的要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%9B%AF%E4%BD%8F%E5%B7%A5%E5%85%B7%E4%BA%8B%E4%BB%B6"><span class="toc-number">5.4.</span> <span class="toc-text">4. 盯住工具事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9B%9E%E5%88%B0%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%8B%AC%E7%AB%8B%E9%AA%8C%E6%94%B6"><span class="toc-number">5.5.</span> <span class="toc-text">5. 回到命令行独立验收</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%AE%A9-Pi-%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6%E5%92%8C%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%99"><span class="toc-number">6.</span> <span class="toc-text">五、让 Pi 理解文件和项目规则</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6-%E7%94%A8%E6%9D%A5%E6%98%8E%E7%A1%AE%E6%9D%90%E6%96%99"><span class="toc-number">6.1.</span> <span class="toc-text">1. @文件 用来明确材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%92%8C-%E9%83%BD%E4%BC%9A%E6%89%A7%E8%A1%8C%E6%9C%AC%E6%9C%BA%E5%91%BD%E4%BB%A4"><span class="toc-number">6.2.</span> <span class="toc-text">2. ! 和 !! 都会执行本机命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%94%A8-AGENTS-md-%E4%BF%9D%E5%AD%98%E9%95%BF%E6%9C%9F%E8%A7%84%E5%88%99"><span class="toc-number">6.3.</span> <span class="toc-text">3. 用 AGENTS.md 保存长期规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%A7%84%E5%88%99%E6%94%B9%E5%AE%8C%E4%BB%A5%E5%90%8E%E8%BE%93%E5%85%A5-reload"><span class="toc-number">6.4.</span> <span class="toc-text">4. 规则改完以后输入 &#x2F;reload</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%BC%9A%E8%AF%9D%E3%80%81%E6%A8%A1%E5%9E%8B%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%80%8E%E6%A0%B7%E7%AE%A1%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">六、会话、模型和上下文怎样管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BB%A7%E7%BB%AD%E5%88%9A%E6%89%8D%E7%9A%84%E4%BC%9A%E8%AF%9D"><span class="toc-number">7.1.</span> <span class="toc-text">1. 继续刚才的会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9B%9E%E9%80%80%E5%92%8C%E5%88%86%E6%94%AF%E6%9C%89%E4%B8%8D%E5%90%8C%E7%94%A8%E9%80%94"><span class="toc-number">7.2.</span> <span class="toc-text">2. 回退和分支有不同用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BF%AB%E6%BB%A1%E6%97%B6%E4%BD%BF%E7%94%A8-compact"><span class="toc-number">7.3.</span> <span class="toc-text">3. 上下文快满时使用 &#x2F;compact</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%BB%93%E6%9E%9C%E4%B8%8D%E5%A5%BD%E6%97%B6%E5%85%88%E6%89%BE%E9%97%AE%E9%A2%98%E8%90%BD%E5%9C%A8%E5%93%AA"><span class="toc-number">7.4.</span> <span class="toc-text">4. 结果不好时先找问题落在哪</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81Skill%E3%80%81Extension-%E5%92%8C-Pi-Package"><span class="toc-number">8.</span> <span class="toc-text">七、Skill、Extension 和 Pi Package</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Skill-%E6%98%AF%E4%B8%80%E5%A5%97%E4%B8%93%E9%A1%B9%E5%B7%A5%E4%BD%9C%E8%AF%B4%E6%98%8E"><span class="toc-number">8.1.</span> <span class="toc-text">1. Skill 是一套专项工作说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Extension-%E4%BC%9A%E7%9B%B4%E6%8E%A5%E6%94%B9%E5%8F%98-Pi-%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="toc-number">8.2.</span> <span class="toc-text">2. Extension 会直接改变 Pi 的行为</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Pi-Package-%E6%98%AF%E5%88%86%E5%8F%91%E8%BF%99%E4%BA%9B%E8%B5%84%E6%BA%90%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">8.3.</span> <span class="toc-text">3. Pi Package 是分发这些资源的容器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81Pi-%E7%9A%84%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C%E5%92%8C%E5%85%A5%E9%97%A8%E5%8D%87%E7%BA%A7%E8%B7%AF%E7%BA%BF"><span class="toc-number">9.</span> <span class="toc-text">八、Pi 的安全边界和入门升级路线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Project-Trust-%E6%B2%A1%E6%9C%89%E6%8F%90%E4%BE%9B%E6%B2%99%E7%AE%B1"><span class="toc-number">9.1.</span> <span class="toc-text">1. Project Trust 没有提供沙箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%8D%E5%8F%AF%E4%BF%A1%E5%92%8C%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E4%BB%BB%E5%8A%A1%E9%9C%80%E8%A6%81%E5%A4%96%E9%83%A8%E9%9A%94%E7%A6%BB"><span class="toc-number">9.2.</span> <span class="toc-text">2. 不可信和无人值守任务需要外部隔离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%B0%E6%89%8B%E5%8F%AF%E4%BB%A5%E6%8C%89%E4%BA%94%E7%BA%A7%E5%BE%80%E4%B8%8A%E8%B5%B0"><span class="toc-number">9.3.</span> <span class="toc-text">3. 新手可以按五级往上走</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Pi%E3%80%81Codex-%E5%92%8C-Claude-Code-%E6%80%8E%E6%A0%B7%E9%80%89"><span class="toc-number">9.4.</span> <span class="toc-text">4. Pi、Codex 和 Claude Code 怎样选</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%B5%84%E6%96%99"><span class="toc-number">10.</span> <span class="toc-text">关键资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

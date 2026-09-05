@@ -1,0 +1,849 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这篇教程的目标：一台只装了系统和显卡驱动的电脑，跟着做完，能跑出带立体声的 AI 视频，并且学会官方提示词语法——H3 出片好坏，大半在这上面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词">
+<meta property="og:url" content="https://macin.top/posts/d3ff02d8/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="这篇教程的目标：一台只装了系统和显卡驱动的电脑，跟着做完，能跑出带立体声的 AI 视频，并且学会官方提示词语法——H3 出片好坏，大半在这上面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/minimax.webp">
+<meta property="article:published_time" content="2026-09-02T02:56:00.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.612Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="MiniMax H3">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/minimax.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词",
+  "url": "https://macin.top/posts/d3ff02d8/",
+  "image": "https://macin.top/img/minimax.webp",
+  "datePublished": "2026-09-02T02:56:00.000Z",
+  "dateModified": "2026-09-05T15:22:43.612Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/d3ff02d8/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/minimax.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">MiniMax H3 本地部署保姆级教程:从零装机到写出专业提示词</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.612Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/minimax/">minimax</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">10.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>35分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><p>这篇教程的目标：一台只装了系统和显卡驱动的电脑，跟着做完，能跑出带立体声的 AI 视频，并且学会官方提示词语法——H3 出片好坏，大半在这上面。每一步都写清“做什么、怎么做、做完应该看到什么”，不需要任何代码基础。</p>
+<p><strong>开始前必须知道的一件事：本地模型的原生画布是 768p 级。</strong> 模型只在短边 768 的画布上训练过，官方的 2K 出片属于另一个闭源模块。但 768p 不是本地的天花板：分辨率可以硬开更大（有人在 5090 上原生跑 1920×1088，画质确实更好，代价是 10 秒片等了 58 分钟），社区也已经有现成的本地超分工作流把 768p 拉上 1080p——两条路的取舍文末细算</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ve63vj/minimax_h3_t2v_10s_at_19201088_took_58_minutes_on/">citation</a></p>
+<p>。先把三个模块的分工搞清楚，官方只开源了中间那个：</p>
+<ul>
+<li><strong>H3-Context-IR</strong> — 提示词理解与编排（把你的描述改写成模型爱吃的格式）。❌ 闭源，仅 API</li>
+<li><strong>H3-Base</strong> — 33B 生成主体，输出 768p 级别音视频。✅ <strong>开源，本教程主角</strong></li>
+<li><strong>H3-Regenerate-2K</strong> — 把 768p 重生成为 2K。❌ 闭源，仅 API</li>
+</ul>
+<p>所以“本地跑 H3 完全不花钱”这句话基本成立：草稿、768p 成片免费，1080p 靠社区超分也能本地解决；只有“原汁原味的官方 2K”必须走 API。什么时候用哪边，文末有一笔算清楚的账。</p>
+<p>本文实测数据来自一张 RTX 4090 48GB（魔改），但这不是门槛——ComfyUI 官方确认的地板是 <strong>3060 12GB + 32GB 内存</strong>。从 3060、5070 到 3090、5090，每档显卡怎么选量化、能跑多快，第 0 步有一张表。显存小只影响你能开多大规格、等多久，不影响“能不能跑”。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>看懂几个名词（30 秒）</li>
+<li>第 0 步：网页版验货 + 硬件自查</li>
+<li>第 1 步：安装 ComfyUI</li>
+<li>第 2 步：下载模型文件</li>
+<li>第 3 步：跑通第一条视频（T2V）</li>
+<li>第 4 步：看懂参数——帧数和分辨率的硬规则</li>
+<li>第 5 步：图生视频（I2V）</li>
+<li>第 6 步：参考生视频（R2V）</li>
+<li>第 7 步：提示词完整指南 ★ 全文最值钱的部分</li>
+<li>第 8 步：加速——SageAttention 省 24%，叠 Cache 最多再省 58%</li>
+<li>常见问题排查</li>
+<li>声音效果，提前对齐预期</li>
+<li>本地 vs API，一笔账</li>
+</ol>
+<h2 id="1-看懂几个名词（30-秒）"><a href="#1-看懂几个名词（30-秒）" class="headerlink" title="1. 看懂几个名词（30 秒）"></a>1. 看懂几个名词（30 秒）</h2><ul>
+<li><strong>ComfyUI</strong>：跑 AI 生成模型的免费开源工作台。界面是“节点连线”式的，但你不需要自己连——官方模板都搭好了，你只改参数。</li>
+<li><strong>工作流（Workflow）</strong>：一张连好线的节点图，相当于“配方”。加载模板 &#x3D; 打开现成配方。</li>
+<li><strong>权重 &#x2F; 模型文件</strong>：模型本体，后缀 <strong>.safetensors</strong> 的大文件。H3 需要 4 个：DiT（画画的）、文本编码器（读懂提示词的）、视频 VAE 和音频 VAE（把内部数据翻译成像素和声波的）。</li>
+<li><strong>量化</strong>：把模型压小的技术。<strong>bf16</strong> 是全精度原版，<strong>int8</strong>、<strong>nvfp4</strong> 是压缩版，画质损失很小、显存需求大降。本地部署基本都用量化版。</li>
+<li><strong>T2V &#x2F; I2V &#x2F; R2V</strong>：三种生成模式——纯文字生成、给图片让它动起来、给参考素材（图&#x2F;视频&#x2F;音频）锁定角色或风格。</li>
+</ul>
+<h2 id="2-第-0-步：网页版验货-硬件自查"><a href="#2-第-0-步：网页版验货-硬件自查" class="headerlink" title="2. 第 0 步：网页版验货 + 硬件自查"></a>2. 第 0 步：网页版验货 + 硬件自查</h2><p>动手之前：先花 10 分钟在网页上验货</p>
+<p>40 GB 的权重先放着。H3 在海螺 AI 网页版（国内 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hailuoai.com/">hailuoai.com</a></p>
+<p>，海外 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hailuoai.video/">hailuoai.video</a></p>
+<p>）就能直接试：登录 → 进视频生成 → 模型选 MiniMax H3 → 随便传一张图，写一句“让画面里的人物向镜头挥手，配上街道环境音”，生成。</p>
+<p>看三样东西：<strong>主体稳不稳、镜头动得自然不自然、声音和画面对不对得上</strong>。这三样满意了，再往下走；不满意，这篇教程你也不用读了，省下半天时间。网页版的额度和 API 是两套账，网页额度用完不影响后面走 API。</p>
+<p>硬件自查</p>
+<ul>
+<li><strong>显卡</strong>：最低 NVIDIA 12GB 显存，推荐 24GB+。怎么查：Windows 按 <strong>Ctrl+Shift+Esc</strong> → 性能 → GPU → “专用 GPU 内存”；或命令行输 <strong>nvidia-smi</strong>。</li>
+<li><strong>内存</strong>：最低 32GB，推荐 64GB。任务管理器 → 性能 → 内存。</li>
+<li><strong>磁盘空闲</strong>：最低 60 GB，推荐 150 GB+。权重约 40 GB，加上生成产物和 R2V 权重会继续涨。</li>
+<li><strong>系统</strong>：Windows 10&#x2F;11 或 Linux.</li>
+<li><strong>网络</strong>：能访问 Hugging Face 或其镜像，见第 2 步镜像方案。</li>
+</ul>
+<p>对号入座：你的显卡属于哪一档</p>
+<p>ComfyUI 核心开发者官方确认的地板线：<strong>3060 12GB + 32GB 内存 + 一块不错的 NVMe 固态，就能跑 480p</strong>。12GB 有 12GB 的跑法，找到自己那一行</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1vd9o0r/minimax_h3_1080p_25_seconds_text_to_video_in/">citation</a></p>
+<p>：</p>
+<p>数据出处：5090 与 12GB 卡来自社区实测帖，4090 移动版来自开启 SageAttention 的 20 步实测</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ves4o0/minimax_h3_is_shockingly_uncensored_wow/">citation</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ve6lvr/minimax_h3_first_local_test_5_seconds_at_960540/">citation</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ve0urz/minimaxh3_weights_up/">citation</a></p>
+<p>两条跨档位的通用提醒：</p>
+<ul>
+<li><p><strong>系统内存和固态跟显卡一样重要。</strong> H3 靠“显存装不下就借内存”的分层加载才能在消费级卡上跑，32GB 内存是底线，64GB 才从容——16GB 内存 + 大显存反而跑不动。模型从磁盘进内存那一步，机械硬盘会让每次首跑多等几分钟，权重务必放 NVMe 上。</p>
+</li>
+<li><p><strong>30&#x2F;40 系和 50 系的一个隐藏差别：NVFP4 只有 50 系（Blackwell）有硬件原生支持。</strong> 在 3090&#x2F;4090 上加载 nvfp4 权重时，ComfyUI 会走“模拟模式”——省磁盘和显存占用，但算之前要解压回高精度，不省时间。所以 50 系用户可以大胆选社区 NVFP4 版 DiT（更小更快），30&#x2F;40 系用户选 INT8&#x2F;FP8 系更划算</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://ai-muninn.com/en/blog/minimax-h3-nvfp4-rtx5090">citation</a></p>
+<p>。</p>
+</li>
+</ul>
+<h2 id="3-第-1-步：安装-ComfyUI"><a href="#3-第-1-步：安装-ComfyUI" class="headerlink" title="3. 第 1 步：安装 ComfyUI"></a>3. 第 1 步：安装 ComfyUI</h2><p><strong>版本必须 ≥ 0.30.0</strong>，这是硬门槛：H3 的原生支持（4 个专用节点 + 官方模板）于 2026 年 8 月 3 日随 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Comfy-Org/ComfyUI/pull/15224">Comfy-Org&#x2F;ComfyUI #15224</a></p>
+<p> 合并，旧版没有这些节点，任何工作流都跑不起来。</p>
+<p>情况 A：全新安装（推荐小白）</p>
+<ol>
+<li><p>打开 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.comfy.org/">ComfyUI 官网</a></p>
+<p>，下载对应系统的<strong>桌面版</strong>安装包。</p>
+</li>
+<li><p>双击安装，一路默认。安装器会自动处理 Python、PyTorch、CUDA 依赖，这正是桌面版对新手友好的原因。</p>
+</li>
+<li><p>装完启动。第一次启动会做初始化，等它跑完。</p>
+</li>
+</ol>
+<p>情况 B：已有 ComfyUI</p>
+<ul>
+<li><strong>桌面版</strong>：菜单里检查更新到最新稳定版。</li>
+<li><strong>手动 git 部署</strong>：进入 ComfyUI 目录执行 <strong>git pull</strong>，再 <strong>pip install -r requirements.txt</strong>。</li>
+<li><strong>整合包（秋叶包等）</strong>：等整合包作者更新，或在启动器里更新内核。注意：桌面版和整合包跟随<strong>稳定版</strong>发布，个别 nightly 才有的功能可能晚几天到。</li>
+</ul>
+<p>验证安装成功</p>
+<p>启动后浏览器打开 <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="http://127.0.0.1:8188/">http://127.0.0.1:8188</a></strong>（桌面版直接弹出窗口），看到节点画布。确认版本：设置（左下角齿轮）→ 关于，版本号 ≥ 0.30.0。低于就回去更新，别硬试——<strong>“缺少 MiniMaxH3ImageToVideo 节点”这个最高频报错，99% 是版本问题</strong>。</p>
+<h2 id="4-第-2-步：下载模型文件"><a href="#4-第-2-步：下载模型文件" class="headerlink" title="4. 第 2 步：下载模型文件"></a>4. 第 2 步：下载模型文件</h2><p>模型托管在 Hugging Face 的 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/Comfy-Org/MiniMax-H3">Comfy-Org&#x2F;MiniMax-H3</a></p>
+<p> 仓库。</p>
+<p><strong>警告：别 clone 整个仓库。</strong> 原始仓库全量约 318 GB，而你只需要 4 个文件。</p>
+<p>国内下载提速</p>
+<p>把任何 Hugging Face 链接里的 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/"><strong>huggingface.co</strong></a></p>
+<p> 换成 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hf-mirror.com/"><strong>hf-mirror.com</strong></a></p>
+<p>，就是国内镜像，速度差一个量级。20GB 的大文件建议用支持断点续传的下载工具（IDM、aria2、或浏览器自带恢复下载），断了不用重来。</p>
+<p>会用命令行的，一条命令精确下四个文件（国内先执行 <strong>set HF_ENDPOINT&#x3D;</strong></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hf-mirror.com/"><strong>https://hf-mirror.com</strong></a></p>
+<p>, Linux&#x2F;macOS 用 <strong>export</strong>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pip install -U huggingface_hub</span><br><span class="line"></span><br><span class="line">hf download Comfy-Org/MiniMax-H3 \</span><br><span class="line">  diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors \</span><br><span class="line">  text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors \</span><br><span class="line">  vae/minimax_h3_video_vae_fp16.safetensors \</span><br><span class="line">  vae/minimax_h3_audio_vae_fp32.safetensors \</span><br><span class="line">  --local-dir ComfyUI/models/</span><br></pre></td></tr></table></figure>
+
+<p>T2V &#x2F; I2V 必需的 4 个文件（约 39.6 GB）</p>
+<p>两个 VAE <strong>都必须下</strong>——视频 VAE 出画面，音频 VAE 出声音，少了音频 VAE 你会得到一条无声视频。</p>
+<p>放完后目录应该长这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ComfyUI/</span><br><span class="line">├── models/</span><br><span class="line">│   ├── diffusion_models/</span><br><span class="line">│   │   └── minimax_h3_fl2va_pruned_int8_convrot.safetensors</span><br><span class="line">│   ├── text_encoders/</span><br><span class="line">│   │   └── qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors</span><br><span class="line">│   └── vae/</span><br><span class="line">│       ├── minimax_h3_video_vae_fp16.safetensors</span><br><span class="line">│       └── minimax_h3_audio_vae_fp32.safetensors</span><br></pre></td></tr></table></figure>
+
+<p>桌面版用户注意：模型目录可能在安装时自选的路径下，设置里搜 “model paths” 确认。</p>
+<p><strong>更懒的办法</strong>：跳过手动下载，直接做第 3 步——加载模板时 ComfyUI 会弹窗列出缺失模型并给下载按钮，点击自动下到正确位置。手动下载的价值在于能用镜像和断点续传，网络不稳的人建议手动。</p>
+<p>官方全部变体一览（按需选择，多数人用不到）</p>
+<p>Diffusion 模型（选一个；想玩 R2V 要多下 ref2va 那份）:</p>
+<ul>
+<li><strong>minimax_h3_fl2va_pruned_int8_convrot</strong>（19.5 GB）— ✅ <strong>推荐</strong>，T2V&#x2F;I2V 最佳平衡</li>
+<li><strong>minimax_h3_fl2va_pruned_fp8_scaled</strong>（19.5 GB）— 备选量化格式</li>
+<li><strong>minimax_h3_fl2va_int8_convrot</strong>（31.7 GB）— 标准 INT8（未剪枝）</li>
+<li><strong>minimax_h3_fl2va_bf16</strong>（61.7 GB）— 全精度，微调用</li>
+<li><strong>minimax_h3_ref2va_pruned_int8_convrot</strong>（19.5 GB）— <strong>R2V 模式专用</strong>，第 6 步会用到</li>
+<li><strong>minimax_h3_ref2va_bf16</strong>（61.7 GB）— R2V 全精度</li>
+</ul>
+<p>文本编码器（选一个）:</p>
+<ul>
+<li><strong>qwen3vl_32b_minimax_h3_nvfp4_awq</strong>（14.6 GB）— ✅ <strong>推荐</strong>，任何 GPU 可跑</li>
+<li><strong>qwen3vl_32b_minimax_h3_int8_convrot</strong>（25.3 GB）— INT8 版</li>
+<li><strong>qwen3vl_32b_minimax_h3_bf16</strong>（48.0 GB）— 全精度</li>
+</ul>
+<p><strong>为什么这么选，两个冷知识</strong>（跳过不影响操作）:</p>
+<ol>
+<li><strong>H3 吃显存的大头是编码器，不是 33B 的 DiT。</strong> 编码器直接用了 Qwen3-VL-32B 的全量权重（bf16 下 62.13 GiB，比 61.73 GiB 的 DiT 还大），一个 32B 视觉语言模型在这里只是个“读题的”。所以编码器必须选狠量化的 nvfp4 版。网上流传“编码器 51.5GB”是错的，以官方仓库文件大小为准。</li>
+<li><strong><strong>pruned</strong></strong><strong>（剪枝）&#x3D; 砍掉 13B 的 AdaLN 分支。</strong> 61.73 − 37.46 ≈ 24.3 GiB，正好是那 13B。官方确认这部分的调制输出可以预计算缓存，纯推理根本不用加载。结论：只做推理就用 pruned，要微调才需要完整权重。</li>
+</ol>
+<p>按显卡档位选社区量化（可选加餐）</p>
+<p>官方那套 <strong>pruned_int8 + nvfp4_awq</strong> 是通吃组合，任何档位都建议先用它跑通。跑通之后想更快、更省，再来这里按卡换餐。以下均为社区第三方转换（非官方发布，画质和许可自查各仓库 README），原生 ComfyUI 可直接加载：</p>
+<p>换社区权重时记住一条：<strong>DiT、编码器可以换，两个 VAE 永远用官方原版</strong>——它们本来就不大，量化它们只会伤画质和声音。</p>
+<h2 id="5-第-3-步：跑通第一条视频（T2V）"><a href="#5-第-3-步：跑通第一条视频（T2V）" class="headerlink" title="5. 第 3 步：跑通第一条视频（T2V）"></a>5. 第 3 步：跑通第一条视频（T2V）</h2><p>加载官方模板</p>
+<ol>
+<li>打开 ComfyUI → 顶部菜单<strong>工作流</strong> → <strong>浏览模板</strong> → <strong>视频</strong>分类，搜 “MiniMax H3”。</li>
+<li>你会看到 <strong>6 个模板</strong>，认清楚，别点错：</li>
+</ol>
+<ul>
+<li><strong>MiniMax H3 Text to Video</strong> — 本地，文生视频，<strong>从这个开始</strong></li>
+<li><strong>MiniMax H3 Image to Video</strong> — 本地，图生视频（首帧&#x2F;尾帧）</li>
+<li><strong>MiniMax H3 Reference to Video</strong> — 本地，参考生视频，需另下 ref2va 权重</li>
+<li><strong>api_minimax_h3_t2v &#x2F; r2v &#x2F; flf2v</strong> — API 版，调 MiniMax 云端，要充值 API key，先无视</li>
+</ul>
+<ol>
+<li>点开 <strong>Text to Video</strong>。如果弹窗提示缺模型，按提示下载；第 2 步已手动放好则直接就绪（没识别到就重启一次 ComfyUI——模型列表在启动时扫描）。</li>
+</ol>
+<p>认识工作流里的关键节点</p>
+<p>模板加载后画布上有一串节点，你只需要认识这几个：</p>
+<ul>
+<li><strong>UNETLoader</strong>：选 DiT 权重，确认下拉框里是 <strong>minimax_h3_fl2va_pruned_int8_convrot.safetensors</strong>。</li>
+<li><strong>文本编码器加载节点</strong>：确认选中 <strong>qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors</strong>。</li>
+<li><strong>两个 VAE Loader</strong>：分别选视频 VAE 和音频 VAE。</li>
+<li><strong>Resolution Selector</strong>：控制输出分辨率（宽高比、Megapixels 两个参数算出宽高）。模板默认是快速预览规格，<strong>第一次先别动</strong>。</li>
+<li><strong>提示词框（正向）</strong>：写你要的内容。</li>
+<li><strong>时长&#x2F;帧数输入</strong>：决定视频长度，规则见第 4 步。</li>
+<li><strong>SaveVideo</strong>：输出 MP4 的终点。</li>
+</ul>
+<p>跑</p>
+<p>提示词框里写一句英文场景（先不管语法，第 7 步才是正课）:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A cat walks along a rainy street at night, neon lights reflecting in puddles, soft rain sounds.</span><br></pre></td></tr></table></figure>
+
+<p>点 <strong>Run（运行）</strong>。</p>
+<p>你应该看到什么</p>
+<ul>
+<li>进度条先卡在模型加载（约 34 GB 从磁盘进显存&#x2F;内存），然后逐步采样。</li>
+<li><strong>第一次特别慢是正常的</strong>：4090 48G 实测首跑 644 秒（含加载），同规格热跑 425 秒；768×432 小规格热跑仅约 99 秒。其他档位对齐预期：5090 出 5 秒片约 108 秒；16GB 卡（如 4090 移动版）960×540 出 5 秒片约 182 秒；12GB 卡靠内存分层加载，864×480 出 90 帧约 6 分钟。首跑都要在这些数字上再加几分钟加载时间，泡杯茶等。</li>
+<li>结束后 SaveVideo 节点出现视频预览：<strong>有画面、有声音</strong>。声音和画面是同一次前向传播里一起生成的，这是 H3 区别于“生成后配音”类模型的根本点。</li>
+<li>控制台如果刷 <strong>Input tensors must be in dtype of torch.float16 or torch.bfloat16, using pytorch attention instead</strong>——<strong>这不是报错</strong>。官方文档确认这是部分层回退到标准 attention 的正常提示，生成不受影响。</li>
+</ul>
+<p>跑通了，部署阶段结束。接下来是从“能跑”到“会用”。</p>
+<h2 id="6-第-4-步：看懂参数——帧数和分辨率的硬规则"><a href="#6-第-4-步：看懂参数——帧数和分辨率的硬规则" class="headerlink" title="6. 第 4 步：看懂参数——帧数和分辨率的硬规则"></a>6. 第 4 步：看懂参数——帧数和分辨率的硬规则</h2><p>这两条规则直接读 ComfyUI 的 H3 节点源码坐实，不是经验玄学。</p>
+<p>规则一：帧数必须落在 17k+5 网格，而且会静默吸附</p>
+<p>源码逻辑就一行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> n % <span class="number">17</span> != <span class="number">5</span>:</span><br><span class="line">    n += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>你填的帧数如果不合法，会被<strong>向上吸附到最近的合法值，不报错、不提示</strong>。实测填 61 帧，拿到 73 帧。</p>
+<p>训练区间是 124–362 帧，24fps 下即 <strong>5.17 至 15.08 秒</strong>；这个区间内的全部合法档位：</p>
+<p><strong>填 60 秒也只会得到 15.08 秒</strong>，更长的内容要分镜头生成再剪辑。节点 tooltip 原话是 “trained range is ~124-362, longer is untested”——少于 124 帧也能跑（网格从 5、22、39……就开始），但在训练分布外，质量不保证。日常直接从这张表里挑，别让它吸附——你以为的 6 秒和实际的 6.58 秒，在卡口型的场景里就是灾难。</p>
+<p>规则二：分辨率的“原生画布”是短边 768</p>
+<p>模型按「<strong>短边 768、面积上限 768×1344、每轴对齐 32 的倍数</strong>」训练。操作建议：</p>
+<ul>
+<li><p><strong>试提示词</strong>：模板默认的快速预览规格（如 768×432），约 99 秒&#x2F;条，快速迭代。</p>
+</li>
+<li><p><strong>出正片</strong>： Resolution Selector 的 Megapixels 拉到约 <strong>1.0</strong>,16:9 下得到约 <strong>1344×768</strong>——正好是原生画布，质量最好。</p>
+</li>
+<li><p><strong>下限 384p</strong>:256p 及更低会<strong>完全失败</strong>，这是官方确认的，不是你的配置问题。</p>
+</li>
+<li><p><strong>超原生画布不是不能，是不划算</strong>：模型没在更大画幅上训练过，但实测硬开是可以出片的——有人在 5090 上原生跑 1920×1088 的 10 秒片，画质确实比 768p 好，代价是 58 分钟一条。社区的共识打法是<strong>低分辨率生成 + 本地超分</strong>：768p 级出片后用 LTX 2.3 或 Wan 2.2 5B 的超分工作流拉到 1080p，同样的 1920×1080 成品耗时从约 700 秒降到 161 秒，快 6 倍、画质接近</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ve63vj/minimax_h3_t2v_10s_at_19201088_took_58_minutes_on/">citation</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1vf4ync/12x_faster_minimax_h3_generations_stop_rendering/">citation</a></p>
+<p>。想要官方原味的 2K，走 API 的重生成——三条路的取舍见文末。</p>
+</li>
+</ul>
+<p>显存和耗时的两条实测规律</p>
+<p><strong>显存吃的是模型，不是画幅。</strong> 768×432 和 1152×640 的峰值显存几乎一样（实测差 &lt;1%）。进程级细看：采样阶段稳定在 19 GB 上下，编码&#x2F;解码阶段瞬时冲到 32 GB——这是 48G 卡放开跑的读数，ComfyUI 的动态加载会按空闲显存自适应，小显存卡靠换入换出也能跑，只是更慢。含义：模型装得下，分辨率随便开到原生画布；装不下，降分辨率救不了你，得换更小的量化版。OOM 时别浪费时间调尺寸。</p>
+<p><strong>耗时规律：像素维度划算，时长维度贵。</strong> 1152×640 相对 768×432 是 2.22 倍像素，只多花 1.86 倍时间，次线性，开大分辨率比直觉上划算；但时长维度相反——attention 对 token 数是超线性的，时长翻倍，耗时比翻倍还多。</p>
+<p>规格标度实测（4090 48G,SageAttention cuda++ 加速下）:</p>
+<p>读表记三个数就够：<strong>5 秒的片等 5 分钟，10 秒等 12 分钟，15 秒满长度一条 19 分钟</strong>。另外注意 1536×864 相对 1152×640 是 1.8 倍像素、耗时接近同比翻倍——大画幅下次线性红利就没了，再次印证别超原生画布。数据可复现性验过：同规格隔天重跑，320.11s 对 322.05s，误差 0.6%。</p>
+<h2 id="7-第-5-步：图生视频（I2V）"><a href="#7-第-5-步：图生视频（I2V）" class="headerlink" title="7. 第 5 步：图生视频（I2V）"></a>7. 第 5 步：图生视频（I2V）</h2><p>用途：让一张现成的图动起来，或用首尾两张图让模型补中间的运动。</p>
+<ol>
+<li><p>模板库加载 <strong>MiniMax H3 Image to Video</strong>。权重和 T2V 完全同一套（fl2va），不用重新下载。</p>
+</li>
+<li><p>用 <strong>LoadImage</strong> 节点上传你的图，连到 <strong>MiniMaxH3ImageToVideo</strong> 节点的 <strong>first_frame</strong> 输入。</p>
+</li>
+<li><p><strong><strong>last_frame</strong></strong> <strong>是可选的</strong>：只给首帧 &#x3D; 从这张图开始往后演；首尾都给 &#x3D; 模型在两张图之间插出连贯运动（适合产品旋转、姿态变化这类“从 A 到 B”的镜头）；只给尾帧 &#x3D; 模型倒推一个合理的开场，最后落在你的图上。</p>
+</li>
+<li><p>提示词按第 7 步的 I2VA 格式写（需要一行首帧对齐指令）。</p>
+</li>
+<li><p>输入图会被适配到生成分辨率，比例差太多会被处理——<strong>上传前先把图裁成和输出一致的宽高比</strong>，省得构图被意外切割。</p>
+</li>
+</ol>
+<h2 id="8-第-6-步：参考生视频（R2V）"><a href="#8-第-6-步：参考生视频（R2V）" class="headerlink" title="8. 第 6 步：参考生视频（R2V）"></a>8. 第 6 步：参考生视频（R2V）</h2><p>用途：锁定一个角色的长相、一种画风、一段动作、一个运镜或一个声音，让它们出现在新视频里。这是 H3 最强也最复杂的模式。</p>
+<p>准备</p>
+<p>R2V 用<strong>另一套权重</strong> <strong>ref2va</strong>，和 T2V&#x2F;I2V 的 <strong>fl2va</strong> 不通用：</p>
+<ol>
+<li><p>回 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/Comfy-Org/MiniMax-H3">Comfy-Org&#x2F;MiniMax-H3</a></p>
+<p> 下载 <strong>minimax_h3_ref2va_pruned_int8_convrot.safetensors</strong>(19.5 GB)，同样放 <strong>ComfyUI&#x2F;models&#x2F;diffusion_models&#x2F;</strong>。</p>
+</li>
+<li><p>编码器和两个 VAE 复用，不用重下。</p>
+</li>
+<li><p>模板库加载 <strong>MiniMax H3 Reference to Video</strong>，确认 UNETLoader 里切到了 ref2va 权重。</p>
+</li>
+</ol>
+<p>使用规则</p>
+<ul>
+<li><strong>数量上限</strong>：最多 9 张参考图、3 条参考视频（每条可带自己的音轨）、3 条独立参考音频。</li>
+<li><strong>按连接顺序用标签引用</strong>：第一张图是 <strong>&lt;Picture 1&gt;</strong>，第二条视频是 <strong>&lt;Video 2&gt;</strong>，以此类推。提示词里必须用这些标签指名道姓。</li>
+<li><strong>给每个参考“派活”</strong>：明确说哪个参考管什么——长相、画风、动作、运镜还是音色。官方明确表示，显式指派的效果远好于把素材一堆了之。</li>
+<li><strong><strong>ref_image_size</strong></strong> <strong>参数</strong>：<strong>match</strong>（默认）把参考图缩到生成分辨率，快；<strong>max</strong> 保留最高 2048px 短边，角色长相更保真，<strong>但参考 token 每一步采样都要完整过一遍，慢好几倍</strong>。日常用 <strong>match</strong>，只有脸锁不住时才换 <strong>max</strong>。</li>
+</ul>
+<p>R2V 提示词的结构差异</p>
+<p>R2V 的完整提示词是六段式（比 T2V 的三字段多了三段），顺序固定：<strong>subject_definitions</strong>（给每个参考内容定义标签和特征）→ <strong>summary</strong>（方括号任务类型开头的一段总结）→ <strong>retention_analysis</strong>（逐标签声明保留程度）→ <strong>detailed_description</strong>（主体，350–500 英文词，风格开场句放在 [Shot 1] 之前）→ <strong>overall_soundscape</strong> → <strong>non_diegetic_music</strong>。</p>
+<p>四种标签各管各的：</p>
+<ul>
+<li><strong><Subject N></strong> — 要在成片里复用的内容：人、场景、服装、风格、动作</li>
+<li><strong><Picture N></strong> — 一张图直接当某一帧或构图锚点</li>
+<li><strong><Video N></strong> — 整片级关系：被编辑的源片、续写起点、剪辑节奏来源</li>
+<li><strong><Audio N></strong> — 被复制或被参考的音频</li>
+</ul>
+<p>最容易搞错的一条：<strong>图片只是用来定义角色或风格的话，不建</strong> <strong><strong><Picture N></strong></strong><strong>，把图的来源写进</strong> <strong><strong><Subject N></strong></strong> <strong>定义里</strong>。<strong><Picture N></strong> 留给“这张图就是第几帧”的场合。</p>
+<p>另外两段的填法：<strong>summary</strong> 开头用方括号打任务类型，多个用 <strong>+</strong> 连——<strong>keyframe completion</strong> &#x2F; <strong>reference generation</strong> &#x2F; <strong>video editing</strong> &#x2F; <strong>video continuation</strong> &#x2F; <strong>audio reuse</strong> &#x2F; <strong>audio reference</strong>。判断题：参考视频只提供运镜和节奏 &#x3D; reference generation，真的在改那条片子才是 video editing。<strong>retention_analysis</strong> 给每个标签一个固定关系词：可见内容用 <strong>fully_preserved</strong> &#x2F; <strong>partially_preserved</strong> &#x2F; <strong>attribute_transfer</strong> &#x2F; <strong>weak_reference</strong>，音频用 <strong>fully_copy</strong> &#x2F; <strong>partially_copy</strong> &#x2F; <strong>reference</strong> &#x2F; <strong>weak_reference</strong>。</p>
+<p>这套格式第一眼劝退，但它就是官方付费模块 Context-IR 的输出格式——你手写等于白嫖。新手不必一上来背全六段：先用模板自带的示例提示词替换素材跑通，再对照 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_ref_en.md">官方 R2V 指南</a></p>
+<p> 里的完整案例逐段仿写，写一次存成模板，后面每次改几个词。记住一句就够：<strong>每个参考素材在</strong> <strong><strong>subject_definitions</strong></strong> <strong>里领一个标签和一份特征描述，后面所有段落都用这个标签称呼它，并说清它被保留了多少。</strong></p>
+<h2 id="9-第-7-步：提示词完整指南-★"><a href="#9-第-7-步：提示词完整指南-★" class="headerlink" title="9. 第 7 步：提示词完整指南 ★"></a>9. 第 7 步：提示词完整指南 ★</h2><p>H3 的提示词是一套官方定义的结构化格式（</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_base_en.md">官方指南原文</a></p>
+<p>)。随手一句话也能出片，但多镜头、角色对白、指定运镜、卡时间点，必须按格式来。<strong>除对白和画面文字保留原语言外，全部用英文写。</strong></p>
+<p>9.1 骨架：三个字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">integrated_multimodal_description: [Shot 1] ...</span><br><span class="line"></span><br><span class="line">overall_soundscape: ...</span><br><span class="line"></span><br><span class="line">non_diegetic_music: ...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>integrated_multimodal_description</strong> — 主体。按时间线写画面、动作、镜头、说话人、对白、画内声音。</li>
+<li><strong>overall_soundscape</strong> — 1–4 句，全片的环境音和动作音效（风雨、脚步、衣料摩擦、呼吸、笑声）。别写：对白、唱歌、画内音乐（它们属于上面）。</li>
+<li><strong>non_diegetic_music</strong> — 1–3 句，配乐（角色听不到、只有观众听到）：乐器、速度、节奏、强弱变化。别写：情绪词（“悲伤的”“史诗感的”）、解释音乐的作用。</li>
+</ul>
+<p>后两个字段没有内容就写 <strong>N&#x2F;A</strong>(soundscape 只有用户明确要求全片静音时才 N&#x2F;A)。</p>
+<p>9.2 镜头：[Shot N] 与切换时间</p>
+<ul>
+<li><strong>[Shot 1]</strong> 开头交代<strong>整体风格 + 初始构图</strong>，不带时间戳。风格词：<strong>Cinematic</strong>、<strong>live-action</strong>、<strong>2D-animated</strong>、<strong>3D CG</strong>、<strong>claymation</strong>、<strong>watercolor</strong>、<strong>vintage film</strong>。</li>
+<li>后续镜头带严格递增的切换时间：<strong>[Shot 2] At 00:03.500, the camera cuts to…</strong></li>
+<li>切换动词：<strong>the camera cuts to</strong> &#x2F; <strong>the shot transitions to</strong> &#x2F; <strong>the shot switches to</strong>；用户明确要求时才用 cross-dissolve、fade、wipe.</li>
+<li><strong>什么时候切镜头</strong>：切换应引入新信息（新主体、新空间、新视角、新时间）。只想拉近拉远或微调角度，用运镜，别切。</li>
+</ul>
+<p>9.3 运镜：类型 + 幅度 + 速度</p>
+<p>写成镜头内自然的英文句子，不要在句尾堆标签。</p>
+<p>幅度：<strong>with small amplitude</strong> &#x2F; <strong>with large amplitude</strong>；速度：<strong>at slow speed</strong> &#x2F; <strong>at fast speed</strong>。中等幅度、正常速度<strong>直接省略不写</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The camera pushes in with small amplitude at slow speed toward the folded letter in her hands.</span><br><span class="line">The camera pans right with large amplitude at fast speed, revealing the open doorway.</span><br><span class="line">The camera holds a static shot as the runner exits the frame.</span><br></pre></td></tr></table></figure>
+
+<p>9.4 对白：说话人 ID + <strong><d></strong> 标签</p>
+<p>规则清单：</p>
+<ol>
+<li>会出声的角色分配稳定 ID:<strong>(S1)</strong>、<strong>(S2)</strong>；多人齐声用 <strong>(S1,S2)</strong>；<strong>跨镜头 ID 不变</strong>；从不出声的角色不编号。</li>
+<li>说话人首次出场，给足身份锚点：角色类型、年龄、性别、是否在画面内、音高、音色、语速、口音。</li>
+<li>身份描述、ID、动作、语气放在 <strong><d></strong> <strong>外面</strong>；<strong><d></strong> 里只放语言标记和台词本身，<strong>一字不改、不翻译、保留原标点</strong>。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The young woman with a quiet, breathy voice (S1) says: &lt;d&gt;[English] I get off at the next station.&lt;/d&gt;</span><br><span class="line">The two children (S1,S2) shout together, &lt;d&gt;[English] Wait for us!&lt;/d&gt;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>画外音</strong>必须用固定短语 <strong>says in an off-screen voiceover</strong>，且紧跟一句声明画面上的人嘴唇没动：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The man (S1) says in an off-screen voiceover: &lt;d&gt;[English] I still remember that road.&lt;/d&gt; while his lips remain completely closed.</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>台词<strong>跨越剪辑点</strong>：在两段的连接处都放 <strong><scenetrans></strong>，并明确写音频连续（如 <strong>carries over from the previous shot</strong>)；台词被<strong>片尾截断</strong>用 <strong><cutoff></strong>。</li>
+<li><strong>画面内文字</strong>（招牌、字幕、霓虹灯）：放英文双引号里，原文保留不翻译——<strong>A red neon sign reading “营业中” glows above the doorway.</strong></li>
+</ol>
+<p>9.5 一个完整可抄的例子（官方 T2VA 案例）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">integrated_multimodal_description: [Shot 1] Live-action, cinematic, a medium-wide shot frames a baker opening the shutters of a small street bakery before sunrise. The camera pushes in with small amplitude at slow speed as the middle-aged baker with a calm, slightly raspy voice (S1) places a fresh loaf on the wooden counter and says: &lt;d&gt;[English] First batch of the morning.&lt;/d&gt; [Shot 2] At 00:05.000, the camera cuts to a close-up of steam rising from the sliced bread while the baker&#x27;s final words carry over from the previous shot.</span><br><span class="line"></span><br><span class="line">overall_soundscape: Wooden shutters scrape open over a quiet street as trays clink softly inside the bakery. The doorbell rings once, followed by light footsteps and the crisp sound of bread being sliced.</span><br><span class="line"></span><br><span class="line">non_diegetic_music: A soft acoustic-guitar pattern at a moderate tempo, joined by sparse upright-bass notes and a gentle fade at the end.</span><br></pre></td></tr></table></figure>
+
+<p>替换成你的场景，就是一条合格的 H3 提示词。</p>
+<p>9.6 带图的三种变体：开头多一行对齐指令</p>
+<p>I2V 家族（I2VA &#x2F; FL2VA &#x2F; L2VA）在三字段<strong>之前</strong>多一行固定格式的对齐指令，然后空一行：</p>
+<p><strong>只给首帧（I2VA）</strong>——固定写法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">For the target video, at 0.00 seconds into the target video, &lt;Picture 1&gt; (from [Shot 1]) is fully referenced.</span><br></pre></td></tr></table></figure>
+
+<p>描述结构：先锚定图里的风格、主体、构图，再写动作如何展开（首帧锚点 → 动作发端 → 持续发展 → 结果）。角色衣着、颜色、关键物件、空间关系要和图保持一致。</p>
+<p><strong>首尾帧都给（FL2VA）</strong>——声明两张图各对齐哪个时间点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">How the reference pictures align with the target video — Picture 1 (from Shot 1) aligns with the 0.00-second mark of the target video; Picture 2 (from Shot 1) aligns with the 8.00-second mark of the target video.</span><br></pre></td></tr></table></figure>
+
+<p>正文别把两张图各描述一遍——<strong>写连接它们的运动路径</strong>（首帧状态 → 可见的中间变化 → 差距逐步收窄 → 尾帧状态）。FL2VA 尽量单镜头，让模型连续插值。</p>
+<p><strong>只给尾帧（L2VA）</strong>——图对齐片尾：</p>
+<p>plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">How the reference pictures align with the target video — &lt;Picture 1&gt; (from [Shot N]) aligns with the 6.00-second mark of the target video.</span><br></pre></td></tr></table></figure>
+
+<p>描述结构：推断一个合理的先前状态 → 明确的动作与过渡路径 → 最后一镜逐步收敛 → 落在图上。</p>
+<p>时间 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://s.ss/"><strong>S.SS</strong></a></p>
+<p> 必须精确到两位小数，且和你的实际视频时长一致（对照第 6 步帧数表换算）。</p>
+<p>9.7 提示词偷懒法</p>
+<p>官方就是这么设计的：H3 的 API 版有个闭源的 Context-IR 模块专门干“把人话改写成上述格式”这件事，本地没有它，但你可以让任何一个 LLM 代劳。把官方指南链接和你的想法一起丢给它：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Learn how to write T2V prompts from https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_base_en.md</span><br><span class="line">then rewrite my idea into the three-field H3 prompt format:</span><br><span class="line">[你的中文想法]</span><br></pre></td></tr></table></figure>
+
+<p>生成结果检查三处：台词是否被改写（必须原文）、镜头时间戳是否递增且在总时长内、配乐字段有没有混进情绪词。</p>
+<p>不想依赖 LLM 的手感，还有个更正统的偷懒路径：<strong>花几分钱调一次官方 Context-IR API</strong>（¥5.80&#x2F;百万 token 输入），把你的大白话和素材丢进去，它返回的增强提示词就是标准格式——这本来就是 API 版里帮你重写提示词的那个闭源模块。拿返回结果存成模板，后面每次改几个词，比从零学快得多，本地 ComfyUI 也认这种格式。</p>
+<h2 id="10-第-8-步：加速——SageAttention-省-24-，叠-Cache-最多再省-58"><a href="#10-第-8-步：加速——SageAttention-省-24-，叠-Cache-最多再省-58" class="headerlink" title="10. 第 8 步：加速——SageAttention 省 24%，叠 Cache 最多再省 58%"></a>10. 第 8 步：加速——SageAttention 省 24%，叠 Cache 最多再省 58%</h2><p>先跑通再折腾这步。加速分两层，可以叠加：<strong>SageAttention 把每一步算得更快，Cache 类节点直接跳过没必要算的步。</strong> 先上第一层——同 seed 同工作流（1152×640&#x2F;124 帧）A&#x2F;B 实测省 24%：</p>
+<ol>
+<li><p><strong>装 SageAttention</strong>：从 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/woct0rdho/SageAttention/releases">SageAttention releases</a></p>
+<p> 下载和你的 PyTorch &#x2F; CUDA 版本匹配的 wheel（文件名里写着 torch 和 cu 版本，对准了再下），然后 <strong>pip install &lt;wheel文件名&gt;</strong>。桌面版用户在其内置终端里执行，保证装进 ComfyUI 用的那个 Python 环境。<strong>版本认准 2.x</strong>——后面的 fp8 系模式只在 2.x 里有，1.x 根本没有对应内核；这些 wheel 都是 2.x 预编译版，直接装最省事。真要从源码自己编，有个硬门槛：sm_89（40 系）要求 CUDA ≥ 12.4（写在 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://setup.py/">setup.py</a></p>
+<p> 里），我们在 12.0 环境下编不过去，升到 12.8 才搞定。</p>
+</li>
+<li><p><strong>装 KJNodes 节点包</strong>： ComfyUI Manager 里搜 <strong>ComfyUI-KJNodes</strong> 安装；或手动 <strong>git clone</strong> </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/kijai/ComfyUI-KJNodes"><strong>https://github.com/kijai/ComfyUI-KJNodes</strong></a></p>
+<p> 到 <strong>ComfyUI&#x2F;custom_nodes&#x2F;</strong>，重启。</p>
+</li>
+<li><p><strong>接线</strong>：工作流里加 <strong>Patch Sage Attention KJ</strong> 节点，插在 <strong>UNETLoader</strong> 和 <strong>BasicGuider</strong> 之间——UNETLoader 的 model 输出 → Patch 节点 model 输入，Patch 节点 model 输出 → BasicGuider 的 model 输入。只有 guider 需要打补丁，scheduler 不用动。</p>
+</li>
+<li><p><strong>选模式</strong>：直接用 <strong>auto</strong> 就行。它会按显卡架构自动落到最快路径——4090 上 auto 就等于 <strong>qk_int8_pv_fp8_cuda++</strong>（查过源码：sm89 分支返回的正是同一个 fp8 内核，手动选没坏处但没必要）；<strong>30 系卡（3090&#x2F;3060 等 Ampere）没有 FP8 硬件单元</strong>，auto 会落到 Ampere 可用的 int8 路径，仍有可观提速。真要手动锁定 <strong>qk_int8_pv_fp8_cuda++</strong>，前提是第 1 步装的确实是 SageAttention 2.x——1.x 没有这个内核，选了也是报错或静默回退。</p>
+</li>
+<li><p>正常 Run。<strong>懒人替代</strong>：不想接节点，启动 ComfyUI 时加 <strong>–use-sage-attention</strong> 参数全局开启（桌面版在设置的启动参数里加）。两个坑必须说清：<strong>这个参数和 KJ 节点二选一，千万别同时开</strong>——两边会重复打补丁，社区有反馈反而变慢；而且启动参数没法选模式，只能走默认路径。要控制力就接节点，要省事就用参数，别混着来。</p>
+</li>
+</ol>
+<p>第二层：Cache 类节点，跳步不硬算</p>
+<p>SageAttention 是把每一步算得更快，Cache 类节点是另一个思路：扩散采样的相邻步输出经常几乎一样，变化小到一定程度就直接复用上一步的结果，<strong>整步跳过不算</strong>。两层叠加，同一条 362 帧满长度片（1152×640，4090 48G）的实测：</p>
+<ul>
+<li><strong>仅 SageAttention</strong> — 1183.6s（对无加速基线省 21.9%；和第 4 步表里的 1158s 是不同批次实测，2% 的批间波动属正常）</li>
+<li><strong>Sage + EasyCache</strong> — 899.5s（在 Sage 基础上再省 24.0%）</li>
+<li><strong>Sage + TeaCache</strong> — 500.5s（在 Sage 基础上再省 57.7%，<strong>比只开 Sage 快一倍还多</strong>）</li>
+</ul>
+<p><strong>EasyCache 是 ComfyUI 原生内置节点</strong>，不用装任何第三方包：画布上加一个 <strong>EasyCache</strong> 节点，串进 model 链路（和 Sage 补丁节点前后排开即可），关键参数是 <strong>reuse_threshold</strong>（另有 <strong>start_percent</strong> &#x2F; <strong>end_percent</strong> &#x2F; <strong>verbose</strong> 三个，一般不用动），默认 0.2 可以直接用。注意上面的 899.5s 是在更保守的 0.1 下测得——阈值越大跳得越多越快，124 帧短片实测 0.2 跑 215.7s、0.1 跑 260.0s，用默认值会比文中数字更快、损失也略大</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.comfy.org/built-in-nodes/EasyCache">citation</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Comfy-Org/ComfyUI/pull/9496">citation</a></p>
+<p>。TeaCache 认准 <strong>H3 专用</strong>的节点包——本文 500.5s 用的是 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Icyoung/ComfyUI-MiniMaxH3-TeaCache">Icyoung&#x2F;ComfyUI-MiniMaxH3-TeaCache</a></p>
+<p>（节点名 <strong>MiniMaxH3TeaCache</strong>），另一个可选是 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/lihaoyun6/ComfyUI-MiniMaxH3-Cache">lihaoyun6&#x2F;ComfyUI-MiniMaxH3-Cache</a></p>
+<p>（节点名 <strong>MiniMaxH3Cache</strong>）。<strong>别装 Manager 里那个通用的</strong> <strong><strong>ComfyUI-TeaCache</strong></strong><strong>（welltop-cn）</strong>——它的支持列表停在 FLUX &#x2F; HiDream 那一代，没有 H3，装完你会发现根本没有能接进 H3 链路的节点。关键参数是 <strong>rel_l1_thresh</strong>，越大跳得越狠越快。</p>
+<p>天下没有免费的午餐——Cache 的加速来自跳过真实计算，但代价要看对地方。我们在 R2V 参考图模式下逐帧核对过：<strong>人脸身份并不漂移</strong>（同一张脸、同一发型、同一裙装结构从头稳到尾），真正掉的是画面的“活性”——近似静止的“发呆”帧占比从 13.8% 翻到 41.5%，细节也更容易糊。所以检查 Cache 成片时别盯着脸看，看画面发不发呆、细节糊不糊。</p>
+<p>另一条要想在前面：<strong>Cache 改变的是生成结果本身，不是“同一条片跑快点”。</strong> 同 seed 实测，TeaCache 输出对无 Cache 基线的 SSIM 只有 0.78（EasyCache 是 0.96）——所以“草稿开 TeaCache 挑片、正片换配置复现”这个直觉打法不成立：换了配置，你挑中的那条画面就变了。正确用法二选一：<strong>跑量筛提示词、筛创意，全程开 Sage + TeaCache，别指望草稿画面能原样复现；对画面有要求的正片，从选片到定稿用同一套保守配置</strong>（Sage + EasyCache 或干脆只开 Sage）。阈值往小调，跳得保守些，损失也小些。</p>
+<h2 id="11-常见问题排查"><a href="#11-常见问题排查" class="headerlink" title="11. 常见问题排查"></a>11. 常见问题排查</h2><p><strong>Q：提示缺少 MiniMaxH3ImageToVideo &#x2F; EmptyMiniMaxH3LatentAV 等节点</strong> A:ComfyUI 版本 &lt; 0.30.0，升级。最高频问题。桌面版&#x2F;整合包跟随稳定版发布，更新后重启再试。</p>
+<p><strong>Q：爆显存（OOM &#x2F; CUDA out of memory）</strong> A：按顺序排查——① 确认用的是 <strong>pruned_int8_convrot</strong> DiT + <strong>nvfp4_awq</strong> 编码器这对最小官方组合，不是误下了 bf16;② 关掉其他吃显存的程序（游戏、另一个 ComfyUI、跑着模型的浏览器标签）;③ 系统内存拉到 32GB 以上，12GB 卡靠内存分层加载；④ 还不行，换社区 INT4 量化（第 2 步末尾）。记住实测规律：<strong>降分辨率救不了 OOM</strong>，显存大头是模型本身。</p>
+<p><strong>Q：输出视频没有声音</strong> A：两个 VAE 必须都加载——<strong>video_vae_fp16</strong> 和 <strong>audio_vae_fp32</strong>，并确认工作流里有 <strong>VAEDecodeAudio</strong> 节点连到 <strong>SaveVideo</strong>。用官方模板一般不会缺，自己改工作流时最容易删错。</p>
+<p><strong>Q：生成完全失败，分辨率开得很小</strong> A:H3 最低 384p,256p 及以下必然失败。用官方模板的分辨率预设。</p>
+<p><strong>Q：视频时长和我填的不一样 &#x2F; 卡不上音乐节拍</strong> A：帧数被吸附到 17k+5 网格（第 6 步），单次上限 15.08 秒。从合法帧数表里直接挑，别填任意值。</p>
+<p><strong>Q:R2V 模板报“找不到模型”</strong> A: R2V 用 <strong>ref2va</strong> 权重，和 T2V&#x2F;I2V 的 <strong>fl2va</strong> 是两套，单独下载（第 6 步）。</p>
+<p><strong>Q:R2V 特别慢</strong> A：检查 <strong>ref_image_size</strong> 是否选了 <strong>max</strong>——参考 token 每步采样都要过一遍，<strong>max</strong> 慢好几倍。日常用 <strong>match</strong>。</p>
+<p><strong>Q：参考视频&#x2F;输入图出来变形、裁切</strong> A：参考视频会被压到「短边 768、面积上限 768×1344、对齐 32」的画布，和输出分辨率是两套规则。素材先自己裁成目标宽高比。</p>
+<p><strong>Q：控制台刷 dtype 警告</strong> A：正常现象（第 5 步），部分层回退标准 attention，不影响生成。</p>
+<p><strong>Q：我的 3090 比别人的 4090 慢好几倍，显存还用不满</strong> A：两个原因叠加——① 3090 是 Ampere 架构，没有 FP8 硬件单元，INT8&#x2F;FP8 权重要在计算前转回高精度，同代对比天然慢；② 社区多人观察到 H3 的动态显存调度偏保守，24GB 卡可能只用到 18GB 左右，显存利用率不满是已知现象，不是你的配置错了。能做的：开 SageAttention（<strong>auto</strong> 模式）、用质量取向的 INT8 Lean 权重、把内存加到 64GB 减少分层等待</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1ve59y1/is_the_vram_being_underutilized_on_minimax_h3/">citation</a></p>
+<p><strong>Q:16GB 卡（5070 Ti &#x2F; 4080）启动就崩，报 “Device memory is nearly full”</strong> A：这是加载阶段显存 + 内存双双吃紧的表现。按顺序试：① 系统内存 32GB 是底线，加到 64GB 最有效；② 加启动参数 <strong>–cache-none –disable-smart-memory</strong> 强制模型完全卸载；③ 关掉浏览器硬件加速（浏览器本身会占 1–2GB 显存）；④ 换第 2 步末尾的 INT4&#x2F;NVFP4 小权重。另有 5070 Ti 用户报告速度异常波动的案例，若明显慢于同档卡，先更新到最新稳定版 ComfyUI 和显卡驱动再对比</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Comfy-Org/ComfyUI/issues/15261">citation</a></p>
+<p><strong>Q：生成的人物说中文口型对不上 &#x2F; 台词被改</strong> A：检查 <strong><d></strong> 标签——语言标记写对（<strong>[Chinese]</strong>)，台词原文放标签内，身份和语气描述放标签外。台词被模型改写通常是因为写在了 <strong><d></strong> 外面。</p>
+<h2 id="12-声音效果，提前对齐预期"><a href="#12-声音效果，提前对齐预期" class="headerlink" title="12. 声音效果，提前对齐预期"></a>12. 声音效果，提前对齐预期</h2><p>官方宣传“原生 32kHz 立体声”，实测拆解：32kHz、双声道属实，左右声道确实不同（L&#x2F;R 差 0.2–0.9 dB，差信号比主信号低 14–24 dB），不是单声道复制两份糊弄人。但预期放对：<strong>这是“有空间感”的窄声场立体声，不是强声像分离</strong>，别指望左右横穿的音效定位。它最值钱的一点：对白、音效、配乐和画面在一次前向传播里同时生成——唇形同步是天生的，不是后期对上去的。</p>
+<h2 id="13-本地-vs-API，一笔账"><a href="#13-本地-vs-API，一笔账" class="headerlink" title="13. 本地 vs API，一笔账"></a>13. 本地 vs API，一笔账</h2><p>官方 API 刊例价（人民币）:<strong>2K ¥0.80&#x2F;秒，768P ¥0.50&#x2F;秒，768P→2K 再生成 ¥0.30&#x2F;秒</strong>；音频输入免费，图片 5 张内免费（超出 ¥0.20&#x2F;张）。</p>
+<p>注意 0.50 + 0.30 &#x3D; 0.80——先出 768p 草稿再升 2K，和直接出 2K <strong>一个价</strong>，官方定价没给“云端草稿”留任何便宜。这正好框定了本地部署的位置：</p>
+<ul>
+<li><p><strong>迭代试错、跑量出草稿 → 本地。</strong> 一条 5 秒 768p 走 API 要 ¥2.5，本地电费忽略不计，试 50 版提示词就省 100 多块。</p>
+</li>
+<li><p><strong>定稿要高清，两条路。</strong> 路线 A：<strong>本地超分到 1080p，免费</strong>。社区已有调好参数的 ComfyUI 工作流，用 LTX 2.3 或 Wan 2.2 5B 把 768p 成片拉上 1080p——注意选调低了 sigmas 的版本，参数过高会换脸、毁口型；早期流传的一些版本就栽在这上面</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/StableDiffusion/comments/1vf4ync/12x_faster_minimax_h3_generations_stop_rendering/">citation</a></p>
+<p>。路线 B：<strong>API 升 2K，¥0.30&#x2F;秒</strong>，15 秒成片 ¥4.5。它和普通超分不是一回事——重生成带着原始上下文重画一遍，小字和细节是还原不是猜，交付级项目值这个钱。ComfyUI 里就有现成的 API 模板（第 3 步表格里那三个 api_ 开头的），不用离开工作台。</p>
+</li>
+<li><p><strong>没有 12GB+ 的 N 卡、或一年用不了几次 → 直接 API</strong>，别为几条视频折腾 40 GB 权重。</p>
+</li>
+</ul>
+<p>本地省下的主要是试错阶段那笔最大的浪费；定稿阶段，1080p 够用就连高清的钱也省了，只有非要官方 2K 才掏 ¥0.30&#x2F;秒。想清楚这个定位，一张消费级的卡不只是草稿机，是台能出片的主力机。</p>
+<p>最后按四类人把路线判断说死：</p>
+<ul>
+<li><strong>只是想玩玩</strong> → 第 0 步的网页版就够了，别往下走。</li>
+<li><strong>做产品接生成能力、要 2K、赶交付</strong> → 直接 API，一条 5 秒 2K 四块钱，别折腾本地。</li>
+<li><strong>有 12GB+ 的 N 卡、出片量大、爱折腾</strong> → 本地部署 + 上面的混合打法，这篇教程就是为你写的。</li>
+<li><strong>想微调、做研究</strong> → 下完整 bf16 权重（AdaLN 那 13B 也在里面），官方推荐 SGLang 多卡起步，超出本文范围。</li>
+</ul>
+<p>附：决定走 API 的话，这段脚本直接抄</p>
+<p>去 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://platform.minimaxi.com/">platform.minimaxi.com</a></p>
+<p>（海外 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://platform.minimax.io/">platform.minimax.io</a></p>
+<p>）注册，用户中心充值，账户管理里创建 API key。然后三步：提交任务 → 轮询状态 → 下载视频：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os, time, requests</span><br><span class="line"></span><br><span class="line">API_KEY = os.environ[<span class="string">&quot;MINIMAX_API_KEY&quot;</span>]   <span class="comment"># 你的 key</span></span><br><span class="line">BASE = <span class="string">&quot;https://api.minimaxi.com&quot;</span>          <span class="comment"># 海外用 https://api.minimax.io</span></span><br><span class="line">headers = &#123;<span class="string">&quot;Authorization&quot;</span>: <span class="string">f&quot;Bearer <span class="subst">&#123;API_KEY&#125;</span>&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 提交任务</span></span><br><span class="line">payload = &#123;</span><br><span class="line">    <span class="string">&quot;model&quot;</span>: <span class="string">&quot;MiniMax-H3&quot;</span>,</span><br><span class="line">    <span class="string">&quot;content&quot;</span>: [</span><br><span class="line">        &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;镜头拍摄一只橘猫趴在窗台上，&quot;</span></span><br><span class="line">         <span class="string">&quot;窗外下着雨，猫的尾巴慢慢摆动，画面是暖色调，&quot;</span></span><br><span class="line">         <span class="string">&quot;配上雨声和远处隐约的车流声。&quot;</span>&#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;duration&quot;</span>: <span class="number">5</span>,           <span class="comment"># 4-15 的整数</span></span><br><span class="line">    <span class="string">&quot;resolution&quot;</span>: <span class="string">&quot;768P&quot;</span>,    <span class="comment"># 草稿用 768P，定稿再 2K</span></span><br><span class="line">    <span class="string">&quot;ratio&quot;</span>: <span class="string">&quot;16:9&quot;</span>,         <span class="comment"># 纯文生视频必填，不能写 adaptive</span></span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(<span class="string">f&quot;<span class="subst">&#123;BASE&#125;</span>/v2/video_generation&quot;</span>, headers=headers, json=payload)</span><br><span class="line">r.raise_for_status()</span><br><span class="line">task_id = r.json()[<span class="string">&quot;task_id&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 轮询直到完成</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line">    q = requests.get(<span class="string">f&quot;<span class="subst">&#123;BASE&#125;</span>/v2/query/video_generation/<span class="subst">&#123;task_id&#125;</span>&quot;</span>, headers=headers).json()</span><br><span class="line">    status = q[<span class="string">&quot;task&quot;</span>][<span class="string">&quot;status&quot;</span>]</span><br><span class="line">    <span class="keyword">if</span> status == <span class="string">&quot;succeeded&quot;</span>:</span><br><span class="line">        url = q[<span class="string">&quot;task&quot;</span>][<span class="string">&quot;content&quot;</span>][<span class="string">&quot;url&quot;</span>]</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> status <span class="keyword">in</span> (<span class="string">&quot;failed&quot;</span>, <span class="string">&quot;canceled&quot;</span>):</span><br><span class="line">        <span class="keyword">raise</span> SystemExit(q)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 下载（链接有时效，别囤着不下）</span></span><br><span class="line"><span class="built_in">open</span>(<span class="string">&quot;out.mp4&quot;</span>, <span class="string">&quot;wb&quot;</span>).write(requests.get(url).content)</span><br></pre></td></tr></table></figure>
+
+<p>图生视频只需在 <strong>content</strong> 里加一项 <strong>{“type”: “image_url”, “image_url”: {“url”: “https:&#x2F;&#x2F;你的图片地址.png”}, “role”: “first_frame”}</strong>，加了首帧图之后把 <strong>ratio</strong> 删掉（会自动按图片比例来）。</p>
+<p>四条新手墙，提前告诉你：</p>
+<ol>
+<li><strong>duration</strong> 只收 <strong>4 到 15 的整数</strong>（注意和本地的 17k+5 帧数网格是两套规则）。</li>
+<li>素材单个限制：视频 50MB、图 30MB、音频 15MB；<strong>请求体总共 64MB</strong>，超了就传 URL 别传 base64。</li>
+<li><strong>音频不能单独作为输入</strong>，必须搭一张图或一段视频。</li>
+<li>任务记录只保存 <strong>7 天</strong>，视频链接有时效，出片就下载。</li>
+</ol>
+<p><em>实测环境：RTX 4090 48GB（魔改）&#x2F; ComfyUI 0.30.0 &#x2F; torch 2.11 + cu128。文中耗时、显存、可复现性数据均为该环境实测；权重大小以 Hugging Face 官方仓库为准；提示词语法以 MiniMax 官方指南为准。</em></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/d3ff02d8/">https://macin.top/posts/d3ff02d8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/MiniMax-H3/">MiniMax H3</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/c7cf5fe3/" title="vLLM 是一个高性能、高吞吐量的大语言模型（LLM）推理和服务引擎"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">vLLM 是一个高性能、高吞吐量的大语言模型（LLM）推理和服务引擎</div></div><div class="info-2"><div class="info-item-1">对于大规模集群，可以使用 vLLM Production Stack 在 Kubernetes 上部署，它集成了自动扩缩容、前缀缓存路由和监控等功能。</div></div></div></a><a class="pagination-related" href="/posts/4d3028f7/" title="video-use：让 AI 编程助手自动编辑视频的工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">video-use：让 AI 编程助手自动编辑视频的工具</div></div><div class="info-2"><div class="info-item-1">video-use 部署教程。这是一个让AI编程助手（如Claude Code）能够自动编辑视频的工具，通过读取音频转录和按需视觉信息来完成剪辑。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/1d841096/" title="手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国</div></div><div class="info-2"><div class="info-item-1">手把手教大家免费生成各种海外地址证明：支持香港、新加坡、英国、澳洲和加拿大，可自用，也可拿去闲鱼卖。</div></div></div></a><a class="pagination-related" href="/posts/65e27cff/" title="不限速下载安装驱动 DriverEasy：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/drivereasy.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-24</div><div class="info-item-2">不限速下载安装驱动 DriverEasy：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">DriverEasy 驱动下载安装工具：完全免费不限速，替代广告弹窗多的驱动精灵、驱动总裁，重装系统后一键下载安装全部驱动。</div></div></div></a><a class="pagination-related" href="/posts/18741877/" title="Karakeep 部署教程：自托管的收藏一切应用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-05</div><div class="info-item-2">Karakeep 部署教程：自托管的收藏一切应用</div></div><div class="info-2"><div class="info-item-1">Karakeep (原名 Hoarder) 是一款自托管的书签管理应用，支持收藏链接、笔记、图片和 PDF。</div></div></div></a><a class="pagination-related" href="/posts/c03ace04/" title="tkinter after() 方法双线程运行启停生成随机数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/python3.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">tkinter after() 方法双线程运行启停生成随机数</div></div><div class="info-2"><div class="info-item-1">tkinter after() 方法与双线程实战教程：Python 界面定时任务启停控制，结合线程实现随机数生成器，附完整示例代码。</div></div></div></a><a class="pagination-related" href="/posts/2f16ba33/" title="apt和apt-get的区别（建议使用apt）：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ubuntu.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-12</div><div class="info-item-2">apt和apt-get的区别（建议使用apt）：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">apt 和 apt-get 的区别解析：apt 命令从 Ubuntu 16.04 起成为主流，功能更友好，建议日常安装软件使用 apt install 替代 apt-get install。</div></div></div></a><a class="pagination-related" href="/posts/475bf98b/" title="万字长文｜Claude code 从入门到实战高手：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/claude.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-26</div><div class="info-item-2">万字长文｜Claude code 从入门到实战高手：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">不是它笨，是大多数人把它当聊天机器人在用。 一份上万字的大厂工程化手册，我精简融合成 23 条实战铁律。 每一条都来自真实翻车现场。</div></div></div></a><a class="pagination-related" href="/posts/30791963/" title="fnOS 教程 支持加密的备份工具 - Duplicati"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/duplicati.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-11</div><div class="info-item-2">fnOS 教程 支持加密的备份工具 - Duplicati</div></div><div class="info-2"><div class="info-item-1">fnOS 安装支持加密的备份工具 Duplicati：解决自带备份工具不支持加密的问题，重要资料加密备份到网盘，附完整安装配置步骤。</div></div></div></a><a class="pagination-related" href="/posts/37370686/" title="Pi 大道至简，超越 Codex 和 Claude Code 的极简 Agent"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/pi.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">Pi 大道至简，超越 Codex 和 Claude Code 的极简 Agent</div></div><div class="info-2"><div class="info-item-1">Pi 极简 AI Coding Agent 保姆级全攻略：默认仅 4 个基础工具、系统提示词约 1000 Token，大道至简超越 Codex 与 Claude Code，附 Git 环境配置与实战。</div></div></div></a><a class="pagination-related" href="/posts/c6d6a67e/" title="巨魔的安装，使用方法和插件（支持iOS 15.2-16.7RC"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/trollstore.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-10</div><div class="info-item-2">巨魔的安装，使用方法和插件（支持iOS 15.2-16.7RC</div></div><div class="info-2"><div class="info-item-1">巨魔（TrollStore）安装使用方法与插件教程：支持 iOS 15.2-16.7RC 与 17.0，TrollRestore 电脑线刷安装或在线安装，附插件使用说明。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%9C%8B%E6%87%82%E5%87%A0%E4%B8%AA%E5%90%8D%E8%AF%8D%EF%BC%8830-%E7%A7%92%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">1. 看懂几个名词（30 秒）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%AC%AC-0-%E6%AD%A5%EF%BC%9A%E7%BD%91%E9%A1%B5%E7%89%88%E9%AA%8C%E8%B4%A7-%E7%A1%AC%E4%BB%B6%E8%87%AA%E6%9F%A5"><span class="toc-number">3.</span> <span class="toc-text">2. 第 0 步：网页版验货 + 硬件自查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-ComfyUI"><span class="toc-number">4.</span> <span class="toc-text">3. 第 1 步：安装 ComfyUI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">4. 第 2 步：下载模型文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%AC%AC-3-%E6%AD%A5%EF%BC%9A%E8%B7%91%E9%80%9A%E7%AC%AC%E4%B8%80%E6%9D%A1%E8%A7%86%E9%A2%91%EF%BC%88T2V%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">5. 第 3 步：跑通第一条视频（T2V）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%AC%AC-4-%E6%AD%A5%EF%BC%9A%E7%9C%8B%E6%87%82%E5%8F%82%E6%95%B0%E2%80%94%E2%80%94%E5%B8%A7%E6%95%B0%E5%92%8C%E5%88%86%E8%BE%A8%E7%8E%87%E7%9A%84%E7%A1%AC%E8%A7%84%E5%88%99"><span class="toc-number">7.</span> <span class="toc-text">6. 第 4 步：看懂参数——帧数和分辨率的硬规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%AC%AC-5-%E6%AD%A5%EF%BC%9A%E5%9B%BE%E7%94%9F%E8%A7%86%E9%A2%91%EF%BC%88I2V%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">7. 第 5 步：图生视频（I2V）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E7%AC%AC-6-%E6%AD%A5%EF%BC%9A%E5%8F%82%E8%80%83%E7%94%9F%E8%A7%86%E9%A2%91%EF%BC%88R2V%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">8. 第 6 步：参考生视频（R2V）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E7%AC%AC-7-%E6%AD%A5%EF%BC%9A%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E2%98%85"><span class="toc-number">10.</span> <span class="toc-text">9. 第 7 步：提示词完整指南 ★</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E7%AC%AC-8-%E6%AD%A5%EF%BC%9A%E5%8A%A0%E9%80%9F%E2%80%94%E2%80%94SageAttention-%E7%9C%81-24-%EF%BC%8C%E5%8F%A0-Cache-%E6%9C%80%E5%A4%9A%E5%86%8D%E7%9C%81-58"><span class="toc-number">11.</span> <span class="toc-text">10. 第 8 步：加速——SageAttention 省 24%，叠 Cache 最多再省 58%</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">12.</span> <span class="toc-text">11. 常见问题排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E5%A3%B0%E9%9F%B3%E6%95%88%E6%9E%9C%EF%BC%8C%E6%8F%90%E5%89%8D%E5%AF%B9%E9%BD%90%E9%A2%84%E6%9C%9F"><span class="toc-number">13.</span> <span class="toc-text">12. 声音效果，提前对齐预期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E6%9C%AC%E5%9C%B0-vs-API%EF%BC%8C%E4%B8%80%E7%AC%94%E8%B4%A6"><span class="toc-number">14.</span> <span class="toc-text">13. 本地 vs API，一笔账</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

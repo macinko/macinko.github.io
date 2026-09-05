@@ -1,0 +1,784 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>万字长文：Deepseek Harness 一文全看懂 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这些问题很少由大模型本身解决。模型接收一组输入，生成文字或工具调用意图，由模型外面的程序负责准备上下文、开放工具、执行动作、保存状态和处理失败。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="万字长文：Deepseek Harness 一文全看懂">
+<meta property="og:url" content="https://macin.top/posts/23c502a/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="这些问题很少由大模型本身解决。模型接收一组输入，生成文字或工具调用意图，由模型外面的程序负责准备上下文、开放工具、执行动作、保存状态和处理失败。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/deepseek.webp">
+<meta property="article:published_time" content="2026-08-26T14:31:40.000Z">
+<meta property="article:modified_time" content="2026-09-05T15:22:43.646Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Deepseek Harness">
+<meta property="article:tag" content="deepseek">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/deepseek.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "万字长文：Deepseek Harness 一文全看懂",
+  "url": "https://macin.top/posts/23c502a/",
+  "image": "https://macin.top/img/deepseek.webp",
+  "datePublished": "2026-08-26T14:31:40.000Z",
+  "dateModified": "2026-09-05T15:22:43.646Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/23c502a/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '万字长文：Deepseek Harness 一文全看懂',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/deepseek.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">万字长文：Deepseek Harness 一文全看懂</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">万字长文：Deepseek Harness 一文全看懂</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-05T15:22:43.646Z" title="更新于 2026-09-05 23:22:43">2026-09-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/agent/">agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">10.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>32分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-05 23:22:43&quot;}" hidden></div><blockquote>
+<p>本文长度约2万字，附有很多名词解释与图片表达，让想学AI但苦于不懂术语、基础不好的人或懂技术但不太了解DSH的人，都能获得对Deepseek Harness的深度认知！！</p>
+</blockquote>
+<p>你让 AI 完成一项工作：“查完这 10 家公司的公开资料，整理成表格，比较产品差异，再写一份分析。”</p>
+<p>模型给了你一份漂亮的计划，并说要开始执行任务，但任务刚开始，问题就来了：</p>
+<ul>
+<li>谁来打开网页和下载文件？</li>
+<li>AI 怎样知道自己已经查过哪些公司？</li>
+<li>搜索失败以后，它会重试、换来源，还是直接编一个答案？</li>
+<li>它准备修改文件时，谁检查路径和权限？</li>
+<li>任务执行到一半中断，下次从哪里继续？</li>
+<li>它删错文件后，开发者能不能还原当时的操作？</li>
+</ul>
+<p>这些问题很少由大模型本身解决。模型接收一组输入，生成文字或工具调用意图，由模型外面的程序负责准备上下文、开放工具、执行动作、保存状态和处理失败。</p>
+<p>我们把这套程序叫做 <strong>Harness</strong>。</p>
+<p>DeepSeek 在官方页面上写了一个公式：</p>
+<blockquote>
+<p>Agent &#x3D; Model + Harness<br>代理人 &#x3D; 模型 + 工具包</p>
+</blockquote>
+<p>如果把 Agent 当成一名数字员工，模型相当于员工的脑子。Harness 则是电脑、办公软件、文件柜、操作手册、权限制度、项目经理和工作记录。</p>
+<p>同一个人坐进两间配置不同的办公室，工作结果会差很多。一个人只能口头回答问题；另一个人能查数据库、运行程序、分派任务，还能在第二天接着昨天的进度继续干。</p>
+<p>DeepSeek Harness 研究的就是这间“办公室”。它把办公室里的主要设施拆成可替换组件，并记录 AI 工作时看到和做过的事情。</p>
+<h2 id="一、先把-Harness-讲透：模型并不会直接使用电脑"><a href="#一、先把-Harness-讲透：模型并不会直接使用电脑" class="headerlink" title="一、先把 Harness 讲透：模型并不会直接使用电脑"></a>一、先把 Harness 讲透：模型并不会直接使用电脑</h2><p>聊天界面容易制造一种错觉：你说一句话，AI 就“打开了网页”“修改了文件”“运行了代码”。</p>
+<p>模型没有直接碰到浏览器、硬盘或终端。它输出的是一段结构化意图，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">调用工具：read_file</span><br><span class="line">参数：&#123; &quot;path&quot;: &quot;report.md&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Harness 收到这段意图后，才会完成后面的工作：</p>
+<ol>
+<li>检查 read_file 是否存在；</li>
+<li>检查当前 Agent 是否有权使用它；</li>
+<li>验证参数格式；</li>
+<li>调用真正的文件系统；</li>
+<li>把读取结果转成模型能理解的内容；</li>
+<li>将结果放进下一次模型请求。</li>
+</ol>
+<p>模型随后再判断下一步。复杂任务会重复这个过程几十次。</p>
+<p>一套完整 Harness 通常包含下面这些部分：</p>
+<p>模型厂商经常公布参数量、推理能力和评测成绩。Agent 真正开始工作后，表格中的每一层都会影响最后产出的结果</p>
+<p>Harness 负责把模型的“想法”变成受约束、可持续的行动。</p>
+<h2 id="二、DeepSeek-Harness-是产品，也是-Agent-组装框架"><a href="#二、DeepSeek-Harness-是产品，也是-Agent-组装框架" class="headerlink" title="二、DeepSeek Harness 是产品，也是 Agent 组装框架"></a>二、DeepSeek Harness 是产品，也是 Agent 组装框架</h2><p>DeepSeek Harness 是 DeepSeek 开源的 Agent Harness。官方同时把它描述为 Coding Agent 和 Agent 的开发、运行环境。</p>
+<blockquote>
+<p>目前它仍处于 Developer Preview，官方明确提醒后续会有破坏兼容性的修改。</p>
+</blockquote>
+<p>对于产品的普通使用者，可以把它当成一个能读写文件、搜索和运行命令的有自己市场的Agent。对于开发者，看到的则是一套组装 Agent 的框架。</p>
+<h2 id="三、DeepSeek-Harness-怎样启动：先用配置拼出一棵插件树"><a href="#三、DeepSeek-Harness-怎样启动：先用配置拼出一棵插件树" class="headerlink" title="三、DeepSeek Harness 怎样启动：先用配置拼出一棵插件树"></a>三、DeepSeek Harness 怎样启动：先用配置拼出一棵插件树</h2><p>DeepSeek Harness 的口号是 <strong>Everything is a Plugin，所有能力都是插件。</strong></p>
+<p>这句话很容易被理解成“它支持安装扩展”。但它实际上是这样的：模型适配器、工具注册表、Session Log、Agent Loop、存储、沙箱、调度和 UI 都由插件提供。DeepSeek 的架构文档甚至写道，系统里没有一个必须修改才能扩展的“特权核心”。</p>
+<p>这里需要做一个技术上的澄清。DeepSeek Harness 仍然有核心接口和基础包，否则插件无法协作。“没有特权核心”的意思是，开发者可以通过配置提供另一种实现，不必 Fork 主仓库再修改内部代码。</p>
+<p><strong>1. Profile：一整套 Agent 配方</strong></p>
+<p>Profile 决定了你这次启动的是哪一种 Agent。</p>
+<p>把 Agent 想成一名刚入职的数字员工。Profile 是公司在他上班前准备好的整套工位：给他配哪个模型、能用哪些工具、把工作记录存在哪里、有没有浏览器界面、采用什么安全规则，全都写在里面。</p>
+<p>它也像一张电脑装机单。你不会只写“装一台电脑”，而是会列出处理器、硬盘、显示器和操作系统。DeepSeek Harness 自带 web 和 headless 等 Profile。选择 web，Agent 会带着浏览器界面启动，适合人坐在屏幕前观察和操作；选择 headless，Agent 不显示界面，接到任务后执行、保存结果并退出，适合脚本和自动化流程</p>
+<p><strong>2. Bundle：可以复用的一组插件</strong></p>
+<p>Profile 管整台机器，Bundle 管一组经常一起出现的能力。它把一批 Cordis 配置和对应代码装进同一个功能包。</p>
+<p>例如，团队可以准备一个“研究 Bundle”，一次装入网页搜索、文件处理、引用检查和研究提示词。另一个“代码审查 Bundle”可以装入代码读取、测试和审查规则。以后创建新的 Agent，配置里引用 Bundle 就行，不必把十几个插件重新接一遍。</p>
+<p>一个 Profile 可以叠加多个 Bundle。你可以先给 Agent 装上研究套件，再加代码审查套件，效果类似给电脑接上扩展坞、显示器和移动硬盘。每个套件负责一组能力，Profile 决定这次启动时带上哪些套件。</p>
+<p><strong>3. Patch：在现有配方上做局部修改</strong></p>
+<p>Patch 解决的是“小改动”。假设 Profile 已经写了几百行配置，你只想换一个模型、关闭某个工具，或者给文件插件增加一条路径限制。复制整份 Profile 再修改，会得到一份难以跟随上游更新的副本。Patch 只记录那几个变化。</p>
+<p>它像贴在装机单旁边的一张便签：其他配置照旧，只把便签上写到的项目换掉。Patch 也可以插入新插件，因此你既能修改现有设置，也能给当前 Agent 临时加一项能力。</p>
+<p>DeepSeek Harness 会把这些配置一层层摞起来。可以把它想成几张透明胶片：底层画着完整的 Profile，Bundle 往房间里添设备，Profile Patch 修改这套方案的局部设置，用户级 Patch 再加入个人偏好，命令行参数负责这一次启动的临时调整。</p>
+<p>两层配置改到同一项时，靠上的那层生效。比如 Profile 规定默认使用 A 工作目录，用户 Patch 把它改成 B，这次启动就使用 B；如果命令行又指定 C，最终使用 C。底层配置仍在，系统只用上层值盖住冲突部分</p>
+<p>DeepSeek Harness 还会监听用户 Patch。你保存配置文件后，系统重新计算哪些插件受到影响，再让 Cordis 重新组合这些插件。这个过程像配电箱里的线路调整：你换掉某一路开关，系统处理与这一路有关的设备，不需要重新设计整栋办公室</p>
+<p>可以把启动过程理解成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">读取 Profile</span><br><span class="line">   ↓</span><br><span class="line">按顺序叠加 Bundles</span><br><span class="line">   ↓</span><br><span class="line">应用用户 Patch</span><br><span class="line">   ↓</span><br><span class="line">得到最终插件清单和配置</span><br><span class="line">   ↓</span><br><span class="line">Cordis 根据依赖关系加载插件</span><br><span class="line">   ↓</span><br><span class="line">模型、工具、Session、Loop、UI 共同组成可运行 Agent</span><br></pre></td></tr></table></figure>
+
+<p>这里还有一个容易绕进去的地方：配置清单的书写顺序，不等于插件真正开始工作的顺序。</p>
+<p>一个文件工具会声明自己需要 tools 和 fs 两项服务。即使它排在配置文件最前面，Cordis 也会等到工具注册表和文件系统准备好之后，再让它开始工作。就像咖啡机可以提前搬进办公室，但电源和水管接通之前，谁也不能用它。</p>
+<p>如果运行中的 fs 服务消失，Cordis 会把依赖它的文件工具卸载，避免系统留下一个“按钮还在，按下去却没有后端”的半残状态。fs 恢复以后，Cordis 再把文件工具加载回来。</p>
+<p>普通读者可以先记住三个动作：Profile 选择整套 Agent，Bundle 安装一组能力，Patch 修改几个局部设置。Cordis 接过最终清单，按照依赖关系把这些零件组装成一套能运行、也能安全拆卸的系统。</p>
+<h2 id="四、Cordis-到底解决了什么：插件卸载后，系统要恢复干净"><a href="#四、Cordis-到底解决了什么：插件卸载后，系统要恢复干净" class="headerlink" title="四、Cordis 到底解决了什么：插件卸载后，系统要恢复干净"></a>四、Cordis 到底解决了什么：插件卸载后，系统要恢复干净</h2><p>DeepSeek Harness 使用 Cordis 管理插件。Cordis 论文提出了一个术语：<strong>Spatiotemporal Composability，时空可组合性</strong></p>
+<p><strong>空间可组合性：谁依赖谁，由系统管理</strong></p>
+<p>一个网页研究插件需要模型服务、搜索服务和工具注册表。它只声明这些依赖，不必把某一家模型或某一个搜索实现写死。</p>
+<p>依赖关系像办公室里的标准插座。台灯只要求有电，不关心电来自哪座发电厂。</p>
+<p><strong>时间可组合性：插件离开时，撤销它留下的改变</strong></p>
+<p>插件运行时可能做很多事：</p>
+<ul>
+<li>注册一个工具；</li>
+<li>增加一段 System Prompt；</li>
+<li>监听工具执行事件；</li>
+<li>打开定时器、文件监听器或网络连接；</li>
+<li>挂载子插件。</li>
+</ul>
+<p>普通插件系统常见的麻烦，是界面上已经关闭插件，旧监听器或旧状态还留在进程里。开发者热更新几次后，同一个回调可能执行多次，或者旧版提示词继续影响模型。</p>
+<p>Cordis 把插件实例放进一个名为 <strong>Fiber</strong> 的生命周期容器。Fiber 会经历：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PENDING → LOADING → ACTIVE → UNLOADING → DISPOSED</span><br><span class="line">                     ↘ FAILED</span><br></pre></td></tr></table></figure>
+
+<p><strong>术语解释：Fiber 是什么？</strong></p>
+<p>这里的 Fiber 不是操作系统线程。它是 Cordis 对一个插件实例的运行记录，负责追踪依赖、状态和清理动作。</p>
+<p>插件通过 ctx.on() 注册事件、通过 ctx. tools .register() 注册工具，Cordis 会把这些注册记在所属 Fiber 下。插件卸载时，Cordis 自动移除它们。插件自己创建的定时器或连接，可以通过 ctx.effect() 返回一个清理函数；Cordis 在卸载阶段调用这个函数。</p>
+<p><strong>术语解释：Effect 是什么？</strong></p>
+<p>Effect 指程序对外部环境造成的改变。注册工具、订阅事件和打开连接都属于 Effect。</p>
+<p>一场临时展览结束后，工作人员需要拆掉展台、灯光和电线。Cordis 希望插件也按这种方式撤场，而不是只从菜单里消失。</p>
+<p>插件拥有的子插件会一起递归卸载。异步清理完成后，dispose() 才结束。这个设计也支撑热模块替换：系统先卸载旧插件并清理注册，再加载新代码。</p>
+<h2 id="五、一次任务怎样运行：Turn-里面可以有多个-Step"><a href="#五、一次任务怎样运行：Turn-里面可以有多个-Step" class="headerlink" title="五、一次任务怎样运行：Turn 里面可以有多个 Step"></a>五、一次任务怎样运行：Turn 里面可以有多个 Step</h2><p>DeepSeek Harness 的 Agent Loop 驱动整个执行过程。理解两个词就能看懂这条循环。</p>
+<p><strong>Turn：用户交给 Agent 的一轮任务</strong></p>
+<p>你说“读取销售数据并生成报告”，这句话会开启一个 Turn。Agent 完成任务、停止或失败时，Turn 结束。</p>
+<p><strong>Step：一次模型请求，加上它触发的工具执行</strong></p>
+<p>模型第一次查看目录，这是一个 Step；读取文件后再次请求模型，让它判断下一步，这是第二个 Step。一个 Turn 经常包含多个 Step</p>
+<p>以“读取 sales.csv，计算增长率并写入 report.md”为例，实际流程大致如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">用户消息进入 Inbox</span><br><span class="line">        ↓</span><br><span class="line">写入 turn/start</span><br><span class="line">        ↓</span><br><span class="line">组装本 Step 的 System Prompt 和工具列表</span><br><span class="line">        ↓</span><br><span class="line">agent/pre-step 检查、补充或拒绝输入</span><br><span class="line">        ↓</span><br><span class="line">从 Session Log 推导模型历史</span><br><span class="line">        ↓</span><br><span class="line">请求模型，流式接收回答</span><br><span class="line">        ↓</span><br><span class="line">模型输出 read_file 工具调用</span><br><span class="line">        ↓</span><br><span class="line">工具通过权限、沙箱和 Hook 管线</span><br><span class="line">        ↓</span><br><span class="line">执行读取，把结果写入 Session Log</span><br><span class="line">        ↓</span><br><span class="line">模型根据文件内容发起下一 Step</span><br><span class="line">        ↓</span><br><span class="line">模型输出 write_file，执行并记录结果</span><br><span class="line">        ↓</span><br><span class="line">没有后续工具或待处理输入，写入 turn/end</span><br></pre></td></tr></table></figure>
+
+<p>这条链路里有几个容易忽略的机制。</p>
+<p><strong>1. Inbox 统一接收输入</strong></p>
+<p>用户新消息、任务中的补充指令和插件注入的上下文都会进入 Agent Inbox。有些消息会唤醒 Agent，有些上下文会等到下一次 Step 再被领取。</p>
+<p>这让系统可以在 Agent 工作时追加要求，例如“不要修改原文件，另存一份”。Agent Loop 不需要为每一种外部输入单独设计一条通道。</p>
+<p><strong>2. agent&#x2F;pre-step 决定本次模型能看到什么</strong></p>
+<p>在调用模型前，插件可以补充、重写或拒绝这一批输入。上下文压缩、运行时状态注入和策略检查都可以接在这里。</p>
+<p>即使插件拒绝了第一批输入，系统仍会记录这个没有执行 Step 的 Turn。日志因此保留“任务曾经被尝试，但在模型请求前停止”的事实。</p>
+<p><strong>3. Agent Loop 只是默认实现</strong></p>
+<p>核心 agent 包声明公共接口，默认 agent-loop 插件提供具体驱动逻辑。其他插件依赖公共 Agent 接口，不直接依赖默认循环。开发者因此可以替换 Loop，而不必重写工具、Session 和 UI。</p>
+<p>这正是“Everything is a Plugin”深入到系统核心后的效果。</p>
+<p><strong>4. 持久事件和实时事件承担不同工作</strong></p>
+<p>DeepSeek Harness 里有两类容易混淆的事件。</p>
+<p>turn&#x2F;start、tool&#x2F;call、tool&#x2F;result 这类 <strong>Session Event</strong> 是已经发生的事实，会进入日志并在重启后保留。</p>
+<p>agent&#x2F;pre-step、agent&#x2F;request、tools&#x2F;pre-execute 这类 <strong>Cordis Event</strong> 是运行中的扩展点。插件可以在这些位置观察、改写或阻止当前操作，它们本身不等于一条持久对话记录。</p>
+<p>可以把 Session Event 看成行车记录仪，把 Cordis Event 看成路口的信号灯和交警。前者记录车辆经过了哪里，后者在车辆行驶时改变它接下来怎么走。</p>
+<p>部分 Cordis Event 使用 <strong>Waterfall</strong> 调度。每个监听器收到一个 next()：调用它表示把控制权交给下一层，不调用则可以中止或替换后续结果。System Prompt 组装和工具策略都使用这种中间件式结构</p>
+<h2 id="六、System-Prompt-会在每个-Step-重新组装"><a href="#六、System-Prompt-会在每个-Step-重新组装" class="headerlink" title="六、System Prompt 会在每个 Step 重新组装"></a>六、System Prompt 会在每个 Step 重新组装</h2><p>很多人把 System Prompt 理解成藏在聊天机器人背后的一段长指令。DeepSeek Harness 把它做成一个组装系统。</p>
+<p>不同插件可以贡献：</p>
+<ul>
+<li>有顺序的提示词片段；</li>
+<li>当前时间、工作目录等动态上下文；</li>
+<li>模型可见的工具 Schema；</li>
+<li>、 一类变量；</li>
+<li>某个 Agent 独享的 Persona 和规则。</li>
+</ul>
+<p>Agent Loop 在每个 Step 开始前组装一次完整请求</p>
+<p><strong>术语解释：Tool Schema 是什么？</strong></p>
+<p>Tool Schema 是工具给模型看的使用说明，通常包含工具名、用途、参数和参数类型。</p>
+<p>例如文件读取工具会告诉模型：参数叫 path，它必须是一段文本。模型看到 Schema 后，才知道怎样生成合法调用。</p>
+<p>工具越多，模型每次请求需要阅读的 Schema 越多，也会消耗更多 Token。DeepSeek Harness 允许插件按 Agent 限制可见工具；被隐藏的工具不会继续占用这一部分请求内容。</p>
+<p><strong>为什么每个 Step 都重新组装？</strong></p>
+<p>任务执行过程中，环境会变化：</p>
+<ul>
+<li>用户切换了模型；</li>
+<li>某个插件加载或卸载；</li>
+<li>Agent 进入了不同模式；</li>
+<li>权限策略发生变化；</li>
+<li>子 Agent 获得了自己的 Persona 和工具范围。</li>
+</ul>
+<p>每个 Step 重新组装，可以让下一次模型请求反映当前环境。</p>
+<p>这种灵活性也带来一个问题：如果提示词或工具集合悄悄变化，开发者很难重现旧请求。DeepSeek Harness 因此在 Session 中记录 request&#x2F;header，保存模型 Provider、模型名、推理参数、最终 System Prompt 和工具 Schema 快照。配置改变时，系统追加新的 Header。</p>
+<p>这一步把“模型当时到底收到了什么”从猜测变成可检查记录。</p>
+<p>它还影响模型服务的 KV Cache。Provider 可以复用没有变化的请求前缀，减少相同 Prompt 的重复计算；插件加载、工具排序或 Persona 改变后，请求前缀也会改变，缓存可能从第一个变化的 Token 开始失效。可插拔带来实验自由，也要求开发者留意延迟和调用成本</p>
+<h2 id="七、Session-Log-怎样成为唯一事实来源"><a href="#七、Session-Log-怎样成为唯一事实来源" class="headerlink" title="七、Session Log 怎样成为唯一事实来源"></a>七、Session Log 怎样成为唯一事实来源</h2><p>DeepSeek Harness 的架构文档写了一条强约束：</p>
+<blockquote>
+<p>Model-visible means logged，模型看到的内容必须被记录。</p>
+</blockquote>
+<p>系统使用 Append-only Session Log，也就是只追加的会话日志。它保存的内容包括：</p>
+<ul>
+<li>turn&#x2F;start 与 turn&#x2F;end；<br>转动&#x2F;开始与转动&#x2F;结束；</li>
+<li>step&#x2F;start 与 step&#x2F;end；<br>步骤&#x2F;开始与步骤&#x2F;结束；</li>
+<li>用户消息和模型输出；</li>
+<li>tool&#x2F;call 与 tool&#x2F;result；<br>工具&#x2F;调用与工具&#x2F;结果；</li>
+<li>Steering 消息和 Todo 更新；</li>
+<li>每次请求所使用的模型配置、System Prompt 与工具 Schema。</li>
+</ul>
+<p><strong>术语解释：Event Sourcing 是什么？</strong></p>
+<p>Event Sourcing 可以翻译成事件溯源。系统不只保存“现在是什么状态”，而是保存“哪些事件一步步造成了现在的状态”。</p>
+<p>银行账户显示余额 1000 元，这只是当前状态。事件溯源还会保留每次入账和支出，所以审计人员能重新计算余额。</p>
+<p>DeepSeek Harness 使用同样思路保存 Agent 运行过程。deriveMessages() 从 Session Log 事件中推导模型下一次看到的历史，系统无需另存一份聊天数组。</p>
+<p><strong>一份日志，同时服务多个系统</strong></p>
+<p>同一条事件流可以支持：</p>
+<ul>
+<li>Resume：重新加载任务；</li>
+<li>Fork：从历史边界创建分支；</li>
+<li>Replay：重放运行过程；</li>
+<li>Trajectory：在界面中查看轨迹；</li>
+<li>Telemetry：统计模型与工具行为；</li>
+<li>Persistence：把 Session 保存到 JSONL 或 SQLite。<br>坚持性：将会话数据保存为 JSONL 或 SQLite 格式。</li>
+</ul>
+<p>开发者不必让 UI、评测系统和恢复系统各自维护一套历史，减少多份记录互相矛盾的机会。</p>
+<p><strong>上下文太长时，旧历史怎样压缩？</strong></p>
+<p>模型有上下文窗口限制。Session 越长，请求成本越高，最终还会超过模型能接收的长度。</p>
+<p>DeepSeek Harness 的 Compaction 插件会在上下文压力达到阈值时生成摘要，并在面向模型的 Surface 上加入替代内容。原始 Append-only Log 仍然保留，系统不需要涂改已经发生的事件。</p>
+<p>这里可以区分两层：</p>
+<ul>
+<li>Raw Log 保存完整事实，方便追踪和审计。</li>
+<li>Surface 决定下一次模型请求使用哪些历史内容，允许摘要替代早期细节。</li>
+</ul>
+<p>好比公司把十年的原始合同留在档案室，同时给项目经理一份两页摘要。档案没有消失，日常工作也不用每次读取全部原件。</p>
+<p>崩溃恢复也有明确边界</p>
+<p>如果程序在工具调用中间崩溃，持久化层会在恢复时补充状态标记。模型请求已经产生、工具却没开始时，系统标记 TOOL_NOT_STARTED；工具调用已经记录但没有结果时，系统标记 TOOL_OUTCOME_UNKNOWN，提醒模型不要盲目重复可能产生副作用的操作。</p>
+<p>当前实现不会从半个 Turn 的中间无缝续跑。恢复逻辑会先为未闭合的调用、Step 和 Turn 补上结束记录，再从新回合继续。这是一个值得在文章里说清楚的限制。</p>
+<h2 id="八、工具调用不会直接落到操作系统，中间有一条安全管线"><a href="#八、工具调用不会直接落到操作系统，中间有一条安全管线" class="headerlink" title="八、工具调用不会直接落到操作系统，中间有一条安全管线"></a>八、工具调用不会直接落到操作系统，中间有一条安全管线</h2><p>模型输出 write_file 或 bash 调用后，DeepSeek Harness 先记录 tool&#x2F;call，再执行工具。官方工具管线包含这些阶段</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">模型提出工具调用</span><br><span class="line">      ↓</span><br><span class="line">先写入 tool/call 日志</span><br><span class="line">      ↓</span><br><span class="line">tools/pre-execute</span><br><span class="line">Hook、权限策略、沙箱检查</span><br><span class="line">      ↓</span><br><span class="line">需要时向用户请求一次性批准</span><br><span class="line">      ↓</span><br><span class="line">不可放宽的安全 Guard 再检查</span><br><span class="line">      ↓</span><br><span class="line">tools/execute</span><br><span class="line">超时、重试、指标统计等包装层</span><br><span class="line">      ↓</span><br><span class="line">真正执行工具</span><br><span class="line">      ↓</span><br><span class="line">tools/post-execute</span><br><span class="line">接受、阻止、替换结果或补充上下文</span><br><span class="line">      ↓</span><br><span class="line">结果归一化并写入 tool/result</span><br><span class="line">      ↓</span><br><span class="line">模型在下一 Step 看到结果</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. 先记调用，再执行</strong></p>
+<p>系统先把模型打算做什么写进 Session。即使后面的审批拒绝或工具报错，开发者仍能看到模型提出过这次操作。</p>
+<p><strong>2. Approval 采用 fail-closed<br>\2. 采用故障关闭模式</strong></p>
+<p>DeepSeek Harness 的审批结果包括 allowed-once、rejected、cancelled 和 unavailable。只有 allowed-once 放行当前这一次操作。界面没有审批处理器、处理器报错或没有返回合法结果时，系统把结果视为 unavailable 并拒绝操作。</p>
+<p><strong>术语解释：Fail-closed 是什么？</strong></p>
+<p>门禁系统断电后保持锁住，这叫 fail-closed。系统遇到异常时选择拒绝，而不是为了方便自动放行。</p>
+<p>DeepSeek Harness 的批准不是永久通行证。一次批准只对应那次具体请求。</p>
+<p><strong>3. Guard 只能收紧，不能偷偷放宽</strong></p>
+<p>工具管线里的 Monotonic Guard 可以拒绝或保持沉默，不能把上游已经拒绝的操作重新批准。</p>
+<p>它像机场的多道安检。后一道可以发现新问题并拦下乘客，不能推翻前一道已经做出的禁止决定。</p>
+<p><strong>4. 文件操作还有更细的检查</strong></p>
+<p>文件工具可以在写入或编辑前触发文件系统事件。策略插件可以检查文件是否已经读取、路径是否在允许范围内，以及当前沙箱模式是否允许修改</p>
+<p>安全策略因此不需要塞进 Agent Loop。插件在工具管线和文件能力接口上完成检查，替换 Loop 时仍能复用。</p>
+<h2 id="九、Capability-Seam：让上层工具不绑定某个底层实现"><a href="#九、Capability-Seam：让上层工具不绑定某个底层实现" class="headerlink" title="九、Capability Seam：让上层工具不绑定某个底层实现"></a>九、Capability Seam：让上层工具不绑定某个底层实现</h2><p>DeepSeek Harness 把一类可替换接口称为 <strong>Capability Seam，能力接缝</strong>。</p>
+<p>一条接缝通常包含三个角色：</p>
+<ol>
+<li>Service Definition：定义统一接口；</li>
+<li>Service Provider：提供具体实现；</li>
+<li>Consumer：使用该能力，很多时候是模型可见工具。</li>
+</ol>
+<p>以文件能力为例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">模型看见 read / write / edit 工具</span><br><span class="line">              │</span><br><span class="line">         Consumer：tool-fs</span><br><span class="line">              │</span><br><span class="line">        Service Definition：ctx.fs</span><br><span class="line">              │</span><br><span class="line">     ┌────────┼─────────┐</span><br><span class="line">     │        │         │</span><br><span class="line">  本地文件   沙箱文件   远程环境实现</span><br><span class="line">  Provider   Provider   Provider</span><br></pre></td></tr></table></figure>
+
+<p>上层工具继续调用相同的 ctx.fs 接口。开发者替换 Provider，就能改变文件实际位于本机、容器还是远程沙箱。工具名称和 Agent Loop 不必跟着改。</p>
+<p>DeepSeek Harness 对模型、Web 搜索、Shell、持久化、上下文压缩和子 Agent 都采用类似分层。</p>
+<p>这种架构的价值在企业环境里很直接。开发团队可以在笔记本上使用本地实现，部署时换成权限受限的远程沙箱；Agent 上层逻辑保持一致。</p>
+<p>它也增加了抽象成本。服务定义、Provider、Consumer 和策略插件之间必须遵守同一契约。小型项目只有一个固定后端时，这套分层可能比业务代码更复杂。</p>
+<h2 id="十、四种模式怎样由同一内核组合出来"><a href="#十、四种模式怎样由同一内核组合出来" class="headerlink" title="十、四种模式怎样由同一内核组合出来"></a>十、四种模式怎样由同一内核组合出来</h2><p>DeepSeek Harness 当前提供 Standard、Code、Minimal 和 Creator 四种主要模式</p>
+<p>它们不是四套完全独立的 Agent。开发者通过不同插件组合和工具暴露方式，让同一个内核服务不同目标。</p>
+<p><strong>Standard Mode：完整工作台<br>标准模式：完整的工作台界面</strong></p>
+<p>Standard Mode 提供文件编辑、Shell、搜索、Skills、计划、目标、子 Agent 和 Workflow 等能力。</p>
+<p>模型能直接看到各个工具的名称、说明和 JSON Schema。需要搜索时调用搜索工具，需要编辑时调用编辑工具。每次调用结束，结果回到模型上下文，模型再决定下一步。</p>
+<p>这种方式直观，适合任务类型多、需要人持续观察的 Coding Agent。</p>
+<p><strong>Code Mode：让模型先写一段工具编排程序</strong></p>
+<p>Code Mode 不再把所有工具都作为普通的末端调用方式呈现。系统向模型提供一个 run_code 入口，以及根据当前工具生成的 TypeScript 或 Python SDK 声明。</p>
+<p>模型可以写出类似下面的程序：</p>
+<p>typescript</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> files = <span class="keyword">await</span> <span class="title class_">Promise</span>.<span class="title function_">all</span>([</span><br><span class="line">  tools.<span class="title function_">read</span>(&#123; <span class="attr">path</span>: <span class="string">&quot;a.md&quot;</span> &#125;),</span><br><span class="line">  tools.<span class="title function_">read</span>(&#123; <span class="attr">path</span>: <span class="string">&quot;b.md&quot;</span> &#125;)</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> files.<span class="title function_">map</span>(<span class="function"><span class="params">x</span> =&gt;</span> x.<span class="property">content</span>)</span><br></pre></td></tr></table></figure>
+
+<p>独立的只读调用可以并行，有先后依赖的操作使用 await 顺序执行。中间工具结果留在程序内部，只有模型主动 return 或 console.log() 的内容回到对话上下文。</p>
+<p>这能减少某些批处理任务里“模型请求一次、调用一次工具、再请求一次模型”的往返，也能避免把每个中间结果都塞回上下文。</p>
+<p>DeepSeek 官方文档没有承诺 Code Mode 在所有任务中都节省 Token。生成的 SDK 说明本身也占用请求长度；任务短、工具少时，普通调用可能更省。</p>
+<p>安全管线没有因为 Code Mode 消失。run_code 内部发出的子调用仍经过工具权限、沙箱和执行管线，并留下关联日志。</p>
+<p><strong>Minimal Mode：控制变量的评测环境</strong></p>
+<p>Minimal Mode 只给模型持久 Shell 和文件编辑器。</p>
+<p>它像一间只发纸笔的考场。研究人员减少 Skills、搜索、规划插件和复杂上下文的帮助，更容易观察模型能否独立读代码、制定计划、运行测试和修复错误。</p>
+<p>DeepSeek 在自己的 Code Agent 文本评测中使用这一模式。它的意义不在于日常使用体验最好，而在于让评测条件更清楚。</p>
+<p><strong>Creator Mode：检查和试验 Harness 本身</strong></p>
+<p>Creator Mode 在 Standard 能力之上增加运行时检查、内存插件试验和 Preset 编写指导。开发者可以让 Agent 帮助理解当前插件树，尝试新的组件组合，再把结果写成新的模式配置。</p>
+<p>它把 Harness 从 Agent 的幕后环境变成 Agent 可以参与操作的开发对象。</p>
+<p>这里要避免过度解读。仓库里存在动态 Cordis 工具和自引用实验，但相关工具集并未默认装入所有发行组合。Creator Mode 更适合被描述为 Harness 开发与实验环境，不能直接等同于“AI 可以无条件重写自己”。</p>
+<h2 id="十一、子-Agent-也被抽象成可替换-Provider"><a href="#十一、子-Agent-也被抽象成可替换-Provider" class="headerlink" title="十一、子 Agent 也被抽象成可替换 Provider"></a>十一、子 Agent 也被抽象成可替换 Provider</h2><p>复杂任务经常需要分工。主 Agent 可以把资料搜索、代码检查或测试交给子 Agent。</p>
+<p>DeepSeek Harness 没把子 Agent 写死成一种内部线程。它定义统一的 ctx.subagents 接口，不同 Provider 可以启动：</p>
+<ul>
+<li>当前进程里的新 Agent；</li>
+<li>从父任务历史 Fork 出来的 Agent；</li>
+<li>通过 ACP 启动的外部 Agent；</li>
+<li>Codex 或 Claude Code 子进程；</li>
+<li>通过 DeepSeek Harness SDK 启动的另一实例。</li>
+</ul>
+<p>主 Agent 通过同一套工具发起委派、发送消息、查询或中断子 Agent。底层运行的是内部子任务还是外部产品，由 Provider 决定。</p>
+<p><strong>Fork 子 Agent 会继承什么？</strong></p>
+<p>Fork Provider 只复制父 Session 中已经完整结束的 Turn。父 Agent 当前仍在执行的工具调用不会复制，因为它缺少对应的结果和 turn&#x2F;end，复制后会形成不完整历史</p>
+<p>Fork 传递的是对话历史，不是权限。子 Agent 会得到新的作用域，不会自动继承父 Agent 的工具限制和操作授权</p>
+<p>这个细节很重要。上下文继承和权限继承属于两件事。一个子 Agent 知道父任务发生过什么，不代表它有权做父 Agent 能做的所有操作。</p>
+<h2 id="十二、它到底能做出什么：从临时造工具到外部自动化"><a href="#十二、它到底能做出什么：从临时造工具到外部自动化" class="headerlink" title="十二、它到底能做出什么：从临时造工具到外部自动化"></a>十二、它到底能做出什么：从临时造工具到外部自动化</h2><p>先说明资料边界。截至 2026 年 8 月 26 日，DeepSeek 官方公开的主要是可运行示例、内置工具和实验性 POC，还没有足够的公开客户案例与业务收益数据。</p>
+<p>所以下面说的“案例”分成四类：</p>
+<p><strong>案例一：Agent 在对话中给自己造一个新工具</strong></p>
+<p>这是 DeepSeek Harness 最有辨识度的用法。</p>
+<p>假设一个团队每次发布前，都要检查四件事：版本号有没有更新、Changelog 有没有补、测试是否通过、安装包有没有异常变大。</p>
+<p>普通 Agent 可以分别读文件、运行测试、计算体积，每次发布都重复一遍。启用官方 web-cordis 示例后，用户还可以提出这样的要求：</p>
+<blockquote>
+<p>给自己增加一个 release_guard 工具。以后调用一次，就完成四项检查，并返回统一的发布报告。</p>
+</blockquote>
+<p>这里的 release_guard 是基于官方机制构造的业务例子，不是 DeepSeek 预装工具。官方 Creator Skill 给出的真实示例叫 preset_check：Agent 临时注册这个工具，用它检查一个 Agent Preset 能否找到对应的 Standing Key</p>
+<p>创建过程不是“模型随便执行一段代码”，而是一条有状态的插件生命周期：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">检查当前运行时</span><br><span class="line">cordis_inspect_list / cordis_inspect_query</span><br><span class="line">             │</span><br><span class="line">             ▼</span><br><span class="line">定义一个不可变 Package</span><br><span class="line">cordis_define</span><br><span class="line">             │</span><br><span class="line">             ▼</span><br><span class="line">用户批准需要授权的 Client 代码</span><br><span class="line">cordis_run</span><br><span class="line">             │</span><br><span class="line">             ▼</span><br><span class="line">新工具进入下一次模型请求的工具表</span><br><span class="line">             │</span><br><span class="line">             ▼</span><br><span class="line">更新 / 回滚 / 停止 / 永久移除</span><br></pre></td></tr></table></figure>
+
+<p>第一步是检查。Agent 可以读取当前真实存在的 Service、Event、Builtin、工具 Schema、主题变量和 Web UI Slot。这样它不必猜“文件服务的方法叫什么”“这个界面插槽收什么参数”。</p>
+<p>第二步是定义。cordis_define 接收模型写出的普通 JavaScript Host 或 Client 函数体，先验证参数和语法，再生成标识。它此时不会运行插件，也不会改变当前版本。</p>
+<p>这里有三个容易混淆的身份：</p>
+<ul>
+<li>pluginId：这个插件长期使用的名字；</li>
+<li>packageId：某一版不可修改的代码；</li>
+<li>Run：某一版代码的一次实际运行。</li>
+</ul>
+<p>它像应用、安装包版本和正在运行的进程。更新时不会覆盖旧 Package，而是为同一个 Plugin 追加新版本。新版本失败后，旧版本的身份还在，Agent 可以显式切回。</p>
+<p>第三步是激活。cordis_run 把指定 Package 挂进当前 Cordis 运行时。含浏览器 Client 代码的 Package 可能触发用户审批；获得授权后，插件才开始工作。</p>
+<p>第四步才是能力变化。如果插件注册了 release_guard，Harness 会发现工具 Schema 已改变，记录一份新的 Request Header。到下一个 Step 重新组装 Prompt 时，模型的工具清单里便出现了 release_guard。这正好解释了前文所说的“每个 Step 都重新组装 System Prompt 和工具表”：动态能力不是口号，它通过下一次请求真正变成模型可调用的接口。</p>
+<p>动态 Package 能做的也不止注册工具。它可以监听事件、提供服务、改变模型路由，或者向 Web UI 的 Slot 塞进一个面板。一个 Package 可以同时包含两半：</p>
+<ul>
+<li>Host Half：运行在 Harness 主机侧，处理文件、数据和后端服务；</li>
+<li>Client Half：运行在浏览器侧，显示按钮、状态面板和工具结果卡片。</li>
+</ul>
+<p>两半还能通过插件私有 RPC 通信。形象地说，Agent 可以临时写一个后台能力，再顺手给它做一个可点击的小界面。</p>
+<p>这里的 RPC，可以理解成前台与后台之间的“内部电话”：浏览器按钮发出一份结构化请求，Host 完成工作后再把结果送回界面。</p>
+<p>如果实验失败，cordis_stop 会停止当前 Run，但保留 Plugin 和各版 Package；cordis_undefine 才会删除定义。插件产生的工具、监听器和其他 Effect 由 Cordis 生命周期统一清理。</p>
+<p>这个能力需要严格看待。官方 web-cordis 文档写明，临时插件只存在于进程内存，卸载或重启后消失，也可能影响同一进程里的其他 Session。它不会自动保存成正式插件，更不是一个低权限安全沙箱。动态代码能够触达真实 Harness 服务，信任级别接近 Shell，因此官方把它设计成主动启用的开发能力。</p>
+<p><strong>案例二：把一项大任务写成“多 Agent 流水线”</strong></p>
+<p>假设要审查 100 个源码文件，并要求每个高风险结论再由另一名 Agent 复核。</p>
+<p>逐个派任务当然能做，但主 Agent 要反复发出委派、等待、读取答案，再派下一轮。官方 workflow 工具允许模型写一段 JavaScript 编排脚本：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">100 个文件</span><br><span class="line">   │</span><br><span class="line">   ├─ 为每个文件启动审计 Agent</span><br><span class="line">   │</span><br><span class="line">   ├─ 统一返回 &#123; 文件、风险、证据、严重度 &#125;</span><br><span class="line">   │</span><br><span class="line">   ├─ 只把高风险项送给验证 Agent</span><br><span class="line">   │</span><br><span class="line">   └─ 主 Agent 去重并汇总报告</span><br></pre></td></tr></table></figure>
+
+<p>脚本可以调用：</p>
+<ul>
+<li>agent()：运行一个子 Agent，并可要求它按 JSON Schema 返回结构化结果；</li>
+<li>pipeline()：让每个对象独立经过多级处理，不必等所有对象完成第一阶段；</li>
+<li>parallel()：并行启动一组任务，再在同一个屏障处等待；</li>
+<li>phase() 和 log()：标记阶段并报告进度；</li>
+<li>provider 和 model：为某一类子任务选另一条模型路线。</li>
+</ul>
+<p>Workflow 脚本本身不能访问文件、网络、定时器或 Node API。它只负责排班，真正读文件和查资料的是子 Agent；并发数和 Agent 总数也受配置上限控制。</p>
+<p>这套系统里还有几个容易被混称为“自动运行”的概念：</p>
+<p>Goal 的进展留在同一条 Session 历史里。Ralph 每轮不继承父对话或上一名子 Agent 的会话，只共享工作区，并让上一轮传递一份受限的结构化报告。官方还要求 Ralph 只能在用户明确提出时使用，不应被 Agent 擅自开启</p>
+<p>再往外一层，Subagent Provider 还能连接进程内 Agent、Fork Agent、ACP Agent、Codex 和 Claude Code。 团队因此可以组合一种“代码评审委员会”：DeepSeek 主 Agent 拆题，Codex 执行实现检查，Claude Code 看架构，Fork Agent 带着父会话历史核对用户意图，最后由主 Agent 汇总。这里描述的是架构允许的组合方式，不是官方公布的客户部署。</p>
+<p><strong>案例三：给 Agent 加上提醒和跨会话记忆</strong></p>
+<p>官方 web-schedule 可选配置层，也就是 Overlay，会增加 schedule_create、schedule_list 和 schedule_delete 三个工具。它支持“多少秒以后”、明确的绝对时间，以及至少五分钟一次的固定间隔。</p>
+<p>用户可以说：</p>
+<blockquote>
+<p>20 分钟后提醒我回来检查部署结果。</p>
+</blockquote>
+<p>到期后，Harness 会在原 Session 空闲时排入一个普通 Follow-up Turn。提醒记录属于原 Session；进程关闭或 Session 处于冷状态时，计时器不运行，重新打开同一 Session 后才恢复并处理逾期提醒。它不会发送系统通知、邮件或短信，也不支持 Cron 表达式。</p>
+<p>所以它更像贴在当前项目白板上的定时便签，不是一台永远在线的云端调度器。</p>
+<p>“记住项目知识”则由另一条扩展路径完成。官方 mcp-memory 目录提供 Memorix、MCP Reference Memory 和 Engram 三份默认关闭的参考配置。DeepSeek Harness 负责启动或连接第三方 MCP Server、发现工具，并把它们暴露为 mcp__服务器__工具；数据库初始化、模型选择和数据迁移仍归外部记忆系统负责。</p>
+<p>这能用来保存架构决定、项目术语或已核实事实，让后续 Session 主动查询。它不是 DeepSeek Harness 自带的一套“自动永久记忆”，而是 Harness 通过 MCP 接上了外部记忆能力。</p>
+<p><strong>案例四：把 Agent 塞进 CI、Python 程序或远程沙箱</strong></p>
+<p>官方 Headless Profile 接收一个任务，创建并保存新 Session，打印最终回答，然后退出。仓库给出的运行方式非常直接：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm dsh --profile headless &quot;fix the failing test in this workspace&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这意味着 CI 脚本、Git Hook 或其他自动化程序可以把 DSH 当成一次性任务执行器。Headless 组合还包含本地 Shell、文件工具、子 Agent、Workflow、Ralph、Todo 和 JSONL Session。</p>
+<p>如果调用方是 Python 服务，官方 jsonrpc-agent 示例展示了怎样通过 Python SDK 和 JSON-RPC 驱动一个无人值守 Coding Agent；捆绑运行时已经携带所需插件，目标机器不必另装 Node.js。</p>
+<p>如果外部程序还需要创建多个 Session、取消任务并逐次决定权限，官方 acp-agent 示例提供 ACP over JSON-RPC stdio。每个 session&#x2F;new 都指定独立工作目录；越权重试会把一次性 allow_once 或 reject_once 决定交给客户端，没有回答时默认拒绝。</p>
+<p>这三种入口的差别可以简单理解为：</p>
+<ul>
+<li>Headless：给一项任务，等一个最终结果；</li>
+<li>JSON-RPC SDK：从 Python 程序控制 Agent 生命周期；</li>
+<li>ACP：把 DSH 作为可被父 Agent、IDE 或自动化平台驱动的 Agent 进程。</li>
+</ul>
+<p>官方还提供 E2B Overlay POC。它替换本地文件系统和子进程 Provider，让原来的文件、Bash、PTY 和 LSP 工具转到同一个远程沙箱，上层工具名称不变</p>
+<p>这展示了 Capability Seam 的实际价值：Agent 仍然以为自己在使用同一套工具，施工地点却从本机换成了一块用完即销毁的远程工地。当前 POC 不会自动上传或同步宿主机项目；模型调用、Session、日志和 Skills 仍留在 Host，不能把它写成完整的云端 Harness。</p>
+<h2 id="十三、在-Harness-领域的创新评价"><a href="#十三、在-Harness-领域的创新评价" class="headerlink" title="十三、在 Harness 领域的创新评价"></a>十三、在 Harness 领域的创新评价</h2><p>插件、MCP、Skills、Hooks、子 Agent、权限控制、Checkpoint 和 Replay 都早已有其他实现。Claude Code 插件可以打包 Skills、Agents、Hooks、MCP 和 LSP；LangGraph 提供持久化和基于 Checkpoint 的任务恢复能力。</p>
+<p>因此，评价 DeepSeek Harness 要看组合方式和系统边界。</p>
+<p>DeepSeek Harness 最有辨识度的贡献可以归纳为三项。</p>
+<p>第一，它把插件边界推进到 Agent 的核心运行结构。开发者可以配置 Agent 的工具、执行循环、历史保存方式、运行环境和界面。</p>
+<p>第二，它把可组合性与可重建性放在同一系统里。Cordis 管理组件的装卸，Session Log 管理运行事实。前者回答“能力怎样换”，后者回答“换完之后、运行过程中发生了什么”。</p>
+<p>第三，它把插件框架本身变成了 Agent 可以检查和操作的对象。动态执行代码并不新鲜；真正有价值的是检查真实接口、不可变版本、审批、请求头变更记录、回滚入口和生命周期清理被放进同一条链路。它仍是高权限实验能力，但已经比一句“让 AI 自己写插件”具体得多。</p>
+<p>这是一套有明确主张的 Harness 架构。它是否会成为行业标准，需要看 API 稳定性、插件质量、调试体验和真实生产负载。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>DeepSeek Harness 把 Agent 拆成了两个层次。</p>
+<p>模型负责提出判断和行动意图。Harness 负责组装模型所见的上下文，审核并执行工具，把结果送回模型，再用事件日志保存全过程。</p>
+<p>DeepSeek 的设计选择也可以分成两条线：Cordis 负责组件的装载、依赖与撤销；Session Log 负责运行历史的记录、推导与恢复。Agent Loop 把两条线连接起来，每个 Step 都从当前插件环境和历史事件生成下一次模型请求。</p>
+<p>实际案例把这套抽象落到了地面：Agent 可以临时增加一个发布检查工具，用 Workflow 组织几十名子 Agent，把一次任务交给 CI 或 Python 程序，在飞书中接收指令，也可以借社区插件获得浏览器、视觉、数据库、条件唤醒和交互式界面。</p>
+<p>这套机制仍在快速变化，距离稳定的通用基础设施还有一段路。它已经给出一个值得保留的评测习惯：以后讨论 Agent 能力，除了问“用了哪个模型”，还要问它看到了什么工具、运行在哪套 Harness 上，以及失败后能不能还原过程。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/23c502a/">https://macin.top/posts/23c502a/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/deepseek/">deepseek</a><a class="post-meta__tags" href="/tags/Deepseek-Harness/">Deepseek Harness</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6458d94e/" title="Codex 自动剪辑：开源爆火涨粉 100w 的人生副本视频（系列一）"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Codex 自动剪辑：开源爆火涨粉 100w 的人生副本视频（系列一）</div></div><div class="info-2"><div class="info-item-1">人生副本系列特火，很解压，有人用它一个视频涨粉 100w，可以带货、带广告、教徒赚钱，很适合大家做副业。</div></div></div></a><a class="pagination-related" href="/posts/2737832d/" title="Codex 的多种方式安装与使用：部署实战，一次成功"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Codex 的多种方式安装与使用：部署实战，一次成功</div></div><div class="info-2"><div class="info-item-1">在以下情况下使用 ChatGPT 桌面应用程序 协调多个项目保持并行工作可见，并在聊天之间快速切换。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/10ed36e2/" title="DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-17</div><div class="info-item-2">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro</div></div><div class="info-2"><div class="info-item-1">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro 模型，框架具备代码读取、文件修改、命令执行与工具调用能力，形成完整的自主分析与修复闭环。</div></div></div></a><a class="pagination-related" href="/posts/bee355f4/" title="DeepSeek接入Claude Code，先进大模型接入AI编程助手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-26</div><div class="info-item-2">DeepSeek接入Claude Code，先进大模型接入AI编程助手</div></div><div class="info-2"><div class="info-item-1">DeepSeek 接入 Claude Code 教程：通过修改环境变量将先进大模型接入终端 AI 编程助手，API Key 在 DeepSeek Platform 获取，花小钱办大事。</div></div></div></a><a class="pagination-related" href="/posts/3903b35/" title="DeepSeek 开源 AI 智能体工作台，上线一天斩获 84.2k 星"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-15</div><div class="info-item-2">DeepSeek 开源 AI 智能体工作台，上线一天斩获 84.2k 星</div></div><div class="info-2"><div class="info-item-1">DeepSeek 开源 AI 智能体基础工作台，上线一天斩获 84.2k Star：把模型、工具、存储拆成插件自由组合，开发者像搭积木一样配置 Agent，无需改源码。</div></div></div></a><a class="pagination-related" href="/posts/cb89ca29/" title="DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力</div></div><div class="info-2"><div class="info-item-1">DeepSeek++ 浏览器扩展：为 DeepSeek 网页版注入 Agentic 能力，补足官方版缺乏的长期记忆、自动化任务处理与工具调用功能，让 AI 对话更高效。</div></div></div></a><a class="pagination-related" href="/posts/59de1e22/" title="DeepSeek Harness 实操全攻略（万字）：从安装到落地一次讲透"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-20</div><div class="info-item-2">DeepSeek Harness 实操全攻略（万字）：从安装到落地一次讲透</div></div><div class="info-2"><div class="info-item-1">npx @deepseek-ai/dsh plugin --profile web remove dsh-find-plugin npx @deepseek-ai/dsh plugin --profile web remove dshmarket</div></div></div></a><a class="pagination-related" href="/posts/6f671d0c/" title="卷出开源新高度！DeepSeek-V4 正式发布：百万上下文 + 工程级"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-23</div><div class="info-item-2">卷出开源新高度！DeepSeek-V4 正式发布：百万上下文 + 工程级</div></div><div class="info-2"><div class="info-item-1">DeepSeek V4 正式发布：一口气发布 Flash 轻量与 Pro 满血 4 个版本，完全开源支持商用、百万上下文，把开源模型能力上限拉到商用工程级。</div></div></div></a><a class="pagination-related" href="/posts/360e83e7/" title="DeepSeek V3.2 正式发布！强化 Agent 能力，融入思考推理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-07</div><div class="info-item-2">DeepSeek V3.2 正式发布！强化 Agent 能力，融入思考推理</div></div><div class="info-2"><div class="info-item-1">DeepSeek V3.2 正式发布：强化 Agent 能力、融入思考推理，官方网页端/App/API 已全面更新。实测本地部署流程，Speciale 强化版表现更夸张，免费开源。</div></div></div></a><a class="pagination-related" href="/posts/79e3dc34/" title="whichllm：命令行分析你的电脑能跑哪个大模型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="info-item-2">whichllm：命令行分析你的电脑能跑哪个大模型</div></div><div class="info-2"><div class="info-item-1">whichllm 命令行工具：自动识别显卡、CPU、内存，从 HuggingFace 筛选适配硬件的开源大模型，按真实跑分排序，还能输出可直接运行的 Python 加载代码。</div></div></div></a><a class="pagination-related" href="/posts/904ac76/" title="NAS 部署 DeepSeek Harness：一句话，AI 帮你从零到部署上线"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">NAS 部署 DeepSeek Harness：一句话，AI 帮你从零到部署上线</div></div><div class="info-2"><div class="info-item-1">NAS 部署 DeepSeek Harness：模块化开源 Agent 框架，统一接口接入 DeepSeek/OpenAI 等大模型，内置文件操作、Shell 命令、联网搜索等工具，一句话让 AI 从零到部署上线。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1827</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2167</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">165</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/macinko" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fa-brands fa-github" style="color: #535353;"></i></a><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E6%8A%8A-Harness-%E8%AE%B2%E9%80%8F%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%B9%B6%E4%B8%8D%E4%BC%9A%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E7%94%B5%E8%84%91"><span class="toc-number">1.</span> <span class="toc-text">一、先把 Harness 讲透：模型并不会直接使用电脑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DeepSeek-Harness-%E6%98%AF%E4%BA%A7%E5%93%81%EF%BC%8C%E4%B9%9F%E6%98%AF-Agent-%E7%BB%84%E8%A3%85%E6%A1%86%E6%9E%B6"><span class="toc-number">2.</span> <span class="toc-text">二、DeepSeek Harness 是产品，也是 Agent 组装框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81DeepSeek-Harness-%E6%80%8E%E6%A0%B7%E5%90%AF%E5%8A%A8%EF%BC%9A%E5%85%88%E7%94%A8%E9%85%8D%E7%BD%AE%E6%8B%BC%E5%87%BA%E4%B8%80%E6%A3%B5%E6%8F%92%E4%BB%B6%E6%A0%91"><span class="toc-number">3.</span> <span class="toc-text">三、DeepSeek Harness 怎样启动：先用配置拼出一棵插件树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Cordis-%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9A%E6%8F%92%E4%BB%B6%E5%8D%B8%E8%BD%BD%E5%90%8E%EF%BC%8C%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%81%A2%E5%A4%8D%E5%B9%B2%E5%87%80"><span class="toc-number">4.</span> <span class="toc-text">四、Cordis 到底解决了什么：插件卸载后，系统要恢复干净</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%B8%80%E6%AC%A1%E4%BB%BB%E5%8A%A1%E6%80%8E%E6%A0%B7%E8%BF%90%E8%A1%8C%EF%BC%9ATurn-%E9%87%8C%E9%9D%A2%E5%8F%AF%E4%BB%A5%E6%9C%89%E5%A4%9A%E4%B8%AA-Step"><span class="toc-number">5.</span> <span class="toc-text">五、一次任务怎样运行：Turn 里面可以有多个 Step</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81System-Prompt-%E4%BC%9A%E5%9C%A8%E6%AF%8F%E4%B8%AA-Step-%E9%87%8D%E6%96%B0%E7%BB%84%E8%A3%85"><span class="toc-number">6.</span> <span class="toc-text">六、System Prompt 会在每个 Step 重新组装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81Session-Log-%E6%80%8E%E6%A0%B7%E6%88%90%E4%B8%BA%E5%94%AF%E4%B8%80%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90"><span class="toc-number">7.</span> <span class="toc-text">七、Session Log 怎样成为唯一事实来源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%B8%8D%E4%BC%9A%E7%9B%B4%E6%8E%A5%E8%90%BD%E5%88%B0%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%8C%E4%B8%AD%E9%97%B4%E6%9C%89%E4%B8%80%E6%9D%A1%E5%AE%89%E5%85%A8%E7%AE%A1%E7%BA%BF"><span class="toc-number">8.</span> <span class="toc-text">八、工具调用不会直接落到操作系统，中间有一条安全管线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81Capability-Seam%EF%BC%9A%E8%AE%A9%E4%B8%8A%E5%B1%82%E5%B7%A5%E5%85%B7%E4%B8%8D%E7%BB%91%E5%AE%9A%E6%9F%90%E4%B8%AA%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="toc-number">9.</span> <span class="toc-text">九、Capability Seam：让上层工具不绑定某个底层实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8F%E6%80%8E%E6%A0%B7%E7%94%B1%E5%90%8C%E4%B8%80%E5%86%85%E6%A0%B8%E7%BB%84%E5%90%88%E5%87%BA%E6%9D%A5"><span class="toc-number">10.</span> <span class="toc-text">十、四种模式怎样由同一内核组合出来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%AD%90-Agent-%E4%B9%9F%E8%A2%AB%E6%8A%BD%E8%B1%A1%E6%88%90%E5%8F%AF%E6%9B%BF%E6%8D%A2-Provider"><span class="toc-number">11.</span> <span class="toc-text">十一、子 Agent 也被抽象成可替换 Provider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%88%B0%E5%BA%95%E8%83%BD%E5%81%9A%E5%87%BA%E4%BB%80%E4%B9%88%EF%BC%9A%E4%BB%8E%E4%B8%B4%E6%97%B6%E9%80%A0%E5%B7%A5%E5%85%B7%E5%88%B0%E5%A4%96%E9%83%A8%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">12.</span> <span class="toc-text">十二、它到底能做出什么：从临时造工具到外部自动化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%9C%A8-Harness-%E9%A2%86%E5%9F%9F%E7%9A%84%E5%88%9B%E6%96%B0%E8%AF%84%E4%BB%B7"><span class="toc-number">13.</span> <span class="toc-text">十三、在 Harness 领域的创新评价</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-number">14.</span> <span class="toc-text">写在最后</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具"/></a><div class="content"><a class="title" href="/posts/678781f/" title="cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具">cmux 是一款基于 Ghostty 构建的 macOS 终端增强工具</a><time datetime="2026-09-05T15:19:48.000Z" title="发表于 2026-09-05 23:19:48">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LoopX 比 Goal 更懂长期任务"/></a><div class="content"><a class="title" href="/posts/b0fa5ab2/" title="LoopX 比 Goal 更懂长期任务">LoopX 比 Goal 更懂长期任务</a><time datetime="2026-09-05T15:18:03.000Z" title="发表于 2026-09-05 23:18:03">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837"/></a><div class="content"><a class="title" href="/posts/44f4d51b/" title="lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837">lcayun美国GTT住宅双ISP属性IP的VPS测评，解锁流媒体效果好配三网AS4837</a><time datetime="2026-09-05T15:16:45.000Z" title="发表于 2026-09-05 23:16:45">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="PanWatch 是一款自托管的 AI 盯盘助手"/></a><div class="content"><a class="title" href="/posts/49e7df74/" title="PanWatch 是一款自托管的 AI 盯盘助手">PanWatch 是一款自托管的 AI 盯盘助手</a><time datetime="2026-09-05T15:14:27.000Z" title="发表于 2026-09-05 23:14:27">2026-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统"/></a><div class="content"><a class="title" href="/posts/827b763f/" title="BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统">BoardUI 是一个专为 AI 智能体界面 (Agentic Interfaces) 设计的 React 设计系统</a><time datetime="2026-09-05T15:12:34.000Z" title="发表于 2026-09-05 23:12:34">2026-09-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

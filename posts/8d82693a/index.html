@@ -1,0 +1,1111 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>One IP：IP 查询、网络诊断与浏览器检测工具箱 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="One IP 是一个集 IP 查询、网络诊断、浏览器检测和 AI 服务状态于一体的工具箱。它的最大特点是统一部署：前端静态文件与 API 由同一个 Cloudflare Worker 提供…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="One IP：IP 查询、网络诊断与浏览器检测工具箱">
+<meta property="og:url" content="https://macin.top/posts/8d82693a/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="One IP 是一个集 IP 查询、网络诊断、浏览器检测和 AI 服务状态于一体的工具箱。它的最大特点是统一部署：前端静态文件与 API 由同一个 Cloudflare Worker 提供…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-10T14:54:21.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.627Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="One IP">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="浏览器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "One IP：IP 查询、网络诊断与浏览器检测工具箱",
+  "url": "https://macin.top/posts/8d82693a/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-10T14:54:21.000Z",
+  "dateModified": "2026-09-13T01:45:15.627Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/8d82693a/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'One IP：IP 查询、网络诊断与浏览器检测工具箱',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">One IP：IP 查询、网络诊断与浏览器检测工具箱</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">One IP：IP 查询、网络诊断与浏览器检测工具箱</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.627Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><h2 id="📋-项目简介"><a href="#📋-项目简介" class="headerlink" title="📋 项目简介"></a>📋 项目简介</h2><p>One IP 是一个集 IP 查询、网络诊断、浏览器检测和 AI 服务状态于一体的工具箱。它的最大特点是<strong>统一部署</strong>：前端静态文件与 API 由同一个 Cloudflare Worker 提供，无需单独部署 Node 服务或 Docker 容器。</p>
+<p><strong>主要功能模块：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">模块</th>
+<th align="left">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">首页</td>
+<td align="left">IPv4&#x2F;IPv6 出口、分流汇总、网络连通性、浏览器指纹、WebRTC、AI 访问与服务状态</td>
+</tr>
+<tr>
+<td align="left">IP 信息</td>
+<td align="left">公网 IP 归属地、运营商、ASN、地图、多源对比及可选风险信息</td>
+</tr>
+<tr>
+<td align="left">WHOIS</td>
+<td align="left">域名、IP、ASN 的 RDAP 注册信息</td>
+</tr>
+<tr>
+<td align="left">网络诊断</td>
+<td align="left">网站分流、HTTP 连通性、全球 ICMP Ping、DNS 出口和 CDN 命中节点</td>
+</tr>
+<tr>
+<td align="left">浏览器检测</td>
+<td align="left">环境信息、指纹、环境一致性、自动化特征、权限隐私与验证码体验</td>
+</tr>
+<tr>
+<td align="left">AI 平台</td>
+<td align="left">ChatGPT、Claude、Gemini、DeepSeek、Grok、Perplexity、通义千问和 Kimi 的访问检测</td>
+</tr>
+<tr>
+<td align="left">服务状态</td>
+<td align="left">聚合官方数据，按分类展示运行情况</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="🎯-部署方式概览"><a href="#🎯-部署方式概览" class="headerlink" title="🎯 部署方式概览"></a>🎯 部署方式概览</h2><p>One IP 提供两种部署方式：</p>
+<ol>
+<li><strong>GitHub Actions 自动部署</strong>（推荐）——推送代码后自动构建并部署到 Cloudflare Workers</li>
+<li><strong>本地命令部署</strong>——在自己电脑上手动执行部署命令</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>重要说明</strong>：虽然工作流文件名为 <code>pages.yml</code>，但实际部署目标是 <strong>Cloudflare Workers + Static Assets</strong>，<strong>不是</strong> GitHub Pages 或 Cloudflare Pages。</p>
+</blockquote>
+<hr>
+<h2 id="一、前置准备"><a href="#一、前置准备" class="headerlink" title="一、前置准备"></a>一、前置准备</h2><h3 id="1-1-注册-Cloudflare-账号"><a href="#1-1-注册-Cloudflare-账号" class="headerlink" title="1.1 注册 Cloudflare 账号"></a>1.1 注册 Cloudflare 账号</h3><p>如果你还没有 Cloudflare 账号，请先前往 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cloudflare.com/">cloudflare.com</a> 注册。</p>
+<h3 id="1-2-获取-Cloudflare-Account-ID"><a href="#1-2-获取-Cloudflare-Account-ID" class="headerlink" title="1.2 获取 Cloudflare Account ID"></a>1.2 获取 Cloudflare Account ID</h3><ol>
+<li>登录 Cloudflare Dashboard</li>
+<li>进入 <strong>Workers &amp; Pages</strong> 页面</li>
+<li>在右侧边栏可以看到 <strong>Account ID</strong>，复制保存备用</li>
+</ol>
+<h3 id="1-3-创建-Cloudflare-API-Token"><a href="#1-3-创建-Cloudflare-API-Token" class="headerlink" title="1.3 创建 Cloudflare API Token"></a>1.3 创建 Cloudflare API Token</h3><ol>
+<li>登录 Cloudflare Dashboard</li>
+<li>点击右上角头像 → <strong>My Profile</strong> → <strong>API Tokens</strong></li>
+<li>点击 <strong>Create Token</strong></li>
+<li>选择 <strong>Edit Cloudflare Workers</strong> 模板（或自定义模板，确保具备 <strong>Workers 编辑权限</strong>）</li>
+<li>配置权限：<ul>
+<li><strong>Account</strong> → <strong>Workers Scripts</strong> → <strong>Edit</strong></li>
+<li><strong>Account</strong> → <strong>Workers KV Storage</strong> → <strong>Edit</strong>（如需）</li>
+<li><strong>Zone</strong> → <strong>Workers Routes</strong> → <strong>Edit</strong>（如需自定义域名）</li>
+</ul>
+</li>
+<li>创建后<strong>立即复制 Token</strong>（只显示一次），妥善保存</li>
+</ol>
+<hr>
+<h2 id="二、方式一：GitHub-Actions-自动部署（推荐）"><a href="#二、方式一：GitHub-Actions-自动部署（推荐）" class="headerlink" title="二、方式一：GitHub Actions 自动部署（推荐）"></a>二、方式一：GitHub Actions 自动部署（推荐）</h2><h3 id="2-1-Fork-或导入项目"><a href="#2-1-Fork-或导入项目" class="headerlink" title="2.1 Fork 或导入项目"></a>2.1 Fork 或导入项目</h3><p><strong>方式 A：Fork 仓库</strong></p>
+<ol>
+<li>打开 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/zhihui-hu/one-ip">https://github.com/zhihui-hu/one-ip</a></li>
+<li>点击右上角 <strong>Fork</strong> 按钮</li>
+<li>选择你的 GitHub 账号，等待 Fork 完成</li>
+</ol>
+<p><strong>方式 B：导入为私有仓库</strong></p>
+<ol>
+<li>在 GitHub 点击 <strong>New repository</strong></li>
+<li>选择 <strong>Import a repository</strong></li>
+<li>填入源地址 <code>https://github.com/zhihui-hu/one-ip</code></li>
+<li>设置仓库名称（如 <code>one-ip</code>），选择公开或私有</li>
+<li>点击 <strong>Begin import</strong></li>
+</ol>
+<blockquote>
+<p>💡 <strong>提示</strong>：默认部署分支为 <code>main</code>，请确保你的仓库主分支名为 <code>main</code>。</p>
+</blockquote>
+<h3 id="2-2-配置-GitHub-Secrets"><a href="#2-2-配置-GitHub-Secrets" class="headerlink" title="2.2 配置 GitHub Secrets"></a>2.2 配置 GitHub Secrets</h3><ol>
+<li>进入你 Fork&#x2F;导入的仓库</li>
+<li>点击 <strong>Settings</strong> → <strong>Secrets and variables</strong> → <strong>Actions</strong></li>
+<li>点击 <strong>New repository secret</strong>，依次添加以下两个 Secret：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">Secret 名称</th>
+<th align="left">用途</th>
+<th align="left">获取方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>CLOUDFLARE_API_TOKEN</code></td>
+<td align="left">Cloudflare Workers 部署凭证，需具备 Workers 编辑权限</td>
+<td align="left">见 1.3 节</td>
+</tr>
+<tr>
+<td align="left"><code>CLOUDFLARE_ACCOUNT_ID</code></td>
+<td align="left">目标 Cloudflare 账户 ID</td>
+<td align="left">见 1.2 节</td>
+</tr>
+</tbody></table>
+<p><strong>添加步骤：</strong></p>
+<ul>
+<li>点击 <strong>New repository secret</strong></li>
+<li>Name 填入 <code>CLOUDFLARE_API_TOKEN</code></li>
+<li>Secret 粘贴你的 API Token</li>
+<li>点击 <strong>Add secret</strong></li>
+<li>重复以上步骤添加 <code>CLOUDFLARE_ACCOUNT_ID</code></li>
+</ul>
+<h3 id="2-3-触发部署"><a href="#2-3-触发部署" class="headerlink" title="2.3 触发部署"></a>2.3 触发部署</h3><p><strong>方式 A：推送触发</strong></p>
+<p>对 <code>main</code> 分支进行任意推送（如修改 README），工作流会自动触发：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/你的用户名/one-ip.git</span><br><span class="line"><span class="built_in">cd</span> one-ip</span><br><span class="line"><span class="comment"># 做一些修改，例如更新 README</span></span><br><span class="line">git commit -am <span class="string">&quot;trigger deploy&quot;</span></span><br><span class="line">git push origin main</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方式 B：手动触发</strong></p>
+<ol>
+<li>进入仓库的 <strong>Actions</strong> 标签页</li>
+<li>左侧选择 <strong>Build and deploy one-ip</strong> 工作流</li>
+<li>点击右侧 <strong>Run workflow</strong> → 选择 <code>main</code> 分支 → <strong>Run workflow</strong></li>
+</ol>
+<h3 id="2-4-查看部署结果"><a href="#2-4-查看部署结果" class="headerlink" title="2.4 查看部署结果"></a>2.4 查看部署结果</h3><p>工作流会依次执行以下步骤：</p>
+<ol>
+<li>✅ 安装依赖（<code>pnpm install --frozen-lockfile</code>）</li>
+<li>✅ 构建（<code>make build</code>）</li>
+<li>✅ 测试（<code>make test</code>）</li>
+<li>✅ 部署到 Cloudflare Workers</li>
+</ol>
+<p><strong>获取部署地址：</strong></p>
+<ul>
+<li>查看 Actions 日志中输出的部署 URL</li>
+<li>或登录 Cloudflare Dashboard → <strong>Workers &amp; Pages</strong> → 找到名为 <code>one-ip</code> 的 Worker → 查看其 <code>*.workers.dev</code> 域名</li>
+</ul>
+<h3 id="2-5-部署行为说明"><a href="#2-5-部署行为说明" class="headerlink" title="2.5 部署行为说明"></a>2.5 部署行为说明</h3><table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">首次部署</td>
+<td align="left">自动创建名为 <code>one-ip</code> 的 Worker</td>
+</tr>
+<tr>
+<td align="left">后续推送</td>
+<td align="left">更新同名 Worker</td>
+</tr>
+<tr>
+<td align="left">Pull Request</td>
+<td align="left">只构建和测试，<strong>不部署</strong></td>
+</tr>
+<tr>
+<td align="left">构建&#x2F;测试失败</td>
+<td align="left">不进入部署步骤</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="三、方式二：本地命令部署"><a href="#三、方式二：本地命令部署" class="headerlink" title="三、方式二：本地命令部署"></a>三、方式二：本地命令部署</h2><p>适合需要精细控制、或不想使用 GitHub Actions 的用户。</p>
+<h3 id="3-1-环境要求"><a href="#3-1-环境要求" class="headerlink" title="3.1 环境要求"></a>3.1 环境要求</h3><table>
+<thead>
+<tr>
+<th align="left">依赖</th>
+<th align="left">版本要求</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Node.js</td>
+<td align="left"><strong>24</strong></td>
+<td align="left">必须为 24.x</td>
+</tr>
+<tr>
+<td align="left">pnpm</td>
+<td align="left"><strong>10.32.1</strong></td>
+<td align="left">与 CI 保持一致</td>
+</tr>
+<tr>
+<td align="left">Make</td>
+<td align="left">最新版</td>
+<td align="left">Windows 用户建议使用 WSL 或 Git Bash</td>
+</tr>
+</tbody></table>
+<p><strong>安装 Node.js 24：</strong></p>
+<p>推荐使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/nvm-sh/nvm">nvm</a> 或 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Schniz/fnm">fnm</a>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 nvm</span></span><br><span class="line">nvm install 24</span><br><span class="line">nvm use 24</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用 fnm</span></span><br><span class="line">fnm install 24</span><br><span class="line">fnm use 24</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>安装 pnpm 10.32.1：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pnpm@10.32.1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>验证版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v   <span class="comment"># 应输出 v24.x.x</span></span><br><span class="line">pnpm -v   <span class="comment"># 应输出 10.32.1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-克隆项目"><a href="#3-2-克隆项目" class="headerlink" title="3.2 克隆项目"></a>3.2 克隆项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zhihui-hu/one-ip.git</span><br><span class="line"><span class="built_in">cd</span> one-ip</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-3-安装依赖"><a href="#3-3-安装依赖" class="headerlink" title="3.3 安装依赖"></a>3.3 安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm install --frozen-lockfile</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-4-登录-Cloudflare"><a href="#3-4-登录-Cloudflare" class="headerlink" title="3.4 登录 Cloudflare"></a>3.4 登录 Cloudflare</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm <span class="built_in">exec</span> wrangler login</span><br></pre></td></tr></table></figure>
+
+
+
+<p>执行后会：</p>
+<ol>
+<li>自动打开浏览器</li>
+<li>跳转到 Cloudflare 授权页面</li>
+<li>点击 <strong>Allow</strong> 授权 Wrangler 访问你的账号</li>
+<li>终端显示登录成功</li>
+</ol>
+<p>验证登录状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm <span class="built_in">exec</span> wrangler <span class="built_in">whoami</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-5-部署到生产环境"><a href="#3-5-部署到生产环境" class="headerlink" title="3.5 部署到生产环境"></a>3.5 部署到生产环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make deploy</span><br></pre></td></tr></table></figure>
+
+
+
+<p>该命令会：</p>
+<ol>
+<li>按上海时间更新版本号</li>
+<li>构建项目（<code>make build</code>）</li>
+<li>部署到 Cloudflare Workers（Worker 名称：<code>one-ip</code>）</li>
+</ol>
+<h3 id="3-6-本地开发调试"><a href="#3-6-本地开发调试" class="headerlink" title="3.6 本地开发调试"></a>3.6 本地开发调试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make worker-dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p>启动后访问 <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="http://127.0.0.1:8787/">http://127.0.0.1:8787/</a></strong></p>
+<p>该命令同时启动：</p>
+<ul>
+<li><strong>Vite 开发服务器</strong>（端口 <code>5137</code>）：处理页面和 HMR WebSocket 热更新</li>
+<li><strong>Worker</strong>（端口 <code>8787</code>）：处理 API 请求</li>
+</ul>
+<blockquote>
+<p>💡 修改前端代码即可热更新，无需提前构建。</p>
+</blockquote>
+<p><strong>不使用 Make 的替代命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pnpm worker:dev    <span class="comment"># 同时启动前端与 Worker</span></span><br><span class="line">pnpm dev           <span class="comment"># 仅启动前端（API 仍需本地 Worker）</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-7-常用命令速查"><a href="#3-7-常用命令速查" class="headerlink" title="3.7 常用命令速查"></a>3.7 常用命令速查</h3><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>make worker-dev</code></td>
+<td align="left">同时启动前端与 Worker</td>
+</tr>
+<tr>
+<td align="left"><code>make build</code></td>
+<td align="left">TypeScript 检查与生产构建，输出到 <code>dist</code></td>
+</tr>
+<tr>
+<td align="left"><code>make test</code></td>
+<td align="left">Worker dry-run 与自动化测试（需先构建）</td>
+</tr>
+<tr>
+<td align="left"><code>make deploy</code></td>
+<td align="left">构建并部署到生产环境</td>
+</tr>
+<tr>
+<td align="left"><code>pnpm lint</code></td>
+<td align="left">静态代码检查</td>
+</tr>
+<tr>
+<td align="left"><code>pnpm preview</code></td>
+<td align="left">预览前端构建产物（不启动 Worker API）</td>
+</tr>
+<tr>
+<td align="left"><code>pnpm worker:types</code></td>
+<td align="left">生成 Worker 环境类型</td>
+</tr>
+<tr>
+<td align="left"><code>pnpm browser:build</code></td>
+<td align="left">重建本地浏览器深度检测脚本</td>
+</tr>
+</tbody></table>
+<p><strong>完整检查流程：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">make build</span><br><span class="line">make <span class="built_in">test</span></span><br><span class="line">pnpm lint</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="四、配置说明"><a href="#四、配置说明" class="headerlink" title="四、配置说明"></a>四、配置说明</h2><h3 id="4-1-基础配置（无需密钥）"><a href="#4-1-基础配置（无需密钥）" class="headerlink" title="4.1 基础配置（无需密钥）"></a>4.1 基础配置（无需密钥）</h3><p>基础查询和公开数据源通常<strong>无需配置密钥</strong>。以下功能开箱即用：</p>
+<ul>
+<li>IP 归属地查询（浏览器直连 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://ip.sb/">IP.SB</a> &#x2F; IPWhois）</li>
+<li>WHOIS &#x2F; RDAP 查询</li>
+<li>网络诊断（Ping、DNS、CDN）</li>
+<li>浏览器指纹检测</li>
+<li>AI 平台访问探测</li>
+<li>服务状态聚合</li>
+</ul>
+<h3 id="4-2-高级配置（可选）"><a href="#4-2-高级配置（可选）" class="headerlink" title="4.2 高级配置（可选）"></a>4.2 高级配置（可选）</h3><p>高级风险查询、验证码体验等功能需要按需启用。</p>
+<h4 id="4-2-1-本地开发配置"><a href="#4-2-1-本地开发配置" class="headerlink" title="4.2.1 本地开发配置"></a>4.2.1 本地开发配置</h4><ol>
+<li>复制示例文件：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> .dev.vars.example .dev.vars</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>编辑 <code>.dev.vars</code>，填入配置：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">配置项</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>TURNSTILE_SITE_KEY</code> &#x2F; <code>TURNSTILE_SECRET</code></td>
+<td align="left">Cloudflare Turnstile 站点密钥与服务端密钥</td>
+</tr>
+<tr>
+<td align="left"><code>TURNSTILE_HOSTNAMES</code></td>
+<td align="left">Turnstile 允许的 hostname，逗号分隔</td>
+</tr>
+<tr>
+<td align="left"><code>RECAPTCHA_SITE_KEY</code> &#x2F; <code>RECAPTCHA_SECRET</code></td>
+<td align="left">Google reCAPTCHA v3 评分型密钥</td>
+</tr>
+<tr>
+<td align="left"><code>RECAPTCHA_HOSTNAMES</code></td>
+<td align="left">reCAPTCHA 允许的 hostname，逗号分隔</td>
+</tr>
+<tr>
+<td align="left"><code>VITE_API_BASE_URL</code></td>
+<td align="left">前端 API 地址，默认 <code>/api</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>注意事项</strong>：</p>
+<ul>
+<li>hostname <strong>只填主机名</strong>，不含协议或端口，需与验证码服务商后台配置一致</li>
+<li><code>TURNSTILE_SITE_KEY</code>、<code>RECAPTCHA_SITE_KEY</code> 可留空；未填写时显示未配置提示</li>
+<li>填写 Site Key 后，如服务端 Secret 缺失或 hostname 不匹配，组件会显示不可用</li>
+</ul>
+</blockquote>
+<h4 id="4-2-2-生产环境配置"><a href="#4-2-2-生产环境配置" class="headerlink" title="4.2.2 生产环境配置"></a>4.2.2 生产环境配置</h4><p><strong>公开配置</strong>（放在 <code>wrangler.toml</code> 的 <code>[vars]</code> 中）：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[vars]</span></span><br><span class="line"><span class="attr">TURNSTILE_SITE_KEY</span> = <span class="string">&quot;你的站点密钥&quot;</span></span><br><span class="line"><span class="attr">TURNSTILE_HOSTNAMES</span> = <span class="string">&quot;your-domain.com&quot;</span></span><br><span class="line"><span class="attr">RECAPTCHA_SITE_KEY</span> = <span class="string">&quot;你的站点密钥&quot;</span></span><br><span class="line"><span class="attr">RECAPTCHA_HOSTNAMES</span> = <span class="string">&quot;your-domain.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>敏感密钥</strong>（使用 Worker Secrets）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pnpm <span class="built_in">exec</span> wrangler secret put TURNSTILE_SECRET --<span class="built_in">env</span>=<span class="string">&quot;&quot;</span></span><br><span class="line">pnpm <span class="built_in">exec</span> wrangler secret put RECAPTCHA_SECRET --<span class="built_in">env</span>=<span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>⚠️ <strong>重要</strong>：</p>
+<ul>
+<li>仅设置实际使用的密钥</li>
+<li>生产 hostname <strong>不应包含</strong> <code>localhost</code> 或 <code>127.0.0.1</code></li>
+<li><strong>不要</strong>将密钥放入 <code>VITE_*</code>，这些值会进入前端产物</li>
+</ul>
+</blockquote>
+<h4 id="4-2-3-项目内管理正式环境密钥（本地部署）"><a href="#4-2-3-项目内管理正式环境密钥（本地部署）" class="headerlink" title="4.2.3 项目内管理正式环境密钥（本地部署）"></a>4.2.3 项目内管理正式环境密钥（本地部署）</h4><ol>
+<li>复制示例文件：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> .secrets.example .secrets.production.env</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>填入对应环境的 Secret（这些文件已被 Git 忽略）</li>
+<li><code>make deploy</code> 会自动：<ul>
+<li>先检查本地配置</li>
+<li>构建部署后通过标准输入上传非空密钥</li>
+<li><strong>不在日志中显示密钥值</strong></li>
+<li><strong>不删除</strong>已有的其他 Secret</li>
+</ul>
+</li>
+</ol>
+<p><strong>仅检查、不上传：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node scripts/sync-worker-secrets.mjs production --check</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>单独重试密钥同步：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node scripts/sync-worker-secrets.mjs production</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>⚠️ <strong>说明</strong>：</p>
+<ul>
+<li>部署与 Secrets 同步是两个步骤；同步失败会报错，<strong>已部署的代码不会自动回滚</strong></li>
+<li>这里只接入本地 Make 部署；GitHub Actions <strong>不会</strong>读取未提交的文件</li>
+<li>CI 部署需要单独使用 GitHub Secrets，或保留已上传的 Worker Secrets</li>
+</ul>
+</blockquote>
+<h4 id="4-2-4-reCAPTCHA-v3-特别说明"><a href="#4-2-4-reCAPTCHA-v3-特别说明" class="headerlink" title="4.2.4 reCAPTCHA v3 特别说明"></a>4.2.4 reCAPTCHA v3 特别说明</h4><p>Google 验证体验使用 <strong>reCAPTCHA v3</strong>：</p>
+<ul>
+<li>前端执行 <code>browser_check</code> action</li>
+<li>服务端校验 hostname、action 和 0–1 范围的 score</li>
+<li>当前体验通过阈值为 <strong>0.5</strong></li>
+<li><strong>必须使用配套的 v3 Site Key 与 Secret</strong></li>
+</ul>
+<hr>
+<h2 id="五、自定义域名配置"><a href="#五、自定义域名配置" class="headerlink" title="五、自定义域名配置"></a>五、自定义域名配置</h2><p>默认部署后，Worker 会分配一个 <code>*.workers.dev</code> 子域名。如需使用自定义域名：</p>
+<h3 id="5-1-前提条件"><a href="#5-1-前提条件" class="headerlink" title="5.1 前提条件"></a>5.1 前提条件</h3><ul>
+<li>域名已添加到 Cloudflare（NS 已指向 Cloudflare）</li>
+<li>域名处于 <strong>Active</strong> 状态</li>
+</ul>
+<h3 id="5-2-配置步骤"><a href="#5-2-配置步骤" class="headerlink" title="5.2 配置步骤"></a>5.2 配置步骤</h3><ol>
+<li>登录 Cloudflare Dashboard</li>
+<li>进入 <strong>Workers &amp; Pages</strong> → 选择 <code>one-ip</code> Worker</li>
+<li>点击 <strong>Settings</strong> → <strong>Triggers</strong> → <strong>Custom Domains</strong></li>
+<li>点击 <strong>Add Custom Domain</strong></li>
+<li>输入你的域名（如 <code>ip.example.com</code>）</li>
+<li>点击 <strong>Add Custom Domain</strong>，Cloudflare 会自动配置 DNS 和证书</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>注意</strong>：从旧 Worker 更名到 <code>one-ip</code> <strong>不会迁移</strong>其密钥和域名，也不会删除旧项目。</p>
+</blockquote>
+<hr>
+<h2 id="六、验证码服务商配置"><a href="#六、验证码服务商配置" class="headerlink" title="六、验证码服务商配置"></a>六、验证码服务商配置</h2><h3 id="6-1-Cloudflare-Turnstile"><a href="#6-1-Cloudflare-Turnstile" class="headerlink" title="6.1 Cloudflare Turnstile"></a>6.1 Cloudflare Turnstile</h3><ol>
+<li>登录 Cloudflare Dashboard</li>
+<li>进入 <strong>Turnstile</strong> 页面</li>
+<li>点击 <strong>Add Site</strong></li>
+<li>填写：<ul>
+<li><strong>Site name</strong>：任意名称</li>
+<li><strong>Domain</strong>：你的域名（如 <code>ip.example.com</code>）</li>
+<li><strong>Widget Mode</strong>：选择 <strong>Managed</strong> 或 <strong>Non-Interactive</strong></li>
+</ul>
+</li>
+<li>创建后获得 <strong>Site Key</strong> 和 <strong>Secret Key</strong></li>
+<li>将 Site Key 填入 <code>wrangler.toml</code> 的 <code>TURNSTILE_SITE_KEY</code></li>
+<li>将 Secret 通过 <code>wrangler secret put TURNSTILE_SECRET</code> 上传</li>
+</ol>
+<h3 id="6-2-Google-reCAPTCHA-v3"><a href="#6-2-Google-reCAPTCHA-v3" class="headerlink" title="6.2 Google reCAPTCHA v3"></a>6.2 Google reCAPTCHA v3</h3><ol>
+<li>访问 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.google.com/recaptcha/admin">Google reCAPTCHA 管理后台</a></li>
+<li>点击 <strong>+</strong> 创建新站点</li>
+<li>填写：<ul>
+<li><strong>Label</strong>：任意名称</li>
+<li><strong>reCAPTCHA type</strong>：选择 <strong>reCAPTCHA v3</strong></li>
+<li><strong>Domains</strong>：你的域名</li>
+</ul>
+</li>
+<li>提交后获得 <strong>Site Key</strong> 和 <strong>Secret Key</strong></li>
+<li>将 Site Key 填入 <code>wrangler.toml</code> 的 <code>RECAPTCHA_SITE_KEY</code></li>
+<li>将 Secret 通过 <code>wrangler secret put RECAPTCHA_SECRET</code> 上传</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：reCAPTCHA v3 与 v2 不兼容，必须使用 v3 的密钥。</p>
+</blockquote>
+<hr>
+<h2 id="七、常见问题排查"><a href="#七、常见问题排查" class="headerlink" title="七、常见问题排查"></a>七、常见问题排查</h2><h3 id="7-1-部署失败"><a href="#7-1-部署失败" class="headerlink" title="7.1 部署失败"></a>7.1 部署失败</h3><p><strong>问题：Actions 报错 <code>CLOUDFLARE_API_TOKEN not found</code></strong></p>
+<ul>
+<li>检查 GitHub Secrets 是否正确添加</li>
+<li>Secret 名称必须完全匹配：<code>CLOUDFLARE_API_TOKEN</code> 和 <code>CLOUDFLARE_ACCOUNT_ID</code></li>
+</ul>
+<p><strong>问题：API Token 权限不足</strong></p>
+<ul>
+<li>重新创建 Token，确保包含：<ul>
+<li><strong>Account</strong> → <strong>Workers Scripts</strong> → <strong>Edit</strong></li>
+<li><strong>Account</strong> → <strong>Workers KV Storage</strong> → <strong>Edit</strong></li>
+<li><strong>Zone</strong> → <strong>Workers Routes</strong> → <strong>Edit</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="7-2-本地开发问题"><a href="#7-2-本地开发问题" class="headerlink" title="7.2 本地开发问题"></a>7.2 本地开发问题</h3><p><strong>问题：<code>pnpm install --frozen-lockfile</code> 失败</strong></p>
+<ul>
+<li>检查 Node.js 版本是否为 24.x</li>
+<li>检查 pnpm 版本是否为 10.32.1</li>
+<li>删除 <code>node_modules</code> 和 <code>pnpm-lock.yaml</code> 后重试</li>
+</ul>
+<p><strong>问题：<code>make worker-dev</code> 后访问 8787 无响应</strong></p>
+<ul>
+<li>检查端口 8787 和 5137 是否被占用</li>
+<li>确认 Worker 已成功启动（查看终端日志）</li>
+</ul>
+<p><strong>问题：Windows 上 <code>make</code> 命令不可用</strong></p>
+<ul>
+<li>使用 WSL（Windows Subsystem for Linux）</li>
+<li>或使用 Git Bash 并安装 <code>make</code></li>
+<li>或直接使用 <code>pnpm worker:dev</code> 替代</li>
+</ul>
+<h3 id="7-3-验证码不工作"><a href="#7-3-验证码不工作" class="headerlink" title="7.3 验证码不工作"></a>7.3 验证码不工作</h3><p><strong>问题：Turnstile 组件显示“未配置”</strong></p>
+<ul>
+<li>检查 <code>TURNSTILE_SITE_KEY</code> 是否填入 <code>wrangler.toml</code></li>
+<li>检查 <code>TURNSTILE_SECRET</code> 是否通过 <code>wrangler secret put</code> 上传</li>
+</ul>
+<p><strong>问题：Turnstile 显示不可用</strong></p>
+<ul>
+<li>检查 hostname 是否匹配（不含协议和端口）</li>
+<li>检查验证码服务商后台是否允许该域名</li>
+<li>检查 Secret 是否正确上传</li>
+</ul>
+<p><strong>问题：reCAPTCHA v3 评分过低</strong></p>
+<ul>
+<li>确保使用 v3 密钥（非 v2）</li>
+<li>确保 hostname 与后台配置一致</li>
+<li>当前阈值为 0.5，低于此值会验证失败</li>
+</ul>
+<h3 id="7-4-自定义域名问题"><a href="#7-4-自定义域名问题" class="headerlink" title="7.4 自定义域名问题"></a>7.4 自定义域名问题</h3><p><strong>问题：添加自定义域名失败</strong></p>
+<ul>
+<li>确认域名已添加到 Cloudflare 且状态为 Active</li>
+<li>确认域名 NS 已指向 Cloudflare</li>
+<li>检查 Worker 是否有权限使用该域名</li>
+</ul>
+<hr>
+<h2 id="八、使用说明"><a href="#八、使用说明" class="headerlink" title="八、使用说明"></a>八、使用说明</h2><h3 id="8-1-功能入口"><a href="#8-1-功能入口" class="headerlink" title="8.1 功能入口"></a>8.1 功能入口</h3><table>
+<thead>
+<tr>
+<th align="left">一级入口</th>
+<th align="left">页面与路由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">概览</td>
+<td align="left"><code>/</code>：当前网络与浏览器概览</td>
+</tr>
+<tr>
+<td align="left">网络检测</td>
+<td align="left"><code>/network/ip</code>、<code>/network/whois</code>、<code>/network/connectivity</code>、<code>/network/ping</code>、<code>/network/dns</code>、<code>/network/cdn</code></td>
+</tr>
+<tr>
+<td align="left">浏览器检测</td>
+<td align="left"><code>/browser/environment</code>、<code>/browser/fingerprint</code>、<code>/browser/consistency</code>、<code>/browser/automation</code>、<code>/browser/privacy</code>、<code>/browser/challenges</code></td>
+</tr>
+<tr>
+<td align="left">AI 检测</td>
+<td align="left"><code>/ai/gpt</code>、<code>/ai/claude</code>、<code>/ai/gemini</code>、<code>/ai/deepseek</code>、<code>/ai/grok</code>、<code>/ai/perplexity</code>、<code>/ai/qwen</code>、<code>/ai/kimi</code></td>
+</tr>
+<tr>
+<td align="left">服务状态</td>
+<td align="left"><code>/status</code>，OpenAI &#x2F; Claude 详情为 <code>/status/openai</code>、<code>/status/claude</code></td>
+</tr>
+</tbody></table>
+<p><strong>兼容性</strong>：旧的 <code>/ip</code>、<code>/query/*</code>、<code>/webrtc</code>、<code>/gpt</code>、<code>/claude</code> 等入口会自动跳转，保留查询参数与锚点。</p>
+<h3 id="8-2-探测方式说明"><a href="#8-2-探测方式说明" class="headerlink" title="8.2 探测方式说明"></a>8.2 探测方式说明</h3><p>首页和 AI 详情使用同一套探测逻辑，从<strong>访问者浏览器直接请求</strong>目标域名：</p>
+<table>
+<thead>
+<tr>
+<th align="left">平台</th>
+<th align="left">探测资源</th>
+<th align="left">结果含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Claude、Perplexity</td>
+<td align="left">各自域名的 <code>/cdn-cgi/trace</code></td>
+<td align="left">读取并校验边缘网络响应，<strong>不证明</strong>源站、登录或对话可用</td>
+</tr>
+<tr>
+<td align="left">Gemini</td>
+<td align="left"><code>gemini.google.com/robots.txt</code></td>
+<td align="left">检测同域资源响应，避免使用返回 404 的图标地址</td>
+</tr>
+<tr>
+<td align="left">其他平台</td>
+<td align="left">当前配置域名的 <code>/favicon.ico</code></td>
+<td align="left">检测资源响应；<strong>不等同于</strong>账号或模型权限检查</td>
+</tr>
+</tbody></table>
+<ul>
+<li>单次等待上限 <strong>6 秒</strong>，失败后再试一次</li>
+<li>探测失败显示“<strong>未确认</strong>”，不会直接判定网站打不开</li>
+<li>跨域不透明响应也不能用于判断 HTTP 状态码</li>
+</ul>
+<h3 id="8-3-结果解读要点"><a href="#8-3-结果解读要点" class="headerlink" title="8.3 结果解读要点"></a>8.3 结果解读要点</h3><ul>
+<li><strong>HTTP 耗时不等于 ICMP 延迟</strong>。收到响应也不代表登录、对话或模型 API 可用。</li>
+<li><strong>未知不等于故障</strong>。跨域策略、网络超时、未公开的响应头和数据源限制都可能导致未知。</li>
+<li><strong>地理位置是估计值</strong>。IP 数据库可能有更新延迟，不能据此确定设备精确位置。</li>
+<li><strong>DNS 出口不等于设备配置地址</strong>。安全 DNS、代理远程解析及系统设置都会影响结果。</li>
+<li><strong>浏览器信号不是身份或风险结论</strong>。指纹 ID、自动化信号和一致性结果不能独立证明真人、机器人或验证码通过率。</li>
+</ul>
+<hr>
+<h2 id="九、数据与隐私"><a href="#九、数据与隐私" class="headerlink" title="九、数据与隐私"></a>九、数据与隐私</h2><ul>
+<li><strong>本地存储</strong>：IP &#x2F; WHOIS 历史、主题和说明关闭状态保存在当前浏览器，清除站点数据可移除</li>
+<li><strong>网络检测</strong>：会访问相应的第三方站点</li>
+<li><strong>IP 查询</strong>：首页和分流的归属查询由浏览器直连 <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://ip.sb/">IP.SB</a></strong>（<code>api.ip.sb</code>），失败后使用 <strong>IPWhois</strong>（<code>ipwho.is</code>）</li>
+<li><strong>Worker 请求</strong>：IP 详情的多源查询、RDAP、Globalping 和官方状态等 API 由 Worker 请求对应服务</li>
+<li><strong>指纹计算</strong>：FingerprintJS 在浏览器本地计算，<strong>不向业务后端上传指纹</strong></li>
+<li><strong>验证码</strong>：脚本在用户点击体验后加载，凭证由 Worker 提交给服务商校验</li>
+</ul>
+<hr>
+<h2 id="十、项目结构参考"><a href="#十、项目结构参考" class="headerlink" title="十、项目结构参考"></a>十、项目结构参考</h2><p>text</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">  components/          通用 UI、响应式弹窗、底部玻璃导航、表格与动画</span><br><span class="line">  hooks/               检测与本地历史逻辑</span><br><span class="line">  layout/              导航与路由分组</span><br><span class="line">  views/               首页、网络、浏览器、AI 与服务状态</span><br><span class="line">public/worker/         Cloudflare Worker API</span><br><span class="line">vendor/browser-diagnostics/  浏览器深度检测来源与许可证</span><br><span class="line">scripts/               开发服务与资源构建脚本</span><br><span class="line">tests/                 自动化测试</span><br><span class="line">make/                  开发、版本和部署命令</span><br><span class="line">.github/workflows/     CI 与 Worker 部署</span><br><span class="line">wrangler.toml          Worker 与静态资源配置</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="📝-部署检查清单"><a href="#📝-部署检查清单" class="headerlink" title="📝 部署检查清单"></a>📝 部署检查清单</h2><p>部署完成后，请逐项验证：</p>
+<ul>
+<li><p>□ </p>
+<p>访问 <code>*.workers.dev</code> 或自定义域名，首页正常加载</p>
+</li>
+<li><p>□ </p>
+<p>首页显示当前出口 IP（IPv4 &#x2F; IPv6）</p>
+</li>
+<li><p>□ </p>
+<p>网络连通性卡片显示正常</p>
+</li>
+<li><p>□ </p>
+<p>浏览器环境信息正确显示</p>
+</li>
+<li><p>□ </p>
+<p>AI 平台访问延迟正常展示</p>
+</li>
+<li><p>□ </p>
+<p>服务状态页面数据正常加载</p>
+</li>
+<li><p>□ </p>
+<p>进入 <code>/network/ip</code> 输入 IP 可查询归属地</p>
+</li>
+<li><p>□ </p>
+<p>进入 <code>/network/whois</code> 可查询 RDAP 信息</p>
+</li>
+<li><p>□ </p>
+<p>进入 <code>/network/ping</code> 可执行全球 Ping</p>
+</li>
+<li><p>□ </p>
+<p>进入 <code>/browser/fingerprint</code> 可查看指纹详情</p>
+</li>
+<li><p>□ </p>
+<p>（如配置）验证码体验组件正常工作</p>
+</li>
+<li><p>□ </p>
+<p>移动端访问布局正常，底部导航可用</p>
+</li>
+<li><p>□ </p>
+<p>深浅主题切换正常</p>
+</li>
+</ul>
+<hr>
+<h2 id="🔗-相关链接"><a href="#🔗-相关链接" class="headerlink" title="🔗 相关链接"></a>🔗 相关链接</h2><ul>
+<li><strong>项目仓库</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/zhihui-hu/one-ip">https://github.com/zhihui-hu/one-ip</a></li>
+<li><strong>Cloudflare Workers 文档</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developers.cloudflare.com/workers/">https://developers.cloudflare.com/workers/</a></li>
+<li><strong>Wrangler CLI 文档</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developers.cloudflare.com/workers/wrangler/">https://developers.cloudflare.com/workers/wrangler/</a></li>
+<li><strong>Cloudflare Turnstile</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developers.cloudflare.com/turnstile/">https://developers.cloudflare.com/turnstile/</a></li>
+<li><strong>Google reCAPTCHA</strong>：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developers.google.com/recaptcha">https://developers.google.com/recaptcha</a></li>
+</ul>
+<hr>
+<h2 id="🙏-致谢"><a href="#🙏-致谢" class="headerlink" title="🙏 致谢"></a>🙏 致谢</h2><ul>
+<li><strong>Globalping</strong>：远端网络测量</li>
+<li><strong>IANA RDAP Bootstrap</strong>：注册信息服务目录</li>
+<li><strong>shadcn&#x2F;ui、TanStack、GSAP</strong>：界面、数据和动画</li>
+<li><strong>FingerprintJS、CreepJS</strong>：浏览器检测能力参考与依赖</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/8d82693a/">https://macin.top/posts/8d82693a/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a><a class="post-meta__tags" href="/tags/Web/">Web</a><a class="post-meta__tags" href="/tags/One-IP/">One IP</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/b0d458b7/" title="Grok Bot 从 0 开始，月入 5000 美金"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Grok Bot 从 0 开始，月入 5000 美金</div></div><div class="info-2"><div class="info-item-1">名字里有 Grok，界面里也有聊天框。打开以后，我还是得打字，它还是会回话。只看这些，确实很容易把它当成另一个聊天机器人。</div></div></div></a><a class="pagination-related" href="/posts/4c8b93b2/" title="Zenlayer裸机服务器限时6折：美国$101.4/月起 香港$143.4/月起"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Zenlayer裸机服务器限时6折：美国$101.4/月起 香港$143.4/月起</div></div><div class="info-2"><div class="info-item-1">Zenlayer推出S系列裸机服务器限时优惠，预付月付可享全场6折优惠，续费同价！覆盖亚太、美洲及欧洲中东非多个城市。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/3afbfc36/" title="Browser-Use 让 AI 代理像人类一样操作浏览器的工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-23</div><div class="info-item-2">Browser-Use 让 AI 代理像人类一样操作浏览器的工具</div></div><div class="info-2"><div class="info-item-1">Browser-Use 的核心价值在于将复杂的浏览器自动化封装成自然语言任务。对于个人用户或快速尝试，推荐先以“技能”方式安装到你的 AI 编程助手中，通过对话来驱动浏览器。</div></div></div></a><a class="pagination-related" href="/posts/dae4ae7a/" title="Lightpanda Browser：为 AI 与自动化而生的 Headless 浏览器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Lightpanda.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Lightpanda Browser：为 AI 与自动化而生的 Headless 浏览器</div></div><div class="info-2"><div class="info-item-1">Lightpanda 是一个从头开始构建的Headless浏览器，专为AI代理和自动化任务设计。它不是Chromium或WebKit的分支，而是使用Zig语言编写…</div></div></div></a><a class="pagination-related" href="/posts/cb89ca29/" title="DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力</div></div><div class="info-2"><div class="info-item-1">DeepSeek++ 浏览器扩展：为 DeepSeek 网页版注入 Agentic 能力，补足官方版缺乏的长期记忆、自动化任务处理与工具调用功能，让 AI 对话更高效。</div></div></div></a><a class="pagination-related" href="/posts/9fb2dcbc/" title="BrowserSkill 是腾讯开源的工具，它能将你的 AI 编程助手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-01</div><div class="info-item-2">BrowserSkill 是腾讯开源的工具，它能将你的 AI 编程助手</div></div><div class="info-2"><div class="info-item-1">BrowserSkill 是腾讯开源的一款工具，它能将你的 AI 编程助手（如 Cursor、Claude Code 等）连接到你已经登录的浏览器</div></div></div></a><a class="pagination-related" href="/posts/fb1010f6/" title="OpenClaw 新手必备！安装实用 Skills，模型选择，浏览器自动化等"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/openclaw.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-21</div><div class="info-item-2">OpenClaw 新手必备！安装实用 Skills，模型选择，浏览器自动化等</div></div><div class="info-2"><div class="info-item-1">OpenClaw 新手必备指南：实用 Skills 安装、模型正确选择与浏览器自动化配置，解决龙虾不好用、不够智能的根源问题，避免走弯路别再被割韭菜。</div></div></div></a><a class="pagination-related" href="/posts/b59338e0/" title="WebLLM 是一个高性能的浏览器端 LLM 推理引擎"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-07</div><div class="info-item-2">WebLLM 是一个高性能的浏览器端 LLM 推理引擎</div></div><div class="info-2"><div class="info-item-1">WebLLM 是一个高性能的浏览器端 LLM 推理引擎，它利用 WebGPU 加速，让你可以直接在浏览器中运行大语言模型，无需服务器支持。</div></div></div></a><a class="pagination-related" href="/posts/11a10355/" title="一个 Skill 让 Agent 自动操作浏览器：ego lite"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ego_lite.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">一个 Skill 让 Agent 自动操作浏览器：ego lite</div></div><div class="info-2"><div class="info-item-1">ego lite 让 Agent 自动操作浏览器：人机协同 Chromium 浏览器，继承 Chrome 登录态与 Cookie 操作需要登录的网站，独立 Space 并行工作，Token 消耗最高提速 3.45 倍。</div></div></div></a><a class="pagination-related" href="/posts/a6a1c961/" title="Nano Banana 水印批量去除工具（浏览器本地处理）"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/banana.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-19</div><div class="info-item-2">Nano Banana 水印批量去除工具（浏览器本地处理）</div></div><div class="info-2"><div class="info-item-1">Nano Banana 水印批量去除工具：Reverse Alpha Blending 算法还原被水印覆盖的像素，所有处理在浏览器本地完成，批量处理保护隐私。</div></div></div></a><a class="pagination-related" href="/posts/4c3f518/" title="浏览器里跑 Qwen3？Docker 部署超简单，本地体验大模型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/qwen.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-07</div><div class="info-item-2">浏览器里跑 Qwen3？Docker 部署超简单，本地体验大模型</div></div><div class="info-2"><div class="info-item-1">在本地浏览器运行 Qwen3-0.6b 大语言模型：Docker 一键部署，零安装无日志记录无数据上传，HTTPS 访问 8443 端口即用，本地 AI 新玩法。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8B-%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">📋 项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F%E6%A6%82%E8%A7%88"><span class="toc-number">2.</span> <span class="toc-text">🎯 部署方式概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87"><span class="toc-number">3.</span> <span class="toc-text">一、前置准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%B3%A8%E5%86%8C-Cloudflare-%E8%B4%A6%E5%8F%B7"><span class="toc-number">3.1.</span> <span class="toc-text">1.1 注册 Cloudflare 账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%8E%B7%E5%8F%96-Cloudflare-Account-ID"><span class="toc-number">3.2.</span> <span class="toc-text">1.2 获取 Cloudflare Account ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%88%9B%E5%BB%BA-Cloudflare-API-Token"><span class="toc-number">3.3.</span> <span class="toc-text">1.3 创建 Cloudflare API Token</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9AGitHub-Actions-%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">二、方式一：GitHub Actions 自动部署（推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Fork-%E6%88%96%E5%AF%BC%E5%85%A5%E9%A1%B9%E7%9B%AE"><span class="toc-number">4.1.</span> <span class="toc-text">2.1 Fork 或导入项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%85%8D%E7%BD%AE-GitHub-Secrets"><span class="toc-number">4.2.</span> <span class="toc-text">2.2 配置 GitHub Secrets</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%A7%A6%E5%8F%91%E9%83%A8%E7%BD%B2"><span class="toc-number">4.3.</span> <span class="toc-text">2.3 触发部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E6%9F%A5%E7%9C%8B%E9%83%A8%E7%BD%B2%E7%BB%93%E6%9E%9C"><span class="toc-number">4.4.</span> <span class="toc-text">2.4 查看部署结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E9%83%A8%E7%BD%B2%E8%A1%8C%E4%B8%BA%E8%AF%B4%E6%98%8E"><span class="toc-number">4.5.</span> <span class="toc-text">2.5 部署行为说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E6%9C%AC%E5%9C%B0%E5%91%BD%E4%BB%A4%E9%83%A8%E7%BD%B2"><span class="toc-number">5.</span> <span class="toc-text">三、方式二：本地命令部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="toc-number">5.1.</span> <span class="toc-text">3.1 环境要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%85%8B%E9%9A%86%E9%A1%B9%E7%9B%AE"><span class="toc-number">5.2.</span> <span class="toc-text">3.2 克隆项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-number">5.3.</span> <span class="toc-text">3.3 安装依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E7%99%BB%E5%BD%95-Cloudflare"><span class="toc-number">5.4.</span> <span class="toc-text">3.4 登录 Cloudflare</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E9%83%A8%E7%BD%B2%E5%88%B0%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83"><span class="toc-number">5.5.</span> <span class="toc-text">3.5 部署到生产环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95"><span class="toc-number">5.6.</span> <span class="toc-text">3.6 本地开发调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="toc-number">5.7.</span> <span class="toc-text">3.7 常用命令速查</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">6.</span> <span class="toc-text">四、配置说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%EF%BC%88%E6%97%A0%E9%9C%80%E5%AF%86%E9%92%A5%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">4.1 基础配置（无需密钥）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">6.2.</span> <span class="toc-text">4.2 高级配置（可选）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-1-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE"><span class="toc-number">6.2.1.</span> <span class="toc-text">4.2.1 本地开发配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-2-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">6.2.2.</span> <span class="toc-text">4.2.2 生产环境配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-3-%E9%A1%B9%E7%9B%AE%E5%86%85%E7%AE%A1%E7%90%86%E6%AD%A3%E5%BC%8F%E7%8E%AF%E5%A2%83%E5%AF%86%E9%92%A5%EF%BC%88%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%EF%BC%89"><span class="toc-number">6.2.3.</span> <span class="toc-text">4.2.3 项目内管理正式环境密钥（本地部署）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-4-reCAPTCHA-v3-%E7%89%B9%E5%88%AB%E8%AF%B4%E6%98%8E"><span class="toc-number">6.2.4.</span> <span class="toc-text">4.2.4 reCAPTCHA v3 特别说明</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE"><span class="toc-number">7.</span> <span class="toc-text">五、自定义域名配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="toc-number">7.1.</span> <span class="toc-text">5.1 前提条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="toc-number">7.2.</span> <span class="toc-text">5.2 配置步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%8D%E5%8A%A1%E5%95%86%E9%85%8D%E7%BD%AE"><span class="toc-number">8.</span> <span class="toc-text">六、验证码服务商配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-Cloudflare-Turnstile"><span class="toc-number">8.1.</span> <span class="toc-text">6.1 Cloudflare Turnstile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Google-reCAPTCHA-v3"><span class="toc-number">8.2.</span> <span class="toc-text">6.2 Google reCAPTCHA v3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-number">9.</span> <span class="toc-text">七、常见问题排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E9%83%A8%E7%BD%B2%E5%A4%B1%E8%B4%A5"><span class="toc-number">9.1.</span> <span class="toc-text">7.1 部署失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98"><span class="toc-number">9.2.</span> <span class="toc-text">7.2 本地开发问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E9%AA%8C%E8%AF%81%E7%A0%81%E4%B8%8D%E5%B7%A5%E4%BD%9C"><span class="toc-number">9.3.</span> <span class="toc-text">7.3 验证码不工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E9%97%AE%E9%A2%98"><span class="toc-number">9.4.</span> <span class="toc-text">7.4 自定义域名问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">10.</span> <span class="toc-text">八、使用说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%8A%9F%E8%83%BD%E5%85%A5%E5%8F%A3"><span class="toc-number">10.1.</span> <span class="toc-text">8.1 功能入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E6%8E%A2%E6%B5%8B%E6%96%B9%E5%BC%8F%E8%AF%B4%E6%98%8E"><span class="toc-number">10.2.</span> <span class="toc-text">8.2 探测方式说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E7%BB%93%E6%9E%9C%E8%A7%A3%E8%AF%BB%E8%A6%81%E7%82%B9"><span class="toc-number">10.3.</span> <span class="toc-text">8.3 结果解读要点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%95%B0%E6%8D%AE%E4%B8%8E%E9%9A%90%E7%A7%81"><span class="toc-number">11.</span> <span class="toc-text">九、数据与隐私</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E5%8F%82%E8%80%83"><span class="toc-number">12.</span> <span class="toc-text">十、项目结构参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9D-%E9%83%A8%E7%BD%B2%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="toc-number">13.</span> <span class="toc-text">📝 部署检查清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%97-%E7%9B%B8%E5%85%B3%E9%93%BE%E6%8E%A5"><span class="toc-number">14.</span> <span class="toc-text">🔗 相关链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%99%8F-%E8%87%B4%E8%B0%A2"><span class="toc-number">15.</span> <span class="toc-text">🙏 致谢</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

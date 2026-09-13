@@ -1,0 +1,597 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ChatOllama 基于 LLM 的开源聊天机器人 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ChatOllama 是一个基于 LLM 的开源聊天机器人，支持本地模型和知识库管理。下面是一份详细的部署教程，涵盖 Docker 和本地开发两种方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ChatOllama 基于 LLM 的开源聊天机器人">
+<meta property="og:url" content="https://macin.top/posts/7a5ae0b2/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="ChatOllama 是一个基于 LLM 的开源聊天机器人，支持本地模型和知识库管理。下面是一份详细的部署教程，涵盖 Docker 和本地开发两种方式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-10T03:13:27.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.595Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="ChatOllama">
+<meta property="article:tag" content="开源">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ChatOllama 基于 LLM 的开源聊天机器人",
+  "url": "https://macin.top/posts/7a5ae0b2/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-10T03:13:27.000Z",
+  "dateModified": "2026-09-13T01:45:15.595Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/7a5ae0b2/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ChatOllama 基于 LLM 的开源聊天机器人',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">ChatOllama 基于 LLM 的开源聊天机器人</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ChatOllama 基于 LLM 的开源聊天机器人</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.595Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/tool/">tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><p>ChatOllama 是一个基于 LLM 的开源聊天机器人，支持本地模型和知识库管理。下面是一份详细的部署教程，涵盖 Docker 和本地开发两种方式。</p>
+<hr>
+<h1 id="ChatOllama-详细部署教程"><a href="#ChatOllama-详细部署教程" class="headerlink" title="ChatOllama 详细部署教程"></a>ChatOllama 详细部署教程</h1><h2 id="1-项目简介"><a href="#1-项目简介" class="headerlink" title="1. 项目简介"></a>1. 项目简介</h2><p>ChatOllama 是一个基于大型语言模型（LLMs）的开源聊天机器人，支持多种语言模型和知识库管理。它提供类似 ChatGPT 的用户界面，支持模型管理、知识库管理、自由聊天以及基于知识库的聊天功能。</p>
+<p><strong>核心功能：</strong></p>
+<ul>
+<li>支持 Ollama 本地模型、OpenAI、Azure OpenAI、Anthropic、Moonshot、Gemini、Groq 等多种 LLM 提供商</li>
+<li>知识库管理（基于向量数据库）</li>
+<li>模型管理（列出、下载、删除）</li>
+<li>支持文本和图像输入</li>
+</ul>
+<h2 id="2-部署前准备"><a href="#2-部署前准备" class="headerlink" title="2. 部署前准备"></a>2. 部署前准备</h2><p>在开始部署之前，请确保你的系统满足以下要求：</p>
+<h3 id="2-1-硬件要求"><a href="#2-1-硬件要求" class="headerlink" title="2.1 硬件要求"></a>2.1 硬件要求</h3><ul>
+<li><strong>基础配置</strong>：4核 CPU + 8GB 内存（支持 7B 参数模型）</li>
+<li><strong>进阶配置</strong>：8核 CPU + 16GB 内存（支持 13B 参数模型）</li>
+<li><strong>磁盘空间</strong>：至少预留 20GB 用于模型存储</li>
+</ul>
+<h3 id="2-2-软件要求"><a href="#2-2-软件要求" class="headerlink" title="2.2 软件要求"></a>2.2 软件要求</h3><ul>
+<li><strong>Docker 和 Docker Compose</strong>（推荐方式）</li>
+<li>或 <strong>Node.js + pnpm</strong>（本地开发方式）</li>
+<li><strong>Ollama 服务器</strong>（必须）</li>
+</ul>
+<h2 id="3-方式一：使用-Docker-部署（推荐）"><a href="#3-方式一：使用-Docker-部署（推荐）" class="headerlink" title="3. 方式一：使用 Docker 部署（推荐）"></a>3. 方式一：使用 Docker 部署（推荐）</h2><p>这是最简单快捷的部署方式，适合大多数用户。</p>
+<h3 id="3-1-安装-Ollama-服务器"><a href="#3-1-安装-Ollama-服务器" class="headerlink" title="3.1 安装 Ollama 服务器"></a>3.1 安装 Ollama 服务器</h3><p>首先需要在本地安装并运行 Ollama 服务器。根据你的操作系统选择安装方式：</p>
+<p><strong>Linux 系统：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://ollama.com/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>macOS 系统：</strong><br>访问 Ollama 官网下载 macOS 版本的安装包，将 Ollama 应用拖拽至 Applications 文件夹。</p>
+<p><strong>Windows 系统：</strong><br>访问 Ollama 官网获取 Windows 安装包，运行安装程序并按照向导完成安装。安装完成后，Ollama 会自动在后台运行。</p>
+<p>安装完成后，验证 Ollama 是否正常运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama --version</span><br></pre></td></tr></table></figure>
+
+
+
+<p>默认情况下，Ollama 服务器运行在 <code>http://localhost:11434</code>。</p>
+<h3 id="3-2-下载并配置-ChatOllama"><a href="#3-2-下载并配置-ChatOllama" class="headerlink" title="3.2 下载并配置 ChatOllama"></a>3.2 下载并配置 ChatOllama</h3><p><strong>步骤 1：克隆项目仓库</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/sugarforever/chat-ollama.git</span><br><span class="line"><span class="built_in">cd</span> chat-ollama</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤 2：检查 docker-compose.yaml 文件</strong></p>
+<p>确保 Ollama 服务器的地址设置正确。如果 Ollama 运行在本地默认端口，配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">chatollama:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">chatollama:latest</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3000:3000&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">OLLAMA_SERVER:</span> <span class="string">&quot;http://host.docker.internal:11434&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-3-启动服务"><a href="#3-3-启动服务" class="headerlink" title="3.3 启动服务"></a>3.3 启动服务</h3><p><strong>步骤 1：启动 Docker 容器</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose up</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤 2：初始化 SQLite 数据库</strong></p>
+<p>如果你是第一次启动 Dockerized ChatOllama，需要初始化 SQLite 数据库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose <span class="built_in">exec</span> chatollama npx prisma migrate dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤 3：下载嵌入模型（用于知识库功能）</strong></p>
+<p>如果要使用知识库功能，需要下载一个嵌入模型。推荐使用 <code>nomic-embed-text</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose <span class="built_in">exec</span> ollama ollama pull nomic-embed-text:latest</span><br></pre></td></tr></table></figure>
+
+
+
+<p>你也可以在 Models 页面（<code>http://localhost:3000/models</code>）进行下载。</p>
+<h3 id="3-4-访问-ChatOllama"><a href="#3-4-访问-ChatOllama" class="headerlink" title="3.4 访问 ChatOllama"></a>3.4 访问 ChatOllama</h3><p>打开浏览器，访问 <code>http://localhost:3000</code>，你应该能看到 ChatOllama 的界面。</p>
+<p><strong>重要设置：</strong> 由于 ChatOllama 运行在 Docker 容器内，你需要在设置中将 Ollama 服务器地址设置为 <code>http://host.docker.internal:11434</code>（假设 Ollama 运行在本地默认端口）。</p>
+<h2 id="4-方式二：本地开发部署"><a href="#4-方式二：本地开发部署" class="headerlink" title="4. 方式二：本地开发部署"></a>4. 方式二：本地开发部署</h2><p>如果你想使用最新的代码库并根据需要进行修改，可以采用这种方式。</p>
+<h3 id="4-1-安装-Ollama-服务器"><a href="#4-1-安装-Ollama-服务器" class="headerlink" title="4.1 安装 Ollama 服务器"></a>4.1 安装 Ollama 服务器</h3><p>参考 3.1 节的步骤安装 Ollama 服务器。默认运行在 <code>http://localhost:11434</code>。</p>
+<h3 id="4-2-安装-ChromaDB"><a href="#4-2-安装-ChromaDB" class="headerlink" title="4.2 安装 ChromaDB"></a>4.2 安装 ChromaDB</h3><p>ChatOllama 支持 Chroma 和 Milvus 两种向量数据库，默认使用 Chroma。</p>
+<p>推荐使用 Docker 运行 ChromaDB：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull chromadb/chroma</span><br><span class="line">docker run -d -p 8000:8000 chromadb/chroma</span><br></pre></td></tr></table></figure>
+
+
+
+<p>现在 ChromaDB 运行在 <code>http://localhost:8000</code>。</p>
+<h3 id="4-3-配置-ChatOllama"><a href="#4-3-配置-ChatOllama" class="headerlink" title="4.3 配置 ChatOllama"></a>4.3 配置 ChatOllama</h3><p><strong>步骤 1：复制环境变量文件</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> .env.example .<span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤 2：安装依赖</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm install</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤 3：运行数据库迁移</strong></p>
+<p>使用 Prisma Migrate 创建数据库表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm prisma-migrate</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-4-启动开发服务器"><a href="#4-4-启动开发服务器" class="headerlink" title="4.4 启动开发服务器"></a>4.4 启动开发服务器</h3><p>确保 <strong>Ollama 服务器</strong> 和 <strong>ChromaDB</strong> 都在运行，然后启动开发服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p>访问 <code>http://localhost:3000</code> 即可使用 ChatOllama。</p>
+<h2 id="5-向量数据库配置"><a href="#5-向量数据库配置" class="headerlink" title="5. 向量数据库配置"></a>5. 向量数据库配置</h2><p>ChatOllama 支持两种向量数据库，你可以在 <code>.env</code> 文件中进行配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 支持的值：chroma, milvus</span></span><br><span class="line">VECTOR_STORE=chroma</span><br><span class="line">CHROMADB_URL=http://localhost:8000</span><br><span class="line">MILVUS_URL=http://localhost:19530</span><br></pre></td></tr></table></figure>
+
+
+
+<p>默认使用 Chroma。如果想使用 Milvus，将 <code>VECTOR_STORE</code> 设置为 <code>milvus</code> 并指定相应的 URL。</p>
+<h2 id="6-嵌入模型配置"><a href="#6-嵌入模型配置" class="headerlink" title="6. 嵌入模型配置"></a>6. 嵌入模型配置</h2><p>使用知识库功能需要配置有效的嵌入模型。你可以选择以下两种方式：</p>
+<h3 id="6-1-使用-Ollama-嵌入模型"><a href="#6-1-使用-Ollama-嵌入模型" class="headerlink" title="6.1 使用 Ollama 嵌入模型"></a>6.1 使用 Ollama 嵌入模型</h3><p>推荐下载 <code>nomic-embed-text</code> 模型：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果在 Docker 中运行</span></span><br><span class="line">docker compose <span class="built_in">exec</span> ollama ollama pull nomic-embed-text:latest</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-2-使用-OpenAI-嵌入模型"><a href="#6-2-使用-OpenAI-嵌入模型" class="headerlink" title="6.2 使用 OpenAI 嵌入模型"></a>6.2 使用 OpenAI 嵌入模型</h3><p>如果偏好使用 OpenAI，请在设置中设置有效的 OpenAI API Key，并填入以下嵌入模型之一：</p>
+<ul>
+<li><code>text-embedding-3-large</code></li>
+<li><code>text-embedding-3-small</code></li>
+<li><code>text-embedding-ada-002</code></li>
+</ul>
+<h2 id="7-数据存储说明"><a href="#7-数据存储说明" class="headerlink" title="7. 数据存储说明"></a>7. 数据存储说明</h2><p>Docker 部署方式下有两种类型的数据存储：</p>
+<h3 id="7-1-向量数据（ChromaDB）"><a href="#7-1-向量数据（ChromaDB）" class="headerlink" title="7.1 向量数据（ChromaDB）"></a>7.1 向量数据（ChromaDB）</h3><p>Chroma 数据库与 ChatOllama 一起运行在 Docker 容器中，数据持久化在 Docker 卷中。</p>
+<h3 id="7-2-关系数据（SQLite）"><a href="#7-2-关系数据（SQLite）" class="headerlink" title="7.2 关系数据（SQLite）"></a>7.2 关系数据（SQLite）</h3><p>SQLite 数据库文件从 <code>~/.chatollama/chatollama.sqlite</code> 挂载并持久化。</p>
+<h2 id="8-GPU-加速配置"><a href="#8-GPU-加速配置" class="headerlink" title="8. GPU 加速配置"></a>8. GPU 加速配置</h2><p>如果你的系统有 NVIDIA GPU，可以使用 <code>docker-compose_gpu.yaml</code> 配置文件来启用 GPU 加速：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose -f docker-compose_gpu.yaml up</span><br></pre></td></tr></table></figure>
+
+
+
+<p>该配置文件包含 NVIDIA GPU 驱动配置，可以显著提升模型推理速度。</p>
+<h2 id="9-常见问题与解决方案"><a href="#9-常见问题与解决方案" class="headerlink" title="9. 常见问题与解决方案"></a>9. 常见问题与解决方案</h2><h3 id="9-1-首次启动时数据库未初始化"><a href="#9-1-首次启动时数据库未初始化" class="headerlink" title="9.1 首次启动时数据库未初始化"></a>9.1 首次启动时数据库未初始化</h3><p><strong>问题</strong>：启动后无法正常使用。</p>
+<p><strong>解决方案</strong>：确保执行数据库迁移命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose <span class="built_in">exec</span> chatollama npx prisma migrate dev</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-2-无法连接到-Ollama-服务器"><a href="#9-2-无法连接到-Ollama-服务器" class="headerlink" title="9.2 无法连接到 Ollama 服务器"></a>9.2 无法连接到 Ollama 服务器</h3><p><strong>问题</strong>：ChatOllama 无法连接到 Ollama。</p>
+<p><strong>解决方案</strong>：在 Docker 部署中，需要在设置中将 Ollama 服务器地址设置为 <code>http://host.docker.internal:11434</code>。</p>
+<h3 id="9-3-模型下载失败"><a href="#9-3-模型下载失败" class="headerlink" title="9.3 模型下载失败"></a>9.3 模型下载失败</h3><p><strong>问题</strong>：外部提供商（如 OpenRouter、DeepSeek）的模型无法下载。</p>
+<p><strong>解决方案</strong>：这是一个已知问题，外部提供商的模型无需下载即可使用。项目已在后续版本中修复了此问题。</p>
+<h3 id="9-4-更新项目后出现问题"><a href="#9-4-更新项目后出现问题" class="headerlink" title="9.4 更新项目后出现问题"></a>9.4 更新项目后出现问题</h3><p><strong>问题</strong>：执行 <code>git pull</code> 后应用无法正常运行。</p>
+<p><strong>解决方案</strong>：每次 <code>git pull</code> 后需要重新运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pnpm install</span><br><span class="line">pnpm prisma-migrate</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="10-访问和使用"><a href="#10-访问和使用" class="headerlink" title="10. 访问和使用"></a>10. 访问和使用</h2><p>完成部署后，打开浏览器访问 <code>http://localhost:3000</code>，你将看到 ChatOllama 的聊天界面。</p>
+<p><strong>主要功能入口：</strong></p>
+<ul>
+<li><strong>模型管理</strong>：<code>http://localhost:3000/models</code></li>
+<li><strong>设置页面</strong>：配置 Ollama 服务器地址、API Key 等</li>
+<li><strong>知识库管理</strong>：创建和管理知识库</li>
+</ul>
+<p>你可以开始与本地 LLM 模型进行对话，或上传文档创建知识库进行基于知识库的问答。</p>
+<hr>
+<p><strong>注意事项</strong>：该项目处于活跃开发中，功能和接口可能会有变化。建议定期查看项目仓库获取最新信息。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/7a5ae0b2/">https://macin.top/posts/7a5ae0b2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E6%BA%90/">开源</a><a class="post-meta__tags" href="/tags/ChatOllama/">ChatOllama</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/2deb4416/" title="Jtti 香港美国日本新加坡云服务器最高立减 88%"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Jtti 香港美国日本新加坡云服务器最高立减 88%</div></div><div class="info-2"><div class="info-item-1">推出秋季促销活动，高效灵活的云服务器和专用服务器，最高立减88%，CN2高速直连，支持自定义配置，且后期可随时升级服务器配置，资源完全独享，终身循环折扣…</div></div></div></a><a class="pagination-related" href="/posts/3d71b633/" title="一篇讲透如何用 Grok Bot 打造一人公司"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">一篇讲透如何用 Grok Bot 打造一人公司</div></div><div class="info-2"><div class="info-item-1">一篇讲透如何用 Grok Bot 组建 Bot 团队，把一个人变成一支队伍：覆盖 Bot 的角色配置、分工与任务交接，并附可复用的项目模板，帮你快速搭起自动化工作流。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/3a2182f6/" title="美团开源 LongCat-Video-Avatar-1.5：打造高保真数字人"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/longcat.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">美团开源 LongCat-Video-Avatar-1.5：打造高保真数字人</div></div><div class="info-2"><div class="info-item-1">美团开源 LongCat-Video-Avatar-1.5：MIT 协议数字人生成模型，一张参考图+一段音频生成唇形同步、身份稳定的 Talking Head，支持本地部署与超长视频。</div></div></div></a><a class="pagination-related" href="/posts/10ed36e2/" title="DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-17</div><div class="info-item-2">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro</div></div><div class="info-2"><div class="info-item-1">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro 模型，框架具备代码读取、文件修改、命令执行与工具调用能力，形成完整的自主分析与修复闭环。</div></div></div></a><a class="pagination-related" href="/posts/f9d9dd32/" title="未来已来？本地部署小米开源 Miloco，用 AI 控制全屋设备"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/mihome.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-29</div><div class="info-item-2">未来已来？本地部署小米开源 Miloco，用 AI 控制全屋设备</div></div><div class="info-2"><div class="info-item-1">本地部署小米开源 Miloco：以米家摄像机为视觉来源、自研大模型为核心打通全屋 IoT，自然语言定义家庭需求规则，硬件要求低也可调用云端 API。</div></div></div></a><a class="pagination-related" href="/posts/8110557c/" title="Robin 由人工智能驱动的暗网开源情报（OSINT）调查工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-29</div><div class="info-item-2">Robin 由人工智能驱动的暗网开源情报（OSINT）调查工具</div></div><div class="info-2"><div class="info-item-1">这份详细的部署教程将指引您安装和使用 Robin——一个由人工智能驱动的暗网开源情报（OSINT）调查工具。</div></div></div></a><a class="pagination-related" href="/posts/f0be9195/" title="NVIDIA Personal AI Router (PAIR) 是开源的本地 AI 推理路由器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/nvidia.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-06</div><div class="info-item-2">NVIDIA Personal AI Router (PAIR) 是开源的本地 AI 推理路由器</div></div><div class="info-2"><div class="info-item-1">NVIDIA Personal AI Router (PAIR) 是一款开源的本地AI推理路由器，能将家庭网络中的多台兼容设备（如RTX PC、DGX Spark、Mac）组成一个AI集群…</div></div></div></a><a class="pagination-related" href="/posts/7863b17f/" title="Qwen 3.8 Max Preview 全面测评：2.4 万亿参数、1M 上下文"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/qwen.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-23</div><div class="info-item-2">Qwen 3.8 Max Preview 全面测评：2.4 万亿参数、1M 上下文</div></div><div class="info-2"><div class="info-item-1">Qwen3.8-Max-Preview 全面测评：基于 2.4 万亿参数的超大规模国产开源模型，1M 超长上下文，代码生成、WebGL 开发与 Agent 架构表现亮眼，新标杆实至名归。</div></div></div></a><a class="pagination-related" href="/posts/786d9e66/" title="Pentest Harness 是一个专为授权渗透测试、漏洞赏金"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-31</div><div class="info-item-2">Pentest Harness 是一个专为授权渗透测试、漏洞赏金</div></div><div class="info-2"><div class="info-item-1">Pentest Harness 是一个专为授权渗透测试、漏洞赏金、安全实验室和 CTF 挑战设计的开源 AI 智能体工作台。</div></div></div></a><a class="pagination-related" href="/posts/1f159285/" title="video-use：用自然语言让 AI 编程助手帮你编辑视频"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-31</div><div class="info-item-2">video-use：用自然语言让 AI 编程助手帮你编辑视频</div></div><div class="info-2"><div class="info-item-1">video-use 是一个让您能通过自然语言与 AI 编程助手对话来编辑视频的开源工具。它通过分析音频转录和文字描述来理解视频内容，从而进行智能剪辑…</div></div></div></a><a class="pagination-related" href="/posts/40cb3c5d/" title="TeamAI CLI 是腾讯开源的团队级 AI 编程助手管理工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tencent.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-10</div><div class="info-item-2">TeamAI CLI 是腾讯开源的团队级 AI 编程助手管理工具</div></div><div class="info-2"><div class="info-item-1">TeamAI CLI 是腾讯开源的团队级 AI 编程助手管理工具，核心目标是让整个团队的开发规范同步到每个程序员的 AI 编程助手中。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ChatOllama-%E8%AF%A6%E7%BB%86%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">ChatOllama 详细部署教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1. 项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%83%A8%E7%BD%B2%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">2. 部署前准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 硬件要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%BD%AF%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 软件要求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8-Docker-%E9%83%A8%E7%BD%B2%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3. 方式一：使用 Docker 部署（推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%89%E8%A3%85-Ollama-%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 安装 Ollama 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%B8%8B%E8%BD%BD%E5%B9%B6%E9%85%8D%E7%BD%AE-ChatOllama"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 下载并配置 ChatOllama</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 启动服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E8%AE%BF%E9%97%AE-ChatOllama"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 访问 ChatOllama</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E9%83%A8%E7%BD%B2"><span class="toc-number">1.4.</span> <span class="toc-text">4. 方式二：本地开发部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%89%E8%A3%85-Ollama-%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 安装 Ollama 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%AE%89%E8%A3%85-ChromaDB"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 安装 ChromaDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E9%85%8D%E7%BD%AE-ChatOllama"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 配置 ChatOllama</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%90%AF%E5%8A%A8%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.4 启动开发服务器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="toc-number">1.5.</span> <span class="toc-text">5. 向量数据库配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.</span> <span class="toc-text">6. 嵌入模型配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%BD%BF%E7%94%A8-Ollama-%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 使用 Ollama 嵌入模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E4%BD%BF%E7%94%A8-OpenAI-%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 使用 OpenAI 嵌入模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">1.7.</span> <span class="toc-text">7. 数据存储说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%EF%BC%88ChromaDB%EF%BC%89"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 向量数据（ChromaDB）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%EF%BC%88SQLite%EF%BC%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">7.2 关系数据（SQLite）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-GPU-%E5%8A%A0%E9%80%9F%E9%85%8D%E7%BD%AE"><span class="toc-number">1.8.</span> <span class="toc-text">8. GPU 加速配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.9.</span> <span class="toc-text">9. 常见问题与解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E9%A6%96%E6%AC%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.9.1.</span> <span class="toc-text">9.1 首次启动时数据库未初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%88%B0-Ollama-%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.9.2.</span> <span class="toc-text">9.2 无法连接到 Ollama 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%A4%B1%E8%B4%A5"><span class="toc-number">1.9.3.</span> <span class="toc-text">9.3 模型下载失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-%E6%9B%B4%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%90%8E%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="toc-number">1.9.4.</span> <span class="toc-text">9.4 更新项目后出现问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E8%AE%BF%E9%97%AE%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="toc-number">1.10.</span> <span class="toc-text">10. 访问和使用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

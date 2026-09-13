@@ -1,0 +1,737 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="差生文具多，这句话放我身上很准。设备越买越多，可我一出门，还是习惯只抱着一台 MacBook 去咖啡馆办公。电脑可以多，包里不能太重。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale">
+<meta property="og:url" content="https://macin.top/posts/b3f7626a/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="差生文具多，这句话放我身上很准。设备越买越多，可我一出门，还是习惯只抱着一台 MacBook 去咖啡馆办公。电脑可以多，包里不能太重。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tailscale.webp">
+<meta property="article:published_time" content="2026-09-06T14:13:47.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.682Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Mac">
+<meta property="article:tag" content="NAT">
+<meta property="article:tag" content="Tailscale">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="内网穿透">
+<meta property="article:tag" content="异地组网">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tailscale.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale",
+  "url": "https://macin.top/posts/b3f7626a/",
+  "image": "https://macin.top/img/tailscale.webp",
+  "datePublished": "2026-09-06T14:13:47.000Z",
+  "dateModified": "2026-09-13T01:45:15.682Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/b3f7626a/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tailscale.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">一台 MacBook 连接 Linux、Mac mini 和 Windows：Tailscale</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.682Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/">web</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/nat/">nat</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><p>差生文具多，这句话放我身上很准。设备越买越多，可我一出门，还是习惯只抱着一台 MacBook 去咖啡馆办公。电脑可以多，包里不能太重。</p>
+<p>家里的设备也不能吃灰。Linux AI PC 负责跑模型，Mac mini 适合长期在线，Windows 留着运行专属软件。既然钱都花了，我希望人在咖啡馆时，它们也能继续干活。</p>
+<p>我的需求就变成了：<strong>MacBook 留在手边，家里的 Linux、Mac mini 和 Windows 随时都能连。</strong> 我最后选了 Tailscale，把几台设备接进同一张私人网络。</p>
+<p>这篇先带你看懂 Tailscale 这个软件有什么功能，再分别完成三条连接：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MacBook → Linux：SSH 远程命令</span><br><span class="line">MacBook → Mac mini：屏幕共享或 SSH</span><br><span class="line">MacBook → Windows：远程桌面或 SSH</span><br></pre></td></tr></table></figure>
+
+<p>最后，你会得到一张以 MacBook 为中心的私人设备网。三台目标电脑使用不同系统，也不必在同一个 Wi-Fi 下。</p>
+<p>本文按 Tailscale macOS 界面和官方文档整理。客户端更新后，图标和菜单名称可能移动；只要找到文中写出的功能名即可，不必逐像素照着截图点。</p>
+<h1 id="一、先把名字说对：本文讲的是-Tailscale"><a href="#一、先把名字说对：本文讲的是-Tailscale" class="headerlink" title="一、先把名字说对：本文讲的是 Tailscale"></a>一、先把名字说对：本文讲的是 Tailscale</h1><p>Tailscale 和 Telnet 不是同一个东西。</p>
+<ul>
+<li><strong>Tailscale</strong> 是组网软件，用来让自己的设备安全地互相找到。</li>
+<li><strong>Telnet</strong> 是一种年代很久的远程连接协议，内容通常不加密，新手不建议拿它远程控制电脑。</li>
+</ul>
+<p>本文从头到尾使用的是 <strong>Tailscale</strong>。你可以把它想成一个只有自己设备才能进入的私人网络：MacBook、Linux、Mac mini 和 Windows 安装软件并登录同一账号后，会像坐在同一张桌子旁边一样互相看见。</p>
+<p>个人设备可以先从免费计划开始，不需要为了这篇教程购买服务器或公网 IP。免费范围和设备数量以后可能调整，准备加入更多成员或大量设备时再看官方价格页。</p>
+<h2 id="Tailscale-自己负责什么？"><a href="#Tailscale-自己负责什么？" class="headerlink" title="Tailscale 自己负责什么？"></a>Tailscale 自己负责什么？</h2><p>Tailscale 主要解决两个问题：</p>
+<ol>
+<li>让四台电脑互相找到；</li>
+<li>在电脑之间建立加密网络。</li>
+</ol>
+<p>它不会凭空替你生成远程桌面。你还要根据任务选择 SSH、macOS 屏幕共享或 Windows 远程桌面。Tailscale 负责把路铺好，这些工具负责让你在路上干活。</p>
+<h1 id="二、Tailscale-软件里的功能，先全部看一遍"><a href="#二、Tailscale-软件里的功能，先全部看一遍" class="headerlink" title="二、Tailscale 软件里的功能，先全部看一遍"></a>二、Tailscale 软件里的功能，先全部看一遍</h1><p>第一次打开 Tailscale，你会看到一堆英文。先别急着连设备，这一节把教程会用到的功能逐个说清楚。</p>
+<h2 id="1-Devices：查看自己的设备"><a href="#1-Devices：查看自己的设备" class="headerlink" title="1. Devices：查看自己的设备"></a>1. Devices：查看自己的设备</h2><p>Devices 是设备列表，也是你最常打开的页面。每一台登录同一账号的电脑都会出现在这里。</p>
+<p>你需要重点看三项：</p>
+<ul>
+<li>设备名前面的<strong>绿色圆点</strong>：代表设备当前在线；</li>
+<li>100.x.x.x 形式的地址：Tailscale 给设备分配的私人 IP；</li>
+<li>设备名称：例如 punk-linux、punk-macmini、punk-windows。</li>
+</ul>
+<p>设备名尽量起得直白。过一个月以后，desktop-a3f9 很难认，punk-linux 一眼就知道是哪台电脑。</p>
+<h2 id="2-Taildrop：在设备之间传文件"><a href="#2-Taildrop：在设备之间传文件" class="headerlink" title="2. Taildrop：在设备之间传文件"></a>2. Taildrop：在设备之间传文件</h2><p>选中一台设备后，右侧的 Taildrop 可以向它发送文件。点击 Select a File，或者把文件拖进虚线框即可。</p>
+<p>比如你在 MacBook 上下载了一个模型配置文件，可以直接 Taildrop 到 Linux；在 Windows 导出了一份表格，也能传回 MacBook。它适合临时传文件，不用再给自己发微信或搭一套网盘。</p>
+<h2 id="3-Ping：测试两台电脑能不能互相找到"><a href="#3-Ping：测试两台电脑能不能互相找到" class="headerlink" title="3. Ping：测试两台电脑能不能互相找到"></a>3. Ping：测试两台电脑能不能互相找到</h2><p>Ping 的意思是“敲一下门，看看对方有没有回应”。点击 Ping device 后，如果能看到延迟时间，说明两台设备已经连通。</p>
+<p>Ping 成功只证明网络通了。SSH 或远程桌面仍然连接不上时，继续检查目标电脑有没有开启对应功能。</p>
+<h2 id="4-Details：查看设备详情"><a href="#4-Details：查看设备详情" class="headerlink" title="4. Details：查看设备详情"></a>4. Details：查看设备详情</h2><p>Details 会显示选中设备的系统、地址、版本、密钥到期时间等信息。排错时先看这里，可以确认你选中的是 Linux、macOS 还是 Windows。</p>
+<h2 id="5-Exit-Nodes：把另一台电脑当成网络出口"><a href="#5-Exit-Nodes：把另一台电脑当成网络出口" class="headerlink" title="5. Exit Nodes：把另一台电脑当成网络出口"></a>5. Exit Nodes：把另一台电脑当成网络出口</h2><p>Exit Nodes 是进阶功能。开启以后，你可以让 MacBook 的上网流量先经过另一台 Tailscale 设备，再访问互联网。</p>
+<p>比如你在外面出差，希望临时使用家里的网络出口，可以把家里长期在线的 Mac mini 配成 Exit Node。第一次连接设备时先跳过它，基础功能跑通后再研究。</p>
+<h2 id="6-Settings：软件设置"><a href="#6-Settings：软件设置" class="headerlink" title="6. Settings：软件设置"></a>6. Settings：软件设置</h2><p>右上角的滑杆图标通常会进入设置。这里能管理开机启动、账号、DNS、更新和其他高级选项。小白阶段只需要确认两件事：Tailscale 已连接，并且软件会跟随系统启动。</p>
+<h2 id="7-Machines：在网页里管理整张网"><a href="#7-Machines：在网页里管理整张网" class="headerlink" title="7. Machines：在网页里管理整张网"></a>7. Machines：在网页里管理整张网</h2><p>桌面客户端适合看在线状态和传文件，改设备名、批准路由、删除旧设备这些操作，要去 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.tailscale.com/admin/machines">Machines 管理页面</a></p>
+<p>。登录后看到的每一行，就是一台已经加入 Tailnet 的设备。</p>
+<p>这两个入口很容易混：<strong>Devices 是 Mac 上的客户端页面，Machines 是浏览器里的管理后台。</strong> 平时连接设备看 Devices，需要改整张网的配置再开 Machines。</p>
+<h2 id="8-Bug-Report：出问题时生成诊断信息"><a href="#8-Bug-Report：出问题时生成诊断信息" class="headerlink" title="8. Bug Report：出问题时生成诊断信息"></a>8. Bug Report：出问题时生成诊断信息</h2><p>不同版本的图标位置可能变化，甲虫图标通常用于问题报告或诊断。普通连接失败先按文末的排错顺序检查；准备向官方支持反馈时，再生成诊断信息。诊断内容不要直接贴到公开平台。</p>
+<p><strong>看到四台设备都有绿色圆点，才进入后面的远程连接。</strong></p>
+<h1 id="三、连接之前，先认识-8-个名词"><a href="#三、连接之前，先认识-8-个名词" class="headerlink" title="三、连接之前，先认识 8 个名词"></a>三、连接之前，先认识 8 个名词</h1><h2 id="1-Tailnet"><a href="#1-Tailnet" class="headerlink" title="1. Tailnet"></a>1. Tailnet</h2><p>Tailnet 是你的 Tailscale 私人设备网。同一账号下的 MacBook、Linux、Mac mini 和 Windows，会进入同一个 Tailnet。</p>
+<h2 id="2-IP-地址"><a href="#2-IP-地址" class="headerlink" title="2. IP 地址"></a>2. IP 地址</h2><p>IP 地址像设备的门牌号。Tailscale 常见地址以 100. 开头，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100.x.x.x</span><br></pre></td></tr></table></figure>
+
+<p>教程统一使用占位地址。你实际操作时，以自己 Tailscale 里显示的地址为准。</p>
+<h2 id="3-MagicDNS"><a href="#3-MagicDNS" class="headerlink" title="3. MagicDNS"></a>3. MagicDNS</h2><p>MagicDNS 允许你用设备名代替 IP。开启后，下面两种写法都能指向同一台 Linux：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh linux用户名@100.x.x.x</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh linux用户名@punk-linux</span><br></pre></td></tr></table></figure>
+
+<p>设备名更容易记，后面的教程优先使用设备名。</p>
+<h2 id="4-Ping"><a href="#4-Ping" class="headerlink" title="4. Ping"></a>4. Ping</h2><p>Ping 用来确认网络通不通。它不会登录电脑，也不会修改文件。</p>
+<h2 id="5-SSH"><a href="#5-SSH" class="headerlink" title="5. SSH"></a>5. SSH</h2><p>SSH 是一种加密远程命令工具。你在 MacBook 的终端里输入命令，就能进入 Linux、Mac mini 或开启了 SSH 的 Windows。</p>
+<p>SSH 连接成功后，你看到的是文字终端，不是对方的桌面画面。</p>
+<h2 id="6-远程桌面"><a href="#6-远程桌面" class="headerlink" title="6. 远程桌面"></a>6. 远程桌面</h2><p>远程桌面会把另一台电脑的图形界面显示在 MacBook 上。Mac mini 可以用 macOS 自带的屏幕共享，Windows 可以用 Windows App。</p>
+<h2 id="7-Terminal、PowerShell"><a href="#7-Terminal、PowerShell" class="headerlink" title="7. Terminal、PowerShell"></a>7. Terminal、PowerShell</h2><p>Terminal 是 macOS 和 Linux 常用的命令窗口。PowerShell 是 Windows 常用的命令窗口。</p>
+<h2 id="8-sudo"><a href="#8-sudo" class="headerlink" title="8. sudo"></a>8. sudo</h2><p>sudo 的意思是“用管理员权限执行接下来的命令”。Linux 安装软件或启动系统服务时经常需要它。</p>
+<p>输入 sudo 命令后，系统可能要求你输入 Linux 登录密码。输入时屏幕没有星号，这是正常现象，输完按回车即可。</p>
+<h1 id="四、四台电脑都安装-Tailscale，并登录同一个账号"><a href="#四、四台电脑都安装-Tailscale，并登录同一个账号" class="headerlink" title="四、四台电脑都安装 Tailscale，并登录同一个账号"></a>四、四台电脑都安装 Tailscale，并登录同一个账号</h1><p>你要准备四台设备：</p>
+<p>打开 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://tailscale.com/download">Tailscale 官方下载页</a></p>
+<p>，根据设备系统选择 macOS、Windows 或 Linux。</p>
+<h2 id="1-MacBook-安装"><a href="#1-MacBook-安装" class="headerlink" title="1. MacBook 安装"></a>1. MacBook 安装</h2><p>在 MacBook 上选择 macOS，下载并安装 Tailscale。第一次启动时，macOS 可能询问是否允许添加 VPN 配置或网络扩展，点击允许；系统借用 VPN 这个名称管理网络通道，不代表你把所有上网流量都交给了出口节点。</p>
+<p>后面如果想在 Terminal 里运行 tailscale status，打开 Tailscale 的设置，找到 CLI integration，按页面提示安装命令入口。若你的版本没有这个选项，也可以直接使用客户端里的 Devices 和 Ping 完成基础验证。</p>
+<h2 id="2-Mac-mini-安装"><a href="#2-Mac-mini-安装" class="headerlink" title="2. Mac mini 安装"></a>2. Mac mini 安装</h2><p>Mac mini 同样使用 macOS 版本。操作与 MacBook 完全一样，安装后先不要开启屏幕共享，先确认它能出现在 Devices 里。准备把 Mac mini 长期留在家中时，顺手打开 Tailscale 的开机启动。</p>
+<h2 id="3-Windows-安装"><a href="#3-Windows-安装" class="headerlink" title="3. Windows 安装"></a>3. Windows 安装</h2><p>在 Windows 上选择 Windows，下载安装程序并运行。安装完成后，Tailscale 图标会出现在任务栏右下角。</p>
+<h2 id="4-Linux-安装"><a href="#4-Linux-安装" class="headerlink" title="4. Linux 安装"></a>4. Linux 安装</h2><p>在 Linux 打开 Terminal，复制下面这条命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://tailscale.com/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tailscale up</span><br></pre></td></tr></table></figure>
+
+<p>终端会给出一个登录链接。在浏览器中打开它，完成账号登录。</p>
+<h2 id="5-四台电脑必须登录同一个账号"><a href="#5-四台电脑必须登录同一个账号" class="headerlink" title="5. 四台电脑必须登录同一个账号"></a>5. 四台电脑必须登录同一个账号</h2><p>你可以使用 Google、Microsoft、GitHub、Apple 或其他页面提供的方式登录。四台设备必须选择同一个账号，否则它们不会出现在同一个 Devices 列表里。</p>
+<h2 id="安装完成的检验标准"><a href="#安装完成的检验标准" class="headerlink" title="安装完成的检验标准"></a>安装完成的检验标准</h2><p>回到 MacBook 的 Tailscale，打开 Devices。你应该能看到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">punk-macbook</span><br><span class="line">punk-linux</span><br><span class="line">punk-macmini</span><br><span class="line">punk-windows</span><br></pre></td></tr></table></figure>
+
+<p>四台设备都出现并显示绿色圆点，这一步就完成了。</p>
+<h2 id="把四台设备改成半年后还能认出的名字"><a href="#把四台设备改成半年后还能认出的名字" class="headerlink" title="把四台设备改成半年后还能认出的名字"></a>把四台设备改成半年后还能认出的名字</h2><p>打开 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.tailscale.com/admin/machines">Machines 管理页面</a></p>
+<p>，找到一台设备，打开行尾菜单并选择编辑设备名。关闭自动沿用系统主机名后，分别改成前面图表里的名称。</p>
+<p>改完再回到 MacBook 的 Devices 页面刷新。你应该能直接看到 punk-linux、punk-macmini 和 punk-windows，以后命令里的设备名都从这里复制，不用背 100.x.x.x。</p>
+<p>如果名字无法访问，进入 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.tailscale.com/admin/dns">DNS 页面</a></p>
+<p> 检查 MagicDNS。新建 Tailnet 通常已经开启；关闭时可以先用 100.x.x.x 地址完成连接，再回来处理名称。</p>
+<h2 id="不要只看绿色圆点"><a href="#不要只看绿色圆点" class="headerlink" title="不要只看绿色圆点"></a>不要只看绿色圆点</h2><p>如果已经安装 CLI，在 MacBook 的 Terminal 运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale status</span><br></pre></td></tr></table></figure>
+
+<p>列表中应同时出现三台目标设备。接着先挑 Linux 做第一次 Tailscale 网络测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale ping punk-linux</span><br></pre></td></tr></table></figure>
+
+<p>看到 pong from 和目标设备名，才算 MacBook 确实找到了 Linux。没有 CLI 时，就在 Devices 里选中 Linux，点击 Ping device，效果相同。</p>
+<h1 id="五、第一条路线：MacBook-连接-Linux"><a href="#五、第一条路线：MacBook-连接-Linux" class="headerlink" title="五、第一条路线：MacBook 连接 Linux"></a>五、第一条路线：MacBook 连接 Linux</h1><p>Linux 最常见的连接方式是 SSH。你可以在 MacBook 上给 AI PC 安装环境、启动模型、查看日志，不需要远程桌面。</p>
+<h2 id="第一步：在-Linux-开启-SSH"><a href="#第一步：在-Linux-开启-SSH" class="headerlink" title="第一步：在 Linux 开启 SSH"></a>第一步：在 Linux 开启 SSH</h2><p>Ubuntu 或 Debian 系统执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y openssh-server</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now ssh</span><br></pre></td></tr></table></figure>
+
+<p>检查 SSH 是否正在运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status ssh</span><br></pre></td></tr></table></figure>
+
+<p>看到 active (running) 即可。按 q 退出状态页面。</p>
+<p>查看 Linux 用户名：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">whoami</span></span><br></pre></td></tr></table></figure>
+
+<p>假设输出是 punk，后面就使用这个用户名。</p>
+<h2 id="第二步：在-MacBook-测试网络"><a href="#第二步：在-MacBook-测试网络" class="headerlink" title="第二步：在 MacBook 测试网络"></a>第二步：在 MacBook 测试网络</h2><p>打开 MacBook 的 Terminal，先执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale ping punk-linux</span><br></pre></td></tr></table></figure>
+
+<p>看到 pong from，说明 Tailscale 已经找到 Linux。命令后面还可能出现 direct 或 DERP，先记住这个词，排错章节会解释。</p>
+<p>你也可以在 Tailscale 的 Devices 页面选中 Linux，然后点击 Ping device。</p>
+<h2 id="第三步：从-MacBook-登录-Linux"><a href="#第三步：从-MacBook-登录-Linux" class="headerlink" title="第三步：从 MacBook 登录 Linux"></a>第三步：从 MacBook 登录 Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh punk@punk-linux</span><br></pre></td></tr></table></figure>
+
+<p>第一次连接可能出现指纹确认，输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+<p>然后输入 Linux 登录密码。终端提示符变成 Linux 用户和设备名，说明连接成功。</p>
+<p>退出 Linux：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Linux-路线的检验标准"><a href="#Linux-路线的检验标准" class="headerlink" title="Linux 路线的检验标准"></a>Linux 路线的检验标准</h2><p>连接后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname</span><br></pre></td></tr></table></figure>
+
+<p>如果输出 Linux 设备名，这条路线就跑通了。</p>
+<h1 id="六、第二条路线：MacBook-连接-Mac-mini"><a href="#六、第二条路线：MacBook-连接-Mac-mini" class="headerlink" title="六、第二条路线：MacBook 连接 Mac mini"></a>六、第二条路线：MacBook 连接 Mac mini</h1><p>MacBook 和 Mac mini 都是 macOS。你可以选择屏幕共享，也可以选择 SSH。想操作桌面就用屏幕共享，只需要执行命令就用 SSH。</p>
+<h2 id="方式-A：屏幕共享"><a href="#方式-A：屏幕共享" class="headerlink" title="方式 A：屏幕共享"></a>方式 A：屏幕共享</h2><p>在 <strong>Mac mini</strong> 上打开：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">系统设置 → 通用 → 共享 → 屏幕共享</span><br></pre></td></tr></table></figure>
+
+<p>开启“屏幕共享”，并确认你的 Mac mini 账号有访问权限。</p>
+<p>如果“远程管理”已经开启，先关闭它，再开启“屏幕共享”。两项功能不能同时工作。访问权限优先选择“仅这些用户”，只加入你实际使用的本地账号。</p>
+<p>回到 <strong>MacBook</strong>，打开 Terminal：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open vnc://punk-macmini</span><br></pre></td></tr></table></figure>
+
+<p>macOS 会打开屏幕共享窗口。输入 Mac mini 的用户名和密码后，你就能看到它的桌面。</p>
+<h2 id="方式-B：SSH"><a href="#方式-B：SSH" class="headerlink" title="方式 B：SSH"></a>方式 B：SSH</h2><p>在 <strong>Mac mini</strong> 上打开：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">系统设置 → 通用 → 共享 → 远程登录</span><br></pre></td></tr></table></figure>
+
+<p>开启“远程登录”，并记下允许登录的用户名。假设 Mac mini 用户名是 punk，在 MacBook 执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh punk@punk-macmini</span><br></pre></td></tr></table></figure>
+
+<p>退出连接仍然使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Mac-mini-路线的检验标准"><a href="#Mac-mini-路线的检验标准" class="headerlink" title="Mac mini 路线的检验标准"></a>Mac mini 路线的检验标准</h2><p>屏幕共享方式能看到 Mac mini 桌面，或者 SSH 后执行 hostname 能看到 Mac mini 设备名，任意一个成功即可。</p>
+<h1 id="七、第三条路线：MacBook-连接-Windows"><a href="#七、第三条路线：MacBook-连接-Windows" class="headerlink" title="七、第三条路线：MacBook 连接 Windows"></a>七、第三条路线：MacBook 连接 Windows</h1><p>连接 Windows 有两种思路：想看完整桌面就用远程桌面，只需要命令行就开启 OpenSSH Server。</p>
+<h2 id="方式-A：Windows-远程桌面"><a href="#方式-A：Windows-远程桌面" class="headerlink" title="方式 A：Windows 远程桌面"></a>方式 A：Windows 远程桌面</h2><p>先确认 Windows 版本。Windows Pro、Enterprise 和 Education 通常可以作为微软远程桌面的被控端；Windows Home 默认不能作为 RDP 被控端。</p>
+<p>在 <strong>Windows</strong> 打开：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">设置 → 系统 → 远程桌面 → 开启远程桌面</span><br></pre></td></tr></table></figure>
+
+<p>再在 Windows 任务栏找到 Tailscale，进入偏好设置并开启 Run Unattended。这样 Windows 重启后，即使还停在登录界面，Tailscale 也能先上线。菜单名称会随版本变化，找不到时搜索 Tailscale 官方文档中的 Run Unattended。</p>
+<p>在 <strong>MacBook</strong> 的 App Store 安装微软的 Windows App。打开后添加一台 PC，电脑名称填写：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">punk-windows</span><br></pre></td></tr></table></figure>
+
+<p>也可以填写 Windows 在 Tailscale 中显示的 100.x.x.x 地址。保存后双击连接，输入 Windows 账号和密码。</p>
+<p>如果 Windows 是 Home 版，可以使用 RustDesk。两端安装后，在 Windows 的 RustDesk 设置中开启 Enable direct IP access，再从 MacBook 输入 Windows 的 Tailscale 100.x.x.x 地址。RustDesk 的访问密码和权限确认仍要保留，Tailscale 只负责两台设备之间的网络。</p>
+<h2 id="方式-B：Windows-开启-SSH"><a href="#方式-B：Windows-开启-SSH" class="headerlink" title="方式 B：Windows 开启 SSH"></a>方式 B：Windows 开启 SSH</h2><p>在 Windows 搜索 PowerShell，选择“以管理员身份运行”。依次执行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-WindowsCapability</span> <span class="literal">-Online</span> | <span class="built_in">Where-Object</span> Name <span class="operator">-like</span> <span class="string">&#x27;OpenSSH.Server*&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Add-WindowsCapability</span> <span class="literal">-Online</span> <span class="literal">-Name</span> OpenSSH.Server~~~~<span class="number">0.0</span>.<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Start-Service</span> sshd</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Set-Service</span> <span class="literal">-Name</span> sshd <span class="literal">-StartupType</span> Automatic</span><br></pre></td></tr></table></figure>
+
+<p>查看 Windows 用户名：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whoami</span><br></pre></td></tr></table></figure>
+
+<p>假设结果最后的用户名是 punk，回到 MacBook 执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh punk@punk-windows</span><br></pre></td></tr></table></figure>
+
+<h2 id="Windows-路线的检验标准"><a href="#Windows-路线的检验标准" class="headerlink" title="Windows 路线的检验标准"></a>Windows 路线的检验标准</h2><p>远程桌面方式能看到 Windows 桌面，或者 SSH 登录后执行下面的命令能显示 Windows 设备名：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、最后完成：一台-MacBook-同时连接三台设备"><a href="#八、最后完成：一台-MacBook-同时连接三台设备" class="headerlink" title="八、最后完成：一台 MacBook 同时连接三台设备"></a>八、最后完成：一台 MacBook 同时连接三台设备</h1><p>三条路线都跑通后，你的设备关系会变成这样：</p>
+<p>你不需要同时打开三个窗口。要用哪台设备，就从 MacBook 发起对应连接。</p>
+<h2 id="建议的最终检查"><a href="#建议的最终检查" class="headerlink" title="建议的最终检查"></a>建议的最终检查</h2><p>在 MacBook 的 Tailscale 中依次选中三台设备，并各点一次 Ping device：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">punk-linux      Ping 成功</span><br><span class="line">punk-macmini    Ping 成功</span><br><span class="line">punk-windows    Ping 成功</span><br></pre></td></tr></table></figure>
+
+<p>然后分别完成一次：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SSH 登录 Linux</span><br><span class="line">屏幕共享打开 Mac mini</span><br><span class="line">Windows App 打开 Windows</span><br></pre></td></tr></table></figure>
+
+<p>这三项都成功，整套网络就搭完了。</p>
+<h1 id="九、连上以后能干什么？"><a href="#九、连上以后能干什么？" class="headerlink" title="九、连上以后能干什么？"></a>九、连上以后能干什么？</h1><h2 id="1-在-MacBook-上使用-Linux-的-AI-服务"><a href="#1-在-MacBook-上使用-Linux-的-AI-服务" class="headerlink" title="1. 在 MacBook 上使用 Linux 的 AI 服务"></a>1. 在 MacBook 上使用 Linux 的 AI 服务</h2><p>如果 Linux 上运行了网页服务，可以在 MacBook 浏览器里打开：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://punk-linux:端口号</span><br></pre></td></tr></table></figure>
+
+<p>例如服务端口是 7860：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://punk-linux:7860</span><br></pre></td></tr></table></figure>
+
+<p>前提是 Linux 上的服务允许其他设备访问，并监听正确的网络地址。</p>
+<h2 id="2-用-Taildrop-传文件"><a href="#2-用-Taildrop-传文件" class="headerlink" title="2. 用 Taildrop 传文件"></a>2. 用 Taildrop 传文件</h2><p>在 Tailscale 的 Devices 里选中目标设备，把文件拖进 Taildrop。接收设备通常会把文件放进下载目录。部分版本需要先到管理后台的 General 设置中开启 Send Files；界面里已经出现 Taildrop 时，直接发送一个小文件测试即可。</p>
+<h2 id="3-把-Mac-mini-当作长期在线设备"><a href="#3-把-Mac-mini-当作长期在线设备" class="headerlink" title="3. 把 Mac mini 当作长期在线设备"></a>3. 把 Mac mini 当作长期在线设备</h2><p>Mac mini 适合长期运行下载、自动化、文件服务或轻量程序。出门后从 MacBook 通过屏幕共享或 SSH 继续操作。</p>
+<h2 id="4-使用-Windows-专属软件"><a href="#4-使用-Windows-专属软件" class="headerlink" title="4. 使用 Windows 专属软件"></a>4. 使用 Windows 专属软件</h2><p>一些财务、工程或企业软件只支持 Windows。你可以把它们留在 Windows 电脑上，通过 MacBook 远程桌面使用。</p>
+<h2 id="5-临时使用家里的网络出口"><a href="#5-临时使用家里的网络出口" class="headerlink" title="5. 临时使用家里的网络出口"></a>5. 临时使用家里的网络出口</h2><p>把长期在线的设备配置成 Exit Node 后，MacBook 可以选择它作为上网出口。第十三节会用 Mac mini 跑一遍完整步骤。</p>
+<p>手机也能加入同一张网。在 iPhone 或 Android 安装 Tailscale，登录同一个账号，就能访问 Linux 上的 AI 网页、接收 Taildrop 文件或选择家里的出口节点。</p>
+<h1 id="十、传文件、打开文件和自动同步，别混成一件事"><a href="#十、传文件、打开文件和自动同步，别混成一件事" class="headerlink" title="十、传文件、打开文件和自动同步，别混成一件事"></a>十、传文件、打开文件和自动同步，别混成一件事</h1><p>设备连通以后，最容易产生的误会是“能传文件，就等于文件会自动同步”。这三种需求用的工具不同，先选对结果，再选工具。</p>
+<h2 id="1-只送一次：Taildrop"><a href="#1-只送一次：Taildrop" class="headerlink" title="1. 只送一次：Taildrop"></a>1. 只送一次：Taildrop</h2><p>安装包、截图、临时文档只需要送到另一台电脑一次，就用 Taildrop。发送完成后，两边各有一份；你修改 MacBook 上的原文件，接收设备那份不会跟着变化。</p>
+<h2 id="2-文件仍放在目标电脑：SMB-文件共享"><a href="#2-文件仍放在目标电脑：SMB-文件共享" class="headerlink" title="2. 文件仍放在目标电脑：SMB 文件共享"></a>2. 文件仍放在目标电脑：SMB 文件共享</h2><p>如果视频、照片或项目资料长期放在 Mac mini 或 Windows，可以开启系统自带的文件共享。MacBook 在 Finder 里选择“前往 → 连接服务器”，输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smb://punk-macmini</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smb://punk-windows/共享文件夹名称</span><br></pre></td></tr></table></figure>
+
+<p>登录目标电脑的本地账号后，MacBook 打开的就是目标电脑上的文件。目标电脑关机、休眠或断网，文件自然也打不开。</p>
+<h2 id="3-两边文件夹自动一致：使用同步软件"><a href="#3-两边文件夹自动一致：使用同步软件" class="headerlink" title="3. 两边文件夹自动一致：使用同步软件"></a>3. 两边文件夹自动一致：使用同步软件</h2><p>如果你想让 MacBook 新建的文件自动出现在 Windows，Windows 修改后又传回 MacBook，需要 Syncthing 一类同步软件。Tailscale 负责让设备互相找到，同步软件负责监视文件变化。</p>
+<p>第一次只同步一个测试目录，不要直接选择桌面、照片库或整个文档目录。同步会传播删除和损坏，重要资料还要保留一份不参与同步的备份。</p>
+<p><strong>Taildrop 管一次发送，SMB 打开远端原文件，同步软件维持两个文件夹。</strong></p>
+<h1 id="十一、把-Linux-上的-AI-网页只开放给自己的设备"><a href="#十一、把-Linux-上的-AI-网页只开放给自己的设备" class="headerlink" title="十一、把 Linux 上的 AI 网页只开放给自己的设备"></a>十一、把 Linux 上的 AI 网页只开放给自己的设备</h1><p>前面直接打开 <a href="http://punk-linux:7860，适合服务已经允许" rel="external nofollow noreferrer">http://punk-linux:7860，适合服务已经允许</a> Tailnet 访问的情况。有些程序只监听 127.0.0.1，它只接受当前 Linux 自己的访问，MacBook 仍然打不开。</p>
+<p>这时可以在 Linux 使用 Tailscale Serve。假设网页服务运行在 3000 端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale serve 3000</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行时，终端可能给出一个授权页面。完成后会得到一个只在 Tailnet 中使用的 HTTPS 地址。MacBook 和手机登录同一 Tailscale 账号后，可以用这个地址打开页面。</p>
+<p>Serve 适合 Open WebUI、Jellyfin、Home Assistant 和自己开发的网页。程序原来的账号密码仍然要保留。</p>
+<p>界面里还可能看到 Funnel。它会把服务开放到互联网，访问范围明显更大。本文的家庭 AI 场景只用 Serve；出现 Funnel 时先停下来，确认你是否真的准备公开这个服务。</p>
+<h1 id="十二、打印机和摄像头装不了-Tailscale，怎么办？"><a href="#十二、打印机和摄像头装不了-Tailscale，怎么办？" class="headerlink" title="十二、打印机和摄像头装不了 Tailscale，怎么办？"></a>十二、打印机和摄像头装不了 Tailscale，怎么办？</h1><p>这属于可选玩法。打印机、老摄像头和部分 NAS 无法安装 Tailscale，但它们所在的家庭网络里有一台长期在线的 Linux 或 Mac mini，就能让这台常开设备充当入口。Tailscale 把它叫作<strong>子网路由器</strong>。</p>
+<p>能直接安装 Tailscale 的 NAS，优先直接安装。只有目标设备无法安装客户端，而且你确实需要从外面访问它，才配置子网路由。</p>
+<p>以 Linux 为例，先查看家庭网段：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route</span><br></pre></td></tr></table></figure>
+
+<p>你可能看到类似 192.168.31.0&#x2F;24 的地址。这里只是例子，必须使用自己家里的实际网段。确认后开启网络转发：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;net.ipv4.ip_forward = 1&#x27;</span> | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/sysctl.d/99-tailscale.conf</span><br><span class="line"><span class="built_in">sudo</span> sysctl -p /etc/sysctl.d/99-tailscale.conf</span><br></pre></td></tr></table></figure>
+
+<p>再把实际网段告诉 Tailscale：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tailscale <span class="built_in">set</span> --advertise-routes=192.168.31.0/24</span><br></pre></td></tr></table></figure>
+
+<p>最后打开 Machines 管理页面，找到这台 Linux，在路由设置里批准刚才的网段。把 MacBook 切到手机热点，再访问打印机或摄像头原来的 192.168.x.x 地址；热点下仍能打开，才证明流量经过了子网路由器。</p>
+<p>看不懂 ip route 的输出时先停在这里。填错网段不会让教程更快，只会让后面更难排查。</p>
+<h1 id="十三、把-Mac-mini-设成-Exit-Node"><a href="#十三、把-Mac-mini-设成-Exit-Node" class="headerlink" title="十三、把 Mac mini 设成 Exit Node"></a>十三、把 Mac mini 设成 Exit Node</h1><p>子网路由器让 MacBook 进入家里的局域网，Exit Node 会让 MacBook 的普通上网流量经过另一台设备。你只想 SSH、传文件或远程桌面时，不需要开启 Exit Node。</p>
+<p>Mac mini 长期在线，很适合做家庭出口。先在 Mac mini 的 Tailscale 设置中找到 Exit Node，开启 Run Exit Node 或同义选项。然后打开 Machines 管理页面，找到 Mac mini，在路由设置中批准它作为出口节点。</p>
+<p>回到 MacBook，打开 Tailscale 的 Exit Nodes，选择 punk-macmini。再访问一个显示公网 IP 的网站；如果地址变成 Mac mini 所在网络的公网 IP，说明出口已经生效。</p>
+<p>不再需要时，回到 Exit Nodes 选择 None。这个动作只让 MacBook 恢复使用眼前的网络，不会把 Mac mini 从 Tailnet 中删除。</p>
+<h1 id="十四、出门前做一次无人值守测试"><a href="#十四、出门前做一次无人值守测试" class="headerlink" title="十四、出门前做一次无人值守测试"></a>十四、出门前做一次无人值守测试</h1><p>同一个 Wi-Fi 下连接成功，只能证明家里的场景能用。真正准备远程工作前，把 MacBook 切到手机热点，让它与三台目标电脑离开同一个局域网，然后依次检查：</p>
+<ol>
+<li>tailscale ping 仍能找到三台设备；</li>
+<li>Mac mini 锁屏后还能重新进入屏幕共享；</li>
+<li>Windows 重启后会自动回到 Tailscale 在线状态；</li>
+<li>Linux 重启后 SSH 服务和 Tailscale 都会启动；</li>
+<li>三台设备进入睡眠后，哪些还能唤醒，哪些会彻底离线。</li>
+</ol>
+<p>Tailscale 没有隔空把关机电脑开起来的通用按钮。Wake-on-LAN 需要设备、网络和家中常开节点共同支持。要长期无人照看，最稳的办法仍然是提前测试重启、锁屏和睡眠，不要等人已经出门才发现电脑离线。</p>
+<h1 id="十五、你可以直接复制给-AI-的提示词"><a href="#十五、你可以直接复制给-AI-的提示词" class="headerlink" title="十五、你可以直接复制给 AI 的提示词"></a>十五、你可以直接复制给 AI 的提示词</h1><h2 id="1-让-AI-帮你判断该用哪种连接"><a href="#1-让-AI-帮你判断该用哪种连接" class="headerlink" title="1. 让 AI 帮你判断该用哪种连接"></a>1. 让 AI 帮你判断该用哪种连接</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我有一台 MacBook，已经通过 Tailscale 看到了三台设备：Linux、Mac mini 和 Windows。</span><br><span class="line">我的任务是：【填写任务】。</span><br><span class="line">请告诉我应该使用 SSH、macOS 屏幕共享、Windows 远程桌面还是 Taildrop。</span><br><span class="line">我是小白，请只给我最短可执行步骤，并告诉我每一步成功后会看到什么。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-排查-MacBook-无法-SSH-到-Linux"><a href="#2-排查-MacBook-无法-SSH-到-Linux" class="headerlink" title="2. 排查 MacBook 无法 SSH 到 Linux"></a>2. 排查 MacBook 无法 SSH 到 Linux</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我的 MacBook 和 Linux 已登录同一个 Tailscale 账号，Devices 里都显示在线。</span><br><span class="line">MacBook 可以 Ping 通 Linux，但执行 ssh 用户名@设备名 失败。</span><br><span class="line">请按以下顺序帮我排查：Linux 的 SSH 是否安装、服务是否运行、用户名是否正确、端口是否监听、系统防火墙是否拦截。</span><br><span class="line">每次只让我执行一条命令，等我贴出结果后再继续。</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-排查-MacBook-无法屏幕共享到-Mac-mini"><a href="#3-排查-MacBook-无法屏幕共享到-Mac-mini" class="headerlink" title="3. 排查 MacBook 无法屏幕共享到 Mac mini"></a>3. 排查 MacBook 无法屏幕共享到 Mac mini</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我的 MacBook 和 Mac mini 都已连接 Tailscale，MacBook 可以 Ping 通 Mac mini。</span><br><span class="line">我已经在 Mac mini 打开屏幕共享，但 open vnc://设备名 仍然无法连接。</span><br><span class="line">请按小白能执行的顺序排查：设备名、屏幕共享权限、允许访问的用户、Mac mini 睡眠状态和系统防火墙。</span><br><span class="line">每一步都告诉我在哪里点击，以及成功标志。</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-排查-MacBook-无法远程桌面到-Windows"><a href="#4-排查-MacBook-无法远程桌面到-Windows" class="headerlink" title="4. 排查 MacBook 无法远程桌面到 Windows"></a>4. 排查 MacBook 无法远程桌面到 Windows</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">我的 MacBook 和 Windows 已登录同一个 Tailscale 账号，Tailscale Ping 正常。</span><br><span class="line">我使用 MacBook 上的 Windows App 连接 Windows 失败。</span><br><span class="line">请先让我确认 Windows 版本是否支持作为远程桌面主机，再检查远程桌面是否开启、Windows 账号是否有密码、设备名或 Tailscale IP 是否正确。</span><br><span class="line">不要一次给太多步骤，每次只排查一个问题。</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-让-AI-根据真实设备名生成命令"><a href="#5-让-AI-根据真实设备名生成命令" class="headerlink" title="5. 让 AI 根据真实设备名生成命令"></a>5. 让 AI 根据真实设备名生成命令</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">这是我的设备信息：</span><br><span class="line">MacBook 名称：【填写】</span><br><span class="line">Linux 名称：【填写】；Linux 用户名：【填写】</span><br><span class="line">Mac mini 名称：【填写】；Mac mini 用户名：【填写】</span><br><span class="line">Windows 名称：【填写】；Windows 用户名：【填写】</span><br><span class="line"></span><br><span class="line">请生成：</span><br><span class="line">1. MacBook SSH 到 Linux 的命令；</span><br><span class="line">2. MacBook 屏幕共享到 Mac mini 的命令；</span><br><span class="line">3. MacBook SSH 到 Mac mini 的命令；</span><br><span class="line">4. MacBook SSH 到 Windows 的命令；</span><br><span class="line">5. 三台目标设备的 Ping 测试命令。</span><br><span class="line">代码分别放进代码块，终端提示符不要放进代码块。</span><br></pre></td></tr></table></figure>
+
+<h1 id="十六、最常见的-9-个问题"><a href="#十六、最常见的-9-个问题" class="headerlink" title="十六、最常见的 9 个问题"></a>十六、最常见的 9 个问题</h1><h2 id="1-Devices-里少了一台电脑"><a href="#1-Devices-里少了一台电脑" class="headerlink" title="1. Devices 里少了一台电脑"></a>1. Devices 里少了一台电脑</h2><p>先检查那台电脑是否安装并打开 Tailscale，再核对四台电脑是否登录了同一个账号。</p>
+<h2 id="2-设备是灰色的"><a href="#2-设备是灰色的" class="headerlink" title="2. 设备是灰色的"></a>2. 设备是灰色的</h2><p>灰色通常代表设备离线。检查目标电脑是否关机、休眠、断网，或者 Tailscale 是否退出。</p>
+<h2 id="3-Ping-成功，SSH-失败"><a href="#3-Ping-成功，SSH-失败" class="headerlink" title="3. Ping 成功，SSH 失败"></a>3. Ping 成功，SSH 失败</h2><p>网络已经通了，问题通常在目标电脑：SSH 没安装、服务没启动、用户名错误或防火墙拦截。</p>
+<h2 id="4-Mac-mini-经常连不上"><a href="#4-Mac-mini-经常连不上" class="headerlink" title="4. Mac mini 经常连不上"></a>4. Mac mini 经常连不上</h2><p>检查 Mac mini 是否进入深度睡眠。长期作为远程设备使用时，需要合理调整电源和睡眠设置。</p>
+<h2 id="5-Windows-App-无法连接-Windows-Home"><a href="#5-Windows-App-无法连接-Windows-Home" class="headerlink" title="5. Windows App 无法连接 Windows Home"></a>5. Windows App 无法连接 Windows Home</h2><p>Windows Home 默认不能作为微软 RDP 的被控端。可以升级版本，或者改用其他远程桌面工具。</p>
+<h2 id="6-为什么-Tailscale-在线，却看不到桌面？"><a href="#6-为什么-Tailscale-在线，却看不到桌面？" class="headerlink" title="6. 为什么 Tailscale 在线，却看不到桌面？"></a>6. 为什么 Tailscale 在线，却看不到桌面？</h2><p>Tailscale 只提供设备之间的网络。你仍要在 Mac mini 开启屏幕共享，或者在 Windows 开启远程桌面。</p>
+<h2 id="7-应该使用设备名还是-IP？"><a href="#7-应该使用设备名还是-IP？" class="headerlink" title="7. 应该使用设备名还是 IP？"></a>7. 应该使用设备名还是 IP？</h2><p>先用设备名，更容易记。设备名解析失败时，再复制 Devices 里的 100.x.x.x 地址测试。</p>
+<h2 id="8-能连接，但传文件和远程桌面很慢"><a href="#8-能连接，但传文件和远程桌面很慢" class="headerlink" title="8. 能连接，但传文件和远程桌面很慢"></a>8. 能连接，但传文件和远程桌面很慢</h2><p>在 MacBook 运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale ping 目标设备名</span><br></pre></td></tr></table></figure>
+
+<p>结果里的 direct 表示两台设备直接通信，通常更快；DERP 表示流量经过 Tailscale 的中转服务器，能连接，但大文件和远程桌面可能更慢。部分网络还会显示 peer relay，代表经过自己配置的中转设备。</p>
+<p>继续运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tailscale netcheck</span><br></pre></td></tr></table></figure>
+
+<p>再换手机热点测试一次。热点下变成 direct，原来的 Wi-Fi、公司网络或路由器更值得检查。看到 DERP 不用重装，先判断速度是否真的影响你的任务。</p>
+<h2 id="9-开着其他-VPN-或代理时突然失效"><a href="#9-开着其他-VPN-或代理时突然失效" class="headerlink" title="9. 开着其他 VPN 或代理时突然失效"></a>9. 开着其他 VPN 或代理时突然失效</h2><p>公司 VPN、商业 VPN、代理工具和 Tailscale 都会改动网络路径。先记下当前状态，只暂停其中一款，再重新运行 tailscale ping。一次只改一个变量，恢复后才能知道冲突来自哪里。</p>
+<h1 id="十七、安全提醒"><a href="#十七、安全提醒" class="headerlink" title="十七、安全提醒"></a>十七、安全提醒</h1><ul>
+<li>只把自己的设备加入 Tailnet；</li>
+<li>Tailscale 账号开启双重验证；</li>
+<li>Mac、Linux 和 Windows 都使用强密码；</li>
+<li>不要把真实账号、密码或完整设备 IP 发到公开平台；</li>
+<li>远程桌面和 SSH 只给需要的账号开放；</li>
+<li>长期不用的旧设备从 Tailscale 管理后台移除。</li>
+</ul>
+<p>完成这套配置后，你平时只需要带 MacBook。Linux 负责算力，Mac mini 保持在线，Windows 运行专属软件，三台电脑都从 Tailscale 的 Devices 页面进入。</p>
+<p>今天先完成最小闭环：<strong>四台设备同账号登录 → 三台目标设备 Ping 成功 → 任选一台完成第一次远程连接。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/b3f7626a/">https://macin.top/posts/b3f7626a/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/Web/">Web</a><a class="post-meta__tags" href="/tags/Mac/">Mac</a><a class="post-meta__tags" href="/tags/Windows/">Windows</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">内网穿透</a><a class="post-meta__tags" href="/tags/NAT/">NAT</a><a class="post-meta__tags" href="/tags/Tailscale/">Tailscale</a><a class="post-meta__tags" href="/tags/%E5%BC%82%E5%9C%B0%E7%BB%84%E7%BD%91/">异地组网</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/ecd53db1/" title="订阅 ChatGPT 最划算方案：菲律宾+Starryblu"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">订阅 ChatGPT 最划算方案：菲律宾+Starryblu</div></div><div class="info-2"><div class="info-item-1">今天用 144 美金订阅上了 ChatGPT Pro 20x，折合人民币不到 1000 块，比美区整整便宜了 300 多，并且是自己的账号和银行卡，算目前订阅 ChatGPT 最划算靠谱的方案。</div></div></div></a><a class="pagination-related" href="/posts/b9fe1a9b/" title="Stock-Scanner 详细部署教程：AI 增强的 A 股量化分析系统"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Stock-Scanner 详细部署教程：AI 增强的 A 股量化分析系统</div></div><div class="info-2"><div class="info-item-1">Stock-Scanner 是一个集成了 25 项财务指标、新闻情绪分析、技术指标计算和 AI 深度解读的开源 A 股量化分析系统。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/f1daab5a/" title="Tailcat 详细部署教程：无需控制平面的安全隧道"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tailscale.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-06</div><div class="info-item-2">Tailcat 详细部署教程：无需控制平面的安全隧道</div></div><div class="info-2"><div class="info-item-1">Tailcat 是 Tailscale 官方开源的一款工具，它复用了 Tailscale 强大的数据平面（基于 WireGuard 的加密通道和 NAT 穿透能力）…</div></div></div></a><a class="pagination-related" href="/posts/88912cc7/" title="Tailscale 全网最全使用指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tailscale.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-12</div><div class="info-item-2">Tailscale 全网最全使用指南</div></div><div class="info-2"><div class="info-item-1">文件还躺在家里的电脑，人已经出门；家中的 AI 和影音库明明在运行，手机却打不开。明明都是自己的设备，传文件、远控和访问网页却各有一套入口——你买得越多…</div></div></div></a><a class="pagination-related" href="/posts/2b9d1ca1/" title="Tailscale 内网穿透、异地组网、远程访问，点对点传输"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tailscale.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-16</div><div class="info-item-2">Tailscale 内网穿透、异地组网、远程访问，点对点传输</div></div><div class="info-2"><div class="info-item-1">Tailscale 内网穿透与异地组网教程：软路由/iStoreOS 安装 Tailscale 实现点对点传输，轻松打通内外网，群晖威联通 NAS 替代 ZeroTier 的更优选择。</div></div></div></a><a class="pagination-related" href="/posts/a640fd1a/" title="使用 Zerotier 进行内网穿透：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/zerotier.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-17</div><div class="info-item-2">使用 Zerotier 进行内网穿透：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">使用 Zerotier 进行内网穿透教程：注册账号、Create A Network 创建网络、设备加入，配置简单速度快，支持自建根服务器获得更好体验。</div></div></div></a><a class="pagination-related" href="/posts/154daf23/" title="使用 Docker 部署 Tailscale：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tailscale.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-10</div><div class="info-item-2">使用 Docker 部署 Tailscale：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">使用 Docker 部署 Tailscale 教程：通用性好对系统改动最小，自带加密无需配置防火墙，适用 fnOS、CasaOS、UGOS 等系统，远程访问 NAS 更方便。</div></div></div></a><a class="pagination-related" href="/posts/324ee7fc/" title="rclone 开机启动：实用工具推荐"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/rclone.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-09</div><div class="info-item-2">rclone 开机启动：实用工具推荐</div></div><div class="info-2"><div class="info-item-1">rclone 开机启动设置教程：Windows（bat 脚本）、Linux（systemd 服务）与 OpenWrt 三种系统的自启动配置方法，云盘自动挂载。</div></div></div></a><a class="pagination-related" href="/posts/e3965a02/" title="Mac 装 Windows 11 免费又简单：VMware Fusion 一步到位"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-27</div><div class="info-item-2">Mac 装 Windows 11 免费又简单：VMware Fusion 一步到位</div></div><div class="info-2"><div class="info-item-1">如何在 Mac 上安装 Windows 11：VMware Fusion Pro 已免费提供给个人用户，qBittorrent 下载镜像，安装 VMware Tools 实现文件拖拽互传与联网。</div></div></div></a><a class="pagination-related" href="/posts/a79c8b00/" title="windows 环境下制作 macos u 盘安装盘：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/macos.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">windows 环境下制作 macos u 盘安装盘：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Windows 环境下制作 macOS U 盘安装盘教程：balenaEtcher 与 TransMac 工具刻录 Install macOS Monterey 12.5 原版镜像。</div></div></div></a><a class="pagination-related" href="/posts/12b4b795/" title="windows 设置网络是否 IPv6 访问优先：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ipv6.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-08</div><div class="info-item-2">windows 设置网络是否 IPv6 访问优先：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Windows 设置网络 IPv6 访问优先教程：重置 IPv6 策略、命令提示符配置前缀优先级，附 IPv6 地址查询与检测方法。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E6%8A%8A%E5%90%8D%E5%AD%97%E8%AF%B4%E5%AF%B9%EF%BC%9A%E6%9C%AC%E6%96%87%E8%AE%B2%E7%9A%84%E6%98%AF-Tailscale"><span class="toc-number">1.</span> <span class="toc-text">一、先把名字说对：本文讲的是 Tailscale</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tailscale-%E8%87%AA%E5%B7%B1%E8%B4%9F%E8%B4%A3%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">Tailscale 自己负责什么？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Tailscale-%E8%BD%AF%E4%BB%B6%E9%87%8C%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%8C%E5%85%88%E5%85%A8%E9%83%A8%E7%9C%8B%E4%B8%80%E9%81%8D"><span class="toc-number">2.</span> <span class="toc-text">二、Tailscale 软件里的功能，先全部看一遍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Devices%EF%BC%9A%E6%9F%A5%E7%9C%8B%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AE%BE%E5%A4%87"><span class="toc-number">2.1.</span> <span class="toc-text">1. Devices：查看自己的设备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Taildrop%EF%BC%9A%E5%9C%A8%E8%AE%BE%E5%A4%87%E4%B9%8B%E9%97%B4%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">2. Taildrop：在设备之间传文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Ping%EF%BC%9A%E6%B5%8B%E8%AF%95%E4%B8%A4%E5%8F%B0%E7%94%B5%E8%84%91%E8%83%BD%E4%B8%8D%E8%83%BD%E4%BA%92%E7%9B%B8%E6%89%BE%E5%88%B0"><span class="toc-number">2.3.</span> <span class="toc-text">3. Ping：测试两台电脑能不能互相找到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Details%EF%BC%9A%E6%9F%A5%E7%9C%8B%E8%AE%BE%E5%A4%87%E8%AF%A6%E6%83%85"><span class="toc-number">2.4.</span> <span class="toc-text">4. Details：查看设备详情</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Exit-Nodes%EF%BC%9A%E6%8A%8A%E5%8F%A6%E4%B8%80%E5%8F%B0%E7%94%B5%E8%84%91%E5%BD%93%E6%88%90%E7%BD%91%E7%BB%9C%E5%87%BA%E5%8F%A3"><span class="toc-number">2.5.</span> <span class="toc-text">5. Exit Nodes：把另一台电脑当成网络出口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Settings%EF%BC%9A%E8%BD%AF%E4%BB%B6%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.6.</span> <span class="toc-text">6. Settings：软件设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Machines%EF%BC%9A%E5%9C%A8%E7%BD%91%E9%A1%B5%E9%87%8C%E7%AE%A1%E7%90%86%E6%95%B4%E5%BC%A0%E7%BD%91"><span class="toc-number">2.7.</span> <span class="toc-text">7. Machines：在网页里管理整张网</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Bug-Report%EF%BC%9A%E5%87%BA%E9%97%AE%E9%A2%98%E6%97%B6%E7%94%9F%E6%88%90%E8%AF%8A%E6%96%AD%E4%BF%A1%E6%81%AF"><span class="toc-number">2.8.</span> <span class="toc-text">8. Bug Report：出问题时生成诊断信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BF%9E%E6%8E%A5%E4%B9%8B%E5%89%8D%EF%BC%8C%E5%85%88%E8%AE%A4%E8%AF%86-8-%E4%B8%AA%E5%90%8D%E8%AF%8D"><span class="toc-number">3.</span> <span class="toc-text">三、连接之前，先认识 8 个名词</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Tailnet"><span class="toc-number">3.1.</span> <span class="toc-text">1. Tailnet</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-IP-%E5%9C%B0%E5%9D%80"><span class="toc-number">3.2.</span> <span class="toc-text">2. IP 地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-MagicDNS"><span class="toc-number">3.3.</span> <span class="toc-text">3. MagicDNS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Ping"><span class="toc-number">3.4.</span> <span class="toc-text">4. Ping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-SSH"><span class="toc-number">3.5.</span> <span class="toc-text">5. SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2"><span class="toc-number">3.6.</span> <span class="toc-text">6. 远程桌面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Terminal%E3%80%81PowerShell"><span class="toc-number">3.7.</span> <span class="toc-text">7. Terminal、PowerShell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-sudo"><span class="toc-number">3.8.</span> <span class="toc-text">8. sudo</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9B%9B%E5%8F%B0%E7%94%B5%E8%84%91%E9%83%BD%E5%AE%89%E8%A3%85-Tailscale%EF%BC%8C%E5%B9%B6%E7%99%BB%E5%BD%95%E5%90%8C%E4%B8%80%E4%B8%AA%E8%B4%A6%E5%8F%B7"><span class="toc-number">4.</span> <span class="toc-text">四、四台电脑都安装 Tailscale，并登录同一个账号</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MacBook-%E5%AE%89%E8%A3%85"><span class="toc-number">4.1.</span> <span class="toc-text">1. MacBook 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Mac-mini-%E5%AE%89%E8%A3%85"><span class="toc-number">4.2.</span> <span class="toc-text">2. Mac mini 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Windows-%E5%AE%89%E8%A3%85"><span class="toc-number">4.3.</span> <span class="toc-text">3. Windows 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Linux-%E5%AE%89%E8%A3%85"><span class="toc-number">4.4.</span> <span class="toc-text">4. Linux 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9B%9B%E5%8F%B0%E7%94%B5%E8%84%91%E5%BF%85%E9%A1%BB%E7%99%BB%E5%BD%95%E5%90%8C%E4%B8%80%E4%B8%AA%E8%B4%A6%E5%8F%B7"><span class="toc-number">4.5.</span> <span class="toc-text">5. 四台电脑必须登录同一个账号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E7%9A%84%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86"><span class="toc-number">4.6.</span> <span class="toc-text">安装完成的检验标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A%E5%9B%9B%E5%8F%B0%E8%AE%BE%E5%A4%87%E6%94%B9%E6%88%90%E5%8D%8A%E5%B9%B4%E5%90%8E%E8%BF%98%E8%83%BD%E8%AE%A4%E5%87%BA%E7%9A%84%E5%90%8D%E5%AD%97"><span class="toc-number">4.7.</span> <span class="toc-text">把四台设备改成半年后还能认出的名字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%A6%81%E5%8F%AA%E7%9C%8B%E7%BB%BF%E8%89%B2%E5%9C%86%E7%82%B9"><span class="toc-number">4.8.</span> <span class="toc-text">不要只看绿色圆点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%AC%AC%E4%B8%80%E6%9D%A1%E8%B7%AF%E7%BA%BF%EF%BC%9AMacBook-%E8%BF%9E%E6%8E%A5-Linux"><span class="toc-number">5.</span> <span class="toc-text">五、第一条路线：MacBook 连接 Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%9C%A8-Linux-%E5%BC%80%E5%90%AF-SSH"><span class="toc-number">5.1.</span> <span class="toc-text">第一步：在 Linux 开启 SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%9C%A8-MacBook-%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C"><span class="toc-number">5.2.</span> <span class="toc-text">第二步：在 MacBook 测试网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E4%BB%8E-MacBook-%E7%99%BB%E5%BD%95-Linux"><span class="toc-number">5.3.</span> <span class="toc-text">第三步：从 MacBook 登录 Linux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-%E8%B7%AF%E7%BA%BF%E7%9A%84%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86"><span class="toc-number">5.4.</span> <span class="toc-text">Linux 路线的检验标准</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%AC%AC%E4%BA%8C%E6%9D%A1%E8%B7%AF%E7%BA%BF%EF%BC%9AMacBook-%E8%BF%9E%E6%8E%A5-Mac-mini"><span class="toc-number">6.</span> <span class="toc-text">六、第二条路线：MacBook 连接 Mac mini</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-A%EF%BC%9A%E5%B1%8F%E5%B9%95%E5%85%B1%E4%BA%AB"><span class="toc-number">6.1.</span> <span class="toc-text">方式 A：屏幕共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-B%EF%BC%9ASSH"><span class="toc-number">6.2.</span> <span class="toc-text">方式 B：SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mac-mini-%E8%B7%AF%E7%BA%BF%E7%9A%84%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86"><span class="toc-number">6.3.</span> <span class="toc-text">Mac mini 路线的检验标准</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%AC%AC%E4%B8%89%E6%9D%A1%E8%B7%AF%E7%BA%BF%EF%BC%9AMacBook-%E8%BF%9E%E6%8E%A5-Windows"><span class="toc-number">7.</span> <span class="toc-text">七、第三条路线：MacBook 连接 Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-A%EF%BC%9AWindows-%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2"><span class="toc-number">7.1.</span> <span class="toc-text">方式 A：Windows 远程桌面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-B%EF%BC%9AWindows-%E5%BC%80%E5%90%AF-SSH"><span class="toc-number">7.2.</span> <span class="toc-text">方式 B：Windows 开启 SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-%E8%B7%AF%E7%BA%BF%E7%9A%84%E6%A3%80%E9%AA%8C%E6%A0%87%E5%87%86"><span class="toc-number">7.3.</span> <span class="toc-text">Windows 路线的检验标准</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%9C%80%E5%90%8E%E5%AE%8C%E6%88%90%EF%BC%9A%E4%B8%80%E5%8F%B0-MacBook-%E5%90%8C%E6%97%B6%E8%BF%9E%E6%8E%A5%E4%B8%89%E5%8F%B0%E8%AE%BE%E5%A4%87"><span class="toc-number">8.</span> <span class="toc-text">八、最后完成：一台 MacBook 同时连接三台设备</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE%E7%9A%84%E6%9C%80%E7%BB%88%E6%A3%80%E6%9F%A5"><span class="toc-number">8.1.</span> <span class="toc-text">建议的最终检查</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E8%BF%9E%E4%B8%8A%E4%BB%A5%E5%90%8E%E8%83%BD%E5%B9%B2%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">九、连上以后能干什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9C%A8-MacBook-%E4%B8%8A%E4%BD%BF%E7%94%A8-Linux-%E7%9A%84-AI-%E6%9C%8D%E5%8A%A1"><span class="toc-number">9.1.</span> <span class="toc-text">1. 在 MacBook 上使用 Linux 的 AI 服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%94%A8-Taildrop-%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">9.2.</span> <span class="toc-text">2. 用 Taildrop 传文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8A%8A-Mac-mini-%E5%BD%93%E4%BD%9C%E9%95%BF%E6%9C%9F%E5%9C%A8%E7%BA%BF%E8%AE%BE%E5%A4%87"><span class="toc-number">9.3.</span> <span class="toc-text">3. 把 Mac mini 当作长期在线设备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BD%BF%E7%94%A8-Windows-%E4%B8%93%E5%B1%9E%E8%BD%AF%E4%BB%B6"><span class="toc-number">9.4.</span> <span class="toc-text">4. 使用 Windows 专属软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%B4%E6%97%B6%E4%BD%BF%E7%94%A8%E5%AE%B6%E9%87%8C%E7%9A%84%E7%BD%91%E7%BB%9C%E5%87%BA%E5%8F%A3"><span class="toc-number">9.5.</span> <span class="toc-text">5. 临时使用家里的网络出口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E4%BC%A0%E6%96%87%E4%BB%B6%E3%80%81%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E5%92%8C%E8%87%AA%E5%8A%A8%E5%90%8C%E6%AD%A5%EF%BC%8C%E5%88%AB%E6%B7%B7%E6%88%90%E4%B8%80%E4%BB%B6%E4%BA%8B"><span class="toc-number">10.</span> <span class="toc-text">十、传文件、打开文件和自动同步，别混成一件事</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8F%AA%E9%80%81%E4%B8%80%E6%AC%A1%EF%BC%9ATaildrop"><span class="toc-number">10.1.</span> <span class="toc-text">1. 只送一次：Taildrop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E4%BB%8D%E6%94%BE%E5%9C%A8%E7%9B%AE%E6%A0%87%E7%94%B5%E8%84%91%EF%BC%9ASMB-%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="toc-number">10.2.</span> <span class="toc-text">2. 文件仍放在目标电脑：SMB 文件共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%A4%E8%BE%B9%E6%96%87%E4%BB%B6%E5%A4%B9%E8%87%AA%E5%8A%A8%E4%B8%80%E8%87%B4%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%90%8C%E6%AD%A5%E8%BD%AF%E4%BB%B6"><span class="toc-number">10.3.</span> <span class="toc-text">3. 两边文件夹自动一致：使用同步软件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%8A%8A-Linux-%E4%B8%8A%E7%9A%84-AI-%E7%BD%91%E9%A1%B5%E5%8F%AA%E5%BC%80%E6%94%BE%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AE%BE%E5%A4%87"><span class="toc-number">11.</span> <span class="toc-text">十一、把 Linux 上的 AI 网页只开放给自己的设备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%89%93%E5%8D%B0%E6%9C%BA%E5%92%8C%E6%91%84%E5%83%8F%E5%A4%B4%E8%A3%85%E4%B8%8D%E4%BA%86-Tailscale%EF%BC%8C%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-number">12.</span> <span class="toc-text">十二、打印机和摄像头装不了 Tailscale，怎么办？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E6%8A%8A-Mac-mini-%E8%AE%BE%E6%88%90-Exit-Node"><span class="toc-number">13.</span> <span class="toc-text">十三、把 Mac mini 设成 Exit Node</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%87%BA%E9%97%A8%E5%89%8D%E5%81%9A%E4%B8%80%E6%AC%A1%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E6%B5%8B%E8%AF%95"><span class="toc-number">14.</span> <span class="toc-text">十四、出门前做一次无人值守测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%A4%8D%E5%88%B6%E7%BB%99-AI-%E7%9A%84%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="toc-number">15.</span> <span class="toc-text">十五、你可以直接复制给 AI 的提示词</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AE%A9-AI-%E5%B8%AE%E4%BD%A0%E5%88%A4%E6%96%AD%E8%AF%A5%E7%94%A8%E5%93%AA%E7%A7%8D%E8%BF%9E%E6%8E%A5"><span class="toc-number">15.1.</span> <span class="toc-text">1. 让 AI 帮你判断该用哪种连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%8E%92%E6%9F%A5-MacBook-%E6%97%A0%E6%B3%95-SSH-%E5%88%B0-Linux"><span class="toc-number">15.2.</span> <span class="toc-text">2. 排查 MacBook 无法 SSH 到 Linux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8E%92%E6%9F%A5-MacBook-%E6%97%A0%E6%B3%95%E5%B1%8F%E5%B9%95%E5%85%B1%E4%BA%AB%E5%88%B0-Mac-mini"><span class="toc-number">15.3.</span> <span class="toc-text">3. 排查 MacBook 无法屏幕共享到 Mac mini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%8E%92%E6%9F%A5-MacBook-%E6%97%A0%E6%B3%95%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E5%88%B0-Windows"><span class="toc-number">15.4.</span> <span class="toc-text">4. 排查 MacBook 无法远程桌面到 Windows</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%AE%A9-AI-%E6%A0%B9%E6%8D%AE%E7%9C%9F%E5%AE%9E%E8%AE%BE%E5%A4%87%E5%90%8D%E7%94%9F%E6%88%90%E5%91%BD%E4%BB%A4"><span class="toc-number">15.5.</span> <span class="toc-text">5. 让 AI 根据真实设备名生成命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%9C%80%E5%B8%B8%E8%A7%81%E7%9A%84-9-%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">16.</span> <span class="toc-text">十六、最常见的 9 个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Devices-%E9%87%8C%E5%B0%91%E4%BA%86%E4%B8%80%E5%8F%B0%E7%94%B5%E8%84%91"><span class="toc-number">16.1.</span> <span class="toc-text">1. Devices 里少了一台电脑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AE%BE%E5%A4%87%E6%98%AF%E7%81%B0%E8%89%B2%E7%9A%84"><span class="toc-number">16.2.</span> <span class="toc-text">2. 设备是灰色的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Ping-%E6%88%90%E5%8A%9F%EF%BC%8CSSH-%E5%A4%B1%E8%B4%A5"><span class="toc-number">16.3.</span> <span class="toc-text">3. Ping 成功，SSH 失败</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Mac-mini-%E7%BB%8F%E5%B8%B8%E8%BF%9E%E4%B8%8D%E4%B8%8A"><span class="toc-number">16.4.</span> <span class="toc-text">4. Mac mini 经常连不上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Windows-App-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5-Windows-Home"><span class="toc-number">16.5.</span> <span class="toc-text">5. Windows App 无法连接 Windows Home</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%BA%E4%BB%80%E4%B9%88-Tailscale-%E5%9C%A8%E7%BA%BF%EF%BC%8C%E5%8D%B4%E7%9C%8B%E4%B8%8D%E5%88%B0%E6%A1%8C%E9%9D%A2%EF%BC%9F"><span class="toc-number">16.6.</span> <span class="toc-text">6. 为什么 Tailscale 在线，却看不到桌面？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8%E8%AE%BE%E5%A4%87%E5%90%8D%E8%BF%98%E6%98%AF-IP%EF%BC%9F"><span class="toc-number">16.7.</span> <span class="toc-text">7. 应该使用设备名还是 IP？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E8%83%BD%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BD%86%E4%BC%A0%E6%96%87%E4%BB%B6%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E5%BE%88%E6%85%A2"><span class="toc-number">16.8.</span> <span class="toc-text">8. 能连接，但传文件和远程桌面很慢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%BC%80%E7%9D%80%E5%85%B6%E4%BB%96-VPN-%E6%88%96%E4%BB%A3%E7%90%86%E6%97%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88"><span class="toc-number">16.9.</span> <span class="toc-text">9. 开着其他 VPN 或代理时突然失效</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E5%AE%89%E5%85%A8%E6%8F%90%E9%86%92"><span class="toc-number">17.</span> <span class="toc-text">十七、安全提醒</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

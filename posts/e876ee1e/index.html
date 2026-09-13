@@ -1,0 +1,815 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ZA Bank 全功能讲解＋实操教程＋避坑指南 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="所以它不是“人在内地远程注册”的账户。即使 App 能下载、资料能提前准备，也需要你本人在香港完成申请和验证。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZA Bank 全功能讲解＋实操教程＋避坑指南">
+<meta property="og:url" content="https://macin.top/posts/e876ee1e/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="所以它不是“人在内地远程注册”的账户。即使 App 能下载、资料能提前准备，也需要你本人在香港完成申请和验证。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/ZA.webp">
+<meta property="article:published_time" content="2026-09-08T10:46:54.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.656Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="ZA Bank">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/ZA.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ZA Bank 全功能讲解＋实操教程＋避坑指南",
+  "url": "https://macin.top/posts/e876ee1e/",
+  "image": "https://macin.top/img/ZA.webp",
+  "datePublished": "2026-09-08T10:46:54.000Z",
+  "dateModified": "2026-09-13T01:45:15.656Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/e876ee1e/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ZA Bank 全功能讲解＋实操教程＋避坑指南',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/ZA.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">ZA Bank 全功能讲解＋实操教程＋避坑指南</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ZA Bank 全功能讲解＋实操教程＋避坑指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.656Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/">global</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/bank/">bank</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">4.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><p>我们先用一句话来说ZA Bank：</p>
+<blockquote>
+<p><strong>ZA Bank 是香港持牌数字银行，适合做香港本地收付款、FPS 转数快、eDDA 调钱、港币消费、App 换汇与小额定存。</strong> 它没有传统柜台和现金存款能力，不适合当“现金中转站”；ZA Card 也不是主打低成本海外取现的卡。</p>
+</blockquote>
+<h2 id="福利邀请🐴：KB87F9"><a href="#福利邀请🐴：KB87F9" class="headerlink" title="福利邀请🐴：KB87F9"></a>福利邀请🐴：KB87F9</h2><h2 id="一、谁能开-ZA-Bank？"><a href="#一、谁能开-ZA-Bank？" class="headerlink" title="一、谁能开 ZA Bank？"></a>一、谁能开 ZA Bank？</h2><p>\1. 中国内地居民游客开户条件</p>
+<p>目前，中国内地居民走“访港游客”渠道开户，需同时满足：</p>
+<ul>
+<li>年满 18 岁；</li>
+<li><strong>开户时人必须在香港；</strong></li>
+<li>持有原件中国居民身份证，且身份证有效期至少还有 30 天；</li>
+<li>有能在香港收短信、接电话的中国内地手机号；</li>
+<li>有一张已绑定该内地手机号的中国内地储蓄卡；</li>
+<li>有效的国家移民管理局出入境证件。</li>
+</ul>
+<p>所以它不是“人在内地远程注册”的账户。即使 App 能下载、资料能提前准备，也需要你本人在香港完成申请和验证。</p>
+<p>\2. 香港身份证用户</p>
+<p>香港居民需持 2018 年 11 月 26 日后签发的新智能身份证、香港手机号及香港住址；永久居民和非永久居民标签均可申请，但仍以银行审核结果为准。</p>
+<h1 id="二、ZA-Bank-开完户后，你实际拿到什么？"><a href="#二、ZA-Bank-开完户后，你实际拿到什么？" class="headerlink" title="二、ZA Bank 开完户后，你实际拿到什么？"></a>二、ZA Bank 开完户后，你实际拿到什么？</h1><p>你拿到的核心是：</p>
+<ol>
+<li><strong>一个 ZA Bank 综合账户</strong></li>
+<li><strong>11 种货币余额体系</strong></li>
+<li><strong>FPS 转数快收付款能力</strong></li>
+<li><strong>ZA Card Visa 扣账卡</strong></li>
+<li><strong>换汇、定存、跨境汇款、eDDA、电子钱包等功能</strong></li>
+</ol>
+<p>支持的 11 种货币为：</p>
+<ul>
+<li>HKD 港币</li>
+<li>CNY 人民币</li>
+<li>USD 美元</li>
+<li>SGD 新加坡元</li>
+<li>GBP 英镑</li>
+<li>EUR 欧元</li>
+<li>CAD 加元</li>
+<li>AUD 澳元</li>
+<li>JPY 日元</li>
+<li>NZD 新西兰元</li>
+<li>CHF 瑞士法郎</li>
+</ul>
+<p>这些币种共用同一个 ZA Bank 账户号码；外币汇入时，正常情况下会按原币种入账，不会自动换汇。</p>
+<h1 id="三、开户后第一时间必须做的-8-件事"><a href="#三、开户后第一时间必须做的-8-件事" class="headerlink" title="三、开户后第一时间必须做的 8 件事"></a>三、开户后第一时间必须做的 8 件事</h1><h2 id="1-设置-App-登录与生物识别"><a href="#1-设置-App-登录与生物识别" class="headerlink" title="1. 设置 App 登录与生物识别"></a>1. 设置 App 登录与生物识别</h2><p>先开 Face ID、指纹或手机系统锁屏，不要只靠简单密码。</p>
+<p>ZA Bank 的大多数操作都在 App 内完成，包括卡片冻结、转账限额、FPS、换汇和客服处理。手机丢失，比实体卡丢失更需要优先处理。</p>
+<h2 id="2-注册-FPS-转数快"><a href="#2-注册-FPS-转数快" class="headerlink" title="2. 注册 FPS 转数快"></a>2. 注册 FPS 转数快</h2><p>路径通常是：</p>
+<p><strong>首页左上角头像 → FPS &amp; Transfer Settings → My FPS → Register now</strong></p>
+<p>你可以绑定：</p>
+<ul>
+<li>香港手机号</li>
+<li>Email</li>
+<li>FPS ID</li>
+<li>香港身份证号码</li>
+</ul>
+<p>建议只绑定一个你长期使用的收款方式，例如手机号或 Email，避免以后忘了钱到底进了哪一家银行。</p>
+<h2 id="3-设置转账限额"><a href="#3-设置转账限额" class="headerlink" title="3. 设置转账限额"></a>3. 设置转账限额</h2><p>尤其是刚开户，不要直接开很高。</p>
+<p>ZA 会区分：</p>
+<ul>
+<li>已登记收款人；</li>
+<li>未登记收款人；</li>
+<li>自己名下账户转账；</li>
+<li>小额转账；</li>
+<li>海外汇款收款人。</li>
+</ul>
+<p>未登记收款人的每日额度受限，低于你设置的小额转账额度时，可能不需要额外二次验证。大额转账前，先检查 App 中的转账上限。</p>
+<h2 id="4-申请实体-ZA-Card"><a href="#4-申请实体-ZA-Card" class="headerlink" title="4. 申请实体 ZA Card"></a>4. 申请实体 ZA Card</h2><p>路径：</p>
+<p><strong>ZA Bank App → ZA Card → More／更多 → Get a Physical Card／申请实体卡</strong></p>
+<p>核对邮寄地址后提交即可。</p>
+<p>注意：<strong>实体卡未收到前，不要在 App 内提前激活。</strong></p>
+<h2 id="5-收到实体卡后再激活"><a href="#5-收到实体卡后再激活" class="headerlink" title="5. 收到实体卡后再激活"></a>5. 收到实体卡后再激活</h2><p>路径：</p>
+<p><strong>App → Account／账户 → ZA Card → Activate ZA Card</strong></p>
+<p>然后设置 ATM 提款密码。</p>
+<h2 id="6-设置-ZA-Card-消费和提款额度"><a href="#6-设置-ZA-Card-消费和提款额度" class="headerlink" title="6. 设置 ZA Card 消费和提款额度"></a>6. 设置 ZA Card 消费和提款额度</h2><p>建议默认不要开太高。</p>
+<ul>
+<li>ATM 每日默认提款上限：HK$20,000；</li>
+<li>可自行调整为 HK$0–50,000；</li>
+<li>ZA Card 默认每月消费上限：HK$300,000；</li>
+<li>可设置范围：HK$0–1,000,000。</li>
+</ul>
+<p>日常建议：</p>
+<p>功能建议日常刷卡额度HK$5,000–20,000ATM 取现额度不需要时设为 HK$0出境期间按旅行预算临时提高网购卡用完后及时降低额度大额付款付款前临时提高，完成后再调低。</p>
+<h2 id="7-绑定-Apple-Pay-Google-Pay-支付宝"><a href="#7-绑定-Apple-Pay-Google-Pay-支付宝" class="headerlink" title="7. 绑定 Apple Pay &#x2F; Google Pay &#x2F; 支付宝"></a>7. 绑定 Apple Pay &#x2F; Google Pay &#x2F; 支付宝</h2><p>ZA Card 可绑定 Apple Pay、Google Pay，也可用于 WeChat Pay、Alipay 等支持 Visa 的支付场景；通过 Apple Pay 或 Google Pay 付款，ZA Bank 不另收电子钱包附加费。</p>
+<h2 id="8-小额测试一次-FPS"><a href="#8-小额测试一次-FPS" class="headerlink" title="8. 小额测试一次 FPS"></a>8. 小额测试一次 FPS</h2><p>第一次绑定 FPS、eDDA、电子钱包或跨行转账，不要一上来就转大额。</p>
+<p>先测试 HK$10 或 HK$100，确认：</p>
+<ul>
+<li>对方姓名是否正确；</li>
+<li>收款账户是否正确；</li>
+<li>是否即时到账；</li>
+<li>自己设置的限额是否足够；</li>
+<li>转账备注是否正确。</li>
+</ul>
+<h1 id="四、ZA-Card-到底是什么？"><a href="#四、ZA-Card-到底是什么？" class="headerlink" title="四、ZA Card 到底是什么？"></a>四、ZA Card 到底是什么？</h1><p>ZA Card 是一张香港发行的 <strong>Visa 扣账卡</strong>，直接连接你的港币往来账户。</p>
+<p>它不是信用卡：</p>
+<ul>
+<li>不会给你授信额度；</li>
+<li>刷卡直接扣账户余额；</li>
+<li>没有年费；</li>
+<li>不存在“最低还款”；</li>
+<li>不会产生信用卡利息或逾期利息。</li>
+</ul>
+<p>注意不要混淆：</p>
+<ul>
+<li><strong>ZA Card：扣账卡，用自己的余额消费；</strong></li>
+<li><strong>ZA Credit：独立循环信贷产品，属于另一种金融产品。</strong></li>
+</ul>
+<h2 id="ZA-Card-的正确使用方式"><a href="#ZA-Card-的正确使用方式" class="headerlink" title="ZA Card 的正确使用方式"></a>ZA Card 的正确使用方式</h2><p>场景 1：香港日常消费</p>
+<p>很适合：</p>
+<ul>
+<li>香港餐厅；</li>
+<li>超市；</li>
+<li>便利店；</li>
+<li>网购；</li>
+<li>Apple Pay；</li>
+<li>Google Pay；</li>
+<li>部分电子钱包；</li>
+<li>香港 Visa 商户。</li>
+</ul>
+<p>可用余额受三个因素限制：</p>
+<ol>
+<li>当日剩余消费限额；</li>
+<li>当月剩余消费限额；</li>
+<li>港币账户可用余额。</li>
+</ol>
+<p>其中最低的那个，决定你最终还能刷多少。</p>
+<p>场景 2：香港 ATM 取港币</p>
+<p>ZA Card 可在香港支持 Visa 的 ATM 使用，香港本地只支持提取港币，不支持在香港 ATM 直接取外币。官方列示可在超过 3,000 台香港本地 ATM 使用。</p>
+<p>场景 3：海外刷卡</p>
+<p>出境前建议在 App 中开启 Travel／海外旅行功能：</p>
+<p><strong>Account → ZA Card → Travel → Overseas Travel</strong></p>
+<p>然后填写：</p>
+<ul>
+<li>出行国家或地区；</li>
+<li>出行日期；</li>
+<li>ATM 提款日限额；</li>
+<li>是否开启海外消费。</li>
+</ul>
+<p>这样更容易避免海外交易被风控拦截。</p>
+<p>场景 4：海外 ATM 提现</p>
+<p>可以用，但不建议把它当主要用途。</p>
+<p>海外 ATM 取外币的官方费用是：</p>
+<ul>
+<li>每笔 HK$50；</li>
+<li>加 1.95% 外币汇率加价；</li>
+<li>本地和海外 ATM 共用每月等值 HK$80,000 免手续费提款额度；</li>
+<li>超出该额度后，另加 1% ATM 费用；</li>
+<li>ATM 所属银行还可能另收本地服务费。</li>
+</ul>
+<p>所以：</p>
+<blockquote>
+<p><strong>ZA Card 可以海外取现，但成本不低。</strong> 更适合紧急备用，不适合长期频繁取现。</p>
+</blockquote>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="五、海外刷卡最重要的坑：不要选港币结算"><a href="#五、海外刷卡最重要的坑：不要选港币结算" class="headerlink" title="五、海外刷卡最重要的坑：不要选港币结算"></a>五、海外刷卡最重要的坑：不要选港币结算</h1><p>在海外刷卡、酒店付款或 ATM 提现时，机器经常会问：</p>
+<ul>
+<li>Pay in HKD？</li>
+<li>Pay in local currency？</li>
+</ul>
+<p>绝大多数情况下，应该选：</p>
+<blockquote>
+<p><strong>当地货币结算。</strong></p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li>日本：选 JPY；</li>
+<li>美国：选 USD；</li>
+<li>英国：选 GBP；</li>
+<li>泰国：选 THB。</li>
+</ul>
+<p>不要因为看到“港币金额更直观”就选 HKD。</p>
+<p>如果你在海外商户处主动选择港币结算，或商户已经把外币交易换成港币处理，ZA Card 可能涉及 1.95% Cross-border Transaction Fee，其中 1% 由 Visa 收取、0.95% 由 ZA Bank 收取。</p>
+<p>这就是典型的 DCC 动态货币转换坑：</p>
+<blockquote>
+<p>商户帮你“贴心换成港币”，往往不是帮你省钱，而是让你接受更差的汇率和额外成本。</p>
+</blockquote>
+<h1 id="-1"><a href="#-1" class="headerlink" title=""></a></h1><h1 id="六、FPS-转数快怎么用？"><a href="#六、FPS-转数快怎么用？" class="headerlink" title="六、FPS 转数快怎么用？"></a>六、FPS 转数快怎么用？</h1><p>FPS 是 ZA 最核心的功能之一。</p>
+<p>你可以：</p>
+<ul>
+<li>用手机号收款；</li>
+<li>用 Email 收款；</li>
+<li>用 FPS ID 收款；</li>
+<li>用银行账户号码收款；</li>
+<li>向其他香港银行即时转港币或人民币；</li>
+<li>接收其他香港银行的 FPS 转账。</li>
+</ul>
+<p>港币和人民币 FPS 正常情况下可即时到账。</p>
+<h2 id="转账前必须看三件事"><a href="#转账前必须看三件事" class="headerlink" title="转账前必须看三件事"></a>转账前必须看三件事</h2><p>\1. 收款人姓名</p>
+<p>不要只看手机号或账号尾号。</p>
+<p>确认 App 显示的姓名与你要转的人一致，再点击确认。</p>
+<p>\2. 是否是未登记收款人</p>
+<p>未登记收款人通常额度较低，也更容易触发二次验证。</p>
+<p>\3. 是否可以撤回</p>
+<p>FPS 即时到账，不要把“可以联系银行”理解成“可以保证撤回”。</p>
+<p>转错后立刻联系收款人和银行，但不能把 FPS 当成支付宝那种一定可以撤销的支付。</p>
+<h1 id="七、eDDA-Easy-Deposit：把其他香港银行的钱调进-ZA"><a href="#七、eDDA-Easy-Deposit：把其他香港银行的钱调进-ZA" class="headerlink" title="七、eDDA &#x2F; Easy Deposit：把其他香港银行的钱调进 ZA"></a>七、eDDA &#x2F; Easy Deposit：把其他香港银行的钱调进 ZA</h1><p>eDDA 是电子直接付款授权。</p>
+<p>你可以把其他支持 eDDA 的银行账户，绑定到 ZA Bank，然后通过 Easy Deposit 把钱调进 ZA；也可能在其他银行或商户端绑定 ZA 账户，让对方从 ZA 扣钱。</p>
+<p>但要注意：</p>
+<ul>
+<li>是否支持，取决于对方银行或商户；</li>
+<li>发起扣款时，ZA 账户余额必须足够；</li>
+<li>当天的自己账户转账额度或已登记收款人额度也必须足够；</li>
+<li>若扣款失败，对方机构可能收取失败费用。</li>
+</ul>
+<p>正确使用方式：</p>
+<ol>
+<li>先绑定自己同名香港银行账户；</li>
+<li>小额试一次；</li>
+<li>只绑定可信平台；</li>
+<li>不再使用时及时取消授权；</li>
+<li>不要把 eDDA 当成“任何银行卡都能自动充钱”。</li>
+</ol>
+<h1 id="八、换汇功能怎么用？"><a href="#八、换汇功能怎么用？" class="headerlink" title="八、换汇功能怎么用？"></a>八、换汇功能怎么用？</h1><p>ZA 支持 11 种货币兑换，官方显示 24&#x2F;7 可进行实时报价换汇，且不额外收取换汇手续费。</p>
+<p>路径通常有三种：</p>
+<ul>
+<li>首页黄色按钮上滑 → Transfer → Currency Exchange；</li>
+<li>Wealth／财富页面 → Currency Exchange；</li>
+<li>Deposit／存款页面 → Currency Exchange。</li>
+</ul>
+<p>正确操作顺序：</p>
+<ol>
+<li>看清买入币种和卖出币种；</li>
+<li>输入金额；</li>
+<li>看实际到账金额；</li>
+<li>看报价有效时间；</li>
+<li>确认后完成兑换。</li>
+</ol>
+<p>换汇避坑</p>
+<p>“0 手续费”不代表没有汇率差。</p>
+<p>真正成本体现在买入价和卖出价之间的点差。小额换汇通常问题不大，但大额换汇前，建议同时对比：</p>
+<ul>
+<li>汇丰；</li>
+<li>Wise；</li>
+<li>其他香港银行；</li>
+<li>当天市场中间价。</li>
+</ul>
+<h1 id="九、定期存款怎么用？"><a href="#九、定期存款怎么用？" class="headerlink" title="九、定期存款怎么用？"></a>九、定期存款怎么用？</h1><p>ZA 的定存支持 11 种货币，最低 HK$1 或等值 1 单位货币即可开立，期限由 7 天至 12 个月。</p>
+<p>适合：</p>
+<ul>
+<li>短期闲置港币；</li>
+<li>临时存放美元、人民币；</li>
+<li>活动送高息券时的短期资金安排；</li>
+<li>不需要随时拿走的钱。</li>
+</ul>
+<p>定存最大的坑：提前支取</p>
+<p>提前取出并不是“少一点利息”那么简单。</p>
+<p>ZA 会收取提前支取费用，最低 HK$200 或等值外币，计算方式与本金、同业拆息、定存利率和剩余期限有关。</p>
+<p>所以：</p>
+<blockquote>
+<p>不要把下个月要交房租、要还卡、要做大额转账的钱锁进定存。</p>
+</blockquote>
+<h1 id="-2"><a href="#-2" class="headerlink" title=""></a></h1><h1 id="十、Money-Safe：防诈骗资金锁定功能"><a href="#十、Money-Safe：防诈骗资金锁定功能" class="headerlink" title="十、Money Safe：防诈骗资金锁定功能"></a>十、Money Safe：防诈骗资金锁定功能</h1><p>Money Safe 是 ZA 比较有特色的安全功能。</p>
+<p>它可以把部分资金锁定为 Protected Funds／受保护资金。锁定后，这笔钱不能用于：</p>
+<ul>
+<li>ATM 提现；</li>
+<li>转账；</li>
+<li>自动转账；</li>
+<li>eDDA；</li>
+<li>自动扣款；</li>
+<li>换汇；</li>
+<li>汇款；</li>
+<li>买基金或股票；</li>
+<li>买保险；</li>
+<li>还贷款；</li>
+<li>卡片还款；</li>
+<li>银行费用扣款。</li>
+</ul>
+<p>它适合放：</p>
+<ul>
+<li>长期备用金；</li>
+<li>不需要随时动用的存款；</li>
+<li>容易被诈骗话术诱导转走的资金；</li>
+<li>父母或长辈的部分安全资金。</li>
+</ul>
+<p>但它有一个非常大的限制：</p>
+<blockquote>
+<p>解锁 Money Safe 不是在 App 内点一下就完成。 出于安全考虑，官方说明可能需要本人亲自到 ZA Bank 办公室做身份核验，释放过程也可能花时间。</p>
+</blockquote>
+<p>所以不要把全部资金都锁进去。</p>
+<h1 id="-3"><a href="#-3" class="headerlink" title=""></a></h1><h1 id="十一、Payment-Connect：香港与内地人民币互转"><a href="#十一、Payment-Connect：香港与内地人民币互转" class="headerlink" title="十一、Payment Connect：香港与内地人民币互转"></a>十一、Payment Connect：香港与内地人民币互转</h1><p>ZA 支持 Payment Connect／跨境支付通。</p>
+<p>符合资格的香港居民，可：</p>
+<ul>
+<li>向中国内地指定银行账户实时发送人民币；</li>
+<li>从中国内地接收人民币或港币。</li>
+</ul>
+<p>转出内地的一般操作逻辑：</p>
+<ol>
+<li>先设置非登记收款人及全球转账额度；</li>
+<li>App 进入 Payment Connect；</li>
+<li>选择按银行卡号或手机号填写收款资料；</li>
+<li>输入金额、扣款币种和备注；</li>
+<li>核对后提交。</li>
+</ol>
+<p>注意：</p>
+<ul>
+<li>这不是“任何 ZA 用户都自动能用”的功能；</li>
+<li>页面写明对象为香港居民，游客账户、身份状态、收款银行支持情况和额度规则都可能影响是否可用；</li>
+<li>首次务必小额测试。</li>
+</ul>
+<h1 id="十二、国际汇款与-ZA-Remit"><a href="#十二、国际汇款与-ZA-Remit" class="headerlink" title="十二、国际汇款与 ZA Remit"></a>十二、国际汇款与 ZA Remit</h1><p>ZA 账户可接收 HKD、CNY、USD、SGD、GBP、EUR、CAD、AUD、JPY、NZD、CHF 等币种的跨境汇入。</p>
+<p>汇入资料包括：</p>
+<ul>
+<li>Bank Name：ZA Bank Limited</li>
+<li>Bank Code：387</li>
+<li>Branch Code：747</li>
+<li>Account Number：12 位、通常以 8 开头</li>
+<li>SWIFT：AABLHKHH；若对方要求 11 位则使用 AABLHKHHXXX。</li>
+</ul>
+<p>另外，ZA Remit 与 Wise 合作做国际汇款。</p>
+<p>费用通常由两部分组成：</p>
+<ol>
+<li>Wise Fee；</li>
+<li>ZA Bank Convenience Fee，标准费率通常为 0.25%，具体金额以交易页面报价为准。</li>
+</ol>
+<p>所以不要只看“ZA Remit”名字，以为一定比 Wise App 自己汇款便宜。每次转账前，都要对比最终到账金额。</p>
+<h1 id="-4"><a href="#-4" class="headerlink" title=""></a></h1><h1 id="十三、账户长期不用会怎样？"><a href="#十三、账户长期不用会怎样？" class="headerlink" title="十三、账户长期不用会怎样？"></a>十三、账户长期不用会怎样？</h1><p>如果连续 18 个月没有转账、入金、开定存、申请贷款等金融活动，账户可能被标记为 inactive／不活跃。</p>
+<p>不活跃后，你可能无法：</p>
+<ul>
+<li>转账；</li>
+<li>入金；</li>
+<li>开定存；</li>
+<li>申请贷款；</li>
+<li>正常使用部分账户功能。</li>
+</ul>
+<p>需要在 ZA App 内重新激活。</p>
+<p>保号建议：</p>
+<blockquote>
+<p>每隔半年做一次同名账户小额转入或 FPS 小额转账，并登录 App 查看通知。</p>
+</blockquote>
+<h1 id="-5"><a href="#-5" class="headerlink" title=""></a></h1><h1 id="十四、资金安全吗？"><a href="#十四、资金安全吗？" class="headerlink" title="十四、资金安全吗？"></a>十四、资金安全吗？</h1><p>ZA Bank 是香港持牌银行。香港存款保障计划目前对每名存款人在每间成员银行的合资格存款，提供最高 HK$800,000 保障，涵盖港币、人民币及其他货币存款。</p>
+<p>但以下不要混淆：</p>
+<ul>
+<li>银行存款：可能受存款保障；</li>
+<li>股票、基金、债券、保险、虚拟资产：不是银行存款，不属于同一类保障。</li>
+</ul>
+<h1 id="十五、ZA-Bank-最容易踩的坑"><a href="#十五、ZA-Bank-最容易踩的坑" class="headerlink" title="十五、ZA Bank 最容易踩的坑"></a>十五、ZA Bank 最容易踩的坑</h1><h2 id="1-以为可以存现金"><a href="#1-以为可以存现金" class="headerlink" title="1. 以为可以存现金"></a>1. 以为可以存现金</h2><p>不可以。</p>
+<p>ZA 目前不能通过 ATM 现金存款。要入金，主要靠 FPS、eDDA、银行转账或跨境汇款。</p>
+<h2 id="2-以为-ZA-Card-是多币种低费旅行卡"><a href="#2-以为-ZA-Card-是多币种低费旅行卡" class="headerlink" title="2. 以为 ZA Card 是多币种低费旅行卡"></a>2. 以为 ZA Card 是多币种低费旅行卡</h2><p>不是。</p>
+<p>它主要连接港币账户。海外 ATM 提现有 HK$50＋1.95% 成本；海外刷卡还要避免 DCC 港币结算。</p>
+<h2 id="3-以为-Visa-卡号可以收款"><a href="#3-以为-Visa-卡号可以收款" class="headerlink" title="3. 以为 Visa 卡号可以收款"></a>3. 以为 Visa 卡号可以收款</h2><p>不能。</p>
+<p>ZA Card 卡号不能用于银行转账或汇款收款。收款用 FPS、账户号码或跨境汇款资料。</p>
+<h2 id="4-一开卡就把消费限额拉满"><a href="#4-一开卡就把消费限额拉满" class="headerlink" title="4. 一开卡就把消费限额拉满"></a>4. 一开卡就把消费限额拉满</h2><p>没有必要。</p>
+<p>ZA Card 最高可设到 HK$1,000,000 月消费限额，但普通用户长期高限额只会增加盗刷风险。</p>
+<h2 id="5-海外-ATM-不先开-Travel-功能"><a href="#5-海外-ATM-不先开-Travel-功能" class="headerlink" title="5. 海外 ATM 不先开 Travel 功能"></a>5. 海外 ATM 不先开 Travel 功能</h2><p>可能出现提款失败、交易拦截或风控验证。</p>
+<p>出境前先在 App 开 Travel，填国家、日期和限额。</p>
+<h2 id="6-把全部钱锁进-Money-Safe"><a href="#6-把全部钱锁进-Money-Safe" class="headerlink" title="6. 把全部钱锁进 Money Safe"></a>6. 把全部钱锁进 Money Safe</h2><p>Money Safe 解锁可能要求本人到 ZA Bank 办公室验证，不适合锁住全部日常现金。</p>
+<h2 id="7-把紧急用钱放进定存"><a href="#7-把紧急用钱放进定存" class="headerlink" title="7. 把紧急用钱放进定存"></a>7. 把紧急用钱放进定存</h2><p>提前支取最低可收 HK$200 或等值外币，先确认自己是否真能锁到期。</p>
+<h2 id="8-只冲活动，不看活动期限"><a href="#8-只冲活动，不看活动期限" class="headerlink" title="8. 只冲活动，不看活动期限"></a>8. 只冲活动，不看活动期限</h2><p>ZA 经常有高息券、开卡奖励、消费回赠和 StockBack 活动，但活动会结束、资格会变、奖励可能有门槛。不要把短期活动利率当成账户长期收益。</p>
+<h1 id="-6"><a href="#-6" class="headerlink" title=""></a></h1><h1 id="十六、最适合-ZA-Bank-的使用方式"><a href="#十六、最适合-ZA-Bank-的使用方式" class="headerlink" title="十六、最适合 ZA Bank 的使用方式"></a>十六、最适合 ZA Bank 的使用方式</h1><p>我建议把 ZA 的定位放得很明确：</p>
+<p>适合做</p>
+<ul>
+<li>香港 FPS 收付款；</li>
+<li>香港电子钱包绑定；</li>
+<li>eDDA 调钱；</li>
+<li>小额港币日常消费；</li>
+<li>香港本地 Visa 支付；</li>
+<li>临时换汇；</li>
+<li>小额定存；</li>
+<li>备用香港账户；</li>
+<li>内地赴港后做轻量数字银行使用。</li>
+</ul>
+<p>不适合做</p>
+<ul>
+<li>现金存取主账户；</li>
+<li>大额长期资金唯一存放处；</li>
+<li>高频海外 ATM 取现；</li>
+<li>完全依赖实体网点服务；</li>
+<li>不看费率的大额跨境汇款；</li>
+<li>没有备用手机和备用银行账户时的唯一账户。</li>
+</ul>
+<h1 id="-7"><a href="#-7" class="headerlink" title=""></a></h1><h1 id="十七、和-汇丰-One-的定位怎么搭配？"><a href="#十七、和-汇丰-One-的定位怎么搭配？" class="headerlink" title="十七、和 汇丰 One 的定位怎么搭配？"></a>十七、和 汇丰 One 的定位怎么搭配？</h1><p>最实用的组合是：</p>
+<p>功能更适合的账户香港 FPS、小额收付款、电子钱包ZA Bank香港现金、ATM、实体卡备用汇丰 One 红狮子海外消费、多币种余额消费汇丰 One 蓝狮子香港本地 eDDA、数字化日常账户ZA Bank主资金、美元、跨境资金管理汇丰 One临时换汇、短期定存活动ZA Bank</p>
+<p>简单理解：</p>
+<blockquote>
+<p>汇丰 One 更像你的“主账户＋多币种资金中枢”。 ZA 更像你的“香港本地数字钱包＋FPS＋eDDA 工具账户”。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/e876ee1e/">https://macin.top/posts/e876ee1e/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/ZA-Bank/">ZA Bank</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/61953606/" title="career-ops 旨在帮助你高效筛选职位、定制简历并跟踪申请进度"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">career-ops 旨在帮助你高效筛选职位、定制简历并跟踪申请进度</div></div><div class="info-2"><div class="info-item-1">此命令会验证所有核心依赖（如 Node.js、Playwright、必要的配置文件）是否正确安装和配置。</div></div></div></a><a class="pagination-related" href="/posts/c879b829/" title="serenity-stock-choke：识别 A 股卡脖子供应链环节"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">serenity-stock-choke：识别 A 股卡脖子供应链环节</div></div><div class="info-2"><div class="info-item-1">技能在分析过程中，推荐使用 neodata-financial-search 和 westock-data 等外部数据工具来获取实时行情、研报和资金流向等数据。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/58df458/" title="Cherry Studio V2 超详细攻略 + 真实使用场景教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/cherry.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">Cherry Studio V2 超详细攻略 + 真实使用场景教程</div></div><div class="info-2"><div class="info-item-1">Cherry Studio V2 超详细攻略：开源免费的全能 AI 桌面工作站（GitHub 约 5 万 Stars），集成多模型对话、智能体、知识库、AI 绘画、翻译等能力，真实场景教程。</div></div></div></a><a class="pagination-related" href="/posts/860ce256/" title="安装 pve 教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/pve.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-26</div><div class="info-item-2">安装 pve 教程</div></div><div class="info-2"><div class="info-item-1">PVE 安装教程：官方或中国镜像下载 ISO，Ventoy/Rufus 制作启动 U 盘，安装界面默认回车同意协议，一步步搭建 Proxmox VE 虚拟化平台。</div></div></div></a><a class="pagination-related" href="/posts/c360413f/" title="debian 卸载 iptables 安装 nftables：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/debian.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-27</div><div class="info-item-2">debian 卸载 iptables 安装 nftables：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Debian 卸载 iptables 安装 nftables 教程：--purge 删除配置文件，移除 iptables-persistent，新一代防火墙框架迁移步骤详解。</div></div></div></a><a class="pagination-related" href="/posts/cd51a990/" title="专门用于安装 Office 的组件工具 Office Tool Plus"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/office.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-27</div><div class="info-item-2">专门用于安装 Office 的组件工具 Office Tool Plus</div></div><div class="info-2"><div class="info-item-1">Office Tool Plus：专为 Office 设计的免费辅助软件，集成众多管理功能，自定义安装组件与版本，小巧无广告无捆绑，需 .NET 5.0 运行环境。</div></div></div></a><a class="pagination-related" href="/posts/27f3948a/" title="docker 搭建 plausible 网站流量分析平台(新版)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/plausible.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-27</div><div class="info-item-2">docker 搭建 plausible 网站流量分析平台(新版)</div></div><div class="info-2"><div class="info-item-1">Docker 搭建 Plausible 网站流量分析平台（新版）：自托管 Community Edition，需 Docker + Compose，CPU 支持 SSE 4.2，建议 2GB 内存运行 ClickHouse。</div></div></div></a><a class="pagination-related" href="/posts/da284815/" title="Windows 11 彻底卸载与清理系统自带 AI（Copilot &#x2F; Recall）指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/windows.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">Windows 11 彻底卸载与清理系统自带 AI（Copilot &#x2F; Recall）指南</div></div><div class="info-2"><div class="info-item-1">Windows 11 彻底卸载系统自带 AI 指南：利用开源工具与一键脚本移除 Copilot、Recall 及高级数据采集服务，解决系统臃肿与隐私担忧。</div></div></div></a><a class="pagination-related" href="/posts/ff015562/" title="git 强制拉取远程仓库覆盖本地仓库，推送本地仓库覆盖远程仓库"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/git-github.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-09</div><div class="info-item-2">git 强制拉取远程仓库覆盖本地仓库，推送本地仓库覆盖远程仓库</div></div><div class="info-2"><div class="info-item-1">Git 强制拉取远程覆盖本地与强制推送本地覆盖远程教程：git reset --hard origin/main 与 push --force 用法，注意放弃本地修改的风险提示。</div></div></div></a><a class="pagination-related" href="/posts/370471a6/" title="Flowsint 部署与安装指南：基于图的可视化调查平台"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Flowsint 部署与安装指南：基于图的可视化调查平台</div></div><div class="info-2"><div class="info-item-1">Flowsint 是一个开源的 OSINT（开源情报）图探索工具，专为道德调查、透明度和验证而设计。它允许您通过可视化图界面和自动化丰富器（Enrichers）…</div></div></div></a><a class="pagination-related" href="/posts/fce7c606/" title="ChatGPT 项目、Codex 项目与本地云端远程怎么选？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-07</div><div class="info-item-2">ChatGPT 项目、Codex 项目与本地云端远程怎么选？</div></div><div class="info-2"><div class="info-item-1">接着你又会看到 Project（项目）、Memory（记忆）、Folder（文件夹）、Instructions（指令）、Local（本地）、Cloud（云端）、Remote（远程） 等一串概念。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%8F%E5%88%A9%E9%82%80%E8%AF%B7%F0%9F%90%B4%EF%BC%9AKB87F9"><span class="toc-number">1.</span> <span class="toc-text">福利邀请🐴：KB87F9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%B0%81%E8%83%BD%E5%BC%80-ZA-Bank%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">一、谁能开 ZA Bank？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81ZA-Bank-%E5%BC%80%E5%AE%8C%E6%88%B7%E5%90%8E%EF%BC%8C%E4%BD%A0%E5%AE%9E%E9%99%85%E6%8B%BF%E5%88%B0%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">二、ZA Bank 开完户后，你实际拿到什么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%BC%80%E6%88%B7%E5%90%8E%E7%AC%AC%E4%B8%80%E6%97%B6%E9%97%B4%E5%BF%85%E9%A1%BB%E5%81%9A%E7%9A%84-8-%E4%BB%B6%E4%BA%8B"><span class="toc-number">4.</span> <span class="toc-text">三、开户后第一时间必须做的 8 件事</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AE-App-%E7%99%BB%E5%BD%95%E4%B8%8E%E7%94%9F%E7%89%A9%E8%AF%86%E5%88%AB"><span class="toc-number">4.1.</span> <span class="toc-text">1. 设置 App 登录与生物识别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B3%A8%E5%86%8C-FPS-%E8%BD%AC%E6%95%B0%E5%BF%AB"><span class="toc-number">4.2.</span> <span class="toc-text">2. 注册 FPS 转数快</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AE%BE%E7%BD%AE%E8%BD%AC%E8%B4%A6%E9%99%90%E9%A2%9D"><span class="toc-number">4.3.</span> <span class="toc-text">3. 设置转账限额</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%94%B3%E8%AF%B7%E5%AE%9E%E4%BD%93-ZA-Card"><span class="toc-number">4.4.</span> <span class="toc-text">4. 申请实体 ZA Card</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%94%B6%E5%88%B0%E5%AE%9E%E4%BD%93%E5%8D%A1%E5%90%8E%E5%86%8D%E6%BF%80%E6%B4%BB"><span class="toc-number">4.5.</span> <span class="toc-text">5. 收到实体卡后再激活</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%AE%BE%E7%BD%AE-ZA-Card-%E6%B6%88%E8%B4%B9%E5%92%8C%E6%8F%90%E6%AC%BE%E9%A2%9D%E5%BA%A6"><span class="toc-number">4.6.</span> <span class="toc-text">6. 设置 ZA Card 消费和提款额度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E7%BB%91%E5%AE%9A-Apple-Pay-Google-Pay-%E6%94%AF%E4%BB%98%E5%AE%9D"><span class="toc-number">4.7.</span> <span class="toc-text">7. 绑定 Apple Pay &#x2F; Google Pay &#x2F; 支付宝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%B0%8F%E9%A2%9D%E6%B5%8B%E8%AF%95%E4%B8%80%E6%AC%A1-FPS"><span class="toc-number">4.8.</span> <span class="toc-text">8. 小额测试一次 FPS</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81ZA-Card-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">四、ZA Card 到底是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZA-Card-%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">ZA Card 的正确使用方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%B5%B7%E5%A4%96%E5%88%B7%E5%8D%A1%E6%9C%80%E9%87%8D%E8%A6%81%E7%9A%84%E5%9D%91%EF%BC%9A%E4%B8%8D%E8%A6%81%E9%80%89%E6%B8%AF%E5%B8%81%E7%BB%93%E7%AE%97"><span class="toc-number">7.</span> <span class="toc-text">五、海外刷卡最重要的坑：不要选港币结算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-1"><span class="toc-number">8.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81FPS-%E8%BD%AC%E6%95%B0%E5%BF%AB%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">六、FPS 转数快怎么用？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AC%E8%B4%A6%E5%89%8D%E5%BF%85%E9%A1%BB%E7%9C%8B%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="toc-number">9.1.</span> <span class="toc-text">转账前必须看三件事</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81eDDA-Easy-Deposit%EF%BC%9A%E6%8A%8A%E5%85%B6%E4%BB%96%E9%A6%99%E6%B8%AF%E9%93%B6%E8%A1%8C%E7%9A%84%E9%92%B1%E8%B0%83%E8%BF%9B-ZA"><span class="toc-number">10.</span> <span class="toc-text">七、eDDA &#x2F; Easy Deposit：把其他香港银行的钱调进 ZA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%8D%A2%E6%B1%87%E5%8A%9F%E8%83%BD%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">11.</span> <span class="toc-text">八、换汇功能怎么用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%AE%9A%E6%9C%9F%E5%AD%98%E6%AC%BE%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">12.</span> <span class="toc-text">九、定期存款怎么用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-2"><span class="toc-number">13.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E3%80%81Money-Safe%EF%BC%9A%E9%98%B2%E8%AF%88%E9%AA%97%E8%B5%84%E9%87%91%E9%94%81%E5%AE%9A%E5%8A%9F%E8%83%BD"><span class="toc-number">14.</span> <span class="toc-text">十、Money Safe：防诈骗资金锁定功能</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-3"><span class="toc-number">15.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81Payment-Connect%EF%BC%9A%E9%A6%99%E6%B8%AF%E4%B8%8E%E5%86%85%E5%9C%B0%E4%BA%BA%E6%B0%91%E5%B8%81%E4%BA%92%E8%BD%AC"><span class="toc-number">16.</span> <span class="toc-text">十一、Payment Connect：香港与内地人民币互转</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%9B%BD%E9%99%85%E6%B1%87%E6%AC%BE%E4%B8%8E-ZA-Remit"><span class="toc-number">17.</span> <span class="toc-text">十二、国际汇款与 ZA Remit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-4"><span class="toc-number">18.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%B4%A6%E6%88%B7%E9%95%BF%E6%9C%9F%E4%B8%8D%E7%94%A8%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="toc-number">19.</span> <span class="toc-text">十三、账户长期不用会怎样？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-5"><span class="toc-number">20.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E8%B5%84%E9%87%91%E5%AE%89%E5%85%A8%E5%90%97%EF%BC%9F"><span class="toc-number">21.</span> <span class="toc-text">十四、资金安全吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%BA%94%E3%80%81ZA-Bank-%E6%9C%80%E5%AE%B9%E6%98%93%E8%B8%A9%E7%9A%84%E5%9D%91"><span class="toc-number">22.</span> <span class="toc-text">十五、ZA Bank 最容易踩的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%A5%E4%B8%BA%E5%8F%AF%E4%BB%A5%E5%AD%98%E7%8E%B0%E9%87%91"><span class="toc-number">22.1.</span> <span class="toc-text">1. 以为可以存现金</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%A5%E4%B8%BA-ZA-Card-%E6%98%AF%E5%A4%9A%E5%B8%81%E7%A7%8D%E4%BD%8E%E8%B4%B9%E6%97%85%E8%A1%8C%E5%8D%A1"><span class="toc-number">22.2.</span> <span class="toc-text">2. 以为 ZA Card 是多币种低费旅行卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%A5%E4%B8%BA-Visa-%E5%8D%A1%E5%8F%B7%E5%8F%AF%E4%BB%A5%E6%94%B6%E6%AC%BE"><span class="toc-number">22.3.</span> <span class="toc-text">3. 以为 Visa 卡号可以收款</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%B8%80%E5%BC%80%E5%8D%A1%E5%B0%B1%E6%8A%8A%E6%B6%88%E8%B4%B9%E9%99%90%E9%A2%9D%E6%8B%89%E6%BB%A1"><span class="toc-number">22.4.</span> <span class="toc-text">4. 一开卡就把消费限额拉满</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%B5%B7%E5%A4%96-ATM-%E4%B8%8D%E5%85%88%E5%BC%80-Travel-%E5%8A%9F%E8%83%BD"><span class="toc-number">22.5.</span> <span class="toc-text">5. 海外 ATM 不先开 Travel 功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%8A%8A%E5%85%A8%E9%83%A8%E9%92%B1%E9%94%81%E8%BF%9B-Money-Safe"><span class="toc-number">22.6.</span> <span class="toc-text">6. 把全部钱锁进 Money Safe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%8A%8A%E7%B4%A7%E6%80%A5%E7%94%A8%E9%92%B1%E6%94%BE%E8%BF%9B%E5%AE%9A%E5%AD%98"><span class="toc-number">22.7.</span> <span class="toc-text">7. 把紧急用钱放进定存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%8F%AA%E5%86%B2%E6%B4%BB%E5%8A%A8%EF%BC%8C%E4%B8%8D%E7%9C%8B%E6%B4%BB%E5%8A%A8%E6%9C%9F%E9%99%90"><span class="toc-number">22.8.</span> <span class="toc-text">8. 只冲活动，不看活动期限</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-6"><span class="toc-number">23.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%9C%80%E9%80%82%E5%90%88-ZA-Bank-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">24.</span> <span class="toc-text">十六、最适合 ZA Bank 的使用方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-7"><span class="toc-number">25.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E5%92%8C-%E6%B1%87%E4%B8%B0-One-%E7%9A%84%E5%AE%9A%E4%BD%8D%E6%80%8E%E4%B9%88%E6%90%AD%E9%85%8D%EF%BC%9F"><span class="toc-number">26.</span> <span class="toc-text">十七、和 汇丰 One 的定位怎么搭配？</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

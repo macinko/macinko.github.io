@@ -1,0 +1,534 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南） | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="几乎所有共享型 VPS 服务商都会对 CPU 使用进行限制，搬瓦工（BandwagonHost &#x2F; IT7 Networks）也不例外。好在搬瓦工并没有把规则藏深，而是在官方 TOS 中写得清清楚楚。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南）">
+<meta property="og:url" content="https://macin.top/posts/7e896594/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="几乎所有共享型 VPS 服务商都会对 CPU 使用进行限制，搬瓦工（BandwagonHost &#x2F; IT7 Networks）也不例外。好在搬瓦工并没有把规则藏深，而是在官方 TOS 中写得清清楚楚。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/bandwagonhost.webp">
+<meta property="article:published_time" content="2026-09-07T07:25:23.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.682Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="BandwagonHost">
+<meta property="article:tag" content="搬瓦工">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/bandwagonhost.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南）",
+  "url": "https://macin.top/posts/7e896594/",
+  "image": "https://macin.top/img/bandwagonhost.webp",
+  "datePublished": "2026-09-07T07:25:23.000Z",
+  "dateModified": "2026-09-13T01:45:15.682Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/7e896594/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/bandwagonhost.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">一文看懂搬瓦工 CPU 限制条款（附官方最新 TOS 规则与避坑指南）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.682Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/">global</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/vps/">vps</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><p>几乎所有共享型 VPS 服务商都会对 CPU 使用进行限制，搬瓦工（BandwagonHost &#x2F; IT7 Networks）也不例外。好在搬瓦工并没有把规则藏深，而是在官方 TOS 中写得清清楚楚。</p>
+<p>本文结合搬瓦工最新修订的官方 TOS 条款，带你彻底搞懂自己的套餐到底有多少 CPU 额度，以及如何看懂 KiwiVM 后台的数据。（VPS实时监控网：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://vpsoso.com/">https://vpsoso.com</a>）</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://vpsoso.com/vps/bwh">vpsoso.com搬瓦工实时库存监控 - 顶级三网各自优化线路提供搬瓦工（BandwagonHost）实时库存监控，包含美国、香港、日本、新加坡、荷兰、迪拜、加拿大等顶级CN2GIA机房的最新补货动态，搭配硬核搬瓦工选购避坑指南。</a></p>
+<h2 id="一、为什么-VPS-必须限制-CPU？"><a href="#一、为什么-VPS-必须限制-CPU？" class="headerlink" title="一、为什么 VPS 必须限制 CPU？"></a>一、为什么 VPS 必须限制 CPU？</h2><p>你买了一台 CPU 标注着“2 核”的 VPS，是不是就意味着你可以 24 小时把它拉满跑满？<strong>答案显然是否定的。</strong></p>
+<p>除极少数价格昂贵的独服（Dedicated Server）或明确标注了“独享资源（Dedicated VCPU &#x2F; SLA）”的高阶套餐外，市面上绝大多数我们买到的 VPS（包括搬瓦工、DMIT、RackNerd 等），本质上都是<strong>共享型虚拟机（Shared Hosting）</strong>。</p>
+<p>商家之所以要在 TOS&#x2F;AUP 条款中严密地限制 CPU 使用，核心原因只有三个：</p>
+<h4 id="1-邻居互不干扰（超卖机制下的“公地悲剧”）"><a href="#1-邻居互不干扰（超卖机制下的“公地悲剧”）" class="headerlink" title="1. 邻居互不干扰（超卖机制下的“公地悲剧”）"></a>1. 邻居互不干扰（超卖机制下的“公地悲剧”）</h4><p>在一台高性能的物理服务器（母鸡）上，商家往往会通过虚拟化技术（如 KVM）切分出几十甚至上百台 VPS。 如果其中某个用户在 VPS 里 24 小时死磕 CPU（比如挖矿、渲染、跑死循环脚本），整台物理机的 CPU 核心就会瞬间被吃满。这会导致同机房、同母鸡上的其他邻居<strong>系统极其卡顿、SSH 连不上、网站打不开</strong>。限制 CPU，是保障整体“公约数”体验的唯一手段。</p>
+<h4 id="2-“超卖（Overcommit）”商业模式的必然选择"><a href="#2-“超卖（Overcommit）”商业模式的必然选择" class="headerlink" title="2. “超卖（Overcommit）”商业模式的必然选择"></a>2. “超卖（Overcommit）”商业模式的必然选择</h4><p>如果每一个 VPS 获得的都是 100% 独享的物理 CPU 算力，那么 VPS 的价格将会极其昂贵（可能一个月要几十甚至上百美元）。 大多数人的日常业务（建站、跑代理、跑轻量脚本）在 95% 的时间里，CPU 占用率其实只有 1%~5%。商家正是利用这种“<strong>平时大家都不用，需要时突发（Burst）用一下</strong>”的时间差，把算力平摊给更多人，从而把 VPS 的价格打到了几刀、十几刀一年的极致性价比。</p>
+<h4 id="3-物理散热与硬件寿命控制"><a href="#3-物理散热与硬件寿命控制" class="headerlink" title="3. 物理散热与硬件寿命控制"></a>3. 物理散热与硬件寿命控制</h4><p>高密度的刀片服务器对散热和功耗要求极高。如果整台母鸡的数十个核心长期处在 100% 满载状态，不仅发热量和电费开支会呈指数级飙升，CPU 长期处于高温高压下也会大幅缩短硬件寿命、增加故障率。</p>
+<blockquote>
+<p><strong>总结一句话：</strong> 限制 CPU 不是商家故意恶心用户，而是<strong>用限制“持续高负载”为代价，换取了“极低的价格”与“短时间突发性能”</strong>。</p>
+</blockquote>
+<h2 id="二、-搬瓦工是怎么限制-CPU-的？（打破三大误区）"><a href="#二、-搬瓦工是怎么限制-CPU-的？（打破三大误区）" class="headerlink" title="二、 搬瓦工是怎么限制 CPU 的？（打破三大误区）"></a>二、 搬瓦工是怎么限制 CPU 的？（打破三大误区）</h2><p>在看具体数据前，先要理清官方条款中的三个核心机制，避免无谓的焦虑：</p>
+<h3 id="1-短时间满载（Burst）完全不受限"><a href="#1-短时间满载（Burst）完全不受限" class="headerlink" title="1. 短时间满载（Burst）完全不受限"></a>1. 短时间满载（Burst）完全不受限</h3><blockquote>
+<p><strong>TOS 原文：</strong> <em>“We allow you to use 100% of the CPU resources on your VPS for short periods of time.”</em></p>
+</blockquote>
+<p>只要你的套餐<strong>不是带 SLA 的独立&#x2F;专属资源套餐</strong>，搬瓦工都允许你在短时间内直接把 CPU 顶到 100%。比如安装软件、解压文件、节点突发流量加解密，瞬间跑满是完全合规的。</p>
+<h3 id="2-限制的是“1-小时平均占用率”"><a href="#2-限制的是“1-小时平均占用率”" class="headerlink" title="2. 限制的是“1 小时平均占用率”"></a>2. 限制的是“1 小时平均占用率”</h3><blockquote>
+<p><strong>TOS 原文：</strong> <em>“However, one-hour-average CPU load on your VPS should not exceed the maximum level permitted…”</em></p>
+</blockquote>
+<p>评估是否违规的标准是 <strong>1 小时内的平均 CPU 占用率（1-hour Average Load）</strong>。瞬间跑满没问题，只要 60 分钟内的平均线不触碰红线即可。</p>
+<h3 id="3-超限不会直接关机，而是“自动降频-限速”"><a href="#3-超限不会直接关机，而是“自动降频-限速”" class="headerlink" title="3. 超限不会直接关机，而是“自动降频&#x2F;限速”"></a>3. 超限不会直接关机，而是“自动降频&#x2F;限速”</h3><blockquote>
+<p><strong>TOS 原文：</strong> <em>“Whenever your VPS exceeds hourly average limits… the CPU cycles available on your VPS will be automatically limited… Once the CPU resources used by your VPS are reduced… limitation will be automatically lifted.”</em></p>
+</blockquote>
+<p>很多人以为超限会被直接关停（Suspended），但最新 TOS 明确说明：<strong>超限后系统只会自动限制你的可用 CPU 算力</strong>，此时 KiwiVM 控制面板主页会弹出提示（Notice）。只要平均负载降下来，限制就会自动解除，不会随意封禁账号。</p>
+<h2 id="三、-搬瓦工全系列套餐-CPU-限制对照表"><a href="#三、-搬瓦工全系列套餐-CPU-限制对照表" class="headerlink" title="三、 搬瓦工全系列套餐 CPU 限制对照表"></a>三、 搬瓦工全系列套餐 CPU 限制对照表</h2><p>根据官方 TOS（<code>VPS Service - Fair Share Policy</code> 章节），各套餐的 <strong>1 小时平均 CPU 使用上限</strong> 如下：</p>
+<h3 id="1-SLA-高可用-无限制套餐"><a href="#1-SLA-高可用-无限制套餐" class="headerlink" title="1. SLA 高可用&#x2F;无限制套餐"></a>1. SLA 高可用&#x2F;无限制套餐</h3><ul>
+<li><strong>带 SLA 协议的任何套餐</strong>（E-Commerce SLA Los Angeles）：支持所有可用核心 <strong>24&#x2F;7 满载运行（无 CPU 限制）</strong></li>
+</ul>
+<h3 id="2-特殊热门-限量版-BOX-系列（最易踩坑）"><a href="#2-特殊热门-限量版-BOX-系列（最易踩坑）" class="headerlink" title="2. 特殊热门&#x2F;限量版&#x2F;BOX 系列（最易踩坑）"></a>2. 特殊热门&#x2F;限量版&#x2F;BOX 系列（最易踩坑）</h3><ul>
+<li><strong>The Plan &#x2F; The Tokyo Plan v2：</strong> 单核的 <strong>45%</strong></li>
+<li><strong>The DC9 &#x2F; The DC6 &#x2F; Freedom Plan &#x2F; The Amsterdam &#x2F; The Tokyo Plan：</strong> 单核的 <strong>30%</strong></li>
+<li><strong>常规 Limited Edition（限量版）&#x2F; POWERBOX &#x2F; MEGABOX &#x2F; SAKURABOX：</strong> 单核的 <strong>30%</strong></li>
+<li><strong>BIGGERBOX &#x2F; MINICHICKEN &#x2F; 2018 黑五等特价包：</strong> 单核的 <strong>25%</strong></li>
+<li><strong>MINIBOX &#x2F; BETA KVM：</strong> 单核的 <strong>20%</strong></li>
+</ul>
+<h3 id="3-V5-CN2-GIA-迪拜-香港-东京高级线路"><a href="#3-V5-CN2-GIA-迪拜-香港-东京高级线路" class="headerlink" title="3. V5 CN2 GIA &#x2F; 迪拜 &#x2F; 香港 &#x2F; 东京高级线路"></a>3. V5 CN2 GIA &#x2F; 迪拜 &#x2F; 香港 &#x2F; 东京高级线路</h3><ul>
+<li><strong>20G &#x2F; 1G 配置：</strong> 完整 <strong>1 核（100%）</strong></li>
+<li><strong>40G &#x2F; 2G 配置：</strong> 1 核心 + 第 2 核心的 50%（相当于 <strong>1.5 核</strong>）</li>
+<li><strong>80G &#x2F; 4G 配置：</strong> 完整 <strong>2 核（200%）</strong></li>
+<li><strong>160G &#x2F; 8G 配置：</strong> 完整 <strong>3 核（300%）</strong></li>
+<li><strong>320G &#x2F; 16G 配置：</strong> 完整 <strong>4 核（400%）</strong></li>
+<li><strong>640G &#x2F; 32G 配置：</strong> 完整 <strong>6 核（600%）</strong></li>
+<li><strong>1280G &#x2F; 64G 配置：</strong> 完整 <strong>8 核（800%）</strong></li>
+</ul>
+<h3 id="4-V5-香港-东京-大阪-新加坡-高级线路"><a href="#4-V5-香港-东京-大阪-新加坡-高级线路" class="headerlink" title="4. V5 香港 &#x2F; 东京 &#x2F; 大阪 &#x2F; 新加坡 高级线路"></a>4. V5 香港 &#x2F; 东京 &#x2F; 大阪 &#x2F; 新加坡 高级线路</h3><ul>
+<li><strong>40G &#x2F; 2G 配置：</strong> 完整 <strong>1 核（100%）</strong></li>
+<li><strong>80G &#x2F; 4G 配置：</strong> 完整 <strong>2 核（200%）</strong></li>
+<li><strong>160G &#x2F; 8G 配置：</strong> 完整 <strong>3 核（300%）</strong></li>
+<li><strong>320G &#x2F; 16G 配置：</strong> 完整 <strong>4 核（400%）</strong></li>
+</ul>
+<h3 id="5-常规-KVM-与-V3-系列"><a href="#5-常规-KVM-与-V3-系列" class="headerlink" title="5. 常规 KVM 与 V3 系列"></a>5. 常规 KVM 与 V3 系列</h3><ul>
+<li><strong>5G 套餐：</strong> 单核的 <strong>20%</strong></li>
+<li><strong>10G 套餐：</strong> 单核的 <strong>25%</strong></li>
+<li><strong>20G 套餐：</strong> 单核的 <strong>50%</strong></li>
+<li><strong>40G 套餐：</strong> 单核的 <strong>75%</strong></li>
+<li><strong>80G 套餐：</strong> 完整 <strong>1 核（100%）</strong></li>
+<li><strong>160G 套餐及以上：</strong> 1.5 核 至 8 核不等</li>
+</ul>
+<h2 id="四、-如何在后台查看自己的-CPU-占用？"><a href="#四、-如何在后台查看自己的-CPU-占用？" class="headerlink" title="四、 如何在后台查看自己的 CPU 占用？"></a>四、 如何在后台查看自己的 CPU 占用？</h2><ol>
+<li>登录搬瓦工 <strong>KiwiVM Control Panel</strong>；</li>
+<li>在左侧导航栏找到 <strong>Security &amp; Records</strong> ➡️ 点击 <strong>Detailed statistics</strong>；</li>
+<li>查看 <strong>CPU Usage</strong> 折线图：</li>
+</ol>
+<p>只要图中绿色折线的 <strong>1 小时平均高度</strong> 保持在你自己套餐对应的额度线（如 30%）以下，服务器就可以长期稳定运行。</p>
+<h2 id="五、-选型建议"><a href="#五、-选型建议" class="headerlink" title="五、 选型建议"></a>五、 选型建议</h2><p>针对搬瓦工当前常年有货的四大主力常规系列（VPS实时监控网：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://vpsoso.com/">https://vpsoso.com</a>），结合官方 TOS 的 CPU 限制，建议按以下业务需求精准选型：</p>
+<ul>
+<li>个人轻量应用 &#x2F; 个人博客 &#x2F; 普通节点（性价比之选）：<ul>
+<li><strong>推荐：Basic VPS（普通 BGP 线路）</strong></li>
+<li><strong>算力分析：</strong> 入门级 20G&#x2F;40G 配置平均算力额度为单核的 <strong>25% ~ 50%</strong>。足以支撑日常轻量个人网站、环境搭建与基础代理请求，短时间的突发任务依然能享受多核全速爆发。</li>
+</ul>
+</li>
+<li>主流商业建站 &#x2F; 高并发 Web 服务 &#x2F; 混合业务（性能与网络兼顾）：<ul>
+<li><strong>推荐：E-Commerce VPS（CN2 GIA &#x2F; 优化线路系列）</strong></li>
+<li><strong>算力分析：</strong> 属于 V5 规格产品，起步款即提供完整的 <strong>100% 单核算力额度</strong>（高配款可达 1.5~8 核）。能够稳定承载高并发 API、中小型数据库以及频繁的加解密数据传输，不会因 CPU 额度低而遭遇频繁降频。</li>
+</ul>
+</li>
+<li>密集计算 &#x2F; 自动化任务 &#x2F; 视频转码 &#x2F; 追求极致稳定（算力零限制）：<ul>
+<li><strong>推荐：E-Commerce + SLA VPS（洛杉矶高可用系列）</strong></li>
+<li><strong>算力分析：</strong> 搬瓦工唯一享受 SLA 协议保障的系列，官方承诺 <strong>所有核心 24&#x2F;7 随意 100% 满载运行（无 CPU 额度限制）</strong>。如果你的业务需要长时间死磕 CPU（如长时间脚本运行、复杂编译、数据处理），选这款能彻底杜绝算力限制瓶颈。</li>
+</ul>
+</li>
+<li>亚太低延迟 &#x2F; 土豪专属 &#x2F; 顶级网络体验（高规格算力）：<ul>
+<li><strong>推荐：Ultra VPS（香港 &#x2F; 日本大阪 &#x2F; 日本东京 &#x2F; 新加坡系列）</strong></li>
+<li><strong>算力分析：</strong> 全线按 <strong>100% 独立核心额度（1核 ~ 4核及以上）</strong> 分配。不仅提供顶级的三网直连&#x2F;GIA 线路，硬件算力额度也给得极为慷慨，适合对网络延迟和服务器性能都有极致要求的企业及高端用户。</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/7e896594/">https://macin.top/posts/7e896594/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/BandwagonHost/">BandwagonHost</a><a class="post-meta__tags" href="/tags/%E6%90%AC%E7%93%A6%E5%B7%A5/">搬瓦工</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/9df91f8e/" title="搬瓦工 Ultra VPS HK $89.99/月 深度硬核测评"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bandwagonhost.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">搬瓦工 Ultra VPS HK $89.99/月 深度硬核测评</div></div><div class="info-2"><div class="info-item-1">搬瓦工（BandwagonHost） Ultra HK（香港） 套餐定位高端企业级与极客玩家，起步售价高达 $89.99 USD / 月。</div></div></div></a><a class="pagination-related" href="/posts/5b00e700/" title="Flectar Mail 是轻量级、原生的电子邮件客户端"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Flectar Mail 是轻量级、原生的电子邮件客户端</div></div><div class="info-2"><div class="info-item-1">Flectar Mail 是一款轻量级、原生的电子邮件客户端，集成了日历和联系人功能。它使用 Rust 构建，启动迅速，内存占用极低（可低至 20 MB），并且不是浏览器套壳…</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/f41f55e1/" title="商务首选搬瓦工 BandwagonHOST SLA 机房"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-05</div><div class="info-item-2">商务首选搬瓦工 BandwagonHOST SLA 机房</div></div><div class="info-2"><div class="info-item-1">相比单纯追求低价，商务、电商、企业项目更怕的是服务器出问题。搬瓦工这套 ECOMMERCE SLA 系列主打 CN2 GIA-E SLA 高可用，洛杉矶 DC5 SLA 机房…</div></div></div></a><a class="pagination-related" href="/posts/9df91f8e/" title="搬瓦工 Ultra VPS HK $89.99&#x2F;月 深度硬核测评"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bandwagonhost.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-07</div><div class="info-item-2">搬瓦工 Ultra VPS HK $89.99&#x2F;月 深度硬核测评</div></div><div class="info-2"><div class="info-item-1">搬瓦工（BandwagonHost） Ultra HK（香港） 套餐定位高端企业级与极客玩家，起步售价高达 $89.99 USD / 月。</div></div></div></a><a class="pagination-related" href="/posts/5255e9ef/" title="bandwagonhost (搬瓦工) 建站 VPS 分享推荐 cn2-gt，gia 线路"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bandwagonhost.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="info-item-2">bandwagonhost (搬瓦工) 建站 VPS 分享推荐 cn2-gt，gia 线路</div></div><div class="info-2"><div class="info-item-1">搬瓦工（BandwagonHost）建站 VPS 推荐：CN2 GT/GIA 优质线路对比，附优惠码与各机房配置价格表，建站与科学上网服务器选购指南。</div></div></div></a><a class="pagination-related" href="/posts/321b2479/" title="MetaTube 小姐姐元数据刮削解决方案：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/metatube.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">MetaTube 小姐姐元数据刮削解决方案：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">MetaTube 元数据刮削解决方案：为 NAS 上收藏的日本电影自动匹配海报墙，解决 TinyMediaManager 无法刮削的资源类型，注意需要科学网络环境且请低调使用。</div></div></div></a><a class="pagination-related" href="/posts/76193229/" title="AI-Memory 详细部署教程：为 AI 编码代理构建长期记忆"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-06</div><div class="info-item-2">AI-Memory 详细部署教程：为 AI 编码代理构建长期记忆</div></div><div class="info-2"><div class="info-item-1">AI-Memory 是一个为 AI 编码代理（如 Claude Code、Codex、Cursor 等）提供长期记忆和跨代理、跨机器、跨团队协作的开源解决方案。</div></div></div></a><a class="pagination-related" href="/posts/e0f54791/" title="币安钱包从 0 到 1，新手完整使用教程，手把手教你安装、充值"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/binance.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-08</div><div class="info-item-2">币安钱包从 0 到 1，新手完整使用教程，手把手教你安装、充值</div></div><div class="info-2"><div class="info-item-1">你有一串私钥，私钥加密之后变成12个助记词，你把这12个词抄在纸上，纸保管好就行了。但纸丢了呢？被人看到了呢？你的币，没了。</div></div></div></a><a class="pagination-related" href="/posts/745a49fb/" title="NAS 温度监控：NAS 实用技巧，避坑指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/nas.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">NAS 温度监控：NAS 实用技巧，避坑指南</div></div><div class="info-2"><div class="info-item-1">NAS 温度监控教程：Unraid、PVE、群晖均可通过内置传感器查看 CPU、主板与硬盘温度，附散热建议，防止硬件过热损坏。</div></div></div></a><a class="pagination-related" href="/posts/7aba8919/" title="Grok bot 实测分享，工作流训练优化实录，如何打造云端小红书"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-29</div><div class="info-item-2">Grok bot 实测分享，工作流训练优化实录，如何打造云端小红书</div></div><div class="info-2"><div class="info-item-1">最近一直在深度使用grok bot，我发现对grok bot 不同岗位的训练还非常重要，目前如果希望他能真正做出成果。是必须深度优化的，而且非常费额度。</div></div></div></a><a class="pagination-related" href="/posts/fbd6f9c8/" title="A-Stock-Data 部署教程：为 AI 助手配备 A 股全栈数据工具"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-04</div><div class="info-item-2">A-Stock-Data 部署教程：为 AI 助手配备 A 股全栈数据工具</div></div><div class="info-2"><div class="info-item-1">本教程将指导你部署 a-stock-data——一个自包含的 Skill 文件，为 AI 编程助手（如 Claude Code、Codex）提供整合自 19 个数据源、54 个端点的 A 股数据工具集…</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-VPS-%E5%BF%85%E9%A1%BB%E9%99%90%E5%88%B6-CPU%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">一、为什么 VPS 必须限制 CPU？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%82%BB%E5%B1%85%E4%BA%92%E4%B8%8D%E5%B9%B2%E6%89%B0%EF%BC%88%E8%B6%85%E5%8D%96%E6%9C%BA%E5%88%B6%E4%B8%8B%E7%9A%84%E2%80%9C%E5%85%AC%E5%9C%B0%E6%82%B2%E5%89%A7%E2%80%9D%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. 邻居互不干扰（超卖机制下的“公地悲剧”）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E2%80%9C%E8%B6%85%E5%8D%96%EF%BC%88Overcommit%EF%BC%89%E2%80%9D%E5%95%86%E4%B8%9A%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%BF%85%E7%84%B6%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.</span> <span class="toc-text">2. “超卖（Overcommit）”商业模式的必然选择</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%89%A9%E7%90%86%E6%95%A3%E7%83%AD%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%AF%BF%E5%91%BD%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.</span> <span class="toc-text">3. 物理散热与硬件寿命控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%90%AC%E7%93%A6%E5%B7%A5%E6%98%AF%E6%80%8E%E4%B9%88%E9%99%90%E5%88%B6-CPU-%E7%9A%84%EF%BC%9F%EF%BC%88%E6%89%93%E7%A0%B4%E4%B8%89%E5%A4%A7%E8%AF%AF%E5%8C%BA%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、 搬瓦工是怎么限制 CPU 的？（打破三大误区）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9F%AD%E6%97%B6%E9%97%B4%E6%BB%A1%E8%BD%BD%EF%BC%88Burst%EF%BC%89%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%8F%97%E9%99%90"><span class="toc-number">2.1.</span> <span class="toc-text">1. 短时间满载（Burst）完全不受限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%99%90%E5%88%B6%E7%9A%84%E6%98%AF%E2%80%9C1-%E5%B0%8F%E6%97%B6%E5%B9%B3%E5%9D%87%E5%8D%A0%E7%94%A8%E7%8E%87%E2%80%9D"><span class="toc-number">2.2.</span> <span class="toc-text">2. 限制的是“1 小时平均占用率”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%B6%85%E9%99%90%E4%B8%8D%E4%BC%9A%E7%9B%B4%E6%8E%A5%E5%85%B3%E6%9C%BA%EF%BC%8C%E8%80%8C%E6%98%AF%E2%80%9C%E8%87%AA%E5%8A%A8%E9%99%8D%E9%A2%91-%E9%99%90%E9%80%9F%E2%80%9D"><span class="toc-number">2.3.</span> <span class="toc-text">3. 超限不会直接关机，而是“自动降频&#x2F;限速”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%90%AC%E7%93%A6%E5%B7%A5%E5%85%A8%E7%B3%BB%E5%88%97%E5%A5%97%E9%A4%90-CPU-%E9%99%90%E5%88%B6%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">三、 搬瓦工全系列套餐 CPU 限制对照表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-SLA-%E9%AB%98%E5%8F%AF%E7%94%A8-%E6%97%A0%E9%99%90%E5%88%B6%E5%A5%97%E9%A4%90"><span class="toc-number">3.1.</span> <span class="toc-text">1. SLA 高可用&#x2F;无限制套餐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%89%B9%E6%AE%8A%E7%83%AD%E9%97%A8-%E9%99%90%E9%87%8F%E7%89%88-BOX-%E7%B3%BB%E5%88%97%EF%BC%88%E6%9C%80%E6%98%93%E8%B8%A9%E5%9D%91%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2. 特殊热门&#x2F;限量版&#x2F;BOX 系列（最易踩坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-V5-CN2-GIA-%E8%BF%AA%E6%8B%9C-%E9%A6%99%E6%B8%AF-%E4%B8%9C%E4%BA%AC%E9%AB%98%E7%BA%A7%E7%BA%BF%E8%B7%AF"><span class="toc-number">3.3.</span> <span class="toc-text">3. V5 CN2 GIA &#x2F; 迪拜 &#x2F; 香港 &#x2F; 东京高级线路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-V5-%E9%A6%99%E6%B8%AF-%E4%B8%9C%E4%BA%AC-%E5%A4%A7%E9%98%AA-%E6%96%B0%E5%8A%A0%E5%9D%A1-%E9%AB%98%E7%BA%A7%E7%BA%BF%E8%B7%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. V5 香港 &#x2F; 东京 &#x2F; 大阪 &#x2F; 新加坡 高级线路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%84-KVM-%E4%B8%8E-V3-%E7%B3%BB%E5%88%97"><span class="toc-number">3.5.</span> <span class="toc-text">5. 常规 KVM 与 V3 系列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E6%9F%A5%E7%9C%8B%E8%87%AA%E5%B7%B1%E7%9A%84-CPU-%E5%8D%A0%E7%94%A8%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">四、 如何在后台查看自己的 CPU 占用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81-%E9%80%89%E5%9E%8B%E5%BB%BA%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">五、 选型建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

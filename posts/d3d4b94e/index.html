@@ -1,0 +1,764 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>开源协议完全指南：有哪些、怎么用、应该怎么选 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="开源协议完全指南：有哪些、怎么用、应该怎么选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源协议完全指南：有哪些、怎么用、应该怎么选">
+<meta property="og:url" content="https://macin.top/posts/d3d4b94e/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="开源协议完全指南：有哪些、怎么用、应该怎么选">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-12T08:22:59.000Z">
+<meta property="article:modified_time" content="2026-09-13T01:45:15.705Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="开源协议">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "开源协议完全指南：有哪些、怎么用、应该怎么选",
+  "url": "https://macin.top/posts/d3d4b94e/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-12T08:22:59.000Z",
+  "dateModified": "2026-09-13T01:45:15.705Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/d3d4b94e/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#212121"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/favicon-16x16.png"/><link rel="mask-icon" href="/img/siteicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '开源协议完全指南：有哪些、怎么用、应该怎么选',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">开源协议完全指南：有哪些、怎么用、应该怎么选</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">开源协议完全指南：有哪些、怎么用、应该怎么选</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-13T01:45:15.705Z" title="更新于 2026-09-13 09:45:15">2026-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-13 09:45:15&quot;}" hidden></div><p>你是不是经常遇到这种情况：在Github上，打开一个开源项目，发现里面放着一个叫 <strong>MIT License</strong> 的文件，却不知道它到底是什么意思？</p>
+<p>其实，我之前也有同样的疑惑。它为什么几乎到处都是？用了 MIT 代码，是不是必须开源自己的项目？如果把代码放到 GitHub，却不写任何协议，别人还能不能用？后来经过一番了解，我终于把这些常见的开源协议弄明白了。</p>
+<p>这一篇，如果你已经是熟悉开源合规的开发大佬，可能可以直接划走；但如果你还只是一个正在做小工具、写 Skill，并准备把作品上传到 GitHub 的新手，我建议你花点时间看完。</p>
+<p>我之前的职业做的也是合规方向，所以对这类问题天然比较感兴趣。今天就结合自己查到的资料，尽量不用晦涩的术语，用通俗一点的语言，聊聊开源协议到底是什么、有哪些，以及我们应该怎么选。</p>
+<p>因为开源协议它是一份真正具有法律意义的授权文件，决定别人能不能使用、修改、分发、商用你的代码，也决定他们在做这些事时必须履行什么义务。</p>
+<p>接下来，我会把常见协议逐个翻译成人话，并解释：</p>
+<ul>
+<li>什么才算开源；</li>
+<li>开源协议可以分成哪几类；</li>
+<li>MIT、BSD、Apache、GPL、LGPL、AGPL、MPL 等协议分别允许什么、要求什么；</li>
+<li>BSL、SSPL 为什么能看到源码，却不能叫开源；</li>
+<li>使用别人的开源代码时要做什么；</li>
+<li>发布自己的项目时应该怎么选；</li>
+<li>文档、图片、字体、数据集和 AI 模型应该如何授权。</li>
+</ul>
+<blockquote>
+<p><strong>先说明：</strong> 本文是个人做的小科普的通俗介绍，不构成法律意见。个人项目通常可以按本文完成基本选型；如果项目涉及融资、并购、专利诉讼、硬件销售、大规模商业分发或复杂的许可证混用，请让专业律师复核。（如有错误，欢迎大家批评指正）</p>
+</blockquote>
+<h1 id="一、先把「开源」说明白"><a href="#一、先把「开源」说明白" class="headerlink" title="一、先把「开源」说明白"></a>一、先把「开源」说明白</h1><h2 id="1-开源不是「代码放在-GitHub」"><a href="#1-开源不是「代码放在-GitHub」" class="headerlink" title="1. 开源不是「代码放在 GitHub」"></a><strong>1. 开源不是「代码放在 GitHub」</strong></h2><p>把代码上传到公开仓库，只代表别人能看到它，不代表别人自动获得使用权。</p>
+<p>一般来说，代码写出来之后，作者就自动拥有相应的版权，无须先放一份 LICENSE。LICENSE 解决的是授权问题：<strong>你愿意把哪些使用权交给别人，对方使用时又需要遵守什么条件。</strong></p>
+<p>所以，仓库里没有许可证时，相关权利通常仍由作者保留，其他人也不能随意使用。别人可能可以在 GitHub 平台规则允许的范围内浏览或 fork 仓库，但不能仅凭代码公开，就认定自己已经获得复制、修改、重新分发或放进商业产品的完整授权。</p>
+<p>换句话说：</p>
+<blockquote>
+<p><strong>没有 LICENSE，不代表没有版权；往往正好相反——作者有版权，但没有明确授权别人使用。公开代码也不等于开源。</strong></p>
+</blockquote>
+<p>真正的开源许可证，会明确允许任何人使用、研究、修改和分发软件，而且不能因为对方是谁、在哪个行业、是否赚钱而区别对待。OSI 的《开源定义》尤其强调：开源许可证不能禁止商业使用，也不能限制某个使用领域。</p>
+<h2 id="2-免费、开源、源码可见，是三件事"><a href="#2-免费、开源、源码可见，是三件事" class="headerlink" title="2. 免费、开源、源码可见，是三件事"></a><strong>2. 免费、开源、源码可见，是三件事</strong></h2><p>这三个概念经常被混在一起：</p>
+<p>举个简单例子：</p>
+<ul>
+<li>Chrome 可以免费下载，但它不等于所有代码都以开源许可证发布；</li>
+<li>Chromium 是开源项目；</li>
+<li>某个项目允许你查看源码，却规定「不得用于商业托管服务」，它是源码可见，不是 OSI 意义上的开源。</li>
+</ul>
+<p>判断一个项目是否开源，不要只看宣传页写了什么，要看它实际使用的许可证，以及该许可证是否符合开源定义。</p>
+<h2 id="3-开源不等于放弃版权"><a href="#3-开源不等于放弃版权" class="headerlink" title="3. 开源不等于放弃版权"></a><strong>3. 开源不等于放弃版权</strong></h2><p>大多数开源协议都建立在版权之上。</p>
+<p>作者先拥有版权，再通过许可证告诉所有人：「只要你遵守这些条件，我允许你做这些事情。」如果使用者不遵守条件，授权可能失效，作者便可以通过版权法追究责任。</p>
+<p>所以，MIT、Apache、GPL 都建立在版权之上：<strong>作者保留版权，同时按协议规定的条件向公众授予使用权。</strong></p>
+<h1 id="二、这些协议，大致可以分成三类"><a href="#二、这些协议，大致可以分成三类" class="headerlink" title="二、这些协议，大致可以分成三类"></a>二、这些协议，大致可以分成三类</h1><p>后面看到再多协议名，也可以先放进三个抽屉里。</p>
+<h2 id="第一类：比较宽松"><a href="#第一类：比较宽松" class="headerlink" title="第一类：比较宽松"></a>第一类：比较宽松</h2><p>代表：<strong>MIT、BSD、Apache 2.0</strong>。</p>
+<p>它们大致在说：</p>
+<blockquote>
+<p>你可以使用、修改、商用，也可以把自己的产品闭源。记得保留原作者的版权和协议声明。</p>
+</blockquote>
+<p>这类协议比较容易被个人开发者和公司接受。</p>
+<h2 id="第二类：你可以用，但改进的部分要分享"><a href="#第二类：你可以用，但改进的部分要分享" class="headerlink" title="第二类：你可以用，但改进的部分要分享"></a>第二类：你可以用，但改进的部分要分享</h2><p>代表：<strong>LGPL、MPL 2.0</strong>。</p>
+<p>它们允许闭源软件使用，同时希望别人对原来的库或文件做了修改后，继续公开这些修改。</p>
+<h2 id="第三类：发布修改版时，相关项目也要继续开源"><a href="#第三类：发布修改版时，相关项目也要继续开源" class="headerlink" title="第三类：发布修改版时，相关项目也要继续开源"></a>第三类：发布修改版时，相关项目也要继续开源</h2><p>代表：<strong>GPL、AGPL</strong>。</p>
+<p>GPL 主要关注软件被交给别人时的情况；AGPL 连放在服务器上给别人使用的情况也考虑进去了。</p>
+<p>先用一张表快速理解：</p>
+<h1 id="三、MIT：新手最常见，也最好理解"><a href="#三、MIT：新手最常见，也最好理解" class="headerlink" title="三、MIT：新手最常见，也最好理解"></a>三、MIT：新手最常见，也最好理解</h1><p>MIT 可以用一句话概括：</p>
+<blockquote>
+<p>代码你可以拿去用、修改、商用和闭源，但请保留原作者的版权声明和 MIT 协议。出了问题，原作者通常不负责。</p>
+</blockquote>
+<p>假设你在 GitHub 上找到一个 MIT 小工具，你可以：</p>
+<ul>
+<li>在自己的项目中使用；</li>
+<li>修改它；</li>
+<li>放进商业产品；</li>
+<li>做成付费服务；</li>
+<li>保持自己的项目闭源。</li>
+</ul>
+<p>你需要做的核心事情，是把原作者的版权声明和 MIT License 保留下来。</p>
+<h2 id="MIT-适合什么项目？"><a href="#MIT-适合什么项目？" class="headerlink" title="MIT 适合什么项目？"></a>MIT 适合什么项目？</h2><ul>
+<li>个人小工具；</li>
+<li>愿意让别人自由复用内部模板和工作流的 Skill；</li>
+<li>学习项目；</li>
+<li>JavaScript、Python 等开发库；</li>
+<li>希望更多人使用的项目。</li>
+</ul>
+<p>如果你正在做一个小工具，想上传 GitHub，又没有特殊的商业计划，<strong>选 MIT 通常就够了。</strong></p>
+<p>MIT 的代价也很明确：别人可以拿你的代码做成闭源商业产品，不必公开他的项目。</p>
+<h1 id="四、BSD：和-MIT-很像"><a href="#四、BSD：和-MIT-很像" class="headerlink" title="四、BSD：和 MIT 很像"></a>四、BSD：和 MIT 很像</h1><p>BSD 也允许使用、修改、商用和闭源。</p>
+<p>常见的有 BSD 2-Clause 和 BSD 3-Clause。对新手来说，只需要记住：</p>
+<ul>
+<li>BSD 2-Clause 和 MIT 的效果很接近；</li>
+<li>BSD 3-Clause 多了一条「不要拿原作者的名字给你的产品背书」。</li>
+</ul>
+<p>比如，某产品使用了一所大学发布的 BSD 代码，可以正常使用，但不能擅自在广告里写「本产品获得这所大学官方推荐」。</p>
+<p>普通个人项目在 MIT 和 BSD 之间纠结时，选更熟悉的 MIT 即可。如果你的项目所在社区普遍用 BSD，也可以跟随社区习惯。</p>
+<h1 id="五、Apache-2-0：像-MIT，但更重视专利"><a href="#五、Apache-2-0：像-MIT，但更重视专利" class="headerlink" title="五、Apache 2.0：像 MIT，但更重视专利"></a>五、Apache 2.0：像 MIT，但更重视专利</h1><p>Apache 2.0 同样允许修改、商用和闭源。</p>
+<p>它和 MIT 的主要区别，可以先记住两个词：<strong>专利、NOTICE</strong>。</p>
+<h2 id="专利是什么意思？"><a href="#专利是什么意思？" class="headerlink" title="专利是什么意思？"></a><strong>专利是什么意思？</strong></h2><p>有些代码背后可能涉及贡献者的专利。Apache 2.0 会在协议规定的范围内，把相关专利许可一并授予使用者。</p>
+<p>简单理解：它希望减少一种风险——贡献者把代码开源给大家使用，之后又拿覆盖这份贡献的专利来起诉使用者。</p>
+<p>这不代表 Apache 2.0 能解决所有专利问题，但它比 MIT 写得更明确。</p>
+<h2 id="NOTICE-是什么？"><a href="#NOTICE-是什么？" class="headerlink" title="NOTICE 是什么？"></a><strong>NOTICE 是什么？</strong></h2><p>有些 Apache 项目会附带一个 <strong>NOTICE</strong> 文件，可以把它理解成一份需要随项目保留的声明清单。如果你分发相关软件，记得一起检查和保留。</p>
+<h2 id="什么情况下选-Apache-2-0？"><a href="#什么情况下选-Apache-2-0？" class="headerlink" title="什么情况下选 Apache 2.0？"></a>什么情况下选 Apache 2.0？</h2><ul>
+<li>企业参与的项目；</li>
+<li>SDK 和开发框架；</li>
+<li>基础设施项目；</li>
+<li>你比较在意专利说明。</li>
+</ul>
+<p>个人小工具想省事，选 MIT。项目更大、参与方更多，或者你在意专利，可以考虑 Apache 2.0。</p>
+<h2 id="六、LGPL：你的程序可以闭源，改库要分享"><a href="#六、LGPL：你的程序可以闭源，改库要分享" class="headerlink" title="六、LGPL：你的程序可以闭源，改库要分享"></a>六、LGPL：你的程序可以闭源，改库要分享</h2><p>LGPL 经常用于软件库。</p>
+<blockquote>
+<p>闭源软件可以使用这个库；如果你修改了库本身并对外发布，通常要公开对这个库的修改。</p>
+</blockquote>
+<p>举个例子：你开发了一款闭源视频软件，其中使用了一个 LGPL 视频库。通常情况下，你不需要公开整款视频软件。如果你修改了这个 LGPL 库，并把修改版随产品一起发布，就需要按协议提供相应源码。</p>
+<p>LGPL 还希望用户能替换这个库。因此，使用 LGPL 库时，要留意动态链接、静态链接和重新链接的要求。</p>
+<p>如果这些词你还不熟，也不用硬啃。准备商业发布时，把下面三件事告诉有经验的人：</p>
+<ol>
+<li>你用了哪个 LGPL 库；</li>
+<li>你有没有修改它；</li>
+<li>你是怎样把它打包进产品的。</li>
+</ol>
+<h2 id="LGPL-适合什么项目？"><a href="#LGPL-适合什么项目？" class="headerlink" title="LGPL 适合什么项目？"></a>LGPL 适合什么项目？</h2><ul>
+<li>音视频库；</li>
+<li>数据库驱动；</li>
+<li>基础运行库；</li>
+<li>希望商业软件采用，又希望库的改进继续公开的项目。</li>
+</ul>
+<h1 id="七、MPL-2-0：改了哪个文件，就公开哪个文件"><a href="#七、MPL-2-0：改了哪个文件，就公开哪个文件" class="headerlink" title="七、MPL 2.0：改了哪个文件，就公开哪个文件"></a>七、MPL 2.0：改了哪个文件，就公开哪个文件</h1><p>MPL 2.0 的边界比较直观。</p>
+<blockquote>
+<p>你修改了哪些 MPL 文件，就继续公开这些文件。你自己另外写的文件，可以保持闭源。</p>
+</blockquote>
+<p>比如，一个项目有 100 个文件，其中 10 个来自 MPL 项目。你修改了这 10 个文件并发布产品，通常需要公开这 10 个文件的源码。你自己新写的另外 90 个文件，可以继续闭源。</p>
+<p>MPL 适合：</p>
+<ul>
+<li>可复用的软件组件；</li>
+<li>需要和闭源代码一起工作的项目；</li>
+<li>希望别人回馈修改，又不想影响整个项目的作者。</li>
+</ul>
+<p>如果你觉得 LGPL 的链接规则太难理解，MPL 的「按文件划分」通常会更直观。</p>
+<h1 id="八、GPL：发布修改版时，要把源码给别人"><a href="#八、GPL：发布修改版时，要把源码给别人" class="headerlink" title="八、GPL：发布修改版时，要把源码给别人"></a>八、GPL：发布修改版时，要把源码给别人</h1><p>GPL：</p>
+<blockquote>
+<p>你可以使用、修改、发布和收费；如果你把基于 GPL 代码做出的相关程序交给别人，通常也要给对方相应源码和修改权。</p>
+</blockquote>
+<p>GPL 允许商用。你可以卖 GPL 软件，也可以收服务费。</p>
+<h2 id="哪些情况通常不用公开？"><a href="#哪些情况通常不用公开？" class="headerlink" title="哪些情况通常不用公开？"></a><strong>哪些情况通常不用公开？</strong></h2><ul>
+<li>只在自己的电脑上运行；</li>
+<li>只在公司内部使用；</li>
+<li>修改后没有对外发布。</li>
+</ul>
+<h2 id="哪些情况需要格外注意？"><a href="#哪些情况需要格外注意？" class="headerlink" title="哪些情况需要格外注意？"></a><strong>哪些情况需要格外注意？</strong></h2><ul>
+<li>把安装包交给客户；</li>
+<li>发布 Docker 镜像；</li>
+<li>把 GPL 代码放进自己的程序后发布；</li>
+<li>把 GPL 软件装进硬件设备再销售。</li>
+</ul>
+<h2 id="GPL-会让公司的所有代码都公开吗？"><a href="#GPL-会让公司的所有代码都公开吗？" class="headerlink" title="GPL 会让公司的所有代码都公开吗？"></a><strong>GPL 会让公司的所有代码都公开吗？</strong></h2><p>不会自动覆盖公司里的所有代码。它关注的是 GPL 程序以及和它组成的相关作品。</p>
+<p>至于哪些代码算作同一个作品，有时要看链接方式和程序结构。个人小项目不用先把自己吓住；商业项目准备发布时，再认真检查边界。</p>
+<h2 id="GPL-2-0-和-GPL-3-0-有什么区别？"><a href="#GPL-2-0-和-GPL-3-0-有什么区别？" class="headerlink" title="GPL 2.0 和 GPL 3.0 有什么区别？"></a><strong>GPL 2.0 和 GPL 3.0 有什么区别？</strong></h2><p>新手先记住：它们是两个不同版本，不能只看见 GPL 三个字就当成完全一样。</p>
+<p>你还可能看到：</p>
+<ul>
+<li><strong>GPL-2.0-only</strong>：只能使用 GPL 2.0；</li>
+<li><strong>GPL-2.0-or-later</strong>：可以选择 GPL 2.0 或更新版本；</li>
+<li><strong>GPL-3.0-only</strong>：只能使用 GPL 3.0。</li>
+</ul>
+<p>如果是给自己的新项目选协议，又没有兼容旧项目的要求，可以先了解 GPL 3.0。</p>
+<h2 id="九、AGPL：把在线服务也考虑进来"><a href="#九、AGPL：把在线服务也考虑进来" class="headerlink" title="九、AGPL：把在线服务也考虑进来"></a>九、AGPL：把在线服务也考虑进来</h2><p>AGPL 可以理解成「网络服务版的 GPL」。</p>
+<blockquote>
+<p>你修改了这个程序，再把它放到服务器上给用户使用，也要让这些用户有机会获得相应源码。</p>
+</blockquote>
+<p>为什么会有它？</p>
+<p>使用普通 GPL 软件做在线服务时，用户只通过网页或 API 使用，没有拿到软件副本。AGPL 增加了网络场景下的源码要求。</p>
+<p>AGPL 仍然允许收费，也允许提供商业服务。它要求的是按协议提供源码。</p>
+<p>它适合：</p>
+<ul>
+<li>在线协作工具；</li>
+<li>数据库和后台服务；</li>
+<li>主要通过网页或 API 提供的产品；</li>
+<li>希望云服务商也公开相关修改的项目。</li>
+</ul>
+<p>需要注意的是，一些公司对 AGPL 比较谨慎。如果你特别希望自己的项目被大公司广泛采用，AGPL 可能会增加阻力。</p>
+<h2 id="十、BSL-和-SSPL：源码能看，但使用限制更多"><a href="#十、BSL-和-SSPL：源码能看，但使用限制更多" class="headerlink" title="十、BSL 和 SSPL：源码能看，但使用限制更多"></a>十、BSL 和 SSPL：源码能看，但使用限制更多</h2><p>这两类协议主要用来保护商业模式。它们不属于严格意义上的开源协议。</p>
+<p><strong>BSL</strong></p>
+<blockquote>
+<p>源码可以看，但某些生产或商业用途暂时受到限制。到了约定日期，相关版本再转成指定的开源协议。</p>
+</blockquote>
+<p>不同 BSL 项目的规定差别很大。看到 BSL 时，要继续看：</p>
+<ol>
+<li>哪些用途免费；</li>
+<li>哪些用途要购买商业许可；</li>
+<li>限制到哪一天；</li>
+<li>到期后转成什么协议。</li>
+</ol>
+<p><strong>SSPL</strong></p>
+<blockquote>
+<p>如果你用它对外提供服务，可能需要开放管理、监控、备份等整套服务相关软件。</p>
+</blockquote>
+<p>它要求开放的范围可能比 AGPL 更大，也没有得到 OSI 的开源认可。</p>
+<p>作为新手，看到 BSL 或 SSPL 时，不要直接按照 MIT 项目的方式使用。一定要阅读该项目写明的具体条件。</p>
+<h2 id="十一、使用别人的开源代码，要做什么？"><a href="#十一、使用别人的开源代码，要做什么？" class="headerlink" title="十一、使用别人的开源代码，要做什么？"></a>十一、使用别人的开源代码，要做什么？</h2><p>不用一上来研究所有法律细节，先按这五步检查。</p>
+<h2 id="第一步：找-LICENSE"><a href="#第一步：找-LICENSE" class="headerlink" title="第一步：找 LICENSE"></a><strong>第一步：找 LICENSE</strong></h2><p>查看仓库根目录有没有：</p>
+<ul>
+<li><strong>LICENSE</strong>；</li>
+<li><strong>LICENSE.txt</strong>；</li>
+<li><strong>COPYING</strong>。</li>
+</ul>
+<p>README 里也可能写着许可证。如果完全找不到，不要默认可以随便使用。</p>
+<h2 id="第二步：看清协议名字和版本"><a href="#第二步：看清协议名字和版本" class="headerlink" title="第二步：看清协议名字和版本"></a><strong>第二步：看清协议名字和版本</strong></h2><p>MIT 比较简单。遇到 GPL 或 LGPL 时，还要看是 2.0、3.0，还是带有 <strong>only</strong>、<strong>or-later</strong>。</p>
+<p>同一个项目的新旧版本，也可能使用不同协议。</p>
+<h2 id="第三步：想清楚你要怎么用"><a href="#第三步：想清楚你要怎么用" class="headerlink" title="第三步：想清楚你要怎么用"></a><strong>第三步：想清楚你要怎么用</strong></h2><p>问自己几个问题：</p>
+<ul>
+<li>只是本地学习吗？</li>
+<li>会把代码复制进自己的项目吗？</li>
+<li>会修改它吗？</li>
+<li>会把安装包或 Docker 镜像交给别人吗？</li>
+<li>会放到服务器上提供在线服务吗？</li>
+</ul>
+<p>用途不同，要求也会不同。</p>
+<h2 id="第四步：保留该保留的内容"><a href="#第四步：保留该保留的内容" class="headerlink" title="第四步：保留该保留的内容"></a><strong>第四步：保留该保留的内容</strong></h2><p>MIT、BSD 也有要求，最常见的就是保留原作者版权和许可证。</p>
+<p>商业产品可以把第三方协议放在：</p>
+<ul>
+<li><strong>LICENSES</strong> 目录；</li>
+<li><strong>THIRD-PARTY-NOTICES</strong> 文件；</li>
+<li>App 的「开源许可」页面；</li>
+<li>产品文档中。</li>
+</ul>
+<h2 id="第五步：该给源码时就给源码"><a href="#第五步：该给源码时就给源码" class="headerlink" title="第五步：该给源码时就给源码"></a><strong>第五步：该给源码时就给源码</strong></h2><p>使用 GPL、LGPL、MPL 或 AGPL 时，如果你的用法触发了源码要求，就要按协议提供相应源码。</p>
+<p>如果你准备收费、交付客户或销售硬件，又不确定自己的做法是否合规，最好再请专业人士检查。</p>
+<h2 id="十二、怎么给自己的-GitHub-项目加协议？"><a href="#十二、怎么给自己的-GitHub-项目加协议？" class="headerlink" title="十二、怎么给自己的 GitHub 项目加协议？"></a>十二、怎么给自己的 GitHub 项目加协议？</h2><p>最简单的方式，是在 GitHub 创建仓库时点击 <strong>Choose a license</strong>，然后选择需要的协议。</p>
+<p>已经创建好的仓库：</p>
+<ol>
+<li>在根目录创建一个名为 <strong>LICENSE</strong> 的文件；</li>
+<li>放入对应协议的完整原文；</li>
+<li>按模板填写年份和版权人；</li>
+<li>在 README 里说明项目使用什么协议。</li>
+</ol>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## License</span></span><br><span class="line"></span><br><span class="line">This project is licensed under the MIT License. See [<span class="string">LICENSE</span>](<span class="link">./LICENSE</span>) for details.</span><br></pre></td></tr></table></figure>
+
+<p>不要只在 README 写一句「本项目采用 MIT」，完整的 LICENSE 文件也要放进去。</p>
+<p>如果仓库里同时有代码、文档、图片和 Logo，也可以分别授权。例如：</p>
+<ul>
+<li>代码：MIT；</li>
+<li>文档：CC BY 4.0；</li>
+<li>图片：CC BY-NC 4.0；</li>
+<li>Logo：保留全部权利。</li>
+</ul>
+<p>在 README 里写清楚即可。</p>
+<h2 id="十三、不同协议的代码能不能混用？"><a href="#十三、不同协议的代码能不能混用？" class="headerlink" title="十三、不同协议的代码能不能混用？"></a>十三、不同协议的代码能不能混用？</h2><p>有时可以，有时不行。</p>
+<p>新手先记住一个大概方向：</p>
+<blockquote>
+<p>MIT、BSD 这类宽松代码，通常比较容易放进其他项目；GPL 这类要求更强的代码，很难直接放进闭源项目。</p>
+</blockquote>
+<p>几个常见情况：</p>
+<ul>
+<li>MIT 代码通常可以放进 GPL 项目；</li>
+<li>GPL 代码不能直接改成 MIT 再闭源；</li>
+<li>Apache 2.0 通常可以放进 GPL 3.0 项目；</li>
+<li>Apache 2.0 和 GPL 2.0-only 通常不能直接组合。</li>
+</ul>
+<p>如果你只是做个人小工具，尽量使用协议清楚、关系简单的依赖。遇到 GPL、AGPL 或多个协议混用时，不确定就先问维护者或有经验的人。</p>
+<h2 id="十四、图片、视频和-Skill，用什么协议？"><a href="#十四、图片、视频和-Skill，用什么协议？" class="headerlink" title="十四、图片、视频和 Skill，用什么协议？"></a>十四、图片、视频和 Skill，用什么协议？</h2><p>这里很容易混淆，因为一个图片或视频 Skill 往往同时包含两类东西：</p>
+<ol>
+<li><strong>Skill 本身的代码、提示词模板或工作流文件</strong>；</li>
+<li><strong>Skill 使用或生成的图片、视频、文案、音乐等内容</strong>。</li>
+</ol>
+<p>这两类内容可以使用不同协议。比如，Skill 的代码使用 MIT，演示图片使用 CC BY，Logo 继续保留全部权利。</p>
+<h2 id="文档、图片和视频常见的-CC-协议"><a href="#文档、图片和视频常见的-CC-协议" class="headerlink" title="文档、图片和视频常见的 CC 协议"></a>文档、图片和视频常见的 CC 协议</h2><ul>
+<li><strong>CC BY</strong>：别人可以使用、修改和商用，但必须署名；</li>
+<li><strong>CC BY-SA</strong>：可以使用、修改和商用，要署名，公开修改版时还要继续使用相同协议；</li>
+<li><strong>CC BY-NC</strong>：可以使用和修改，要署名，但不能商用；</li>
+<li><strong>CC BY-ND</strong>：可以使用，也可以商用，但不能发布修改版；</li>
+<li>**CC BY-NC-SA：**不能商用，修改版还要继续使用相同协议；</li>
+<li><strong>CC BY-NC-ND</strong>：限制最多，不能商用，也不能发布修改版；</li>
+<li><strong>CC0</strong>：作者尽量完全放开，通常连署名也不强制。</li>
+</ul>
+<p>可以这样记：</p>
+<ul>
+<li><strong>BY</strong> &#x3D; 要署名；</li>
+<li><strong>SA</strong> &#x3D; 修改后继续用相同协议；</li>
+<li><strong>NC</strong> &#x3D; 不能商用；</li>
+<li><strong>ND</strong> &#x3D; 不能发布修改版。</li>
+</ul>
+<p>这里的「不能改」容易产生误解。ND 通常限制的是<strong>向外分享经过修改的版本</strong>；仅仅为了自己使用而修改，和公开发布修改版，需要分开看。</p>
+<h2 id="图片、视频-Skill-里的模板，想保护起来怎么办？"><a href="#图片、视频-Skill-里的模板，想保护起来怎么办？" class="headerlink" title="图片、视频 Skill 里的模板，想保护起来怎么办？"></a>图片、视频 Skill 里的模板，想保护起来怎么办？</h2><p>如果一个图片生成 Skill 里包含大量提示词、风格模板、参数组合和工作流，这些内容往往才是 Skill 最有价值的部分。此时不要直接给整个仓库使用 MIT 或 Apache 2.0，因为这两种协议都允许别人复制、修改、商用，甚至放进闭源产品。</p>
+<p>你可以按保护强度选择：</p>
+<p><strong>方案一：不公开模板，只开放调用方式</strong></p>
+<p>这是保护力度最强的做法。把模板和工作流保存在私有服务端，用户只能通过 Skill 或 API 调用，看不到完整模板。</p>
+<p>公开出去的客户端代码可以使用 MIT，但服务端模板保持私有。这样既方便别人使用 Skill，又减少模板被整套复制的风险。</p>
+<p><strong>方案二：公开可看，但保留全部权利</strong></p>
+<p>如果必须把模板放进公开仓库，可以不给模板添加开源许可，并明确标注：</p>
+<blockquote>
+<p>Templates, prompts and workflows: All rights reserved.</p>
+</blockquote>
+<p>这代表别人可以看到这些内容，但没有自动获得复制、修改、重新发布或商用的授权。GitHub 的平台规则仍可能允许用户浏览和 fork 仓库，所以公开仓库无法阻止别人“看到”模板。</p>
+<p><strong>方案三：代码开源，模板单独授权</strong></p>
+<p>你也可以在同一个仓库中拆分授权：</p>
+<ul>
+<li>Skill 的程序代码：MIT 或 Apache 2.0；</li>
+<li>提示词、模板和工作流：保留全部权利，或者使用单独的内容许可；</li>
+<li>示例图片和视频：根据需要使用 CC 协议；</li>
+<li>Logo 和品牌名称：保留权利。</li>
+</ul>
+<p>然后在 README 和各目录中写清楚适用范围，避免别人误以为仓库里的所有内容都采用 MIT。</p>
+<p>如果你允许别人学习和非商业使用模板，可以考虑 <strong>CC BY-NC-ND</strong>：要求署名、禁止商用，也不允许公开发布修改版。但它并不属于开源许可，而且是否适合提示词、模板，还取决于这些内容能否达到当地版权法要求的原创性。</p>
+<p>还要注意一个现实：版权通常保护模板的具体文字和表达，不一定保护背后的想法、画面风格、制作方法或参数逻辑。提示词过短、过于通用，也可能难以获得充分的版权保护。如果模板构成核心商业资产，最稳妥的方法仍是不要公开完整内容。</p>
+<p>最后，<strong>Skill 的模板授权和生成图片的授权是两回事。</strong> 即使模板归你所有，生成图片能否商用，仍要看模型平台条款、输入素材、字体、音乐、肖像和商标等因素。</p>
+<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a><strong>字体</strong></h2><p>字体常见 OFL 1.1。它通常允许使用、修改和嵌入，也允许放进商业软件。</p>
+<h2 id="数据和-AI-模型"><a href="#数据和-AI-模型" class="headerlink" title="数据和 AI 模型"></a><strong>数据和 AI 模型</strong></h2><p>数据还可能涉及隐私和来源。AI 模型还要分别看权重、代码、训练数据、平台条款和使用限制。</p>
+<p>所以，看到数据集、模型或 Skill 名称里有 Open，也不要马上理解成可以随便商用。</p>
+<h1 id="十五、怎么选？直接看答案"><a href="#十五、怎么选？直接看答案" class="headerlink" title="十五、怎么选？直接看答案"></a>十五、怎么选？直接看答案</h1><h2 id="1、我做了一个小工具、脚本或-Skill，想上传-GitHub"><a href="#1、我做了一个小工具、脚本或-Skill，想上传-GitHub" class="headerlink" title="1、我做了一个小工具、脚本或 Skill，想上传 GitHub"></a>1、我做了一个小工具、脚本或 Skill，想上传 GitHub</h2><p>如果里面没有需要保密或限制复用的核心模板，可以选 <strong>MIT</strong>。</p>
+<p>它简单、常见，别人容易理解。对大多数愿意让别人自由复用的个人项目来说，这是最省心的选择。</p>
+<p>如果项目中含有你想保护的提示词、模板、数据或工作流，不要直接把整个仓库都授权为 MIT。先把这些内容单独拆出来，再分别决定是否公开和如何授权。</p>
+<h2 id="2、我做的是企业项目，比较在意专利"><a href="#2、我做的是企业项目，比较在意专利" class="headerlink" title="2、我做的是企业项目，比较在意专利"></a>2、我做的是企业项目，比较在意专利</h2><p>选 <strong>Apache 2.0</strong>。</p>
+<h2 id="3、我做的是一个库，希望闭源软件能用，但改库的人要公开修改"><a href="#3、我做的是一个库，希望闭源软件能用，但改库的人要公开修改" class="headerlink" title="3、我做的是一个库，希望闭源软件能用，但改库的人要公开修改"></a>3、我做的是一个库，希望闭源软件能用，但改库的人要公开修改</h2><p>选 <strong>LGPL</strong>。</p>
+<h2 id="4、我希望按文件划分，改过哪些文件就公开哪些文件"><a href="#4、我希望按文件划分，改过哪些文件就公开哪些文件" class="headerlink" title="4、我希望按文件划分，改过哪些文件就公开哪些文件"></a>4、我希望按文件划分，改过哪些文件就公开哪些文件</h2><p>选 <strong>MPL 2.0</strong>。</p>
+<h2 id="5、我希望别人发布修改版时，相关程序继续开源"><a href="#5、我希望别人发布修改版时，相关程序继续开源" class="headerlink" title="5、我希望别人发布修改版时，相关程序继续开源"></a>5、我希望别人发布修改版时，相关程序继续开源</h2><p>选 <strong>GPL 3.0</strong>。</p>
+<h2 id="6、我的项目主要是在线服务，希望别人做成-SaaS-后也公开修改"><a href="#6、我的项目主要是在线服务，希望别人做成-SaaS-后也公开修改" class="headerlink" title="6、我的项目主要是在线服务，希望别人做成 SaaS 后也公开修改"></a>6、我的项目主要是在线服务，希望别人做成 SaaS 后也公开修改</h2><p>选 <strong>AGPL 3.0</strong>。</p>
+<h2 id="7、我想限制云厂商拿去做竞争服务"><a href="#7、我想限制云厂商拿去做竞争服务" class="headerlink" title="7、我想限制云厂商拿去做竞争服务"></a>7、我想限制云厂商拿去做竞争服务</h2><p>可以研究 BSL、商业许可或双重许可。这已经涉及商业模式，个人新手项目通常不用急着考虑。</p>
+<h2 id="8、我做的是图片或视频-Skill，里面的模板需要保护"><a href="#8、我做的是图片或视频-Skill，里面的模板需要保护" class="headerlink" title="8、我做的是图片或视频 Skill，里面的模板需要保护"></a>8、我做的是图片或视频 Skill，里面的模板需要保护</h2><p>不要直接给整个 Skill 使用 MIT。MIT 会允许别人复制、修改、商用你的模板和工作流。</p>
+<p>更合适的做法是：</p>
+<ul>
+<li>**最重视保护：**模板不公开，放在私有服务端，只开放 Skill 或 API 的调用方式；</li>
+<li><strong>代码可以开源，模板不能复制</strong>：程序代码使用 MIT 或 Apache 2.0，模板目录明确标注「All rights reserved」；</li>
+<li><strong>允许学习，但不允许商用和公开改编</strong>：模板可考虑 CC BY-NC-ND，同时说明它不属于开源授权；</li>
+<li><strong>希望模板也被自由使用</strong>：再考虑 CC BY 或 CC BY-SA.</li>
+</ul>
+<p>无论选择哪一种，都要在 README 中分别写清代码、模板、示例素材和生成内容的授权范围。</p>
+<p>如果这些模板是你的核心竞争力，优先选择私有保存。公开仓库里的声明可以提供法律边界，却无法从技术上阻止别人查看或抄走内容。</p>
+<h2 id="十六、最后记住这几句话"><a href="#十六、最后记住这几句话" class="headerlink" title="十六、最后记住这几句话"></a>十六、最后记住这几句话</h2><ol>
+<li>代码放到 GitHub，不会自动变成开源项目。</li>
+<li>没有 LICENSE，你依然有版权，只是别人没有获得明确的使用许可。</li>
+<li>个人小工具想简单开源，MIT 通常够用。</li>
+<li>企业项目或比较在意专利，可以考虑 Apache 2.0。</li>
+<li>使用 GPL、AGPL、LGPL 等代码时，要多看一眼发布和源码要求。</li>
+<li>不要自己拼一份新协议，优先使用成熟的标准协议。</li>
+</ol>
+<p>协议没有绝对的好坏，关键看你希望别人怎样使用你的作品。</p>
+<p>如果你和我一样，还处在边做边学的阶段，也不用一开始就把几十种协议全部研究明白。先把自己的使用场景想清楚，再从最常见的几个协议里选择，就已经能避开大部分问题了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/d3d4b94e/">https://macin.top/posts/d3d4b94e/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BC%80%E6%BA%90%E5%8D%8F%E8%AE%AE/">开源协议</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/7a3e1f78/" title="旧东西不值钱，替人处理旧东西很值钱"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">旧东西不值钱，替人处理旧东西很值钱</div></div><div class="info-2"><div class="info-item-1">旧东西不值钱，替人处理旧东西很值钱</div></div></div></a><a class="pagination-related" href="/posts/515eeee2/" title="1小时录音，3分半转完：免费、离线、不上传服务器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">1小时录音，3分半转完：免费、离线、不上传服务器</div></div><div class="info-2"><div class="info-item-1">1小时录音，3分半转完：免费、离线、不上传服务器</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2282</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2404</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">166</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E6%8A%8A%E3%80%8C%E5%BC%80%E6%BA%90%E3%80%8D%E8%AF%B4%E6%98%8E%E7%99%BD"><span class="toc-number">1.</span> <span class="toc-text">一、先把「开源」说明白</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%80%E6%BA%90%E4%B8%8D%E6%98%AF%E3%80%8C%E4%BB%A3%E7%A0%81%E6%94%BE%E5%9C%A8-GitHub%E3%80%8D"><span class="toc-number">1.1.</span> <span class="toc-text">1. 开源不是「代码放在 GitHub」</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%8D%E8%B4%B9%E3%80%81%E5%BC%80%E6%BA%90%E3%80%81%E6%BA%90%E7%A0%81%E5%8F%AF%E8%A7%81%EF%BC%8C%E6%98%AF%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2. 免费、开源、源码可见，是三件事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BC%80%E6%BA%90%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%94%BE%E5%BC%83%E7%89%88%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">3. 开源不等于放弃版权</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%99%E4%BA%9B%E5%8D%8F%E8%AE%AE%EF%BC%8C%E5%A4%A7%E8%87%B4%E5%8F%AF%E4%BB%A5%E5%88%86%E6%88%90%E4%B8%89%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">二、这些协议，大致可以分成三类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%B1%BB%EF%BC%9A%E6%AF%94%E8%BE%83%E5%AE%BD%E6%9D%BE"><span class="toc-number">2.1.</span> <span class="toc-text">第一类：比较宽松</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%B1%BB%EF%BC%9A%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%94%A8%EF%BC%8C%E4%BD%86%E6%94%B9%E8%BF%9B%E7%9A%84%E9%83%A8%E5%88%86%E8%A6%81%E5%88%86%E4%BA%AB"><span class="toc-number">2.2.</span> <span class="toc-text">第二类：你可以用，但改进的部分要分享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%B1%BB%EF%BC%9A%E5%8F%91%E5%B8%83%E4%BF%AE%E6%94%B9%E7%89%88%E6%97%B6%EF%BC%8C%E7%9B%B8%E5%85%B3%E9%A1%B9%E7%9B%AE%E4%B9%9F%E8%A6%81%E7%BB%A7%E7%BB%AD%E5%BC%80%E6%BA%90"><span class="toc-number">2.3.</span> <span class="toc-text">第三类：发布修改版时，相关项目也要继续开源</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81MIT%EF%BC%9A%E6%96%B0%E6%89%8B%E6%9C%80%E5%B8%B8%E8%A7%81%EF%BC%8C%E4%B9%9F%E6%9C%80%E5%A5%BD%E7%90%86%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">三、MIT：新手最常见，也最好理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MIT-%E9%80%82%E5%90%88%E4%BB%80%E4%B9%88%E9%A1%B9%E7%9B%AE%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">MIT 适合什么项目？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81BSD%EF%BC%9A%E5%92%8C-MIT-%E5%BE%88%E5%83%8F"><span class="toc-number">4.</span> <span class="toc-text">四、BSD：和 MIT 很像</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Apache-2-0%EF%BC%9A%E5%83%8F-MIT%EF%BC%8C%E4%BD%86%E6%9B%B4%E9%87%8D%E8%A7%86%E4%B8%93%E5%88%A9"><span class="toc-number">5.</span> <span class="toc-text">五、Apache 2.0：像 MIT，但更重视专利</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E5%88%A9%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">专利是什么意思？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NOTICE-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">5.2.</span> <span class="toc-text">NOTICE 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E9%80%89-Apache-2-0%EF%BC%9F"><span class="toc-number">5.3.</span> <span class="toc-text">什么情况下选 Apache 2.0？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81LGPL%EF%BC%9A%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8F%AF%E4%BB%A5%E9%97%AD%E6%BA%90%EF%BC%8C%E6%94%B9%E5%BA%93%E8%A6%81%E5%88%86%E4%BA%AB"><span class="toc-number">5.4.</span> <span class="toc-text">六、LGPL：你的程序可以闭源，改库要分享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LGPL-%E9%80%82%E5%90%88%E4%BB%80%E4%B9%88%E9%A1%B9%E7%9B%AE%EF%BC%9F"><span class="toc-number">5.5.</span> <span class="toc-text">LGPL 适合什么项目？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81MPL-2-0%EF%BC%9A%E6%94%B9%E4%BA%86%E5%93%AA%E4%B8%AA%E6%96%87%E4%BB%B6%EF%BC%8C%E5%B0%B1%E5%85%AC%E5%BC%80%E5%93%AA%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">七、MPL 2.0：改了哪个文件，就公开哪个文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81GPL%EF%BC%9A%E5%8F%91%E5%B8%83%E4%BF%AE%E6%94%B9%E7%89%88%E6%97%B6%EF%BC%8C%E8%A6%81%E6%8A%8A%E6%BA%90%E7%A0%81%E7%BB%99%E5%88%AB%E4%BA%BA"><span class="toc-number">7.</span> <span class="toc-text">八、GPL：发布修改版时，要把源码给别人</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E9%80%9A%E5%B8%B8%E4%B8%8D%E7%94%A8%E5%85%AC%E5%BC%80%EF%BC%9F"><span class="toc-number">7.1.</span> <span class="toc-text">哪些情况通常不用公开？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E9%9C%80%E8%A6%81%E6%A0%BC%E5%A4%96%E6%B3%A8%E6%84%8F%EF%BC%9F"><span class="toc-number">7.2.</span> <span class="toc-text">哪些情况需要格外注意？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPL-%E4%BC%9A%E8%AE%A9%E5%85%AC%E5%8F%B8%E7%9A%84%E6%89%80%E6%9C%89%E4%BB%A3%E7%A0%81%E9%83%BD%E5%85%AC%E5%BC%80%E5%90%97%EF%BC%9F"><span class="toc-number">7.3.</span> <span class="toc-text">GPL 会让公司的所有代码都公开吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPL-2-0-%E5%92%8C-GPL-3-0-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">7.4.</span> <span class="toc-text">GPL 2.0 和 GPL 3.0 有什么区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81AGPL%EF%BC%9A%E6%8A%8A%E5%9C%A8%E7%BA%BF%E6%9C%8D%E5%8A%A1%E4%B9%9F%E8%80%83%E8%99%91%E8%BF%9B%E6%9D%A5"><span class="toc-number">7.5.</span> <span class="toc-text">九、AGPL：把在线服务也考虑进来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81BSL-%E5%92%8C-SSPL%EF%BC%9A%E6%BA%90%E7%A0%81%E8%83%BD%E7%9C%8B%EF%BC%8C%E4%BD%86%E4%BD%BF%E7%94%A8%E9%99%90%E5%88%B6%E6%9B%B4%E5%A4%9A"><span class="toc-number">7.6.</span> <span class="toc-text">十、BSL 和 SSPL：源码能看，但使用限制更多</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E4%BD%BF%E7%94%A8%E5%88%AB%E4%BA%BA%E7%9A%84%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%EF%BC%8C%E8%A6%81%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">7.7.</span> <span class="toc-text">十一、使用别人的开源代码，要做什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%89%BE-LICENSE"><span class="toc-number">7.8.</span> <span class="toc-text">第一步：找 LICENSE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E7%9C%8B%E6%B8%85%E5%8D%8F%E8%AE%AE%E5%90%8D%E5%AD%97%E5%92%8C%E7%89%88%E6%9C%AC"><span class="toc-number">7.9.</span> <span class="toc-text">第二步：看清协议名字和版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%83%B3%E6%B8%85%E6%A5%9A%E4%BD%A0%E8%A6%81%E6%80%8E%E4%B9%88%E7%94%A8"><span class="toc-number">7.10.</span> <span class="toc-text">第三步：想清楚你要怎么用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E4%BF%9D%E7%95%99%E8%AF%A5%E4%BF%9D%E7%95%99%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">7.11.</span> <span class="toc-text">第四步：保留该保留的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E8%AF%A5%E7%BB%99%E6%BA%90%E7%A0%81%E6%97%B6%E5%B0%B1%E7%BB%99%E6%BA%90%E7%A0%81"><span class="toc-number">7.12.</span> <span class="toc-text">第五步：该给源码时就给源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%80%8E%E4%B9%88%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84-GitHub-%E9%A1%B9%E7%9B%AE%E5%8A%A0%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="toc-number">7.13.</span> <span class="toc-text">十二、怎么给自己的 GitHub 项目加协议？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E4%B8%8D%E5%90%8C%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BB%A3%E7%A0%81%E8%83%BD%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8%EF%BC%9F"><span class="toc-number">7.14.</span> <span class="toc-text">十三、不同协议的代码能不能混用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%9B%BE%E7%89%87%E3%80%81%E8%A7%86%E9%A2%91%E5%92%8C-Skill%EF%BC%8C%E7%94%A8%E4%BB%80%E4%B9%88%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="toc-number">7.15.</span> <span class="toc-text">十四、图片、视频和 Skill，用什么协议？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E3%80%81%E5%9B%BE%E7%89%87%E5%92%8C%E8%A7%86%E9%A2%91%E5%B8%B8%E8%A7%81%E7%9A%84-CC-%E5%8D%8F%E8%AE%AE"><span class="toc-number">7.16.</span> <span class="toc-text">文档、图片和视频常见的 CC 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E3%80%81%E8%A7%86%E9%A2%91-Skill-%E9%87%8C%E7%9A%84%E6%A8%A1%E6%9D%BF%EF%BC%8C%E6%83%B3%E4%BF%9D%E6%8A%A4%E8%B5%B7%E6%9D%A5%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-number">7.17.</span> <span class="toc-text">图片、视频 Skill 里的模板，想保护起来怎么办？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E4%BD%93"><span class="toc-number">7.18.</span> <span class="toc-text">字体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C-AI-%E6%A8%A1%E5%9E%8B"><span class="toc-number">7.19.</span> <span class="toc-text">数据和 AI 模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9F%E7%9B%B4%E6%8E%A5%E7%9C%8B%E7%AD%94%E6%A1%88"><span class="toc-number">8.</span> <span class="toc-text">十五、怎么选？直接看答案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E6%88%91%E5%81%9A%E4%BA%86%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7%E3%80%81%E8%84%9A%E6%9C%AC%E6%88%96-Skill%EF%BC%8C%E6%83%B3%E4%B8%8A%E4%BC%A0-GitHub"><span class="toc-number">8.1.</span> <span class="toc-text">1、我做了一个小工具、脚本或 Skill，想上传 GitHub</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E6%88%91%E5%81%9A%E7%9A%84%E6%98%AF%E4%BC%81%E4%B8%9A%E9%A1%B9%E7%9B%AE%EF%BC%8C%E6%AF%94%E8%BE%83%E5%9C%A8%E6%84%8F%E4%B8%93%E5%88%A9"><span class="toc-number">8.2.</span> <span class="toc-text">2、我做的是企业项目，比较在意专利</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%88%91%E5%81%9A%E7%9A%84%E6%98%AF%E4%B8%80%E4%B8%AA%E5%BA%93%EF%BC%8C%E5%B8%8C%E6%9C%9B%E9%97%AD%E6%BA%90%E8%BD%AF%E4%BB%B6%E8%83%BD%E7%94%A8%EF%BC%8C%E4%BD%86%E6%94%B9%E5%BA%93%E7%9A%84%E4%BA%BA%E8%A6%81%E5%85%AC%E5%BC%80%E4%BF%AE%E6%94%B9"><span class="toc-number">8.3.</span> <span class="toc-text">3、我做的是一个库，希望闭源软件能用，但改库的人要公开修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E6%88%91%E5%B8%8C%E6%9C%9B%E6%8C%89%E6%96%87%E4%BB%B6%E5%88%92%E5%88%86%EF%BC%8C%E6%94%B9%E8%BF%87%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6%E5%B0%B1%E5%85%AC%E5%BC%80%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">8.4.</span> <span class="toc-text">4、我希望按文件划分，改过哪些文件就公开哪些文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E6%88%91%E5%B8%8C%E6%9C%9B%E5%88%AB%E4%BA%BA%E5%8F%91%E5%B8%83%E4%BF%AE%E6%94%B9%E7%89%88%E6%97%B6%EF%BC%8C%E7%9B%B8%E5%85%B3%E7%A8%8B%E5%BA%8F%E7%BB%A7%E7%BB%AD%E5%BC%80%E6%BA%90"><span class="toc-number">8.5.</span> <span class="toc-text">5、我希望别人发布修改版时，相关程序继续开源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81%E6%88%91%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%BB%E8%A6%81%E6%98%AF%E5%9C%A8%E7%BA%BF%E6%9C%8D%E5%8A%A1%EF%BC%8C%E5%B8%8C%E6%9C%9B%E5%88%AB%E4%BA%BA%E5%81%9A%E6%88%90-SaaS-%E5%90%8E%E4%B9%9F%E5%85%AC%E5%BC%80%E4%BF%AE%E6%94%B9"><span class="toc-number">8.6.</span> <span class="toc-text">6、我的项目主要是在线服务，希望别人做成 SaaS 后也公开修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81%E6%88%91%E6%83%B3%E9%99%90%E5%88%B6%E4%BA%91%E5%8E%82%E5%95%86%E6%8B%BF%E5%8E%BB%E5%81%9A%E7%AB%9E%E4%BA%89%E6%9C%8D%E5%8A%A1"><span class="toc-number">8.7.</span> <span class="toc-text">7、我想限制云厂商拿去做竞争服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8%E3%80%81%E6%88%91%E5%81%9A%E7%9A%84%E6%98%AF%E5%9B%BE%E7%89%87%E6%88%96%E8%A7%86%E9%A2%91-Skill%EF%BC%8C%E9%87%8C%E9%9D%A2%E7%9A%84%E6%A8%A1%E6%9D%BF%E9%9C%80%E8%A6%81%E4%BF%9D%E6%8A%A4"><span class="toc-number">8.8.</span> <span class="toc-text">8、我做的是图片或视频 Skill，里面的模板需要保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E6%9C%80%E5%90%8E%E8%AE%B0%E4%BD%8F%E8%BF%99%E5%87%A0%E5%8F%A5%E8%AF%9D"><span class="toc-number">8.9.</span> <span class="toc-text">十六、最后记住这几句话</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）"/></a><div class="content"><a class="title" href="/posts/406ed995/" title="LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）">LMCache 为 LLM 推理引擎设计的 KV 缓存管理中间层，加速推理并降低延迟（TTFT）</a><time datetime="2026-09-13T01:43:45.000Z" title="发表于 2026-09-13 09:43:45">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="superfile 是一个用 Go 语言编写的现代化终端文件管理器"/></a><div class="content"><a class="title" href="/posts/280701c9/" title="superfile 是一个用 Go 语言编写的现代化终端文件管理器">superfile 是一个用 Go 语言编写的现代化终端文件管理器</a><time datetime="2026-09-13T01:40:53.000Z" title="发表于 2026-09-13 09:40:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏"/></a><div class="content"><a class="title" href="/posts/9d2dede3/" title="Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏">Grok Bot 应用指南实操案例：闲鱼上架、小红书做图、找工具、做短视频、整理收藏</a><time datetime="2026-09-13T01:34:24.000Z" title="发表于 2026-09-13 09:34:24">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"/></a><div class="content"><a class="title" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</a><time datetime="2026-09-13T01:28:53.000Z" title="发表于 2026-09-13 09:28:53">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/meme.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="全网最全Meme币圈术语手册（新手零基础入门完整版）"/></a><div class="content"><a class="title" href="/posts/467b1334/" title="全网最全Meme币圈术语手册（新手零基础入门完整版）">全网最全Meme币圈术语手册（新手零基础入门完整版）</a><time datetime="2026-09-13T01:22:13.000Z" title="发表于 2026-09-13 09:22:13">2026-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

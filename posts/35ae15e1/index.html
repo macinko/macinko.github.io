@@ -1,0 +1,567 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>KV Cache--DS V4.1-Flash 的制胜秘密 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="今天跑一个长上下文的 agent，比如让模型读完一个百万 token 的代码仓库再干活，显存里最占地方的并非模型权重，而是 KV Cache。权重是固定的，几百 GB 就几百 GB；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KV Cache--DS V4.1-Flash 的制胜秘密">
+<meta property="og:url" content="https://macin.top/posts/35ae15e1/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="今天跑一个长上下文的 agent，比如让模型读完一个百万 token 的代码仓库再干活，显存里最占地方的并非模型权重，而是 KV Cache。权重是固定的，几百 GB 就几百 GB；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/deepseek.webp">
+<meta property="article:published_time" content="2026-09-14T01:17:35.000Z">
+<meta property="article:modified_time" content="2026-09-16T02:37:40.891Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="DeepSeek">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/deepseek.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "KV Cache--DS V4.1-Flash 的制胜秘密",
+  "url": "https://macin.top/posts/35ae15e1/",
+  "image": "https://macin.top/img/deepseek.webp",
+  "datePublished": "2026-09-14T01:17:35.000Z",
+  "dateModified": "2026-09-16T02:37:40.891Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/35ae15e1/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'KV Cache--DS V4.1-Flash 的制胜秘密',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2437</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2530</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">167</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/deepseek.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">KV Cache--DS V4.1-Flash 的制胜秘密</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">KV Cache--DS V4.1-Flash 的制胜秘密</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-16T02:37:40.891Z" title="更新于 2026-09-16 10:37:40">2026-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/deepseek/">deepseek</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-16 10:37:40&quot;}" hidden></div><blockquote>
+<p>DeepSeek V1 到 V4.1-Flash，单 token 的 global KV 如何从 389,000 B 压缩到 890 B的？这篇文章对于 Agent 的使用者、本地模型部署者、模型开发者都有一定帮助。</p>
+</blockquote>
+<p>今天跑一个长上下文的 agent，比如让模型读完一个百万 token 的代码仓库再干活，显存里最占地方的<strong>并非模型权重，而是 KV Cache</strong>。权重是固定的，几百 GB 就几百 GB；而 KV Cache 跟着上下文线性长，只要上下文翻一倍，它就会翻一倍。</p>
+<p>9 月初 DeepSeek 发布 V4.1-Flash 技术报告，标题就叫 <em>Pushing the Limits of KV Cache Compression</em>。摘要里的一句话一针见血：prefill 仍然很贵，同时大 KV Cache 持续挤占 HBM 和 SSD 的容量与传输带宽，这三样合起来是降低部署成本面临的紧迫瓶颈。</p>
+<p>这篇文章想做的事是把 KV Cache 这几年来几次关键突破画出来，最后重点讲讲 V4.1 Flash 的突破。中间会穿插一点硬件知识，因为不理解 HBM 是什么、为什么贵，就理解不了为什么大家要拼命压这几个字节。</p>
+<p>每个 token 的全局 KV Cache 从 V1 的 389 KB 压到 V4.1 的 890 字节，减少到 1&#x2F;437</p>
+<p><strong>阅读指南：</strong></p>
+<ul>
+<li><strong>Agent 使用者</strong>（用 Claude Code、Cursor 之类工具，关心为什么长对话变慢变贵）：读第一节和第五节的账单部分就够了，第一节解释 prefill 和 decode 这两种成本，第五节解释缓存命中价为什么能定到未命中的 2%。中间的技术细节可以跳过，看图就行</li>
+<li><strong>本地模型部署者</strong>（在自己的卡上跑 vLLM、SGLang，为显存发愁）：重点是第二节、第三节和文末的“如果你在部署模型”。第二节讲清显存金字塔和为什么 decode 卡在带宽，第三节区分直接决定你有哪些开关可以配置，文末四条是可操作的清单</li>
+<li><strong>模型开发者</strong>（做架构或训练，想知道 V4.1 到底改了什么）：第三节的三维框架和第四节全文是主体，尤其是 CSA2 三模式、40 层排布和 890 字节账单三段。第五节列了四条设计原因，可以对着报告原文核对</li>
+</ul>
+<p>没有任何机器学习背景也能读完前两节。第四节涉及具体的层数、维度和字节数，读起来会慢一些，但每一段都配了图，直接看图会更加直观。</p>
+<h1 id="一、KV-Cache-是什么"><a href="#一、KV-Cache-是什么" class="headerlink" title="一、KV Cache 是什么"></a>一、KV Cache 是什么</h1><p>这一节讲三件事：KV Cache 为什么存在、它有多大、prefill 和 decode 的区别。后面所有内容都建立在这三件事上。</p>
+<p>Transformer 生成文字是一个字一个字往外蹦的，每蹦一个新字，它要回头看一遍前面所有的字，这个”回头看”就是注意力。</p>
+<p>注意力的机制是：每个字有三个向量，Q（Query，我在找什么）、K（Key，我是什么）、V（Value，我携带什么信息）。新字的 Q 去和前面每个字的 K 做点积，得到关注权重，再用权重把那些字的 V 加权求和。</p>
+<p>这里有一个关键：前面那些字的 K 和 V <strong>不会变</strong>，第 100 个字看第 3 个字时用的 K、V，和第 200 个字看第 3 个字时用的，是同一组数。</p>
+<p>如果不缓存，每生成一个字就把前面所有字的 K、V 重算一遍，总计算量是 O(N²)；而缓存则每步只算新字的 K、V，其余从显存里读，计算量降到 O(N)。后者的代价是显存占用，每个字、每一层都要存一份 K 和 V。</p>
+<p>这就是 KV Cache，名字很朴素，就是把 K 和 V 缓存起来。</p>
+<h2 id="KV-Cache-到底有多大"><a href="#KV-Cache-到底有多大" class="headerlink" title="KV Cache 到底有多大"></a>KV Cache 到底有多大</h2><p>一个乘法公式就能算清楚：</p>
+<p>拿 DeepSeek 的第一代 67B 模型算：95 层，K 和 V 各一份，8 个 KV 头，每头 128 维，BF16 精度每个数 2 字节，相乘得到每个 token 约 389 KB。</p>
+<p>389 KB 听起来不多。但 128K 上下文就是 48 GB，一张 H100（2026.9.12市场价约为30万RMB） 的 80 GB 显存放完 KV 就剩不下多少给权重了。1M 上下文要 380 GB，四张 H100 的显存全拿来放 KV 都不够。</p>
+<p>这个公式很重要，里面的每一项的优化都意味着 KV Cache 能进一步降低。</p>
+<h2 id="prefill-和-decode"><a href="#prefill-和-decode" class="headerlink" title="prefill 和 decode"></a>prefill 和 decode</h2><ul>
+<li><strong>prefill</strong>：模型读 prompt 的阶段，所有 token 一起过一遍网络，把它们的 K、V 算出来存好，属于算力密集型</li>
+<li><strong>decode</strong>：模型生成回答的阶段，一次只处理一个新 token，但要把前面所有 token 的 KV 从显存读出来，属于带宽密集型</li>
+</ul>
+<p>agent 场景有个特点：工具调用非常频繁，每次调用都把新结果塞回上下文，再让模型读一遍。所以 agent 场景下 prefill 性能比较重要，这一点决定了 V4.1 Flash 的很多设计选择。</p>
+<h1 id="二、硬件层：显存为何如此金贵"><a href="#二、硬件层：显存为何如此金贵" class="headerlink" title="二、硬件层：显存为何如此金贵"></a>二、硬件层：显存为何如此金贵</h1><p>要理解为什么大家非要为几个字节较劲，得先看看这些字节存放的位置。</p>
+<p>GPU 的内存是一个金字塔。塔尖是片上 SRAM，只有几十 MB，但是快到几十 TB&#x2F;s，但小到只能放正在计算的那一小块。往下是 HBM 显存，几十到一两百 GB，速度 3-8 TB&#x2F;s。再往下是主机内存，TB 级，但要走 PCIe，带宽掉到几十到几百 GB&#x2F;s。金字塔底部是 SSD，几十 TB，带宽只有几 GB&#x2F;s。</p>
+<p>V4.1 把 KV Cache 按照位置分成两类：</p>
+<ul>
+<li>运行时 KV：<strong>正在服务的请求</strong>的 KV，必须在 HBM 里，受 HBM 容量约束</li>
+<li>持久化 KV：为了<strong>前缀复用</strong>而保留的 KV，放在 SSD 或主机内存，受 SSD 容量和 I&#x2F;O 带宽约束</li>
+</ul>
+<p>前缀复用是什么？你已经和模型对话了10轮，如果第11轮的 prompt 前面10轮都一样，且第10轮的 KV 还留着，那么第11轮就不用重算，agent 场景里这种复用极其频繁，所以生产系统会把 KV 存到 SSD 上，能保留几十个小时之久。</p>
+<h2 id="HBM-是什么"><a href="#HBM-是什么" class="headerlink" title="HBM 是什么"></a>HBM 是什么</h2><p>HBM 全称 High Bandwidth Memory，高带宽显存，它和消费级电脑里的内存条有着本质区别。</p>
+<p>普通内存条插在主板上，通过几十根线和 CPU 通信。HBM 是把 DRAM 芯片一层层<strong>垂直堆叠</strong>起来，用穿透硅片的 TSV（硅通孔）上下打通，然后整个堆和 GPU 计算芯片<strong>并排贴在同一块硅中介层上</strong>。距离从厘米级缩到毫米级，连线从几十根变成上千根，带宽因此暴涨。</p>
+<p>代价是三样：贵、难做、扩展难度指数级上升。每个 HBM 堆要堆 8 层或 12 层芯片，良率随层数指数下降。中介层的面积有限，能贴几个堆是定死的。所以 H100 是 80 GB，H200 是 141 GB，B200 是 192 GB，每一代加几十 GB 都是封装工艺的极限。</p>
+<p>还有一个原因让 KV 的每个字节更值钱了。decode 每生成一个 token，都要把权重和整段 KV 从 HBM 读一遍，算力是闲的，瓶颈在 HBM 带宽。上下文越长，要读的 KV 越多，每个 token 花的时间越长。所以压缩 KV 同时能够达到省钱和提速的目的。</p>
+<h1 id="三、KV-Cache-的几大突破"><a href="#三、KV-Cache-的几大突破" class="headerlink" title="三、KV Cache 的几大突破"></a>三、KV Cache 的几大突破</h1><p>这一节先给一个最基础的分析框架，然后逐个分析过去 DeepSeek 的六次突破。</p>
+<p>这里有一个非常干净的框架，即 KV Cache 的总大小是三个数的乘积：</p>
+<ul>
+<li><strong>每条 KV 有多大</strong>（entry 大小）</li>
+<li><strong>存多少条</strong>（序列长度）</li>
+<li><strong>存几份</strong>（层数）</li>
+</ul>
+<p>盒子的体积就是驻留在显存里的字节数，继续往下看之前，先来了解下两个重要区分：</p>
+<p><strong>第一个区分：省存储，还是省读取</strong> 第二节说过，decode 每一步都要把 KV 从 HBM 读一遍，所以读多少和存多少是不同的两个点。有些技术让每一步少读一些，但盒子本身没变小。GPU 已经塞满的时候，更快的注意力 kernel 腾不出位置给下一个请求，只有缩小盒子才行。</p>
+<p><strong>第二个区分：训练时就加进去，还是部署时再分开</strong> GQA、MLA、跨层复用、压缩注意力改变了模型的权重形状和缓存布局，必须在训练时定下来，不能给训好的模型打补丁。量化、分页、前缀缓存、分层卸载是推理引擎上的开关，模型不动。这决定了一项技术能传播多快。</p>
+<p><strong>突破一：GQA，让多个 Q 头共用一组 K、V</strong></p>
+<p>最早的多头注意力（MHA）里，8 个 Q 头配 8 组 K、V。2023 年的 GQA 说：K、V 没必要那么多，4 个 Q 头共用一组就够。KV 头数从 8 降到 2，缓存直接砍到四分之一。Llama 2 和 DeepSeek-V1 都用了它，代价是精度略降。</p>
+<p><strong>突破二：MLA，低秩压缩</strong></p>
+<p>DeepSeek-V2（2024 年）的 MLA 走了另一条路：</p>
+<p>它不减少头数，而是把所有头的 K、V 压成一个 512 维的潜在向量存起来。算注意力时再用两个上投影矩阵解压回各头的 K、V。更妙的是，数学上这两个矩阵可以吸收进 Q 和输出的投影里，解压这一步可以完全省掉。另外留 64 维给 RoPE 位置编码单独存下来。</p>
+<p>效果也很显著：每层每 token 只存 576 个数，而 MHA 是 2048 个，与此同时精度也能和 MHA 一致。</p>
+<p><strong>突破三：量化，一个数从 2 字节到半字节</strong></p>
+<p>BF16 一个数 2 字节，FP8 一个数 1 字节，DeepSeek-V3 开始用 FP8 存 KV，直接减半。V4.1 更进一步用 FP4，再减半。这是唯一一项既可以当部署开关（推理时直接量化）、也可以训练时就加进去（量化感知训练）的技术。</p>
+<p><strong>突破四：滑动窗口和稀疏注意力</strong></p>
+<p>序列维度上，第一个想法是<strong>滑动窗口注意力</strong>（SWA）：每个 token 只看最近的 128 个。这样 SWA 的 KV 大小固定，和上下文长度无关。</p>
+<p>但只看最近 128 个显然不够，要配一个能看全局的分支。全局分支怎么省？<strong>稀疏注意力</strong>：用一个轻量索引器给所有历史 token 打分，只挑分数最高的 512 个来做注意力。DeepSeek-V3.2 的 DSA 就是这个思路。</p>
+<p>注意稀疏注意力省的是<strong>读取</strong>，不是存储。KV 还是要全存着，只是每次只读一部分。要省存储有两条路。一条是<strong>压缩</strong>：DeepSeek-V4 的 CSA 把每 2 个 token 的 KV 压成 1 条，训进去的。另一条是<strong>驱逐</strong>：运行时按重要性丢 token，比如 H2O 保留最近的 token 加上历史上被关注最多的那些。驱逐是部署开关，代价是丢掉的 token 真的没了，一个当下没人看的工具结果，可能几轮之后正是需要的。</p>
+<p>还有一条更激进的路：Qwen3-Next、Jamba 这类混合模型用循环层的固定大小状态代替大部分层的 KV，只留少数全注意力层。这是三个维度之外的第四条路，DeepSeek 完全没走这条路，但我们还是需要知道一下，它是当前另一大流派。</p>
+<p><strong>突破五：跨层复用，别存那么多份</strong></p>
+<p>层数这一维，2024 年的 CLA 提出让相邻层共用 KV，YoCo 更激进：模型下半段的层算 KV，上半段直接用。</p>
+<p>这一维的潜力其实最大，一个 40 层的模型，如果只存 4 份 KV 而不是 40 份，就是 10 倍。<strong>V4.1 在这部分做了最多的功课</strong>。</p>
+<p><strong>突破六：系统层，不改模型改部署</strong></p>
+<p>vLLM 的 PagedAttention 借鉴操作系统的虚拟内存，把 KV 按固定大小的页分配，解决显存碎片。前缀缓存让多个请求共享相同开头的 KV 页。分层卸载把不活跃的 KV 挪到主机内存和 SSD。</p>
+<p>这三样都是部署开关，共同特点是不改变一个请求的 KV 有多少字节，改变的是浪费多少、重复多少、放在哪里。系统层的改动和模型层的改动是<strong>相乘</strong>的，这一点在 V4.1 上很显著，接下来我们能看到。</p>
+<h1 id="四、DS-V4-1-Flash：架构、缓存精度、部署策略三层联合优化"><a href="#四、DS-V4-1-Flash：架构、缓存精度、部署策略三层联合优化" class="headerlink" title="四、DS-V4.1-Flash：架构、缓存精度、部署策略三层联合优化"></a>四、DS-V4.1-Flash：架构、缓存精度、部署策略三层联合优化</h1><p>前面的每一次突破基本各打一维，V4.1 的核心主张是<strong>在架构、缓存精度、部署策略三个层面联合优化</strong>，三个维度加系统层一起压缩。结果是 HBM 里的全局 KV 压缩到 V4-Flash 的 1&#x2F;4，SSD 里的持久化 KV 压缩到 1&#x2F;8。</p>
+<h2 id="CED：上半段模型的-KV-由下半段代算"><a href="#CED：上半段模型的-KV-由下半段代算" class="headerlink" title="CED：上半段模型的 KV 由下半段代算"></a>CED：上半段模型的 KV 由下半段代算</h2><p>V4.1 是一个 40 层的模型，前 20 层叫因果编码器，后 20 层叫解码器：</p>
+<p>常规 Transformer 里，第 30 层的 KV 由第 30 层自己的隐状态算出来。CED 说不用，第 21 到 40 层的全局 KV 全部由<strong>第 20 层的输出</strong>乘各层独立的投影矩阵得到。</p>
+<p>这意味着 prefill 只需要跑前 20 层，后 20 层的 KV 一个矩阵乘法就拿到了。prefill 的激活参数从 16B 降到 8B，计算量减半。对 prefill 重的 agent 负载来说，这是直接省一半。</p>
+<p>CED 的灵感来自 YoCo，但每个 decoder 层有自己的投影矩阵，KV 容量没打折；滑动窗口的 KV 仍然逐层自算，局部信息的深度没打折。</p>
+<h2 id="CSA2：三种模式，40-层只存-4-份"><a href="#CSA2：三种模式，40-层只存-4-份" class="headerlink" title="CSA2：三种模式，40 层只存 4 份"></a>CSA2：三种模式，40 层只存 4 份</h2><p>CSA2 是这次架构上最核心的改动。每一层被静态分配三种模式之一：</p>
+<ul>
+<li><strong>Full 模式</strong>：全套自己算。算 main KV，投影出索引器的 K，算索引器的 Q，打分选出 Top-512。</li>
+<li><strong>Reindex 模式</strong>：借用最近一个 Full 层的 main KV 和索引器 K，但用自己的索引器 Q 重新打分。KV 不存，但每层能挑不同的 512 条来看。</li>
+<li><strong>Reuse 模式</strong>：main KV 和 Top-512 索引全借，直接做注意力。</li>
+</ul>
+<p>三种模式都保留自己的 Q 和 SWA KV，区别只在 main KV、索引器 K、Top-K 索引这三样从哪来。</p>
+<p>报告给出了 40 层的实际排布：</p>
+<p>编码器 18 层分 3 组，每组 1 个 Full 加 5 个 Reuse，每 2 个 token 压成 1 条。解码器 20 层分 5 组，第一组 1 个 Full 加 3 个 Reuse，后四组 1 个 Reindex 加 3 个 Reuse。</p>
+<p>我们数一数：40 层里处于 Full 模式的只有 4 层。<strong>只有这 4 层有实际开销，其余 36 层都不占用空间。</strong></p>
+<h2 id="层级稀疏索引器：后面的层只在候选池里找"><a href="#层级稀疏索引器：后面的层只在候选池里找" class="headerlink" title="层级稀疏索引器：后面的层只在候选池里找"></a>层级稀疏索引器：后面的层只在候选池里找</h2><p>跨层复用索引减少了打分次数，但剩下的 Full 和 Reindex 层还是要给整个上下文打分，一百万 token 的上下文这个成本不小。</p>
+<p>层级稀疏索引器只在解码器里用：第一个 Full 层给所有位置打完分后，按 8 个位置一块取每块最高分，选出前 2048 块，得到 16,384 个候选位置的池子。后面的 Reindex 层只在池子里打分。后续索引器的成本从随上下文线性增长变成常数。报告的 Figure 2 显示，上下文从 4K 扩到 1M，V4.1 单个 token 的 decode 计算量只涨了四分之一。</p>
+<p>按第三节的区分，这一项省的是读取。CSA2 的跨层复用和 FP4 负责缩小盒子，层级索引器负责让每一步只读盒子的一小角。两件事都做了，才同时拿到 890 字节和几乎不随上下文增长的 decode 计算量。</p>
+<h2 id="P4-main-KV：一个数只占半字节"><a href="#P4-main-KV：一个数只占半字节" class="headerlink" title="P4 main KV：一个数只占半字节"></a>P4 main KV：一个数只占半字节</h2><p>精度这一维，V4.1 把 main KV 从 V4 的 FP8 压到 FP4：E2M1 格式，每 16 个通道共用一个 FP8 缩放因子，选 OCP 标准的 MXFP4 是为了兼容尽可能多的硬件。它参考了 NVIDIA 的 NVFP4 但去掉了第二级全局缩放因子，报告用 RMSNorm 之后 latent 范数有上界这一条论证了全局缩放纯属多余。</p>
+<p>这里有两个细节，一是 FP4 只用来<strong>存</strong>，算注意力之前先反量化，所以不依赖硬件原生 FP4 矩阵乘法。二是 SWA KV 对量化敏感，仍然保留 FP8；main KV 的精度损失靠后训练阶段的量化感知训练压到边际水平。</p>
+<p><strong>890 字节是怎么算出来的</strong></p>
+<p>虽然DS官方报告没有给出分解，我们按格式参数和层配置反推，估算出一个结果：</p>
+<p>一条 FP4 main KV：512 维 × 0.5 字节，加 32 个缩放因子各 1 字节，288 字节。一条 FP4 索引器 K：128 维 × 0.5 字节，加 8 个缩放因子，72 字节。编码器 3 份，压缩比 2 意味着每 token 只占半条，3 × 360 ÷ 2 &#x3D; 540 字节。解码器 1 份，360 字节。合计约 900 字节，和报告的 890 字节基本吻合。</p>
+<h2 id="系统层：按存活多久分层，而非按大小分层"><a href="#系统层：按存活多久分层，而非按大小分层" class="headerlink" title="系统层：按存活多久分层，而非按大小分层"></a>系统层：按存活多久分层，而非按大小分层</h2><p>模型层的改动到此为止，HBM 里的 KV 压到了 1&#x2F;4。报告还有另一半功夫在部署系统上，把 SSD 里的持久化 KV 压到 1&#x2F;8。这一半和硬件的关系最密切。</p>
+<p>先看 V4 的问题，V4 的持久化缓存里，SWA KV 占了将近一半。但 SWA KV 的访问模式和全局 KV 完全不同：全局 KV 是长尾复用，一个前缀几十个小时后还可能被命中；SWA KV 只在一个活跃会话的几分钟里有用，会话一结束就成了死数据。用 72 小时的 LRU 策略去管理分钟级的数据，纯属浪费。V4.1 的解决方案分成三层：</p>
+<ul>
+<li><strong>HBM</strong>：正在服务的请求的 runtime KV。毫秒级。</li>
+<li><strong>主机内存 DRAM 池</strong>（新增）：每台机器划出 10% 的 DRAM 组成分布式内存池，只放编码器的 SWA KV，TTL 几分钟。容量远小于 SSD，但周转极快。</li>
+<li><strong>SSD 持久化缓存</strong>：只放全局 KV，保证 72 小时以上。</li>
+</ul>
+<p>那少数命中了全局 KV 但 SWA KV 已过期的请求怎么办？这就是 <strong>SWA Bounded Replay</strong>（有界重放）。各层的滑动窗口依赖层层叠加，精确重建第 20 层的 SWA 状态要从 20 × 128 个 token 之前开始算。有界重放不追求精确：只重放最近 128 个 token，接受一个近似状态。之前的研究表明 SWA 的有效感受野远小于理论值，报告的实验也确认这对回答质量几乎没有影响。</p>
+<p>这一招用在两处。编码器侧，它让前缀缓存只依赖全局 KV，SWA KV 从此不必进 SSD。解码器侧更彻底：解码器的 SWA KV 永远不缓存，每次 prefill 只把 prompt 最后 128 个 token 过一遍解码器，prefill 再省一半。</p>
+<p>于是持久化 KV 的 1&#x2F;8 就是两个因子的乘积：去掉 SWA KV 约省一半，全局 KV 本身压到 1&#x2F;4。</p>
+<h1 id="五、总结：这些字节最后变成了什么"><a href="#五、总结：这些字节最后变成了什么" class="headerlink" title="五、总结：这些字节最后变成了什么"></a>五、总结：这些字节最后变成了什么</h1><p>压缩 KV Cache 并不是为了论文里的数字好看，它最终将落到API定价，与此同时，还需要确保效果至少不会变弱（对于基座模型而言）。</p>
+<h2 id="DeepSeek-API定价下调"><a href="#DeepSeek-API定价下调" class="headerlink" title="DeepSeek API定价下调"></a>DeepSeek API定价下调</h2><p>V4.1-Flash 发布当天，DeepSeek 同步调整了 API 价格：</p>
+<p>最能体现 KV 压缩的一个数字是<strong>缓存命中价</strong>：只有未命中价的 2%。用户命中前缀缓存时，服务商要做的事是把持久化KV 从 SSD 搬回 HBM。KV 每 token 越小，搬得越快，占的 SSD 越少，能保留的时间越长，这个价格就能定得越低。V4.1 把持久化 KV 压到 V4 的 1&#x2F;8，直接对应了这个价格的下调。四天后，所有 V4-Pro 的请求被直接路由到 V4.1-Flash，按 V4.1-Flash 的价格计费。</p>
+<p>横向对比 Claude Opus 5 和 GPT-5.6 Sol：V4.1-Flash 的输出价是它们的1&#x2F;20到1&#x2F;25，缓存命中价是它们的1&#x2F;80到1&#x2F;160。而且 DeepSeek 的前缀在 SSD 上保留 72 小时以上，Claude 和 OpenAI 的缓存默认 5 分钟到 1 小时。对一个跑几天的 agent 任务，这两个差异是叠加之后，对成本影响巨大。</p>
+<h2 id="压缩这么多，能力为何不降反升？"><a href="#压缩这么多，能力为何不降反升？" class="headerlink" title="压缩这么多，能力为何不降反升？"></a>压缩这么多，能力为何不降反升？</h2><p>先看看报告里的对比：V4.1-Flash-Base 用 V4-Pro 1&#x2F;3 的总参数和 1&#x2F;4 的激活参数，在世界知识、推理、代码上和 V4-Pro-Base 打平。后训练之后，DeepSWE v1.1 拿到 74.2，和 Claude Opus 5 的 74.0、GPT-5.6 Sol 的 73.0 在同一水平。</p>
+<p>KV 压缩了四倍，能力为什么不降反升？报告没有单独回答，但我们如果把设计细节拼起来，可以看到答案：</p>
+<ul>
+<li><strong>压缩的是冗余，而非信息本身</strong> 跨层复用的前提是相邻层的 KV 高度相似。Reindex 模式又保留了”每层挑不同的 512 条”的自由度，共享的只是 KV 本身</li>
+<li><strong>每一处近似都在训练里见过</strong> FP4 靠量化感知训练，层级索引器在训练和推理中用同一个候选池，有界重放在后训练中被模拟</li>
+<li><strong>容量从 KV 挪到了权重</strong> V4.1 有 552B 骨干参数和 196B Engram 条件记忆参数，比 V4-Flash 的 284B 大得多。存储压力从”每个 token 存多少 KV”转移到了”模型本身记住多少”，后者不随上下文增长</li>
+<li><strong>只切了全局分支，没动局部分支</strong> 所有压缩都落在全局分支上，每层的 SWA KV 仍然自己算、仍然 FP8</li>
+</ul>
+<p>当然，模型的差距仍然存在，Terminal-Bench 3.0 上 V4.1-Flash 是 30.0，Opus 5 是 43.3；HLE 上 36.8 对 56.3。官方报告自己也说，在需要专家级领域知识的科学类 agent 任务上和巨型参数模型还有差距。</p>
+<h1 id="如果你在部署模型"><a href="#如果你在部署模型" class="headerlink" title="如果你在部署模型"></a>如果你在部署模型</h1><p>读到这里的人里总有几个正在为显存发愁，如果把上面的内容总结成四条：</p>
+<ul>
+<li><strong>选模型时</strong>看四个数：KV 头数、局部层和全局层的比例、有没有 latent 压缩、有没有循环层</li>
+<li><strong>部署现有模型时</strong>先开 FP8 KV，再固定住 prompt 模板让前缀缓存命中，这两样不丢任何 token，驱逐规则留到最后，基于真实工作负载测试后再决定如何做</li>
+<li><strong>显存看着没变时</strong>去看 KV 池能装多少 token，而不是看 nvidia-smi 的总量。池子是固定的，省下的空间是真实容量</li>
+<li><strong>如果遇到延迟瓶颈</strong>，尝试测量注意力读了多少字节，稀疏读能让每步更快</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/35ae15e1/">https://macin.top/posts/35ae15e1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DeepSeek/">DeepSeek</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/d44ec69e/" title="打飞机完全指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">打飞机完全指南</div></div><div class="info-2"><div class="info-item-1">觉得只有找不到对象的屌丝、泡不到妞的废物，才会在夜里可怜兮兮地自己解决；好像一个男人只要有魅力、有性生活，就应该彻底戒掉打飞机。</div></div></div></a><a class="pagination-related" href="/posts/4c4498ca/" title="公众号 IP！到底怎么做？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechat.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">公众号 IP！到底怎么做？</div></div><div class="info-2"><div class="info-item-1">做公众号3年多、累计利润超100万：从300多个流量号到只做一个IP号，分享先想结果再想内容的公众号IP打造思路与踩坑经验。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/c72eeb59/" title="绝非玩具｜DeepSeek Harness 爆改一站式创作工作台"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">绝非玩具｜DeepSeek Harness 爆改一站式创作工作台</div></div><div class="info-2"><div class="info-item-1">做短视频到现在，我踩过最多的坑不是剪辑、不是拍摄，而是流程断裂。选题记在备忘录，脚本写在 Notion，视频剪完导出到桌面，封面用 Canva 单独做…</div></div></div></a><a class="pagination-related" href="/posts/cb89ca29/" title="DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="info-item-2">DeepSeek++ 浏览器扩展：为网页版注入 Agentic 能力</div></div><div class="info-2"><div class="info-item-1">DeepSeek++ 浏览器扩展：为 DeepSeek 网页版注入 Agentic 能力，补足官方版缺乏的长期记忆、自动化任务处理与工具调用功能，让 AI 对话更高效。</div></div></div></a><a class="pagination-related" href="/posts/51a4ec48/" title="AI 交易员第一步,用 Deepseek 跑通量化交易：实用工具推荐"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-25</div><div class="info-item-2">AI 交易员第一步,用 Deepseek 跑通量化交易：实用工具推荐</div></div><div class="info-2"><div class="info-item-1">今天需要用到四样东西。第一是 DeepSeek V4 Pro，第二是 Pi Agent，第三是 OKX Agent Skills 和 OKX CLI，第四是 OKX 模拟盘。</div></div></div></a><a class="pagination-related" href="/posts/1c8f489e/" title="DeepSeek V4 Flash 0731 开源发布：Agent"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-03</div><div class="info-item-2">DeepSeek V4 Flash 0731 开源发布：Agent</div></div><div class="info-2"><div class="info-item-1">DeepSeek-V4-Flash-0731 开源发布：Agent 调用、推理性能与前端代码生成能力显著跃升，原生支持 Responses API 并全面兼容 Codex，一次性生成高质量代码。</div></div></div></a><a class="pagination-related" href="/posts/904ac76/" title="NAS 部署 DeepSeek Harness：一句话，AI 帮你从零到部署上线"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-16</div><div class="info-item-2">NAS 部署 DeepSeek Harness：一句话，AI 帮你从零到部署上线</div></div><div class="info-2"><div class="info-item-1">NAS 部署 DeepSeek Harness：模块化开源 Agent 框架，统一接口接入 DeepSeek/OpenAI 等大模型，内置文件操作、Shell 命令、联网搜索等工具，一句话让 AI 从零到部署上线。</div></div></div></a><a class="pagination-related" href="/posts/10ed36e2/" title="DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-17</div><div class="info-item-2">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro</div></div><div class="info-2"><div class="info-item-1">DeepSeek Harness 部署与实测：全面对接开源 DeepSeek-V4-Pro 模型，框架具备代码读取、文件修改、命令执行与工具调用能力，形成完整的自主分析与修复闭环。</div></div></div></a><a class="pagination-related" href="/posts/a5828efa/" title="HarmonyOS (鸿蒙) 设备上完整运行 DeepSeek Harness (dsh)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-29</div><div class="info-item-2">HarmonyOS (鸿蒙) 设备上完整运行 DeepSeek Harness (dsh)</div></div><div class="info-2"><div class="info-item-1">这份详细的部署教程将指引您在 HarmonyOS (鸿蒙) 设备上完整运行 DeepSeek Harness (dsh)。这是一套完整的适配方案，解决了在鸿蒙系统上运行 dsh…</div></div></div></a><a class="pagination-related" href="/posts/360e83e7/" title="DeepSeek V3.2 正式发布！强化 Agent 能力，融入思考推理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-07</div><div class="info-item-2">DeepSeek V3.2 正式发布！强化 Agent 能力，融入思考推理</div></div><div class="info-2"><div class="info-item-1">DeepSeek V3.2 正式发布：强化 Agent 能力、融入思考推理，官方网页端/App/API 已全面更新。实测本地部署流程，Speciale 强化版表现更夸张，免费开源。</div></div></div></a><a class="pagination-related" href="/posts/79e3dc34/" title="whichllm：命令行分析你的电脑能跑哪个大模型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-07</div><div class="info-item-2">whichllm：命令行分析你的电脑能跑哪个大模型</div></div><div class="info-2"><div class="info-item-1">whichllm 命令行工具：自动识别显卡、CPU、内存，从 HuggingFace 筛选适配硬件的开源大模型，按真实跑分排序，还能输出可直接运行的 Python 加载代码。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2437</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2530</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">167</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81KV-Cache-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">一、KV Cache 是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#KV-Cache-%E5%88%B0%E5%BA%95%E6%9C%89%E5%A4%9A%E5%A4%A7"><span class="toc-number">1.1.</span> <span class="toc-text">KV Cache 到底有多大</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#prefill-%E5%92%8C-decode"><span class="toc-number">1.2.</span> <span class="toc-text">prefill 和 decode</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A1%AC%E4%BB%B6%E5%B1%82%EF%BC%9A%E6%98%BE%E5%AD%98%E4%B8%BA%E4%BD%95%E5%A6%82%E6%AD%A4%E9%87%91%E8%B4%B5"><span class="toc-number">2.</span> <span class="toc-text">二、硬件层：显存为何如此金贵</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HBM-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.1.</span> <span class="toc-text">HBM 是什么</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81KV-Cache-%E7%9A%84%E5%87%A0%E5%A4%A7%E7%AA%81%E7%A0%B4"><span class="toc-number">3.</span> <span class="toc-text">三、KV Cache 的几大突破</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81DS-V4-1-Flash%EF%BC%9A%E6%9E%B6%E6%9E%84%E3%80%81%E7%BC%93%E5%AD%98%E7%B2%BE%E5%BA%A6%E3%80%81%E9%83%A8%E7%BD%B2%E7%AD%96%E7%95%A5%E4%B8%89%E5%B1%82%E8%81%94%E5%90%88%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">四、DS-V4.1-Flash：架构、缓存精度、部署策略三层联合优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CED%EF%BC%9A%E4%B8%8A%E5%8D%8A%E6%AE%B5%E6%A8%A1%E5%9E%8B%E7%9A%84-KV-%E7%94%B1%E4%B8%8B%E5%8D%8A%E6%AE%B5%E4%BB%A3%E7%AE%97"><span class="toc-number">4.1.</span> <span class="toc-text">CED：上半段模型的 KV 由下半段代算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSA2%EF%BC%9A%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F%EF%BC%8C40-%E5%B1%82%E5%8F%AA%E5%AD%98-4-%E4%BB%BD"><span class="toc-number">4.2.</span> <span class="toc-text">CSA2：三种模式，40 层只存 4 份</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%82%E7%BA%A7%E7%A8%80%E7%96%8F%E7%B4%A2%E5%BC%95%E5%99%A8%EF%BC%9A%E5%90%8E%E9%9D%A2%E7%9A%84%E5%B1%82%E5%8F%AA%E5%9C%A8%E5%80%99%E9%80%89%E6%B1%A0%E9%87%8C%E6%89%BE"><span class="toc-number">4.3.</span> <span class="toc-text">层级稀疏索引器：后面的层只在候选池里找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P4-main-KV%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%95%B0%E5%8F%AA%E5%8D%A0%E5%8D%8A%E5%AD%97%E8%8A%82"><span class="toc-number">4.4.</span> <span class="toc-text">P4 main KV：一个数只占半字节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%B1%82%EF%BC%9A%E6%8C%89%E5%AD%98%E6%B4%BB%E5%A4%9A%E4%B9%85%E5%88%86%E5%B1%82%EF%BC%8C%E8%80%8C%E9%9D%9E%E6%8C%89%E5%A4%A7%E5%B0%8F%E5%88%86%E5%B1%82"><span class="toc-number">4.5.</span> <span class="toc-text">系统层：按存活多久分层，而非按大小分层</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E8%BF%99%E4%BA%9B%E5%AD%97%E8%8A%82%E6%9C%80%E5%90%8E%E5%8F%98%E6%88%90%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">五、总结：这些字节最后变成了什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepSeek-API%E5%AE%9A%E4%BB%B7%E4%B8%8B%E8%B0%83"><span class="toc-number">5.1.</span> <span class="toc-text">DeepSeek API定价下调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E8%BF%99%E4%B9%88%E5%A4%9A%EF%BC%8C%E8%83%BD%E5%8A%9B%E4%B8%BA%E4%BD%95%E4%B8%8D%E9%99%8D%E5%8F%8D%E5%8D%87%EF%BC%9F"><span class="toc-number">5.2.</span> <span class="toc-text">压缩这么多，能力为何不降反升？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E5%9C%A8%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">如果你在部署模型</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/91ae2c99/" title="【小学生也能看懂】GPT-6 Astra 新手指南"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chatgpt.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="【小学生也能看懂】GPT-6 Astra 新手指南"/></a><div class="content"><a class="title" href="/posts/91ae2c99/" title="【小学生也能看懂】GPT-6 Astra 新手指南">【小学生也能看懂】GPT-6 Astra 新手指南</a><time datetime="2026-09-16T02:35:27.000Z" title="发表于 2026-09-16 10:35:27">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/602cd622/" title="网警同款开盒思路，查人查公司查设备，五个免费开源工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="网警同款开盒思路，查人查公司查设备，五个免费开源工具"/></a><div class="content"><a class="title" href="/posts/602cd622/" title="网警同款开盒思路，查人查公司查设备，五个免费开源工具">网警同款开盒思路，查人查公司查设备，五个免费开源工具</a><time datetime="2026-09-16T02:34:06.000Z" title="发表于 2026-09-16 10:34:06">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4eeb53c0/" title="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析"/></a><div class="content"><a class="title" href="/posts/4eeb53c0/" title="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析">有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析</a><time datetime="2026-09-16T02:08:23.000Z" title="发表于 2026-09-16 10:08:23">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a33909e2/" title="超简单 Grok Bot ，入门到一键构建机器人团队"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="超简单 Grok Bot ，入门到一键构建机器人团队"/></a><div class="content"><a class="title" href="/posts/a33909e2/" title="超简单 Grok Bot ，入门到一键构建机器人团队">超简单 Grok Bot ，入门到一键构建机器人团队</a><time datetime="2026-09-16T01:53:05.000Z" title="发表于 2026-09-16 09:53:05">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d14fc9ae/" title="用workbuddy做微信小程序，小白看完都能直接上手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/workbuddy.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="用workbuddy做微信小程序，小白看完都能直接上手"/></a><div class="content"><a class="title" href="/posts/d14fc9ae/" title="用workbuddy做微信小程序，小白看完都能直接上手">用workbuddy做微信小程序，小白看完都能直接上手</a><time datetime="2026-09-16T01:12:52.000Z" title="发表于 2026-09-16 09:12:52">2026-09-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

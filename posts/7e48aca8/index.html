@@ -1,0 +1,624 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="你还需要知道：用了什么量化？上下文开了多长？模型是否全部放在显存里？所谓“快”，指开始回答快，还是回答时每秒生成的 token 多？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署">
+<meta property="og:url" content="https://macin.top/posts/7e48aca8/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="你还需要知道：用了什么量化？上下文开了多长？模型是否全部放在显存里？所谓“快”，指开始回答快，还是回答时每秒生成的 token 多？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-14T08:44:40.000Z">
+<meta property="article:modified_time" content="2026-09-16T02:37:40.996Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="DFlash">
+<meta property="article:tag" content="KV Cache">
+<meta property="article:tag" content="MoE">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署",
+  "url": "https://macin.top/posts/7e48aca8/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-14T08:44:40.000Z",
+  "dateModified": "2026-09-16T02:37:40.996Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/7e48aca8/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2437</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2530</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">167</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">显存有限，怎么把字吐得更快？MoE、KV Cache、DFlash 本地部署</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-16T02:37:40.996Z" title="更新于 2026-09-16 10:37:40">2026-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/tool/">tool</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-16 10:37:40&quot;}" hidden></div><p><strong>“一张 16GB 显卡，也能跑 27B 大模型。”</strong></p>
+<p>看到这句话，先别急着下载权重。</p>
+<p>你还需要知道：用了什么量化？上下文开了多长？模型是否全部放在显存里？所谓“快”，指开始回答快，还是回答时每秒生成的 token 多？</p>
+<p>这些条件不同，“能跑”的含义可能相差很大。模型成功加载，只是第一步；能读完你的材料、给出可靠答案，并在可接受的时间内完成，才算真正可用。</p>
+<p><strong>本地部署要解决的，是在输出质量满足需求的前提下，让模型装得下、上下文放得下，再让生成尽可能快。</strong> MoE、量化、KV Cache、MTP、DFlash，分别处理这条链上的不同问题，并不是把所有开关打开，就一定能得到最优结果。</p>
+<p>下面就从一张 16GB 显卡出发，按实际做选择的顺序，算清显存和速度两笔账。文中的具体架构以 Qwen3.8-27B 为例；16GB 配置是预算演示，不是本文已经复现的硬件实测。</p>
+<h2 id="一、先算总账：显存里不只有模型权重"><a href="#一、先算总账：显存里不只有模型权重" class="headerlink" title="一、先算总账：显存里不只有模型权重"></a>一、先算总账：显存里不只有模型权重</h2><p><em>图 1：显存总账——运行显存不只由模型权重决定，还要给上下文缓存、运行时工作区和草稿模型留位置。</em></p>
+<p>一个常见误区是：下载的模型文件有 15GB，显卡有 16GB 显存，应该刚好能跑。</p>
+<p>问题在于，<strong>模型运行还需要其他空间</strong>。除了<strong>权重</strong>，还有保存<strong>上下文的缓存</strong>、计算时的<strong>临时张量</strong>、推理引擎的<strong>工作区</strong>；如果额外挂载草稿模型来加速，还要为草稿权重和相关缓存留位置。使用图像、视频输入时，也可能增加视觉模块与中间计算的开销。</p>
+<p>可以先记住这笔总账：</p>
+<p><strong>运行显存 ≈ 主模型权重 + 上下文缓存与状态 + 运行时工作区 + 可选的草稿模型及其额外开销。</strong></p>
+<p>这不是精确测量公式，而是一份防止漏项的预算清单。不同引擎的预分配策略、并发请求数、输入长度和运行阶段，都会改变实际占用。磁盘上的文件大小，也不等于加载后的显存占用。</p>
+<p>所以，正确顺序不是先把最大模型塞满显存，再看能不能聊天，而是先确定任务需要多长的上下文、能接受怎样的质量和等待时间，再决定把多少空间分给权重。</p>
+<p>下面先看通常最大的一笔：模型本身。</p>
+<h2 id="二、模型能不能装下：先分清参数，再看量化"><a href="#二、模型能不能装下：先分清参数，再看量化" class="headerlink" title="二、模型能不能装下：先分清参数，再看量化"></a>二、模型能不能装下：先分清参数，再看量化</h2><p><em>图 2：一部分方块被点亮抽出（MoE 只激活部分专家），整体结构被压缩成更小更密的晶体（低比特量化）。</em></p>
+<p>总参数不等于每一步参与计算的参数</p>
+<p>“拥有 270 亿参数”和“生成一个 token 要使用多少参数”，不是同一个问题。token 是模型处理文本的单位，可以是一个字、词的一部分或其他片段，并不固定对应一个汉字。</p>
+<p><strong>稠密模型</strong>（Dense）没有 <strong>MoE</strong> 那样的专家选择机制：每个 token 都沿着各层的稠密计算路径前进。可以把它理解为“各部门都参与处理”。<strong>MoE</strong> 则在专家层里设置路由器，让一个 token 只调用部分专家，类似医院分诊，不需要所有科室同时会诊。具体选几个专家，由模型配置决定。</p>
+<p>例如 <strong>30B-A3B</strong> 这类命名，通常表示总参数约 30B、每个 token 激活约 3B。它有利于降低相对于总参数规模的计算量，却不意味着权重只需要按 3B 来存。</p>
+<p><strong>对于希望把权重全部放入 GPU 的部署，容量要按总参数和存储精度算，不能按激活参数算。</strong> 也可以将部分专家放在系统内存中，但这会引入新的调度、计算或传输代价。因此，“MoE 省计算，不会自动按激活比例省权重空间”比“MoE 一定装不下”更准确。是否适合 16GB 显卡，要比较具体模型，而不是只看架构标签。</p>
+<p>量化改变的是每个参数占多少空间</p>
+<p>按 27B 参数粗算，BF16 每个参数占 2 字节，仅权重数据就约为 54GB。这里使用十进制 GB；实际文件还要看具体组件与存储格式。这显然超出了 16GB 显卡的容量。</p>
+<p>量化用更少的比特表示权重。若理想化地把每个参数都存成 4 bit，27B 权重的原始数据约为 13.5GB；但实际量化还需要缩放因子等元数据，而且不是所有张量都用同一精度，所以不能用这个数字直接预测下载文件大小。</p>
+<p>原始材料列出的体积梯度是：BF16 约 54GB、Q8_0 约 29GB、Q4_K_M 约 16.5GB、IQ3_XXS 约 11GB。这些可用于理解量级，但缺少对应文件与版本，不能当成所有 27B 模型的通用规格。</p>
+<p><strong>量化</strong>像有损压缩，但不能把 8-bit、4-bit、3-bit 简单对应成固定“画质”。低比特量化可能影响复杂推理、代码正确性、长文本稳定性等表现；影响大小取决于模型、量化方法、校准数据和任务。一个聊天时看不出明显区别的版本，不代表在你的实际工作里没有损失。</p>
+<p>所谓“<strong>分层量化</strong>”，就是不把所有层或张量一刀切：更敏感的部分保留较高精度，其他部分压得更紧。<strong>Q4_K_M</strong>、<strong>IQ3_XXS</strong> 等是具体量化方案的名称，不是质量保证书，也不意味着每个参数恰好占 4 bit 或 3 bit。</p>
+<p>到这里，第一个选择才算清楚：<strong>先找满足任务质量的模型与量化版本，再看它能否为缓存和运行时留下空间。</strong> 如果仍然装不下，才进入下一项取舍。</p>
+<h2 id="三、装不下怎么办：CPU-GPU-卸载的代价"><a href="#三、装不下怎么办：CPU-GPU-卸载的代价" class="headerlink" title="三、装不下怎么办：CPU&#x2F;GPU 卸载的代价"></a>三、装不下怎么办：CPU&#x2F;GPU 卸载的代价</h2><p><em>图 3：GPU 与 CPU 两层平台之间的狭窄通道，就是跨设备传输的代价所在。</em></p>
+<p><strong>大模型由多层网络组成</strong>，<strong>“层”可以看作逐级处理信息的积木</strong>。层数是具体架构的设计结果，不能仅凭“27B”这样的参数规模推出。</p>
+<p>如果权重无法全部进入显存，一种办法是把部分层留在系统内存，由 CPU 计算，其余交给 GPU。以 llama.cpp 为例，<strong>–n-gpu-layers</strong> 控制加载到 GPU 的层数。这类部分卸载，<strong>让“显存不够”不再必然等于“完全不能运行”</strong>。</p>
+<p>**代价是什么？**首先是 CPU 侧计算与内存带宽可能成为瓶颈；其次是跨设备边界时需要传输中间数据，并进行同步。它不是简单地“每留一层在 CPU，整个模型就通过 PCIe 搬一次”，也不能一概断言只留一层就会速度断崖。具体下降多少，要看卸载比例、CPU 性能、内存带宽和引擎实现。</p>
+<p>对交互式聊天来说，如果追求低延迟，通常应优先争取全 GPU 驻留；如果更看重模型能力，能接受多等一会儿，部分卸载也可能是合理选择。</p>
+<p><strong>卸载解决的是容量限制，不是免费的扩容。</strong> 一个稍小但全 GPU 运行的模型，与一个更大却依赖 CPU 的模型，哪一个更好，要由任务质量和实际等待时间共同决定。</p>
+<h2 id="四、上下文能开多长：KV-Cache-与混合注意力"><a href="#四、上下文能开多长：KV-Cache-与混合注意力" class="headerlink" title="四、上下文能开多长：KV Cache 与混合注意力"></a>四、上下文能开多长：KV Cache 与混合注意力</h2><p><em>图 4：越堆越高的玻璃塔代表随上下文增长的缓存，其中少数亮起的层是全注意力层，其余是线性注意力层。</em></p>
+<p>权重装下了，为什么输入一篇长文还是可能<strong>爆显存</strong>？<strong>因为模型运行时，还要保存已经读过的内容所对应的中间状态</strong>。</p>
+<p>在标准因果全注意力中，过去 token 的 Key 和 Value 可以缓存起来，供后续生成使用，不必反复计算。这就是 <strong>KV Cache</strong>。把它比作“读书笔记”很直观，但它不是文字摘要，而是供注意力计算使用的张量；缓存放得下，也不等于模型能毫无遗漏地利用所有前文。</p>
+<p>对于各全注意力层配置相同、K&#x2F;V 维度相同的情况，原始 KV 数据量可近似写成：</p>
+<p>​         <em>Mkv</em>    ≈  2×<em>B</em> ×<em>T</em> × <em>L</em>full  × <em>Hkv</em> × <em>D</em>  × <em>s</em></p>
+<p>其中，2 表示 K 和 V 两份数据；B 是批量大小，T 是缓存的 token 数，L 是全注意力层数，H 是 KV 头数，D 是每个头的维度，s 是每个元素占用的字节数。量化元数据、内存对齐和引擎预分配等，还会带来额外开销。对单个请求来说，随着输入与输出累计变长，缓存通常也会随之增大。</p>
+<p>这解释了两种不同的优化：<strong>缓存量化减少每个元素的存储空间，混合注意力减少需要保存完整历史 KV 的层数。</strong> 前者需要后端支持，并可能影响精度或速度；后者是模型架构，不能靠部署时改一个参数随意切换。</p>
+<p>以 Qwen3.8-27B 为例，官方配置中的文本网络有 64 层，每 4 层安排 1 层全注意力，也就是 48 层线性注意力、16 层全注意力；全注意力部分有 4 个 KV 头，头维度为 256。这些是这个模型的具体设计，不是所有 27B 模型的共同规格。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/Qwen/Qwen3.8-27B/blob/main/config.json">模型配置</a></p>
+<p>如果其他条件相同，把全注意力层从 64 层减到 16 层，这部分随序列增长的 KV 数据就降到四分之一。但线性注意力仍需要维护递归状态等数据，所以不能说整个缓存、更不能说全部运行显存，都直接变成四分之一。</p>
+<p>还要分清两条分类轴：<strong>稠密&#x2F;MoE 决定专家如何参与计算，全注意力&#x2F;混合注意力决定如何处理序列信息。</strong> 稠密模型也可以采用混合注意力，不能把缓存节省笼统归功于“稠密”。</p>
+<p>Qwen3.8-27B 的官方模型卡给出原生 262,144 token 的上下文能力。但这是模型支持的长度，不是某张显卡一定能承载的长度，更不是 262,144 个汉字；输入与输出都要计入上下文预算。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/Qwen/Qwen3.8-27B">模型卡</a></p>
+<p>因此，选择上下文长度时，要同时过两道关：模型是否支持，以及你的剩余显存是否足够。剩下的另一道关，则是等待时间。</p>
+<h2 id="五、装下了为什么还慢：先分清“读输入”和“写输出”"><a href="#五、装下了为什么还慢：先分清“读输入”和“写输出”" class="headerlink" title="五、装下了为什么还慢：先分清“读输入”和“写输出”"></a>五、装下了为什么还慢：先分清“读输入”和“写输出”</h2><p><em>图 5：左侧输入被一次性并行吸入（Prefill），右侧 token 光点被逐个吐出（Decode）。</em></p>
+<p>一次模型请求，至少要区分两个阶段。</p>
+<p><strong>Prefill（预填充）是读输入。</strong> 提示词和历史对话已经确定，模型可以并行处理多个 token，建立后续生成需要的缓存。输入越长，要做的计算越多，开始回答前就可能等得越久。</p>
+<p><strong>Decode（解码）是写输出。</strong> 在普通自回归生成中，下一个 token 要等上一个生成后才能确定。单用户、小批量时，每步只推进少量 token，却仍需从显存读取大量模型权重。</p>
+<p>这像从仓库搬工具到工作台加工零件：<strong>显存是仓库，权重是工具，GPU 的计算单元是工作台。</strong> 工作台放不下所有工具，需要反复搬运。预填充时，零件已经备齐，搬来一批工具可以连续加工多个零件；单用户解码时，下一个零件要根据上一个的加工结果才能确定，每轮加工一个，却仍得搬一遍所需工具。</p>
+<p>所以，<strong>预填充能让多个 token 分摊权重搬运成本，更容易发挥 GPU 的计算能力；小批量解码分摊得少，更容易受显存带宽限制。</strong> 这不是说 GPU 总在“闲等”：高并发能提高权重复用，超长上下文也会增加注意力计算与缓存访问开销。</p>
+<p>因此，评估“快不快”，至少要分开看首 token 延迟、生成阶段的 token&#x2F;s，以及整个请求的完成时间。若框架把思考内容隐藏起来，用户看到第一段正式答案之前的等待，还可能包含一部分生成时间。</p>
+<p><strong>加快 Decode，不等于按相同比例缩短 Prefill，更不等于按相同比例缩短整个任务。</strong> 但对需要生成大量内容的请求，Decode 确实值得重点优化。接下来的问题是：能不能让大模型每次运行，换回不止一个最终 token？</p>
+<h2 id="六、一次验证多个-token：投机解码、MTP-与-DFlash"><a href="#六、一次验证多个-token：投机解码、MTP-与-DFlash" class="headerlink" title="六、一次验证多个 token：投机解码、MTP 与 DFlash"></a>六、一次验证多个 token：投机解码、MTP 与 DFlash</h2><p><em>图 6：小模型整块并发“发牌”，大模型一次性验证；通过的保留，被拒绝的（红色）退回重来。</em></p>
+<h2 id="先理解通用框架：助手起草，主模型验证"><a href="#先理解通用框架：助手起草，主模型验证" class="headerlink" title="先理解通用框架：助手起草，主模型验证"></a><strong>先理解通用框架：助手起草，主模型验证</strong></h2><p><strong>投机解码</strong>（Speculative Decoding）先用一个计算便宜的机制，提出一段候选 token，再让主模型在一次前向计算中验证多个位置。因为候选内容已经给定，验证这些位置可以并行进行，不必像普通生成那样，每确定一个 token 才发起下一轮主模型计算。</p>
+<p><strong>直观地说，就是先让助手起草，再交给主模型审阅</strong>。若连续多个候选都通过，一次主模型验证就能推进多个最终 token；如果很快被拒绝，则丢弃后续草稿，从拒绝处修正并继续。</p>
+<p>先分清两个概念：<strong>贪心解码每步选概率最高的 token；随机采样则按概率抽取。</strong> 比如两个候选的概率分别是 70% 和 30%，贪心选前者，随机采样则两者都有机会。它们决定“选哪个”，投机解码解决“怎样更快”，不是同一种分类。</p>
+<p>所谓“无损”，就是<strong>加速但不改变主模型原本的选择规则</strong>：贪心模式下，结果要与逐个生成一致；随机采样下，经过正确的验证与校正，各种结果出现的概率应保持不变，但每次回答不必逐字相同。</p>
+<p><strong>速度也要算成本</strong>。像助手起草、主编审稿：草稿大部分能用，才省事；总要退回重写，反而更慢。投机解码同样要为起草、验证和缓存付出时间与显存。<strong>只有草稿被连续接受得足够多，省下的主模型计算轮次才可能抵过这些开销。</strong> 草稿准确率低、批量较大或引擎支持不佳时，都可能不升反降。</p>
+<h2 id="MTP（多-token-预测）：草稿不一定来自独立的小模型"><a href="#MTP（多-token-预测）：草稿不一定来自独立的小模型" class="headerlink" title="MTP（多 token 预测）：草稿不一定来自独立的小模型"></a>MTP（多 token 预测）：草稿不一定来自独立的小模型</h2><p>前面说，投机解码需要一个助手先写草稿。<strong>这个助手不一定是另一个小模型，也可以是主模型自带的预测模块。</strong> <strong>MTP（Multi-Token Prediction，多 token 预测）<strong>就能提供这种能力：训练时</strong>，<strong>不只</strong>让模型学习预测</strong>下<strong>一个</strong> token，还让额外模块学习预测后面几个 token。</p>
+<p>沿用“助手起草、主编审稿”的比喻：独立草稿模型像外请的助手，原生 MTP 模块像自带的助手。用于投机解码时，它先猜后面几个 token，再由主模型验证；猜出来的内容不能直接当作最终答案。</p>
+<p>所以，<strong>MTP 可以负责“写草稿”，投机解码负责“起草后验证”，两者可以配合，不是互相替代。</strong> 能猜几步、是否并行、最终快多少，要看具体模型和推理软件；自带助手也有开销，并不保证固定的加速倍数。</p>
+<h2 id="DFlash：让小模型同时起草多个-token，再由主模型验证"><a href="#DFlash：让小模型同时起草多个-token，再由主模型验证" class="headerlink" title="DFlash：让小模型同时起草多个 token，再由主模型验证"></a>DFlash：让小模型同时起草多个 token，再由主模型验证</h2><p>有些草稿模型仍要一个 token 接一个 token 地写，起草本身也会拖慢速度。<strong>DFlash 用块扩散方式，让小模型一次计算就提出一整块候选</strong>，像把“填完一个空，再填下一个”改成“一次填一排空格”。</p>
+<p>为了猜得更准，DFlash 还把主模型部分层的中间计算结果提供给草稿模型。好比主编先给助手一份参考笔记，助手不必完全从头理解上下文，再将草稿交回主编审核。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://z-lab.ai/projects/dflash/">技术说明</a></p>
+<p>所以，<strong>DFlash 不只是让主模型批量审稿，也让助手批量起草，并借主模型的信息提高准确率。</strong> 最终输出仍须通过验证；草稿模型虽小，权重和缓存也要占显存，不能当作零成本。</p>
+<h2 id="DFlash-2：让同时起草的-token-更连贯，提高草稿通过率"><a href="#DFlash-2：让同时起草的-token-更连贯，提高草稿通过率" class="headerlink" title="DFlash 2：让同时起草的 token 更连贯，提高草稿通过率"></a>DFlash 2：让同时起草的 token 更连贯，提高草稿通过率</h2><p>一次填一排空格，容易出现“每个词单看合理，连起来却不通顺”，也可能越填到后面越不准。DFlash 2 用两项改进来缓解这些问题。</p>
+<p><strong>路径选择器像在挑词组句</strong>：每个位置先保留几个候选，再比较相邻候选的搭配，选出更连贯的一串。<strong>局部卷积则让相邻位置共享一点信息</strong>：每个位置计算时，也参考前一个位置的中间结果，减少各猜各的、后半段容易出错的问题。两者都只是改善草稿，最终仍要由主模型验证。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://inco.ai/blog/dflash2/">技术说明</a></p>
+<p>效果可以看“每轮验证能推进多少个 token”。例如，官方 Qwen3.8-27B 的一组测试中，块大小设为 8，平均每轮推进 <strong>4.80 个 token</strong>。这不等于快了 4.80 倍，因为起草和验证本身也耗时。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://inco.ai/blog/dflash2/">实验说明</a></p>
+<p>实际提速还看使用场景：同一模型卡中，单请求时的输出吞吐约为普通逐个生成的 <strong>2.67～3.43 倍</strong>，32 个请求并发时则约为 <strong>1.01～1.45 倍</strong>。这些数字按总输出量除以请求全程耗时计算，不是纯生成阶段的速度，也不代表你的 16GB 显卡能达到同样效果。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://huggingface.co/incoai/Qwen3.8-27B-DFlash2">测试说明</a></p>
+<p><strong>DFlash 让草稿写得快，DFlash 2 进一步让草稿接得顺、通过得多，争取减少主模型的计算轮次。</strong> 真正部署时，仍要确认主模型、草稿模型、量化格式和推理软件能配套，并为草稿留下显存空间。</p>
+<h2 id="七、回到-16GB：预算是否成立，性能如何验证"><a href="#七、回到-16GB：预算是否成立，性能如何验证" class="headerlink" title="七、回到 16GB：预算是否成立，性能如何验证"></a>七、回到 16GB：预算是否成立，性能如何验证</h2><p><em>图 7：容器被不同大小的方块刚好填满，指示条接近满格——预算很紧，任何漏项都可能让方案失败。</em></p>
+<h2 id="显存：算得下，还要留余量。“恰好装满”，并不是安全方案"><a href="#显存：算得下，还要留余量。“恰好装满”，并不是安全方案" class="headerlink" title="显存：算得下，还要留余量。“恰好装满”，并不是安全方案"></a><strong>显存：算得下，还要留余量。“恰好装满”，并不是安全方案</strong></h2><p>把前面的权重、缓存和加速开销放到一起，就能算出一份显存预算。下面沿用原始材料的估算数演示，<strong>不是实测配置</strong>；具体模型文件、草稿配置和推理软件版本尚未明确。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>示例预算</th>
+<th>使用前需要确认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主模型</td>
+<td>约 11GB</td>
+<td>加载后占多少显存，量化后回答是否可靠</td>
+</tr>
+<tr>
+<td>草稿及相关开销</td>
+<td>约 1.1GB</td>
+<td>是否算上草稿的权重、缓存和临时计算空间</td>
+</tr>
+<tr>
+<td>100K 上下文缓存</td>
+<td>约 1.9GB</td>
+<td>缓存用什么精度，实际占用多少显存</td>
+</tr>
+<tr>
+<td>引擎与其他运行预留</td>
+<td>约 2GB</td>
+<td>是否够用来容纳运行中的临时数据</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>约 16GB</td>
+<td>几乎没有额外余量，不代表能稳定运行</td>
+</tr>
+</tbody></table>
+<p><strong>加起来刚好 16GB，不等于能稳定运行。</strong> 这像把行李箱塞得刚好合上，途中再添一点东西就装不下了。表中任何一项低估，都可能超出容量。实际应统一 GB 与 GiB 的计量口径，以系统显示的可用显存为准，并检查运行时的最高占用。</p>
+<p>上下文拉长，预算还会变化。假如缓存从约 1.9GB 增到约 5GB，其他项目不变，总计就达到约 <strong>19.1GB</strong>。这里仍是估算，但说明了一个关键区别：<strong>模型支持长上下文，不代表你的显卡装得下。</strong></p>
+<p>预算超了，可以缩短上下文、换更小或更低比特的模型、关闭草稿加速，或者让 CPU 分担一部分。每次调整后都要重看质量和速度，不能为了塞进加速器，先把主模型压到不好用。</p>
+<h2 id="速度：每秒写得快，不等于整项任务同比变快"><a href="#速度：每秒写得快，不等于整项任务同比变快" class="headerlink" title="速度：每秒写得快，不等于整项任务同比变快"></a>速度：每秒写得快，不等于整项任务同比变快</h2><p>原始材料记录：不开 DFlash 2 时为 27.86 token&#x2F;s、10 分 54 秒；开启后为 49.96 token&#x2F;s、2 分 40 秒。缺少完整日志与环境说明，这组数字只能用来说明比较方法，不能当作已复现的对照实验。</p>
+<p>每秒生成速度约变成 <strong>1.79 倍</strong>，前后总耗时之比却约为 <strong>4.09 倍</strong>。为什么差这么多？像两个人抄文章：一个人更早写完，不一定全是手速快，也可能是文章更短、准备时间更少。模型也是如此：输出长度、输入处理、缓存命中，以及是否计入加载时间，都会影响总耗时。</p>
+<p>所以，不能仅凭这组记录就说“投机解码让模型少想了”。它加快的是生成过程，不保证每次回答一样长；即使生成更快，输入处理和工具调用等环节仍然要花时间。</p>
+<p>公平的比较，应在同一套硬件、主模型、提示词和生成设置下，只改变是否开启草稿加速。记录输出 token 数、开始回答前的等待时间、生成速度、总耗时、显存最高占用和答案质量；加载、预热与思考内容的计时口径保持一致，随机采样时多测几次。</p>
+<p><strong>显存要算全，还要留余量；速度要在相同条件下比较，还要看答案质量。</strong> 先确认模型好用，再判断加速值不值得开。</p>
+<h2 id="八、关键概念速查：每个词对应哪个问题"><a href="#八、关键概念速查：每个词对应哪个问题" class="headerlink" title="八、关键概念速查：每个词对应哪个问题"></a>八、关键概念速查：每个词对应哪个问题</h2><p><em>图 8：这些概念不是孤立的术语，而是同一根技术链条上可以互相组合的模块。</em></p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>回答的问题</th>
+<th>不能忽略的边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>稠密 &#x2F; MoE</td>
+<td>每个 token 经过怎样的计算路径，调用多少专家？</td>
+<td>激活参数少，不代表全部权重占用同比减少</td>
+</tr>
+<tr>
+<td>权重量化</td>
+<td>模型权重如何少占空间？</td>
+<td>低比特可能影响质量，文件大小不是运行显存</td>
+</tr>
+<tr>
+<td>分层卸载</td>
+<td>GPU 放不下时，能否借助 CPU 与内存？</td>
+<td>容量换取速度，影响程度需实测</td>
+</tr>
+<tr>
+<td>KV Cache</td>
+<td>怎样复用已经处理过的上下文？</td>
+<td>长度、KV 头数、精度与并发都会影响占用</td>
+</tr>
+<tr>
+<td>混合注意力</td>
+<td>能否减少保存完整历史 KV 的层？</td>
+<td>属于模型架构，其他状态仍然占空间</td>
+</tr>
+<tr>
+<td>Prefill &#x2F; Decode</td>
+<td>慢在读输入，还是写输出？</td>
+<td>两个阶段瓶颈不同，不能共用一个加速倍数</td>
+</tr>
+<tr>
+<td>MTP</td>
+<td>能否用模型自带模块预测后续 token？</td>
+<td>可以用于投机起草，效果取决于模型和引擎</td>
+</tr>
+<tr>
+<td>投机解码</td>
+<td>一次主模型验证能否推进多个 token？</td>
+<td>正确验证才能保持目标分布，也有额外成本</td>
+</tr>
+<tr>
+<td>DFlash &#x2F; DFlash 2</td>
+<td>怎样并行起草，并提高候选的衔接与接受率？</td>
+<td>需要配套草稿与后端，收益随任务和并发变化</td>
+</tr>
+</tbody></table>
+<h2 id="结语：装得下只是起点，好用才是目的"><a href="#结语：装得下只是起点，好用才是目的" class="headerlink" title="结语：装得下只是起点，好用才是目的"></a>结语：装得下只是起点，好用才是目的</h2><p>本地部署，先看模型能不能答好你的问题，再看显存能否装下权重、上下文缓存和运行开销，最后才是用 MTP、DFlash 等方法争取提速。<strong>模型不是越大越好，加速也不是开了就一定有效。</strong></p>
+<p>下次看到“16GB 能跑 27B”，别只问每秒能生成多少 token。还要看它用了什么模型和量化、能处理多长的输入，以及在你的硬件上表现如何。最终要回答的是：<strong>答案是否可靠，运行是否稳定，完成任务要等多久？</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/7e48aca8/">https://macin.top/posts/7e48aca8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/MoE/">MoE</a><a class="post-meta__tags" href="/tags/KV-Cache/">KV Cache</a><a class="post-meta__tags" href="/tags/DFlash/">DFlash</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6411fa2c/" title="为什么你手握 Codex、Claude，依然赚不到钱？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">为什么你手握 Codex、Claude，依然赚不到钱？</div></div><div class="info-2"><div class="info-item-1">过去，一个人赚不到钱，往往还能找到很多具体的理由。不会编程，不会做网站，不会设计，不会写文案，没有开发团队，也没钱雇程序员。</div></div></div></a><a class="pagination-related" href="/posts/5cb45529/" title="薄肌黄毛与男性觉醒是个骗局"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">薄肌黄毛与男性觉醒是个骗局</div></div><div class="info-2"><div class="info-item-1">我的文章也写给那些学了别人开始换发型，慢慢练肌肉，开始晒腹肌线条、学会「永远给自己留好退出机制」「拒绝力工思维，培养黄毛思维」这类金句，但是嘞…</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/5743d22f/" title="linux 中的 cron 如何设置和管理：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/linux.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-19</div><div class="info-item-2">linux 中的 cron 如何设置和管理：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Linux 中 cron 设置与管理教程：crontab 查看、编辑、删除定时任务，格式为分钟 小时 日 月 周 命令，自动化运维必备。</div></div></div></a><a class="pagination-related" href="/posts/d320dd43/" title="ubuntu 下使用 ufw 配置防火墙（简化 iptables 的操作）"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ubuntu.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">ubuntu 下使用 ufw 配置防火墙（简化 iptables 的操作）</div></div><div class="info-2"><div class="info-item-1">Ubuntu 使用 UFW 配置防火墙教程：Uncomplicated Firewall 简化 iptables 操作，支持 IPv4/IPv6 规则，附 Gufw 图形界面方案，Debian 同样适用。</div></div></div></a><a class="pagination-related" href="/posts/627c2f1f/" title="TrueNAS 系统安装教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/truenasscale.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-05</div><div class="info-item-2">TrueNAS 系统安装教程</div></div><div class="info-2"><div class="info-item-1">TrueNAS 系统安装教程：基于开源软件的企业级网络存储方案，支持 ZFS 快照克隆、SMB/NFS/AFP 文件共享、iSCSI 块存储与 S3 对象存储，家庭与数据中心皆宜。</div></div></div></a><a class="pagination-related" href="/posts/e0a16d4e/" title="Telegram 使用指南：注册、安全、找资源与 Bot 自动化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/telegram.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-08</div><div class="info-item-2">Telegram 使用指南：注册、安全、找资源与 Bot 自动化</div></div><div class="info-2"><div class="info-item-1">但加完之后，列表开始爆炸：项目群、频道、机器人、客服、私信、资源转发、各种“官方通知”。三天后，手机里多了一个蓝色图标，脑子里多了一堆红点。</div></div></div></a><a class="pagination-related" href="/posts/816e2658/" title="远程访问需要的上行带宽多少才够：远程访问带宽避坑指南"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/nas.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-11</div><div class="info-item-2">远程访问需要的上行带宽多少才够：远程访问带宽避坑指南</div></div><div class="info-2"><div class="info-item-1">远程访问需要的上行带宽分析：家庭宽带上行一般 30-50Mbps 是否够用，测速网测试方法（建议有线连接），NAS 远程访问带宽规划。</div></div></div></a><a class="pagination-related" href="/posts/f20d7a08/" title="shadowrocket 小火箭在线安装：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/shadowrocket.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="info-item-2">shadowrocket 小火箭在线安装：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Shadowrocket 小火箭在线安装教程：无需美区 Apple ID，访问网页一键在线安装即可使用，闪退可多尝试几个安装包，iOS 科学上网利器。</div></div></div></a><a class="pagination-related" href="/posts/3f52c74b/" title="使用 PE 打包 ISO 镜像：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/nas.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">使用 PE 打包 ISO 镜像：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">使用 PE 打包 ISO 镜像教程：iStoreOS、OpenWRT 等只提供 img 镜像而虚拟机仅支持 ISO 时，用微 PE ISO 配合 UltraISO 打包转换启动镜像。</div></div></div></a><a class="pagination-related" href="/posts/37862c25/" title="docker 搭建青龙 tools：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/qinglong.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">docker 搭建青龙 tools：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Docker 搭建青龙 tools 教程：v1.7 起全面支持热更新，提供 amd64、arm64、arm-7 架构，更新失败删除容器镜像重新拉取即可。</div></div></div></a><a class="pagination-related" href="/posts/12b4b795/" title="windows 设置网络是否 IPv6 访问优先：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ipv6.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-08</div><div class="info-item-2">windows 设置网络是否 IPv6 访问优先：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Windows 设置网络 IPv6 访问优先教程：重置 IPv6 策略、命令提示符配置前缀优先级，附 IPv6 地址查询与检测方法。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2437</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2530</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">167</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E7%AE%97%E6%80%BB%E8%B4%A6%EF%BC%9A%E6%98%BE%E5%AD%98%E9%87%8C%E4%B8%8D%E5%8F%AA%E6%9C%89%E6%A8%A1%E5%9E%8B%E6%9D%83%E9%87%8D"><span class="toc-number">1.</span> <span class="toc-text">一、先算总账：显存里不只有模型权重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9E%8B%E8%83%BD%E4%B8%8D%E8%83%BD%E8%A3%85%E4%B8%8B%EF%BC%9A%E5%85%88%E5%88%86%E6%B8%85%E5%8F%82%E6%95%B0%EF%BC%8C%E5%86%8D%E7%9C%8B%E9%87%8F%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">二、模型能不能装下：先分清参数，再看量化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%A3%85%E4%B8%8D%E4%B8%8B%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9ACPU-GPU-%E5%8D%B8%E8%BD%BD%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">3.</span> <span class="toc-text">三、装不下怎么办：CPU&#x2F;GPU 卸载的代价</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E8%83%BD%E5%BC%80%E5%A4%9A%E9%95%BF%EF%BC%9AKV-Cache-%E4%B8%8E%E6%B7%B7%E5%90%88%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">四、上下文能开多长：KV Cache 与混合注意力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%A3%85%E4%B8%8B%E4%BA%86%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E6%85%A2%EF%BC%9A%E5%85%88%E5%88%86%E6%B8%85%E2%80%9C%E8%AF%BB%E8%BE%93%E5%85%A5%E2%80%9D%E5%92%8C%E2%80%9C%E5%86%99%E8%BE%93%E5%87%BA%E2%80%9D"><span class="toc-number">5.</span> <span class="toc-text">五、装下了为什么还慢：先分清“读输入”和“写输出”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%B8%80%E6%AC%A1%E9%AA%8C%E8%AF%81%E5%A4%9A%E4%B8%AA-token%EF%BC%9A%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81%E3%80%81MTP-%E4%B8%8E-DFlash"><span class="toc-number">6.</span> <span class="toc-text">六、一次验证多个 token：投机解码、MTP 与 DFlash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E7%90%86%E8%A7%A3%E9%80%9A%E7%94%A8%E6%A1%86%E6%9E%B6%EF%BC%9A%E5%8A%A9%E6%89%8B%E8%B5%B7%E8%8D%89%EF%BC%8C%E4%B8%BB%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81"><span class="toc-number">7.</span> <span class="toc-text">先理解通用框架：助手起草，主模型验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MTP%EF%BC%88%E5%A4%9A-token-%E9%A2%84%E6%B5%8B%EF%BC%89%EF%BC%9A%E8%8D%89%E7%A8%BF%E4%B8%8D%E4%B8%80%E5%AE%9A%E6%9D%A5%E8%87%AA%E7%8B%AC%E7%AB%8B%E7%9A%84%E5%B0%8F%E6%A8%A1%E5%9E%8B"><span class="toc-number">8.</span> <span class="toc-text">MTP（多 token 预测）：草稿不一定来自独立的小模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DFlash%EF%BC%9A%E8%AE%A9%E5%B0%8F%E6%A8%A1%E5%9E%8B%E5%90%8C%E6%97%B6%E8%B5%B7%E8%8D%89%E5%A4%9A%E4%B8%AA-token%EF%BC%8C%E5%86%8D%E7%94%B1%E4%B8%BB%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81"><span class="toc-number">9.</span> <span class="toc-text">DFlash：让小模型同时起草多个 token，再由主模型验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DFlash-2%EF%BC%9A%E8%AE%A9%E5%90%8C%E6%97%B6%E8%B5%B7%E8%8D%89%E7%9A%84-token-%E6%9B%B4%E8%BF%9E%E8%B4%AF%EF%BC%8C%E6%8F%90%E9%AB%98%E8%8D%89%E7%A8%BF%E9%80%9A%E8%BF%87%E7%8E%87"><span class="toc-number">10.</span> <span class="toc-text">DFlash 2：让同时起草的 token 更连贯，提高草稿通过率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%9B%9E%E5%88%B0-16GB%EF%BC%9A%E9%A2%84%E7%AE%97%E6%98%AF%E5%90%A6%E6%88%90%E7%AB%8B%EF%BC%8C%E6%80%A7%E8%83%BD%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81"><span class="toc-number">11.</span> <span class="toc-text">七、回到 16GB：预算是否成立，性能如何验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E5%AD%98%EF%BC%9A%E7%AE%97%E5%BE%97%E4%B8%8B%EF%BC%8C%E8%BF%98%E8%A6%81%E7%95%99%E4%BD%99%E9%87%8F%E3%80%82%E2%80%9C%E6%81%B0%E5%A5%BD%E8%A3%85%E6%BB%A1%E2%80%9D%EF%BC%8C%E5%B9%B6%E4%B8%8D%E6%98%AF%E5%AE%89%E5%85%A8%E6%96%B9%E6%A1%88"><span class="toc-number">12.</span> <span class="toc-text">显存：算得下，还要留余量。“恰好装满”，并不是安全方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9F%E5%BA%A6%EF%BC%9A%E6%AF%8F%E7%A7%92%E5%86%99%E5%BE%97%E5%BF%AB%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%95%B4%E9%A1%B9%E4%BB%BB%E5%8A%A1%E5%90%8C%E6%AF%94%E5%8F%98%E5%BF%AB"><span class="toc-number">13.</span> <span class="toc-text">速度：每秒写得快，不等于整项任务同比变快</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5%E9%80%9F%E6%9F%A5%EF%BC%9A%E6%AF%8F%E4%B8%AA%E8%AF%8D%E5%AF%B9%E5%BA%94%E5%93%AA%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">14.</span> <span class="toc-text">八、关键概念速查：每个词对应哪个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD%EF%BC%9A%E8%A3%85%E5%BE%97%E4%B8%8B%E5%8F%AA%E6%98%AF%E8%B5%B7%E7%82%B9%EF%BC%8C%E5%A5%BD%E7%94%A8%E6%89%8D%E6%98%AF%E7%9B%AE%E7%9A%84"><span class="toc-number">15.</span> <span class="toc-text">结语：装得下只是起点，好用才是目的</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/91ae2c99/" title="【小学生也能看懂】GPT-6 Astra 新手指南"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chatgpt.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="【小学生也能看懂】GPT-6 Astra 新手指南"/></a><div class="content"><a class="title" href="/posts/91ae2c99/" title="【小学生也能看懂】GPT-6 Astra 新手指南">【小学生也能看懂】GPT-6 Astra 新手指南</a><time datetime="2026-09-16T02:35:27.000Z" title="发表于 2026-09-16 10:35:27">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/602cd622/" title="网警同款开盒思路，查人查公司查设备，五个免费开源工具"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="网警同款开盒思路，查人查公司查设备，五个免费开源工具"/></a><div class="content"><a class="title" href="/posts/602cd622/" title="网警同款开盒思路，查人查公司查设备，五个免费开源工具">网警同款开盒思路，查人查公司查设备，五个免费开源工具</a><time datetime="2026-09-16T02:34:06.000Z" title="发表于 2026-09-16 10:34:06">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4eeb53c0/" title="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析"/></a><div class="content"><a class="title" href="/posts/4eeb53c0/" title="有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析">有了VPS为什么还需要住宅IP？VPS搭配住宅IP的应用场景解析</a><time datetime="2026-09-16T02:08:23.000Z" title="发表于 2026-09-16 10:08:23">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a33909e2/" title="超简单 Grok Bot ，入门到一键构建机器人团队"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="超简单 Grok Bot ，入门到一键构建机器人团队"/></a><div class="content"><a class="title" href="/posts/a33909e2/" title="超简单 Grok Bot ，入门到一键构建机器人团队">超简单 Grok Bot ，入门到一键构建机器人团队</a><time datetime="2026-09-16T01:53:05.000Z" title="发表于 2026-09-16 09:53:05">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d14fc9ae/" title="用workbuddy做微信小程序，小白看完都能直接上手"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/workbuddy.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="用workbuddy做微信小程序，小白看完都能直接上手"/></a><div class="content"><a class="title" href="/posts/d14fc9ae/" title="用workbuddy做微信小程序，小白看完都能直接上手">用workbuddy做微信小程序，小白看完都能直接上手</a><time datetime="2026-09-16T01:12:52.000Z" title="发表于 2026-09-16 09:12:52">2026-09-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

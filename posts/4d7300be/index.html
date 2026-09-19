@@ -1,0 +1,611 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>如何自动化获客 | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="读完这份指南，你会知道怎么为任何东西自动生成线索——无论你卖的是线上数字产品，是给自家生意找客户，还是一个产品都没有、只想生成线索再转卖给企业。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何自动化获客">
+<meta property="og:url" content="https://macin.top/posts/4d7300be/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="读完这份指南，你会知道怎么为任何东西自动生成线索——无论你卖的是线上数字产品，是给自家生意找客户，还是一个产品都没有、只想生成线索再转卖给企业。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-14T01:35:51.000Z">
+<meta property="article:modified_time" content="2026-09-19T15:49:42.234Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="自动化">
+<meta property="article:tag" content="获客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "如何自动化获客",
+  "url": "https://macin.top/posts/4d7300be/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-14T01:35:51.000Z",
+  "dateModified": "2026-09-19T15:49:42.234Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/4d7300be/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何自动化获客',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2638</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2669</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">如何自动化获客</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">如何自动化获客</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-19T15:49:42.234Z" title="更新于 2026-09-19 23:49:42">2026-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-19 23:49:42&quot;}" hidden></div><p>（说明：文中的冷启动短信&#x2F;邮件触达与平台数据抓取，在部分地区法规和平台规则下有限制，落地前请自行确认。）</p>
+<p>读完这份指南，你会知道怎么为任何东西自动生成线索——无论你卖的是线上数字产品，是给自家生意找客户，还是一个产品都没有、只想生成线索再转卖给企业。</p>
+<p>方法其实只有一个：找到已经在付钱的人，把他们的数据抓下来，做出能触达他们的东西，然后放到他们看得见的地方。唯一会变的是最后拿到线索的人是谁。</p>
+<p>读完你会拥有：</p>
+<p>一个清楚知道谁会买你产品的 agent</p>
+<p>一份用他们自己三个月原话写成的买家画像</p>
+<p>从这份画像生成的广告素材，每个角度好几版</p>
+<p>一个把线索送进你产品的 whop ads 广告活动</p>
+<p>一个能找出「这个行业要修的那个东西」的扫描器</p>
+<p>一条本地企业愿意按月付费的线索管道</p>
+<p>全部按计划自动跑，只有少数几件事留给人手动</p>
+<p>用哪个 agent？grok bot 还是 hermes</p>
+<p>两个都能跑完这篇文章里的所有东西，系统也完全一样，区别只是你愿意做多少配置。</p>
+<p>grok bot 上手简单。它自带一台电脑，有终端、浏览器和文件系统，你像聊天一样跟它说话。所以做法是：先用 claude 把整套系统写成一个 skill 文件，然后把这个文件连同 API key 和它需要的工具权限一起交给 grok bot。它读了 skill 就开始跑。你也可以用 chatgpt 或 grok bot 自己来写这个 skill，但我自己是用 claude 写的。</p>
+<p>也就是说，普通人也能跑：你什么都不用配置，只要给 grok bot 一个文件和几个 key，它就开始干活。</p>
+<p>hermes 起步更技术化，跑起来之后反而更省心。它按计划运行——grok bot 也能做计划任务，但 hermes 就是为这个建的。配置 hermes 只需要给 claude 一段 prompt：你给它 hermes 的文档和一个来自 </p>
+<p>@BotFather</p>
+<p> 的 telegram bot token，它就会把 hermes 作为常驻服务部署到 railway 上。然后你把同一个 skill 文件、同一批 API key、同样的工具权限交给 hermes，之后 prompt 都通过 telegram 发给它。</p>
+<p>所以 skill 文件才是核心。用 claude 写出来，两个 agent 都能跑。这篇文章里的每一段 prompt，最后都是这个 skill 文件的内容。</p>
+<p>下面我说「agent」，指的都是这两个里的任意一个。</p>
+<p>skill 文件</p>
+<p>skill 文件本质上就是一份文档，告诉 agent 怎么干一件活：步骤是什么、按什么顺序、用哪些工具、要记录什么。你写一次，任何读到它的 agent 都能跑这个活。</p>
+<p>你用 claude 来写（用 codex 也行）。把文章里的 prompt 粘进一个新对话，告诉 claude 你要跑哪条 pipeline，让它把这些 prompt 变成一个完整的 skill 文件——规则在最上面，步骤在下面。它会回给你一个 .md 文件，你保存下来，交给 grok bot 或 hermes。</p>
+<p>​    把这些变成一个用于 [pipeline 一&#x2F;二&#x2F;三] 的 skill 文件。</p>
+<p>​    - 这是我的 prompt：[粘贴进来]</p>
+<p>​    - 把运行规则放在最上面：一个行业或一个细分一张表，绝不跨表读；任何会接触真人或花钱的动作，先停下来问我；不确定的东西标成 review，不要猜</p>
+<p>​    - 然后按顺序列步骤，每一步说明它用什么工具、读什么、写什么、把什么交给下一步</p>
+<p>​    - 列出这个 agent 跑起来需要的所有 API key 和工具权限，让我一次性给全</p>
+<p>​    - 写得让一个从没看过这篇文章的 agent，只看文件就能跑起来</p>
+<p>​    - 告诉我这里面你觉得哪些地方说得不够清楚、会让 agent 去猜</p>
+<p>哪一半是你的</p>
+<p>这篇文章是给三种人写的，各人跑的部分不一样。</p>
+<p>如果你在卖数字产品，或者想做，就跑 pipeline 一。线索是你的，广告是你的，买家落在你的页面上。</p>
+<p>如果你自己有个生意，就跑 pipeline 二给自己用：找出需要你这门生意的人，把修复效果做到他们自己的物业上，把修复展示在业主面前，线索就来了。如果你是生意主人，跳过 pipeline 三。</p>
+<p>如果你既没有产品也没有生意，就把 pipeline 二接上 pipeline 三：为某个城市的某个行业生成线索，卖给做这个活的企业。</p>
+<p>pipeline 一：数字线索</p>
+<p>这一条是给有产品（或者有产品想法）的人用的。你要弄清楚到底是谁买它、他们在哪，把他们过去三个月说过的话全抓下来，然后用这些做广告。（你不需要担心自己以前从没投过广告，现在用 whop ads 投起来很容易。）</p>
+<p>从产品开始</p>
+<p>agent 得先理解产品，才能找到买家。它做什么、卖多少钱、解决什么问题，以及一个人得相信自己是什么样的人，才会想要它。</p>
+<p>所以第一段 prompt 是产品，回来的是买家：他们的人口学身份，以及他们的心理画像。比如「34 岁、住在德州的男性」是人口学；「试过好几种办法、为没一个成功而沮丧的 34 岁男性」是心理画像。</p>
+<p>​    这是我的产品：[描述它，或者把页面粘进来]。</p>
+<p>​    - 告诉我谁会买这个。年龄、处境、在做什么、处在人生哪个阶段</p>
+<p>​    - 告诉我他们在这些表面之下是什么样的人。他们试过什么、害怕什么、绝不肯承认自己想要什么、用什么说法解释自己为什么还没做成</p>
+<p>​    - 告诉我这些人在网上的什么地方。具体的 subreddit、facebook 群组、youtube 频道、tiktok 账号、discord、论坛。要实际的名字，不要品类</p>
+<p>​    - 对每一个地方，告诉我他们为什么在那儿、在那儿聊什么</p>
+<p>​    - 告诉我哪些地方有买家，哪些地方只是些嘴上聊的人</p>
+<p>​    - 如果你不确定一个地方是不是真实存在、是否活跃，就直说，不要列进来</p>
+<p>抓三个月的数据</p>
+<p>然后 agent 去那些地方，把这三个月的东西全抓下来：帖子、评论、回复、人们问的问题、他们抱怨的事、他们用的词。apify 对这些平台每一个都有 scraper，agent 通过 apify mcp 来跑。</p>
+<p>三个月足够看出什么在重复，又不会旧到失效。</p>
+<p>​    从你列出的每一个「有买家」的地方，抓最近三个月的数据。</p>
+<p>​    - 用 apify mcp。reddit、facebook 群组、youtube 评论、tiktok 评论，每个地方选合适的 scraper</p>
+<p>​    - 抓帖子和高赞评论、回复。保留每一条的来源 url、日期和互动量</p>
+<p>​    - 把出现超过三次的每一个问题写下来，用他们自己的原话，附上出现次数</p>
+<p>​    - 把他们对「自己试过的东西」的每一个抱怨写下来，用他们自己的原话，附上出现次数</p>
+<p>​    - 把描述问题时用的说法，和描述他们其实想要什么时用的说法，都写下来</p>
+<p>​    - 告诉我他们已经为什么付过钱，以及他们对那东西的评价</p>
+<p>​    - 把这些写成一份画像，引语和计数都在里面，按次数排序</p>
+<p>​    - 凡是你在猜而不是在引用，都标出来</p>
+<p>agent 的活是找出重复最多的是什么。</p>
+<p>创意计划</p>
+<p>在动手做广告之前，画像要先变成一个计划。agent 读画像里的内容，定出 angles——也就是出现次数最高的抱怨或欲望；再定出每个 angle 下面的 hooks——也就是画像里说出这件事的原话。</p>
+<p>然后它算清楚 whop ads 需要什么。whop ads 跑在 meta、facebook 和 instagram 上，所以素材是竖版视频和静图，用 meta 的三种尺寸比例。agent 读 whop 的文档就知道这些，而计划会写明每个素材用在哪里。</p>
+<p>​    从画像生成创意计划。</p>
+<p>​    - 取出现次数最高的三个抱怨或欲望，把每一个做成一个 angle</p>
+<p>​    - 每个 angle 写三个 hook，都要用画像里的原话，不要用我的措辞</p>
+<p>​    - 每个 hook 说明视频里显示什么、静图里显示什么。要显示他们描述的想要的结果，不是产品</p>
+<p>​    - 读 whop 的广告文档，告诉我通过 whop ads 投 meta 需要哪些格式和尺寸</p>
+<p>​    - 每个素材说明它投在哪个位置：信息流、stories、reels</p>
+<p>​    - 每个素材结尾都是同一个 offer 和同一个结账链接</p>
+<p>​    - 如果某个 angle 在画像里素材不够、写不出三个 hook，就砍掉并说明原因，不要硬凑</p>
+<p>三个 angle、九个素材。够用来学到东西，又不会多到把预算摊成零。agent 通过 replicate 或 fal 来生成，看你给了它哪个的 key。目前 gpt image 2.5 是最好的图像模型，seedance 2.5 是最好的视频模型，所以它会调这两个，两个都能直接从计划里出来，不用再额外给 prompt。</p>
+<p>开跑 whop ads</p>
+<p>whop ads 跑在 whop 自己的 meta 代理账号上。你是从 whop 后台启动，不是在 meta 的原生广告管理器里，广告通过处在 meta 最高层级的账号跑在 facebook 和 instagram 上。这意味着竞价里优先、规模化后千次展示成本更低，被拒的次数也远少于一个新账号。这真的很爽。</p>
+<p>pixel 已经在你的 whop 页面上，而且它用真实支付数据来做归因。所以当一次转化被计入时，是真的有人付了钱。whop 还会把转化回传给 meta 的优化系统，于是 meta 用同一套数字来学习。</p>
+<p>agent 按计划把这一切建起来：一个 campaign，三个 ad set（一个 angle 一个），每个 ad set 三个素材。每个 ad set 从 [占位] 一天开始。要盯的数字是「每单成本」对「你产品的价格」。如果某个 ad set 的每单成本连续三天高于产品价格，就暂停它。agent 每天从广告后台拉花费、从 whop 拉净收入，并排放在一起——这是唯一能真正看清它的办法。</p>
+<p>投放资金当天可以从你 whop 的待结算余额里出。广告带来买家，买家养广告。</p>
+<p>agent 的每日报告是每个 ad set 四个数字：花费、点击、成交、每单成本，以及哪个 angle 在赢、有什么该暂停。</p>
+<p>用 whop ads 本身不用付钱，你只付投放花费，仅此而已。</p>
+<p>收集线索</p>
+<p>广告把人送到你的页面，产品就是你第一段 prompt 里给它的那个。页面上说的话和广告一样，用的还是他们的语气。</p>
+<p>对点了但没买的人，agent 会去跟进。whop 会告诉你谁访问过、谁到了结账这一步。</p>
+<p>这就是 pipeline 一：产品、买家、三个月的原话、计划、素材、广告。线索始终是你的。</p>
+<p>pipeline 二：实体线索</p>
+<p>这一条是线索给本地企业用的。你从公开数据里找到一处有可见问题的物业或商铺，把修复效果渲染到那处真实的物业上，把这张渲染图送到业主眼前，回应你的人就是线索。</p>
+<p>选行业</p>
+<p>选一个词就能说清楚的行业：太阳能、屋顶、园林、泳池、遮阳篷、围栏、车道、招牌。买家必须在消息到达之前就已经想要这东西——所以这个行业得是那种「物业或商铺本身就告诉你他们需要」的。你不是在创造需求，你是在发现需求。</p>
+<p>其中一些业主是家庭，一些是企业，方法不管这些。带泳池的房子是家庭。没有招牌的咖啡馆是企业。屋顶空空平平的仓库是企业。屋顶旧了的房子是家庭。要紧的是：这个行业要修的那个东西，能从公开数据里看出来，agent 才能找到它。</p>
+<p>所以第一段 prompt 是行业，回来的是数据在哪。</p>
+<p>​    我在为 [城市] 的 [行业] 生成线索。</p>
+<p>​    - 告诉我这个行业需要做的时候，物业或商铺看起来是什么样。什么东西可见、从哪里看得见</p>
+<p>​    - 告诉我哪个公开数据源能显示出它。卫星影像、街景、挂牌照片、商户信息、许可记录、房产记录。要具体到数据源，以及它会返回什么</p>
+<p>​    - 告诉我要找的买家是家庭还是企业，各自我能拿到什么联系数据。只有地址，还是也有邮箱和电话</p>
+<p>​    - 告诉我该用哪一个判定条件。只要一个，不要一串</p>
+<p>​    - 告诉我渲染图需要显示什么，渲染进哪张图里</p>
+<p>​    - 如果这个行业在公开数据里没有可见信号，就直说，不要编一个出来</p>
+<p>找出候选</p>
+<p>判定条件只有一个：有那个行业要修的东西。你叠加的每一个过滤条件都会砍短名单、加进一个猜测，而猜测会互相放大。第一批发出去之后，行业自己会告诉你哪些过滤值得做，这是很有价值的信息。</p>
+<p>数据是公开的，而且大多免费。数据源取决于行业，这也是上一段 prompt 存在的原因。agent 只用上一段 prompt 指出的那一个数据源去读。给判定条件再加第二个数据源，就是名单缩水的开始。</p>
+<p>多数影像 API 都有一个免费的元数据检查，能告诉你影像是否存在、有多旧，然后你才需要为图像付费。agent 对每个地址先跑这个，只对返回「较新」的付费。</p>
+<p>​    为 [城市] 的 [行业] 建候选名单。</p>
+<p>​    - 从房产记录或商户信息里（看这个行业需要哪个）拉出 [区域] 里的每一个地址，能公开拿到的业主名字也一起拿</p>
+<p>​    - 对每一个地址，先检查影像或挂牌照片是否存在，再决定要不要拉东西；什么都没有、或者影像超过三年的直接丢掉</p>
+<p>​    - 通过这一关的，拉我们选定的那一个数据源，检查那一个判定条件</p>
+<p>​    - 通过判定的，拉渲染需要的参考图</p>
+<p>​    - 写一张表：地址、业主、联系数据、来源 url，以及一个标记——判定是明确还是边界</p>
+<p>​    - 边界情况标成 review，不要判成进或出</p>
+<p>​    - 做完了告诉我这批花了多少 API 调用</p>
+<p>渲染修复效果</p>
+<p>图像模型把修复效果做到他们真实的物业上。</p>
+<p>它必须是编辑。模型拿到参考图，只改这个行业要修的那一个东西。</p>
+<p>这里需要好几帧参考图，原因和我那篇圣诞灯文章里一样：只有一张图，模型对图外的一切只能靠猜。三到四张参考图，它才够用。</p>
+<p>触达业主</p>
+<p>三个渠道可以做这件事：邮件、短信、明信片。三个渠道用的渲染图一样，指向的地方也一样——一个专为这处物业建的页面，最上面是渲染图，下面是一个表单，问他们希望什么时候报价。</p>
+<p>用哪个渠道取决于你手里有什么。对企业，你通常能从商户信息里拿到邮箱和电话，所以邮件和短信都行，agent 用你给它的发送通道来发。对家庭，你通常只有地址，那就只能寄信。在我自己的测试里，明信片的效果本来就远远好于邮件和短信。寄信这块有多家明信片公司提供 API，你可以把权限给 agent。你批准之后，agent 会自己把这一批发出去。</p>
+<p>​    为 [城市]、[行业] 准备外联批次。</p>
+<p>​    - 对表里每一处物业，按我们手里的数据选渠道。只有地址就寄信。有邮箱或电话就加上邮件或短信</p>
+<p>​    - 渲染图和每一条消息一起发。寄信就整版放在正面，邮件就放在正文里，短信就放页面的链接</p>
+<p>​    - 配一句话，用大白话说清楚：这是你家&#x2F;你店，修好的样子是这样的，想看要做些什么就点这里</p>
+<p>​    - 每处物业建一个页面，最上面是渲染图，写上地址，再放一个表单问他们希望什么时候报价。所有渠道都指向它</p>
+<p>​    - 明信片上的二维码位置在版面上留空，真实的码我自己合成上去</p>
+<p>​    - 每个地址、邮箱、号码在进批次之前都要验证</p>
+<p>​    - 准备好这一批就停。给我看每个渠道的数量，以及各一个样例</p>
+<p>业主打开页面，看到自家的地方，填上时间，这次表单提交就打了时间戳、绑定了他们的地址。</p>
+<p>接住回应</p>
+<p>扫码、填表、回复，这些就是线索。它带着地址、业主名字、他们想要的报价时间，还有一张这处物业的渲染图。线索一落地，agent 就记进表里，而这张表就是下一条 pipeline 里你要卖的东西。</p>
+<p>打开了、扫了码但没填表，也值得记下来。一个人看了自己家修好的样子、只是还没要报价，他是有热度的，第二批会去跟进这些人。</p>
+<p>如果你就是生意主人、给自己跑这条线，到这里就结束了：agent 做完了寻找、渲染和发送，剩下的只有对话，而对话由你来。</p>
+<p>这就是 pipeline 二：行业、发现、渲染、触达、接住。</p>
+<p>pipeline 三：把线索卖出去</p>
+<p>现在线索要交给做这个活的企业，你为它收钱。</p>
+<p>找到这些企业</p>
+<p>google places、行业、城市。过滤出老板亲自经营的公司而不是加盟店——因为看邮件的正是老板；评论数在 15 到 200 之间；有真实地址等等。</p>
+<p>agent 拉出名单，对每一家记下它覆盖的区域。</p>
+<p>触达企业</p>
+<p>你其实不用去推销。给企业的消息里带着一批已经生成好的、就在他们区域里的线索样本。老板看到的是完成度很高的线索，他脑子里的问题会变成「这样的还有多少」，而不是「这玩意行不行」。有地址就寄信，有邮箱就发邮件，都有就都做。</p>
+<p>​    为 [城市] 的 [行业] 公司准备外联。</p>
+<p>​    - 从 google places 拉出 [城市] 里所有评论数在 15 到 200 之间、没有加盟店特征的 [行业] 公司，并记下每家覆盖的区域</p>
+<p>​    - 对每一家，从表里挑还没有卖出去、离他们最近的三个线索</p>
+<p>​    - 用这三个做一页 pdf：街道和区域、渲染图、以及填表时他们要求的时间</p>
+<p>​    - 消息用大白话写：这是你附近这周要 [行业] 报价的三个人，就是他们</p>
+<p>​    - 链接或二维码指向这份 pdf</p>
+<p>​    - 再起草一封一周后发的跟进邮件，带同样的三个线索</p>
+<p>​    - 全部准备好就停。第一封信由我发给任何回复的老板</p>
+<p>​    - 如果一家公司在它覆盖的区域里凑不够三个线索，就跳过并说明，不要把跨城的线索发过去</p>
+<p>定价</p>
+<p>两种方式：按条收费，或者按月托管整条 pipeline。</p>
+<p>按条收费用在第一个月。企业为自己拿到的线索付钱，看着线索成交，也就知道了对他们来说一条值多少。这个数字对照的是这个行业的平均客单价。</p>
+<p>按月托管用在第二个月。企业已经看到线索成交了，更愿意为一个固定数字买下整条管道：在一组 zip code 里独家，每月 [占位]，agent 让这条管道只为他们一家在那些 zip 里继续跑。</p>
+<p>交付</p>
+<p>线索落在一个企业能看到的看板上：地址、业主、渲染图、表单填写、时间戳、状态。</p>
+<p>让他们持续付钱的东西是：看板在他们什么都不用做的情况下自己满起来，以及从里面成交的第一单。</p>
+<p>agent 跑什么</p>
+<p>三条 pipeline 加起来，agent 负责：寻找、读取、画像、素材、物业扫描、渲染、建页面、外联批次、表格，以及每日报告。几乎全包了。</p>
+<p>有三件事留给你。</p>
+<p>渲染图在批次发出之前要你检查；和商家老板的第一次对话；任何广告的预算。agent 提建议，你拍板。</p>
+<p>什么会崩</p>
+<p>公开影像在有些地方是旧的。agent 读到的那张图可能是三年前的，而它看到的问题早就被修好了。元数据检查在有些数据源上会告诉你日期，有些不会，所以任何新区域的第一批就是你发现它有多旧的地方。信之前先看几张。</p>
+<p>whop ads 会拒收带承诺的素材。不能编收入数字，不能用假证言，不能有任何暗示买家会得到某种结果的表述。合规检查在投之前跑，一条被拒的广告会拖累整个广告组。记住这一点。</p>
+<p>企业老板通常不会回第一条消息。他们会回第二条，或者回一周后的跟进。建议至少跟进两次。</p>
+<p>从哪里开始</p>
+<p>挑一条 pipeline。有产品就跑 pipeline 一。没有就把 pipeline 二接 pipeline 三。</p>
+<p>第一批发出之前，每一张渲染图都看一眼。那些做错的图会告诉你该往渲染 prompt 里加什么。</p>
+<p>然后带着学到的东西，做同城的第二批。</p>
+<p>祝你配置愉快。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/4d7300be/">https://macin.top/posts/4d7300be/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><a class="post-meta__tags" href="/tags/%E8%8E%B7%E5%AE%A2/">获客</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/b0f17cc/" title="Evoxt 美国洛杉矶 VPS 测评：硬件性能拉满，三网普通直连回程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Evoxt 美国洛杉矶 VPS 测评：硬件性能拉满，三网普通直连回程</div></div><div class="info-2"><div class="info-item-1">Evoxt提供廉价国外VPS产品方案，在全球多个地方均有部署机房，由于VPS支持多个程序一键安装，并且支持多个游戏控制面板，无论是搭建个人网站…</div></div></div></a><a class="pagination-related" href="/posts/4129a217/" title="Reddit 爆款贴被封后，我的出海防封与获客 SOP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/reddit.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Reddit 爆款贴被封后，我的出海防封与获客 SOP</div></div><div class="info-2"><div class="info-item-1">很多人以为在 Reddit 被删帖是因为“竞品恶意举报”或者“代理节点不干净”。等真正排查完风控日志后才发现，90% 的开发者都死在底层的自动化机制上。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/a64442f5/" title="SpiderFoot 开源情报(OSINT)自动化工具详细部署教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-30</div><div class="info-item-2">SpiderFoot 开源情报(OSINT)自动化工具详细部署教程</div></div><div class="info-2"><div class="info-item-1">本教程将基于 smicallef/spiderfoot 项目，详细介绍如何在多种操作系统上部署这款强大的OSINT侦察工具。</div></div></div></a><a class="pagination-related" href="/posts/e97f1d3f/" title="Apify Agent Skills 部署教程：网页抓取与自动化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-09</div><div class="info-item-2">Apify Agent Skills 部署教程：网页抓取与自动化</div></div><div class="info-2"><div class="info-item-1">Apify Agent Skills 是一套专为 AI 编程代理（如 Claude Code、Cursor、Windsurf 等）设计的技能包，它能让你的 AI 代理直接调用 Apify 平台上的 30,000+ 个现成…</div></div></div></a><a class="pagination-related" href="/posts/2226b778/" title="用 NAS 搭建闲鱼自动赚钱机器！多账号自动回复 + 智能发货"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/goofish.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-25</div><div class="info-item-2">用 NAS 搭建闲鱼自动赚钱机器！多账号自动回复 + 智能发货</div></div><div class="info-2"><div class="info-item-1">用 NAS 搭建闲鱼自动回复管理系统：多用户多账号管理、智能回复、自动发货确认、商品管理，JWT 认证与数据隔离，闲鱼自动赚钱机器。</div></div></div></a><a class="pagination-related" href="/posts/dae4ae7a/" title="Lightpanda Browser：为 AI 与自动化而生的 Headless 浏览器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Lightpanda.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">Lightpanda Browser：为 AI 与自动化而生的 Headless 浏览器</div></div><div class="info-2"><div class="info-item-1">Lightpanda 是一个从头开始构建的Headless浏览器，专为AI代理和自动化任务设计。它不是Chromium或WebKit的分支，而是使用Zig语言编写…</div></div></div></a><a class="pagination-related" href="/posts/f8169370/" title="n8n 工作流自动化平台部署教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/n8n.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-22</div><div class="info-item-2">n8n 工作流自动化平台部署教程</div></div><div class="info-2"><div class="info-item-1">n8n 是一个 fair-code（源码可见）的工作流自动化平台，允许您通过视觉化画布构建复杂的自动化流程，连接超过 1500+ 应用和服务。它原生支持AI能力…</div></div></div></a><a class="pagination-related" href="/posts/b530596c/" title="docker 搭建 qinglong 青龙面板：手把手教程，复制即用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/qinglong.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-27</div><div class="info-item-2">docker 搭建 qinglong 青龙面板：手把手教程，复制即用</div></div><div class="info-2"><div class="info-item-1">Docker 搭建青龙面板（qinglong）教程：配置国内镜像源，创建 docker_data 与 ql 文件夹，docker 或 compose 方式部署定时任务管理面板。</div></div></div></a><a class="pagination-related" href="/posts/6c82accb/" title="Holo 3.1 本地 Agent 部署指南：打造零成本自动化办公环境"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/openclaw.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-13</div><div class="info-item-2">Holo 3.1 本地 Agent 部署指南：打造零成本自动化办公环境</div></div><div class="info-2"><div class="info-item-1">Holo 3.1 本地 Agent 部署指南：摆脱云端 API 限制，对接 OpenClaw 等本地 Agent 框架，打造零成本自动化办公环境，附详细部署到接入的技术步骤。</div></div></div></a><a class="pagination-related" href="/posts/cc586e6d/" title="Nanobrowser 详细部署教程：从零开始配置你的 AI 网页自动化助手"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-05</div><div class="info-item-2">Nanobrowser 详细部署教程：从零开始配置你的 AI 网页自动化助手</div></div><div class="info-2"><div class="info-item-1">Nanobrowser 是一款开源、免费的Chrome扩展，通过多智能体协作实现AI驱动的网页自动化。</div></div></div></a><a class="pagination-related" href="/posts/e0a16d4e/" title="Telegram 使用指南：注册、安全、找资源与 Bot 自动化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/telegram.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-08</div><div class="info-item-2">Telegram 使用指南：注册、安全、找资源与 Bot 自动化</div></div><div class="info-2"><div class="info-item-1">但加完之后，列表开始爆炸：项目群、频道、机器人、客服、私信、资源转发、各种“官方通知”。三天后，手机里多了一个蓝色图标，脑子里多了一堆红点。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2638</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2669</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/77de5c65/" title="Codex无限Token的方法找到了，附详细教程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Codex无限Token的方法找到了，附详细教程"/></a><div class="content"><a class="title" href="/posts/77de5c65/" title="Codex无限Token的方法找到了，附详细教程">Codex无限Token的方法找到了，附详细教程</a><time datetime="2026-09-19T15:48:07.000Z" title="发表于 2026-09-19 23:48:07">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6f21e51d/" title="普通人不要转型FDE，但是这个岗位一定是个机会！"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="普通人不要转型FDE，但是这个岗位一定是个机会！"/></a><div class="content"><a class="title" href="/posts/6f21e51d/" title="普通人不要转型FDE，但是这个岗位一定是个机会！">普通人不要转型FDE，但是这个岗位一定是个机会！</a><time datetime="2026-09-19T15:45:30.000Z" title="发表于 2026-09-19 23:45:30">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bcd59ed8/" title="搜索能力 + 信息筛选能力 + 营销能力 = 变现力"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="搜索能力 + 信息筛选能力 + 营销能力 = 变现力"/></a><div class="content"><a class="title" href="/posts/bcd59ed8/" title="搜索能力 + 信息筛选能力 + 营销能力 = 变现力">搜索能力 + 信息筛选能力 + 营销能力 = 变现力</a><time datetime="2026-09-19T15:43:44.000Z" title="发表于 2026-09-19 23:43:44">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ad487d0b/" title="性爱小技巧：后入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="性爱小技巧：后入"/></a><div class="content"><a class="title" href="/posts/ad487d0b/" title="性爱小技巧：后入">性爱小技巧：后入</a><time datetime="2026-09-19T15:38:59.000Z" title="发表于 2026-09-19 23:38:59">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b7a96e6a/" title="NETfront：香港老牌商家VPS，三网优化直连/原生IP"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="NETfront：香港老牌商家VPS，三网优化直连/原生IP"/></a><div class="content"><a class="title" href="/posts/b7a96e6a/" title="NETfront：香港老牌商家VPS，三网优化直连/原生IP">NETfront：香港老牌商家VPS，三网优化直连/原生IP</a><time datetime="2026-09-19T15:36:13.000Z" title="发表于 2026-09-19 23:36:13">2026-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

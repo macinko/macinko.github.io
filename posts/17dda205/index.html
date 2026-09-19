@@ -1,0 +1,541 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号） | 极客的赛博空间 | 专注 AI 与技术分享</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="我自己刚把全流程走完：下单 → 4.99 付款 → IDnow 扫证 + NFC + 视频自拍 → 出 eSIM 码 → 登录 Mein O2 → 发短信拿保号 IBAN → Wise 设自动转 0.01€。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号）">
+<meta property="og:url" content="https://macin.top/posts/17dda205/">
+<meta property="og:site_name" content="极客的赛博空间 | 专注 AI 与技术分享">
+<meta property="og:description" content="我自己刚把全流程走完：下单 → 4.99 付款 → IDnow 扫证 + NFC + 视频自拍 → 出 eSIM 码 → 登录 Mein O2 → 发短信拿保号 IBAN → Wise 设自动转 0.01€。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/o2.webp">
+<meta property="article:published_time" content="2026-09-14T09:02:47.000Z">
+<meta property="article:modified_time" content="2026-09-19T15:49:42.242Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="O2">
+<meta property="article:tag" content="Wise">
+<meta property="article:tag" content="eSIM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/o2.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号）",
+  "url": "https://macin.top/posts/17dda205/",
+  "image": "https://macin.top/img/o2.webp",
+  "datePublished": "2026-09-14T09:02:47.000Z",
+  "dateModified": "2026-09-19T15:49:42.242Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/17dda205/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 专注 AI 与技术分享" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2638</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2669</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/o2.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 专注 AI 与技术分享</span></a><a class="nav-page-title" href="/"><span class="site-name">德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">德国 O2 eSIM 全网最细通关手册（4.99€开卡 + Wise 自动保号）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-19T15:49:42.242Z" title="更新于 2026-09-19 23:49:42">2026-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/">global</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/global/sim/">sim</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-19 23:49:42&quot;}" hidden></div><p>先说结论，别往下划才发现自己条件不够：</p>
+<p>• 现在不是 0 元开卡。官网 Prepaid Basistarif 一次性 4.99€，同时送 5€ 启动余额，0 月租、无合约。</p>
+<p>• 中国护照可以过 IDnow。</p>
+<p>• 德国沃达丰、格鲁吉亚 eSIM 这类口子，最近一批一批在关。O2 这个窗口也在收，能办就现在办。</p>
+<p>• 这张号不是拿来天天打电话的，是给后面的海外基建、、账户、U卡、撸毛、收款、交易所、AI 账号、社媒矩阵留一条德国原生线。</p>
+<p>我自己刚把全流程走完：下单 → 4.99 付款 → IDnow 扫证 + NFC + 视频自拍 → 出 eSIM 码 → 登录 Mein O2 → 发短信拿保号 IBAN → Wise 设自动转 0.01€。下面每一步都按屏幕上的真实页面写。</p>
+<h1 id="为什么还值-4-99€"><a href="#为什么还值-4-99€" class="headerlink" title="为什么还值 4.99€"></a><strong>为什么还值 4.99€</strong></h1><p>以前那波教程还在写「0 元白嫖」。那是半年前的事了。官网现在写得很清楚：Basistarif 一次性 4.99€，含 5€ Startguthaben，无月租。</p>
+<p>账算明白：</p>
+<p>贵吗？对比一张后面能用两三年的 +49 德国大网号，不贵。Vodafone 德国对网络环境和支付越来越挑，格鲁吉亚那类 eSIM 也一批批失效。O2 现在还能过，指不定下个月就加视频客服或砍掉护照通道。</p>
+<p>这张号我自己会拿来干什么：欧洲银行账户&#x2F;欧卡&#x2F;德区apple商店&#x2F;部分券商短信等，最重要的是准备开的高质量U卡Bybit欧卡；ChatGPT、Claude、Telegram、部分交易所二次验证；iMessage &#x2F; FaceTime；国内用 Wi‑Fi Calling 收短信，不走国际漫游。</p>
+<p>它不是流量卡。别拿它当旅行网，那是另一件事。</p>
+<h1 id="开卡前准备（少一样都容易卡）"><a href="#开卡前准备（少一样都容易卡）" class="headerlink" title="开卡前准备（少一样都容易卡）"></a><strong>开卡前准备（少一样都容易卡）</strong></h1><p><strong>必须有</strong></p>
+<p>\1. 有效中国护照（信息必须和后面填的拼音、生日一字不差）</p>
+<p>\2. 能收信的 Gmail &#x2F; 常用邮箱</p>
+<p>\3. 一张能过 3DS 的 Visa &#x2F; Mastercard（PayPal 有时也行，我走的卡）</p>
+<p>\4. 一个德国地址：谷歌地图搜柏林 &#x2F; 慕尼黑住宅区，抄邮编、街道、门牌。eSIM 不邮寄，这个地址只要像真的</p>
+<p>\5. 相对稳定的网络。德国住宅 IP 最稳，美国住宅很多人也过了。全程别来回切国家</p>
+<p>强烈建议：电脑 + 手机都开着；网页下单，IDnow 用手机 App；沉浸式翻译；光线好、一个人；护照原件能读 NFC。国行手机不会原生装 eSIM 的，先看文末卡托科普。</p>
+<p>不要做：姓名写成微信名；生日和护照不一致；KYC 做到一半切 App &#x2F; 锁屏；激活后开数据漫游。</p>
+<p>官方入口：</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.o2online.de/mobilfunk/prepaid/esim/">https://www.o2online.de/mobilfunk/prepaid/esim/</a></p>
+<p>选 eSIM，套餐选 Basistarif &#x2F; Prepaid Basistarif，不要手滑点到带月租的 S&#x2F;M&#x2F;L。</p>
+<h1 id="第一步：选套餐，进购物车"><a href="#第一步：选套餐，进购物车" class="headerlink" title="第一步：选套餐，进购物车"></a><strong>第一步：选套餐，进购物车</strong></h1><p>打开页面，SIM 类型选 eSIM，不要 SIM-Karte。Basistarif 现在标的是：0€ 月租、一次性 4.99€、含 5.00€ Startguthaben。点 Jetzt bestellen 进购物车，确认还是 eSIM、金额 4.99€、运费 0。</p>
+<p><em>图1  选 eSIM + Basistarif + 购物车 4.99€</em></p>
+<p>到这一步还没花钱。看清楚再往下。</p>
+<h1 id="第二步：邮箱、姓名、生日，必须跟护照同一套"><a href="#第二步：邮箱、姓名、生日，必须跟护照同一套" class="headerlink" title="第二步：邮箱、姓名、生日，必须跟护照同一套"></a><strong>第二步：邮箱、姓名、生日，必须跟护照同一套</strong></h1><p>先填邮箱——后面验证码、订单、IDnow 通知全往这儿扔。一个邮箱目前只能挂一个客户账户。</p>
+<p>称呼按护照选先生&#x2F;女士；名、姓用护照拼音，不要自己发明拼法；出生日期必须和护照一致。页面会提醒：填的资料要跟证件一致，否则激活会卡。</p>
+<p><em>图2  邮箱、德国地址、选择付款方式</em></p>
+<p>地址官网写的是「德国期间能联系到你的住址」。没有真实住址就用谷歌地图找居民楼：邮编先填，城市经常自动带出；街道+门牌号编一个合理的；楼层可空。填完点「进行付款 &#x2F; Weiter」。</p>
+<p><em>图3  条款同意 + 邮箱验证 + 银行卡表单</em></p>
+<h1 id="第三步：付款方式选-Visa-Mastercard"><a href="#第三步：付款方式选-Visa-Mastercard" class="headerlink" title="第三步：付款方式选 Visa &#x2F; Mastercard"></a><strong>第三步：付款方式选 Visa &#x2F; Mastercard</strong></h1><p>可选 Bankkonto、Visa&#x2F;Mastercard、PayPal。Bankkonto 要德国账户，直接划掉。我建议 Visa &#x2F; Mastercard，4.99€ 一笔，3DS 验证一下就过。页面会提示直接扣款仅限 18 岁以上。</p>
+<p>营销同意能不勾就不勾。邮箱再要一次验证码。卡信息按卡面填，持卡人姓名用卡上的拼音&#x2F;英文。</p>
+<p><em>图4  3DS 付款 → 等待 → OnlineIdent 须知</em></p>
+<p>提交后进 3DS &#x2F; OTP 页，金额显示 €4.99，商户 o2。付完不要关页。有时会卡在「请稍等片刻」，一两分钟都正常，别刷新，别点浏览器后退。</p>
+<p><em>图5  参考编号、下 App、扫码、相机权限</em></p>
+<h1 id="第四步：IDnow-身份验证（最容易翻车）"><a href="#第四步：IDnow-身份验证（最容易翻车）" class="headerlink" title="第四步：IDnow 身份验证（最容易翻车）"></a><strong>第四步：IDnow 身份验证（最容易翻车）</strong></h1><p>O2 用的是 Telefónica 合作的 OnlineIdent &#x2F; IDnow。要求：有效证件、带摄像头的手机或电脑、稳定网络、光线足、房间里没别人。勾选同意后点「接管并继续」。</p>
+<p>网页会给参考编号 + 二维码。手机下 Identity Online（开发者 IDnow GmbH）。用 App 扫网页二维码，或手动输入 identity code。</p>
+<p><em>图6  同意、扫描护照主页</em></p>
+<p>App 顺序基本是：拍证件正面（居中、四角在框、别反光）→ NFC 贴着读芯片（护照和手机都别挪）→ 拍反面 → 短视频自拍（表情中性、一个人）→ 系统核验。</p>
+<p><em>图7  NFC + 视频自拍 + Verifying</em></p>
+<p>血泪经验：安卓白屏闪退的人不少，优先 iPhone；NFC 失败就重贴，别退出整个流程；核验成功后不要杀 App、不要关浏览器，它要自己跳回官网，有人要等整整两分钟才出码；护照姓名生日必须和第一步完全一致；少数情况走人工视频，听不懂就开翻译。</p>
+<h1 id="第五步：出码，装进手机"><a href="#第五步：出码，装进手机" class="headerlink" title="第五步：出码，装进手机"></a><strong>第五步：出码，装进手机</strong></h1><p>跳回官网后会出现 eSIM 安装页：下载 Profile + 二维码。</p>
+<p><em>图8  Data check 等待 + eSIM 二维码</em></p>
+<p>海外版 &#x2F; 支持 eSIM 的手机：设置 → 蜂窝网络 → 添加 eSIM → 扫码。</p>
+<p>国行 iPhone &#x2F; 不支持原生 eSIM 的安卓：走卡托。我长期用 Xesim，App 里直接扫这个码，或用简易下载码写入。卡托怎么选、怎么写号，单独写过一篇，先看再买：</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/i/article/2092930821560897537">https://x.com/i/article/2092930821560897537</a></p>
+<p>购买链接（下单填优惠码 J888，九折）：</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://xesim.cc/?DIST=RE5CHlo=">https://xesim.cc/?DIST=RE5CHlo%3D</a></p>
+<p>先把二维码截图存好。万一这次没装上，登录 Mein O2 还能再生成。</p>
+<p>装上立刻做两件事：关掉这张卡的数据漫游；有 Wi‑Fi Calling &#x2F; WLAN-Telefonie 就打开。主卡流量继续走自己的号，O2 这张只负责收验证码。</p>
+<h1 id="第六步：立刻注册-Mein-O2"><a href="#第六步：立刻注册-Mein-O2" class="headerlink" title="第六步：立刻注册 Mein O2"></a><strong>第六步：立刻注册 Mein O2</strong></h1><p>去 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.o2online.de/">https://login.o2online.de</a></p>
+<p> ，选「我是移动用户 &#x2F; Mobilfunk-Kunde」，输入刚拿到的德国号码。先短信验证码，再邮箱验证码，然后设密码：12 位以上，大小写+数字+符号，不能带简单连号，也不能太像你的号码。</p>
+<p><em>图9  Mein O2 入口 + 登录 + 注册类型</em></p>
+<p><em>图10  输入号码 + 短信码 + 邮箱码</em></p>
+<p><em>图11  设密码 + 登录成功，余额 5.00€</em></p>
+<p>后台优先做一件事：关掉语音信箱转接。路径大致是：管理 SIM 卡和合约 → Mailbox &#x2F; 语音信箱 → 关闭「忙线 &#x2F; 未接转到语音信箱」。不关的后果：别人打进来你没接，转语音，扣费。</p>
+<p><em>图12  套餐说明 + SIM 管理 + 语音信箱</em></p>
+<p>以后换设备，也在这个后台重新生成 eSIM，不用再 KYC。</p>
+<h1 id="第七步：拿到专属保号-IBAN"><a href="#第七步：拿到专属保号-IBAN" class="headerlink" title="第七步：拿到专属保号 IBAN"></a><strong>第七步：拿到专属保号 IBAN</strong></h1><p>最省钱的是银行转账，不是短信充值。用这张 O2 号发短信到 56656，内容写 iBAN。过几秒 o2 Info 会回收款人、IBAN、BIC、附言。</p>
+<p>格式类似：Telef…..  erm…… &#x2F; IBAN DE……………… &#x2F; BIC …………….. &#x2F; 附言 0179-你的号码-四位校验。</p>
+<p><em>图13  56656 短信 + o2 回复 + Wise 欧元账户</em></p>
+<p>注意：IBAN 对很多用户是同一条 Telefónica 对公户，区分你的是附言。附言必须原样填，少一段钱到不了你的号。把整条短信丢进备忘录。</p>
+<h1 id="第八步：Wise-首充测试-自动保号"><a href="#第八步：Wise-首充测试-自动保号" class="headerlink" title="第八步：Wise 首充测试 + 自动保号"></a><strong>第八步：Wise 首充测试 + 自动保号</strong></h1><p>官方说法：预付费余额最迟每 6 个月要有一次充值，否则可能丢号。充值一般按 182 天续期，上限大约一年。社区长期玩法是 1 欧分银行转账。我测过能入账，但它不是印在官网上的「保号价目表」。重要号别卡着最后一天只打 1 分赌运气，提前 30 天转更稳。</p>
+<h2 id="8-1-在-Wise-加收款人"><a href="#8-1-在-Wise-加收款人" class="headerlink" title="8.1 在 Wise 加收款人"></a><strong>8.1 在 Wise 加收款人</strong></h2><p>货币 EUR，地区选欧洲境内，企业名称 Telef…….. Germ……，IBAN 填短信里那一串。识别成功会显示 UN……… BANK &#x2F; Hyp………bank 绿勾。</p>
+<p><em>图14  选 EUR + 填机构信息 + IBAN 识别成功</em></p>
+<h2 id="8-2-先手动转一笔测试"><a href="#8-2-先手动转一笔测试" class="headerlink" title="8.2 先手动转一笔测试"></a><strong>8.2 先手动转一笔测试</strong></h2><p>金额 0.10€ 或 1€ 都行。附言 &#x2F; 付款参考号必须填短信里的 0179-xxxxxxx-xxxx。漏了这步，钱进对公户，你的号上没余额。</p>
+<h2 id="8-3-设置自动保号"><a href="#8-3-设置自动保号" class="headerlink" title="8.3 设置自动保号"></a><strong>8.3 设置自动保号</strong></h2><p>Wise 里走「付款 → 定时汇款」：从你的 EUR 余额到 Tele…….. Germ……；金额 0.01€（想稳就 0.10€）；频率每季度一次或每 5 个月一次；结束日期拉远；附言还是那串校验码，一次都别改。</p>
+<p><em>图15  Wise 定时汇款 0.01€ + 附言已填</em></p>
+<p>季度扣 1 欧分，一年几分钱，号一直活。钱包里常备 1–2 欧欧元余额，别让自动任务因余额不足失败。日历再备一个 5 个月提醒，进去 Mein O2 看一眼。</p>
+<h1 id="使用时真正会踩的坑"><a href="#使用时真正会踩的坑" class="headerlink" title="使用时真正会踩的坑"></a><strong>使用时真正会踩的坑</strong></h1><p>\1. 数据漫游：在中国开 O2 流量，按兆计费，能把 5€ 瞬间打穿。这张卡只开 Wi‑Fi Calling。</p>
+<p>\2. 语音信箱：关掉。</p>
+<p>\3. 短信资费：往外发 9 欧分起，短指令可以，别群发。</p>
+<p>\4. 保号不是「卡一直插着就行」。必须在周期内完成充值或产生计费。</p>
+<p>\5. 1 欧分不是官方保底。过期后再转，有时要走 Lastschrift。</p>
+<p>\6. 下单到 KYC 结束，IP 尽量同一出口。</p>
+<p>\7. 一个护照短期别贪多开。一张高质量德国号，比五张废号有用。</p>
+<p>\8. IDnow 成功但没码：先等邮件，再登录 Mein O2 下载 profile。境外偶发延迟。</p>
+<p>\9. 国行装不上不是 O2 的问题，是手机没有 eSIM 权限。回头看卡托那篇。</p>
+<h1 id="和我之前两篇怎么配合看"><a href="#和我之前两篇怎么配合看" class="headerlink" title="和我之前两篇怎么配合看"></a><strong>和我之前两篇怎么配合看</strong></h1><p>eSIM 是什么、国行怎么用卡托、Xesim 怎么写号：</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/i/article/2092930821560897537">https://x.com/i/article/2092930821560897537</a></p>
+<p>没有卡托的，下单用 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://xesim.cc/?DIST=RE5CHlo=">https://xesim.cc/?DIST=RE5CHlo%3D</a></p>
+<p> ，优惠码 J888（10% off）。苹果优先 X2 Pro，安卓 X2 就够。</p>
+<p>另一张更便宜的入门海外号（大约 9 块那档，功能定位不一样）在这里。德国 O2 是重量级原生号，别混着用：</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/Jin111026Jin/status/2089573935373590762">https://x.com/Jin111026Jin/status/2089573935373590762</a></p>
+<p>O2 这篇解决的是：要一张德国大网、能过一堆正规平台风控的号。卡托那篇解决的是：国行手机怎么把这张号装进去。两篇叠在一起才是完整基建。</p>
+<h1 id="我的建议：办不办"><a href="#我的建议：办不办" class="headerlink" title="我的建议：办不办"></a><strong>我的建议：办不办</strong></h1><p>办。前提是你真的在搭海外资金和账号体系。4.99€ 换一条 +49，后面开户、过 2FA、留底，比临时接码号稳得多。</p>
+<p>不办的情况也很清楚：只想白嫖流量、只想当天接一条验证码、护照快过期、不愿意做 IDnow。那种去买一次性旅行 eSIM。</p>
+<p>政策会收。窗口从「0 元 + 护照秒过」变成「4.99€ + App 核验」，下一步可能是强制人工视频或拒非欧护照。这篇的重点不是又一个羊毛，是趁还能过，把底层号码补上。</p>
+<p>我是做海外资金和金融基建的，号对我来说是工具，不是收藏品。工具齐了，后面的卡、账户、出金路由才有地方落。</p>
+<p>你要是按这篇跑通了，评论区丢个「过了」就行。卡在哪一步，把页面关键词发出来。</p>
+<p>免责：流程、价格、保号规则以 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://o2online.de/">o2online.de</a></p>
+<p> 当时页面为准。身份信息必须真实并与证件一致。海外支付、KYC、转账有失败和风控可能，损失自担。本文只记录 2026 年 9 月的实操路径，不是 O2 官方文档。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/17dda205/">https://macin.top/posts/17dda205/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 专注 AI 与技术分享</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/eSIM/">eSIM</a><a class="post-meta__tags" href="/tags/Wise/">Wise</a><a class="post-meta__tags" href="/tags/O2/">O2</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/9b73eaa1/" title="香港数字银行安全吗？1 分钟转微信、支付宝到底是真是假"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">香港数字银行安全吗？1 分钟转微信、支付宝到底是真是假</div></div><div class="info-2"><div class="info-item-1">我把图里三家银行的官方资料，以及最近两年的跨境支付变化重新核了一遍。先说结论：功能大体是真的，但这张图把三种不同通道混在了一起…</div></div></div></a><a class="pagination-related" href="/posts/6411fa2c/" title="为什么你手握 Codex、Claude，依然赚不到钱？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">为什么你手握 Codex、Claude，依然赚不到钱？</div></div><div class="info-2"><div class="info-item-1">过去，一个人赚不到钱，往往还能找到很多具体的理由。不会编程，不会做网站，不会设计，不会写文案，没有开发团队，也没钱雇程序员。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/c5d20e14/" title="德国 O₂ Prepaid eSIM 又可以申请了！附保号方法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/o2.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-07</div><div class="info-item-2">德国 O₂ Prepaid eSIM 又可以申请了！附保号方法</div></div><div class="info-2"><div class="info-item-1">目前 O₂ 官网的 Prepaid Basistarif 是一次性 4.99€，同时包含 5€ Startguthaben，也就是 5 欧元初始余额。</div></div></div></a><a class="pagination-related" href="/posts/bacfb8da/" title="iFAST 英国银行｜全套内地材料申请，从注册到首次入金"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/iFAST.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-10</div><div class="info-item-2">iFAST 英国银行｜全套内地材料申请，从注册到首次入金</div></div><div class="info-2"><div class="info-item-1">iFAST 能用来做什么？ 管理海外资金、连接部分券商、向 Wise 转账，以及在国内部分商户扫码支付。</div></div></div></a><a class="pagination-related" href="/posts/7f47f1e9/" title="英国 iFAST 银行开户完整教程：大陆居民亲测，附真实踩坑记录"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/iFAST.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-24</div><div class="info-item-2">英国 iFAST 银行开户完整教程：大陆居民亲测，附真实踩坑记录</div></div><div class="info-2"><div class="info-item-1">你把稳定币（USDT/USDC）在境外平台换成欧元， 直接打到 Wise 或香港银行？大概率触发风控。</div></div></div></a><a class="pagination-related" href="/posts/5c0c5dab/" title="国行手机用国外 eSIM？我折腾完了，把完整路径给你铺好"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-18</div><div class="info-item-2">国行手机用国外 eSIM？我折腾完了，把完整路径给你铺好</div></div><div class="info-2"><div class="info-item-1">它是通过一种写入的方式，把卡的数据灌进你手机里，然后该打电话打电话，该上网上网，功能和实体SIM卡一模一样。</div></div></div></a><a class="pagination-related" href="/posts/1dba2c85/" title="最新 X 原创内容奖励绑定 Stripe 与 Wise&#x2F;香港银行卡简易教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/x.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">最新 X 原创内容奖励绑定 Stripe 与 Wise&#x2F;香港银行卡简易教程</div></div><div class="info-2"><div class="info-item-1">X 原创内容奖励审核通过后，非美国用户需要连接 Stripe 收款账户。可以使用 Wise 港元账户，也可以使用普通香港银行卡，两者的操作流程相同，只有填写的银行账户资料不同。</div></div></div></a><a class="pagination-related" href="/posts/9cbf51df/" title="数据恢复工具 Wise Data Recovery Pro v6.2.2.520 绿色便携版"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/data.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-04</div><div class="info-item-2">数据恢复工具 Wise Data Recovery Pro v6.2.2.520 绿色便携版</div></div><div class="info-2"><div class="info-item-1">Wise Data Recovery Pro v6.2.2.520 绿色便携版：恢复 Word/Excel 文档、TXT、压缩包与视频，支持 NTFS/FAT 硬盘、U 盘、移动硬盘，界面简洁易用。</div></div></div></a><a class="pagination-related" href="/posts/f66e34da/" title="开箱 Starryblu：没有港卡，跨境资金链路怎么搭"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Starryblu.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-13</div><div class="info-item-2">开箱 Starryblu：没有港卡，跨境资金链路怎么搭</div></div><div class="info-2"><div class="info-item-1">今天开箱的是 Starryblu，最近被很多人拿来对标 Wise 和 Revolut 的新加坡支付工具。</div></div></div></a><a class="pagination-related" href="/posts/1c25218e/" title="大陆身份证就能开香港银行账户,不用赴港了 Wise"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wise.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-05</div><div class="info-item-2">大陆身份证就能开香港银行账户,不用赴港了 Wise</div></div><div class="info-2"><div class="info-item-1">Wise 持大陆身份证即可线上开香港多币种账户，免赴港。真实汇率无隐藏费用，支持 40+ 币种、借记卡与快速跨境转账。</div></div></div></a><a class="pagination-related" href="/posts/829c7ce/" title="Mercury 账户里的美元，回国前先把这 6 条路排个序"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/mercury.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-29</div><div class="info-item-2">Mercury 账户里的美元，回国前先把这 6 条路排个序</div></div><div class="info-2"><div class="info-item-1">我把 Mercury、Wise、国家外汇管理局、两地海关、香港汇丰和工银亚洲的公开资料重新对了一遍。常规转账优先看第一、第二条。临时需要小额现金，可以看第六条。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2638</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2669</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E5%80%BC-4-99%E2%82%AC"><span class="toc-number">1.</span> <span class="toc-text">为什么还值 4.99€</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%8D%A1%E5%89%8D%E5%87%86%E5%A4%87%EF%BC%88%E5%B0%91%E4%B8%80%E6%A0%B7%E9%83%BD%E5%AE%B9%E6%98%93%E5%8D%A1%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">开卡前准备（少一样都容易卡）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E9%80%89%E5%A5%97%E9%A4%90%EF%BC%8C%E8%BF%9B%E8%B4%AD%E7%89%A9%E8%BD%A6"><span class="toc-number">3.</span> <span class="toc-text">第一步：选套餐，进购物车</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E9%82%AE%E7%AE%B1%E3%80%81%E5%A7%93%E5%90%8D%E3%80%81%E7%94%9F%E6%97%A5%EF%BC%8C%E5%BF%85%E9%A1%BB%E8%B7%9F%E6%8A%A4%E7%85%A7%E5%90%8C%E4%B8%80%E5%A5%97"><span class="toc-number">4.</span> <span class="toc-text">第二步：邮箱、姓名、生日，必须跟护照同一套</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E4%BB%98%E6%AC%BE%E6%96%B9%E5%BC%8F%E9%80%89-Visa-Mastercard"><span class="toc-number">5.</span> <span class="toc-text">第三步：付款方式选 Visa &#x2F; Mastercard</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9AIDnow-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%EF%BC%88%E6%9C%80%E5%AE%B9%E6%98%93%E7%BF%BB%E8%BD%A6%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">第四步：IDnow 身份验证（最容易翻车）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E5%87%BA%E7%A0%81%EF%BC%8C%E8%A3%85%E8%BF%9B%E6%89%8B%E6%9C%BA"><span class="toc-number">7.</span> <span class="toc-text">第五步：出码，装进手机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9A%E7%AB%8B%E5%88%BB%E6%B3%A8%E5%86%8C-Mein-O2"><span class="toc-number">8.</span> <span class="toc-text">第六步：立刻注册 Mein O2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E6%AD%A5%EF%BC%9A%E6%8B%BF%E5%88%B0%E4%B8%93%E5%B1%9E%E4%BF%9D%E5%8F%B7-IBAN"><span class="toc-number">9.</span> <span class="toc-text">第七步：拿到专属保号 IBAN</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E6%AD%A5%EF%BC%9AWise-%E9%A6%96%E5%85%85%E6%B5%8B%E8%AF%95-%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%8F%B7"><span class="toc-number">10.</span> <span class="toc-text">第八步：Wise 首充测试 + 自动保号</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-%E5%9C%A8-Wise-%E5%8A%A0%E6%94%B6%E6%AC%BE%E4%BA%BA"><span class="toc-number">10.1.</span> <span class="toc-text">8.1 在 Wise 加收款人</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-%E5%85%88%E6%89%8B%E5%8A%A8%E8%BD%AC%E4%B8%80%E7%AC%94%E6%B5%8B%E8%AF%95"><span class="toc-number">10.2.</span> <span class="toc-text">8.2 先手动转一笔测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%8F%B7"><span class="toc-number">10.3.</span> <span class="toc-text">8.3 设置自动保号</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E7%9C%9F%E6%AD%A3%E4%BC%9A%E8%B8%A9%E7%9A%84%E5%9D%91"><span class="toc-number">11.</span> <span class="toc-text">使用时真正会踩的坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%92%8C%E6%88%91%E4%B9%8B%E5%89%8D%E4%B8%A4%E7%AF%87%E6%80%8E%E4%B9%88%E9%85%8D%E5%90%88%E7%9C%8B"><span class="toc-number">12.</span> <span class="toc-text">和我之前两篇怎么配合看</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E5%BB%BA%E8%AE%AE%EF%BC%9A%E5%8A%9E%E4%B8%8D%E5%8A%9E"><span class="toc-number">13.</span> <span class="toc-text">我的建议：办不办</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/77de5c65/" title="Codex无限Token的方法找到了，附详细教程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/codex.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="Codex无限Token的方法找到了，附详细教程"/></a><div class="content"><a class="title" href="/posts/77de5c65/" title="Codex无限Token的方法找到了，附详细教程">Codex无限Token的方法找到了，附详细教程</a><time datetime="2026-09-19T15:48:07.000Z" title="发表于 2026-09-19 23:48:07">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6f21e51d/" title="普通人不要转型FDE，但是这个岗位一定是个机会！"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="普通人不要转型FDE，但是这个岗位一定是个机会！"/></a><div class="content"><a class="title" href="/posts/6f21e51d/" title="普通人不要转型FDE，但是这个岗位一定是个机会！">普通人不要转型FDE，但是这个岗位一定是个机会！</a><time datetime="2026-09-19T15:45:30.000Z" title="发表于 2026-09-19 23:45:30">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bcd59ed8/" title="搜索能力 + 信息筛选能力 + 营销能力 = 变现力"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="搜索能力 + 信息筛选能力 + 营销能力 = 变现力"/></a><div class="content"><a class="title" href="/posts/bcd59ed8/" title="搜索能力 + 信息筛选能力 + 营销能力 = 变现力">搜索能力 + 信息筛选能力 + 营销能力 = 变现力</a><time datetime="2026-09-19T15:43:44.000Z" title="发表于 2026-09-19 23:43:44">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/ad487d0b/" title="性爱小技巧：后入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="性爱小技巧：后入"/></a><div class="content"><a class="title" href="/posts/ad487d0b/" title="性爱小技巧：后入">性爱小技巧：后入</a><time datetime="2026-09-19T15:38:59.000Z" title="发表于 2026-09-19 23:38:59">2026-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b7a96e6a/" title="NETfront：香港老牌商家VPS，三网优化直连/原生IP"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="NETfront：香港老牌商家VPS，三网优化直连/原生IP"/></a><div class="content"><a class="title" href="/posts/b7a96e6a/" title="NETfront：香港老牌商家VPS，三网优化直连/原生IP">NETfront：香港老牌商家VPS，三网优化直连/原生IP</a><time datetime="2026-09-19T15:36:13.000Z" title="发表于 2026-09-19 23:36:13">2026-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

@@ -1,0 +1,881 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口 | 极客的赛博空间 | 已被墙，开代理访问</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="上一篇爆了，被很多人看到！在这里肥肠感谢大家的支持，上一篇主要给大家讲了从一个真实问题出发，如何做需求方向验证，又把需求翻译成了用户会搜索的关键词。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口">
+<meta property="og:url" content="https://macin.top/posts/ddb65433/">
+<meta property="og:site_name" content="极客的赛博空间 | 已被墙，开代理访问">
+<meta property="og:description" content="上一篇爆了，被很多人看到！在这里肥肠感谢大家的支持，上一篇主要给大家讲了从一个真实问题出发，如何做需求方向验证，又把需求翻译成了用户会搜索的关键词。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-22T01:07:16.000Z">
+<meta property="article:modified_time" content="2026-09-23T15:17:04.170Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Web出海">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口",
+  "url": "https://macin.top/posts/ddb65433/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-22T01:07:16.000Z",
+  "dateModified": "2026-09-23T15:17:04.170Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/ddb65433/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 已被墙，开代理访问" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 已被墙，开代理访问" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2837</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2800</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 已被墙，开代理访问</span></a><a class="nav-page-title" href="/"><span class="site-name">Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Web出海第二步：竞品调研全流程，教你找到第一个能赚美刀的切入口</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-23T15:17:04.170Z" title="更新于 2026-09-23 23:17:04">2026-09-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/software/">software</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">13.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>40分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-23 23:17:04&quot;}" hidden></div><p>上一篇爆了，被很多人看到！在这里肥肠感谢大家的支持，上一篇主要给大家讲了从一个真实问题出发，如何做需求方向验证，又把需求翻译成了用户会搜索的关键词。</p>
+<p>做Web出海第一步，且最重要的一步，就是找好需求，并找好关键词。方向选对了，离月入万刀就不远了！ 哈哈哈我终于把第二篇写完了～欢迎大家讨论～</p>
+<p>万字长文｜Web出海第一步，从选需求到关键词研究，教你选出第一个赚美刀的方向</p>
+<p>大家好，好么，上回那篇Web出海的完整闭环流程写完，很多准备做出海的小伙伴关注了我，跟我说已经开始采购域名了，这家伙，大家这执行力很棒啊！…</p>
+<p>但需求方向刚确定，还不能马上就开干啊，你还得知道市场上已经有什么产品，用户现在怎么解决，竞品从哪里获得用户，又靠什么收费，知己知彼。</p>
+<p>这一篇我就把竞品调研的方法讲清楚，帮你判断这个赛道你值不值得进，怎么从竞品中杀出重围，先带你看文章架构：</p>
+<ul>
+<li>为什么要做竞品调研</li>
+<li>做竞品调研前，认识这些概念和工具（新手往这儿看）</li>
+<li>竞品调研全流程分享</li>
+<li>小白跟练：用 PDF Translator 分析一次</li>
+<li>复盘：竞品调研到底要得到什么</li>
+</ul>
+<p><strong>这篇如果是想做AI出海产品经理的小白同学！一定也要看起来！我把我毕生所学都写进来了hhh</strong></p>
+<h2 id="一、为什么要做竞品调研"><a href="#一、为什么要做竞品调研" class="headerlink" title="一、为什么要做竞品调研"></a>一、为什么要做竞品调研</h2><h2 id="竞品调研可不是为了抄功能"><a href="#竞品调研可不是为了抄功能" class="headerlink" title="竞品调研可不是为了抄功能"></a><strong>竞品调研可不是为了抄功能</strong></h2><p>很多人说到竞品调研，第一反应不就是抄吗？你小子还挺精！那我还写这篇干啥了hhhh</p>
+<p>哎！你想想，人家竞品已经上辣么久了，你花几周把同样的功能做出来，用户为什么非要来你这儿呢？</p>
+<p>哎呀，我也不是给你泼冷水，既然竞品已经存在，不一定是坏事呀。有人在做、有人在用、有人愿意付费，至少说明这个需求已经被市场验证了，不代表你就不能做了。</p>
+<p>所以你要研究的是：用户为什么用它，用户从哪里进入，从哪出，经过几步才能拿到结果，哪一步让他愿意掏钱，哪些服务流程或者功能环节还没有被打磨好。</p>
+<p>所以，竞品调研不是证明别人做过，所以我也能做，而是把别人的服务流程、获客方式和收费逻辑拆出来，再结合自己的能力和资源判断：<strong>这件事换我能不能干？我应该从哪儿开始？</strong></p>
+<h2 id="竞品调研的目标和作用"><a href="#竞品调研的目标和作用" class="headerlink" title="竞品调研的目标和作用"></a>竞品调研的目标和作用</h2><p>这篇调研结束时，至少要回答四个问题：</p>
+<ul>
+<li>这个赛道有没有真实产品和真实用户？</li>
+<li>竞品的基础服务闭环是什么？</li>
+<li>竞品从哪里获得用户，又怎么把用户变成付费用户？</li>
+<li>我能不能做出一个基础版本，并且找到一条自己走得通的获客路径？</li>
+</ul>
+<p>比如，想做一个 pdf to word 工具，搜这个词时，常见的竞品可能会包括 Smallpdf、iLovePDF、PDF2Go，以及 Adobe Acrobat 的在线工具。</p>
+<p>我说实话了，这些产品经营时间长、功能成熟、品牌也已经被用户熟识，而且它们的核心流程都很完整，价格和功能也没有明显空档，用户反馈里也没有反复出现的关键抱怨，那这个方向就不太适合新手作为第一个产品，因为你干不过他们hhh</p>
+<p>这不是说它绝对不能做，而是你要知道：<strong>你面对的不是一个简单的功能，而是一批已经积累了品牌、SEO 和产品资源的成熟对手。</strong> 如果你没有非常明确的用户群、场景或服务切入口，单纯做一个“我也能把 PDF 转成 Word”的产品，进入成本会比较高，除非你能做出过人之处了</p>
+<p>反过来，如果你发现搜索结果里有不少小站，或者用户反复抱怨格式错乱、文件隐私、批量处理和某个具体场景，而现有竞品没有接住，才值得继续往下研究。</p>
+<h2 id="二、做竞品调研前，认识这些概念和工具（新手往这儿看）"><a href="#二、做竞品调研前，认识这些概念和工具（新手往这儿看）" class="headerlink" title="二、做竞品调研前，认识这些概念和工具（新手往这儿看）"></a>二、做竞品调研前，认识这些概念和工具（新手往这儿看）</h2><p>如果你本身在做出海了，往下滑，这部分你不用看，新手这部分一定要看，纯扫盲来的</p>
+<h2 id="站点基本信息：看这个网站积累了什么"><a href="#站点基本信息：看这个网站积累了什么" class="headerlink" title="站点基本信息：看这个网站积累了什么"></a>站点基本信息：看这个网站积累了什么</h2><p>这些词主要在增长调研和 SEO 判断里出现，用来判断一个网站大概经营了多久、积累了多少资源：</p>
+<ul>
+<li><strong>域名年龄：</strong> 这个域名从注册到现在大概多久了。时间越长，通常意味着积累时间越长，但不等于排名一定好。</li>
+<li><strong>DA（Domain Authority）：</strong> Moz 的权重指标，用来预测一个域名在搜索结果里获得排名的能力，通常是 1 到 100 分；</li>
+<li><strong>DR（Domain Rating）：</strong> Ahrefs 的权重指标，主要看一个网站反向链接配置的强弱，也是 0 到 100 分；你提到的“D2”，如果指的是 Ahrefs 的指标，通常写作 DR；</li>
+<li><strong>AS（Authority Score）：</strong> Semrush 的权重指标，会综合看反向链接质量、估算自然流量和疑似垃圾链接等信号。</li>
+<li><strong>引荐域名：</strong> 有多少个不同的网站链接到它，可以粗看外部链接的积累。一个网站上有 100 个链接，不一定等于 100 个引荐域名。</li>
+<li><strong>自然关键词：</strong> 网站没有直接购买广告，而是通过页面内容在 Google 上获得排名的词。</li>
+<li><strong>自然流量：</strong> 用户通过搜索结果进入网站的流量。</li>
+<li><strong>Organic Keywords：</strong> 一个网站在 Google 前 100 名里出现过的关键词数量，但数量多不等于质量高，还要继续看它有多少词进入前十。</li>
+<li><strong>排名页面：</strong> 哪些具体页面带来了搜索流量，而不只是看它的首页。</li>
+<li><strong>Keyword Ranking：</strong> 某个页面在某个关键词上的排名。看竞品时，不要只看“有多少关键词”，还要看它真正排在前几名的是什么词。</li>
+<li><strong>Backlink：</strong> 反向链接，其他网站指向这个网站的一条链接。一个网站可以拥有很多 Backlink，但它们可能都来自同一个站。</li>
+</ul>
+<h2 id="功能调研：看用户怎么完成任务"><a href="#功能调研：看用户怎么完成任务" class="headerlink" title="功能调研：看用户怎么完成任务"></a>功能调研：看用户怎么完成任务</h2><p>这些词主要在你实际体验竞品时出现：</p>
+<ul>
+<li><strong>服务闭环：</strong> 用户从进入产品，到完成任务、拿到结果的完整过程。比如 PDF 翻译就是上传、处理、预览、下载。</li>
+<li><strong>Aha Moment：</strong> 用户第一次真正感受到产品价值的那个瞬间。比如上传 PDF 后，几秒钟就看到排版基本不变的翻译结果，这一刻可能就是 PDF Translator 的 Aha Moment。</li>
+<li><strong>免费额度：</strong> 免费用户可以使用多少次、多少页或多少容量。</li>
+<li><strong>MVP：</strong> 最小可用版本。不是把产品做得很粗糙，而是先保留完成核心任务所必须的功能。</li>
+</ul>
+<h2 id="增长和SEO调研：用户从哪里来"><a href="#增长和SEO调研：用户从哪里来" class="headerlink" title="增长和SEO调研：用户从哪里来"></a>增长和SEO调研：用户从哪里来</h2><ul>
+<li><strong>流量来源：</strong> 用户从搜索、直接访问、社媒、推荐还是广告来到网站。</li>
+<li><strong>自然搜索：</strong> 不直接购买广告，而是依靠搜索排名获得访问。</li>
+<li><strong>SERP：</strong> Search Engine Results Page，也就是你在 Google 里搜索一个词后看到的结果页。工具给出的 KD 只是参考，真正要看的还是 SERP 前十是谁。</li>
+<li><strong>Search Intent：</strong> 用户搜索一个词时真正想做什么。是了解问题、比较产品，还是马上使用工具，决定了你应该做什么页面。</li>
+<li><strong>内容入口：</strong> 博客、教程、模板页、免费工具页等吸引用户进入网站的页面。</li>
+<li><strong>外链：</strong> 其他网站指向你的网站的链接。</li>
+<li><strong>长尾词：</strong> 更具体、更接近某个场景的搜索词。单个词的搜索量可能不大，但用户目的通常更清楚，竞争也可能更小。</li>
+<li><strong>广告投放：</strong> 通过 Google、Meta 等平台直接购买流量。</li>
+</ul>
+<h2 id="商业化调研：用户在哪一步付钱"><a href="#商业化调研：用户在哪一步付钱" class="headerlink" title="商业化调研：用户在哪一步付钱"></a>商业化调研：用户在哪一步付钱</h2><ul>
+<li><strong>付费墙：</strong> 用户在哪一步开始必须升级或付费，才能继续使用某个功能或额度。</li>
+<li><strong>Freemium：</strong> 基础功能免费，高级功能或更高额度收费。</li>
+<li><strong>订阅制：</strong> 按月或按年持续收费。</li>
+<li><strong>按量付费：</strong> 按处理次数、文件页数、使用额度等收费。</li>
+<li><strong>一次性买断：</strong> 用户付一次钱，获得某个版本或某段时间的使用权。</li>
+<li><strong>Trial：</strong> 试用期或试用额度，用来让用户在付款前体验产品。</li>
+<li><strong>CTA：</strong> Call To Action，页面上推动用户完成下一步的按钮或文案，比如 Upload、Try Free、Start Now。</li>
+<li><strong>Conversion：</strong> 用户完成了你希望他完成的动作，比如上传文件、注册、订阅或付款。</li>
+<li><strong>Conversion Rate：</strong> 转化率。比如 100 个访问者里有 5 个人注册，注册转化率就是 5%。</li>
+</ul>
+<h2 id="工具先列入门款，这里不展开"><a href="#工具先列入门款，这里不展开" class="headerlink" title="工具先列入门款，这里不展开"></a>工具先列入门款，这里不展开</h2><p>工具不用一开始全部购买，也不用现在就学会。早期先知道这些工具大概用来做什么，真正调研时再查：</p>
+<ul>
+<li><p><strong>Google Trends：</strong> 看一个词的长期趋势、季节性和不同国家的热度；</p>
+</li>
+<li><p><strong>Similarweb：</strong> 粗看流量来源、国家和渠道构成；</p>
+</li>
+<li><p><strong>AITDK：</strong> 快速查看域名年龄、估算流量、自然关键词、引荐域名和基础 SEO 信息；</p>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://sitedata.dev/"><strong>SiteData.dev</strong></a></p>
+<p><strong>：</strong> 查看流量来源、搜索与社媒占比、引荐域名、域名注册时间和一些 SEO 数据；</p>
+</li>
+<li><p><strong>Ahrefs 或 Semrush：</strong> 看自然关键词、排名页面和引荐域名；</p>
+</li>
+<li><p><strong>Wayback Machine：</strong> 看产品过去的首页、定价页和定位变化；</p>
+</li>
+<li><p><strong>Google Ads Transparency Center、Meta Ad Library：</strong> 看竞品是否长期投广告；</p>
+</li>
+<li><p><strong>Reddit、导航站和评价站：</strong> 看用户讨论、产品评价和真实原话。</p>
+</li>
+</ul>
+<p>预算有限的话，先会用 Google Trends、Similarweb、Wayback Machine 和 Reddit 就够了；Ahrefs、Semrush 这类工具，等你真的需要查关键词和外链时再上手。这一篇只介绍小白早期比较容易上手的工具，不在这里展开具体操作。大家如果有更好用、更适合新手的工具，也可以放到评论区补充。</p>
+<p><strong>这个工具系列，下一篇我会展开写写怎么去用！！</strong></p>
+<h2 id="三、竞品调研全流程分享"><a href="#三、竞品调研全流程分享" class="headerlink" title="三、竞品调研全流程分享"></a>三、竞品调研全流程分享</h2><p>咳咳，从这里开始，就是本文章含金量最高的部分了！</p>
+<h2 id="第一部分：功能调研，看竞品如何服务用户"><a href="#第一部分：功能调研，看竞品如何服务用户" class="headerlink" title="第一部分：功能调研，看竞品如何服务用户"></a>第一部分：功能调研，看竞品如何服务用户</h2><p><strong>第一步：先筛出目标竞品</strong></p>
+<p>拿上一篇你确认好的核心关键词，直接放进谷歌里搜，快速看前三页的产品。</p>
+<p>把和需求无关和长期不更新的结果删掉，把前三页产品都尽量体验一次，留下约5个真正解决问题的产品。不要只看站点的名字，要点进网站真实体验：它是不是在服务同一类用户，用户能不能在里面完成同一个核心任务。</p>
+<p>这5个产品就是功能调研的目标竞品。后面所有功能体验，都以这批产品为主就行了</p>
+<p><strong>第二步：作为用户体验产品</strong></p>
+<p>别只看竞品首页上写了多少功能，要像一个第一次来的普通用户一样去体验。就以你作为正常人的体感，看下面五维度：</p>
+<ul>
+<li><strong>页面结构和上手难度：</strong> UI是否设计合理，是否简洁好看，核心按钮是否容易找到，第一次来的用户能不能马上明白这是做什么的，以及下一步该做什么</li>
+<li><strong>功能体验和质量：</strong> 上传、输入、处理、预览、下载是否顺畅，等待时有没有提示，失败时有没有解决办法，最后的速度、准确度、格式保留和稳定性怎么样</li>
+<li><strong>流程效率和闭环：</strong> 不同竞品完成同一个任务分别要几步，哪个更简便；它是把用户的问题完整解决了，还是只完成一个小环节，后面还得用户自己找别的工具</li>
+<li><strong>注册和付费节点：</strong> 哪一步要求登录、注册、验证或付费，免费额度和付费墙出现得是否自然，会不会在用户还没感受到价值前就被卡住</li>
+<li><strong>值得学习和做得不好的地方：</strong> 值得学习的可能是页面清楚、流程短、结果交付明确、错误提示及时；做得不好的可能是等待时间太长、格式混乱、免费额度太紧，或者一个简单动作要来回跳转很多页面</li>
+</ul>
+<p>这样对比之后，你看到的就不只是它有什么功能，而是它让用户完成任务的成本有多高。你也会渐渐的明确出来哪些功能是核心，哪些是你的机会点，哪些是可以再观察迭代的。</p>
+<p><strong>第三步：整理功能清单，再判断优先级</strong></p>
+<p>先把这5个竞品的功能 list 整理出来，把它们放在一起对比，再把功能分成四层：</p>
+<ul>
+<li><strong>MVP版本必须有：</strong> 不做就无法完成核心任务的功能</li>
+<li><strong>后续再做：</strong> 有价值，但不影响第一版完成主任务</li>
+<li><strong>差异点：</strong> 你准备重点做得更好的一个或两个环节</li>
+<li><strong>技术风险：</strong> 成本高、难度高、需要先验证的功能</li>
+</ul>
+<p>以我做过的PDF Translator这个词为例吧，第一版先保证上传、选择语言、翻译、预览和下载能跑通；批量处理、术语表、复杂 OCR、文档对话，可以先放到后续或技术风险区。</p>
+<p>但不要因为某个竞品少了一个功能，就马上认定这就是你的机会。你要找的机会点应该是用户确实在意，但竞品做得不够好的地方，或者多个产品都没有把某个关键环节接起来。先判断它是不是影响核心结果，再决定要不要把它做成自己的差异点。</p>
+<p><strong>容易犯的错，是把功能数量当成产品能力。</strong> 功能再多，如果用户从上传文件到拿到结果的流程很长，仍然不能算服务做得好。你需要做的是让用户又快又好的拿到大结果（哈哈哈哈哈哈）</p>
+<h2 id="第二部分：增长调研，竞品的用户到底从哪来的"><a href="#第二部分：增长调研，竞品的用户到底从哪来的" class="headerlink" title="第二部分：增长调研，竞品的用户到底从哪来的"></a><strong>第二部分：增长调研，竞品的用户到底从哪来的</strong></h2><p>增长调研要回答的是：<strong>竞品的用户从哪里来，哪些动作真正带来了增长，这条路径我有没有机会复制。</strong></p>
+<p>上来啊，我建议你先选好调研的样本，这儿为啥我不建议你直接参考刚才功能调研的产品呢？因为很有可能你看的产品基本都是老站点，不是说老站点不能学，是人家的成功太早了，你还真未必能学起来。</p>
+<p>夏林果建议啊，横向挑和自己域名年龄、资源积累差不多的新站或小站，重点看近一两年起来的产品，然后纵向再选一两个老站，用 Wayback Machine 看它早期怎么冷启动、最近又在做什么。域名年龄、权重、引荐域名、页面数量和流量，可以先用 AITDK 或 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://sitedata.dev/">SiteData.dev</a></p>
+<p> 快速看一遍。</p>
+<p><strong>第一步：看 SEO 关键词怎么起量</strong></p>
+<p>用 Ahrefs 或 Semrush 查看自然关键词、排名页面和估算流量，重点回答三个问题：</p>
+<ul>
+<li>哪些关键词已经带来流量，是核心词、场景词还是长尾词？</li>
+<li>哪些词进入前十，哪些只是排在前五十甚至前一百？</li>
+<li>这些词分别对应工具页、产品页、场景页还是博客？</li>
+</ul>
+<p>还要打开排名靠前的页面，看它的页面内容 SEO 怎么做：先看 TDK，也就是 Title、Description 和页面关键词；再看 Hero 区怎么用一句话说明产品、功能和价值。继续看有没有 How to use、Features、Benefits、FAQ、案例、使用场景和 CTA，正文是在解决用户问题，还是只是在堆关键词。</p>
+<p>页面的展示方式也要看：有没有 FAQ、HowTo、Product 或 Video 等结构化数据；有没有视频演示、截图、交互效果和动效，帮助用户更快理解产品。展示做得好，不只是让页面好看，也能降低理解成本，提高用户继续使用的概率。</p>
+<p>不要看它有多少关键词，要找出真正带来访问的词，以及这些词背后的搜索需求。以及这个竞品是靠一个大词起量，还是靠大量具体长尾词慢慢堆起来的。这都代表了不同的打法，知道不！！</p>
+<p><strong>第二步：拆它的页面矩阵</strong></p>
+<p>把竞品所有重要页面按类型列出来：核心工具页、功能页、语言组合页、场景页、模板页、比较页、帮助页和博客。再看每类页面的数量、URL 结构、上线时间、收录情况和各自带来的流量。</p>
+<p>竞品的增长可能不是靠首页，而是靠几十个场景页或几百篇长尾文章。你要看清楚它是怎么把不同搜索词分配给不同页面的，哪些页面负责获客，哪些页面负责把用户引回工具。页面上线时间可以通过 Wayback、工具里的首次发现时间和页面历史变化交叉判断，不要把估算日期当成精确事实。</p>
+<p>博客和整体页面结构也要单独看，比如博客文章是否在回答长尾问题，是否把用户引回产品页；除了首页和博客，它有没有工具页、模板页、案例页、帮助中心、比较页或免费资源页。页面越多不代表 SEO 越好，但这些页面能让你看出它是怎么把不同搜索需求分配到不同页面上的。</p>
+<p><strong>第三步：看多语言 SEO 怎么做</strong></p>
+<p>看它服务哪些国家和语言，以及这些语言是简单翻译首页，还是有独立的语言页、场景页和内容页。重点看：</p>
+<ul>
+<li>不同国家的主要关键词是否真的做了本地化，而不是逐字翻译；</li>
+<li>语言版本是否有独立 URL、TDK、内部链接和内容；</li>
+<li>哪些语言页面拿到了流量，哪些只是铺出来但没有起量。</li>
+</ul>
+<p>多语言不是页面翻译得越多越好。要把语言数量和实际流量、转化、维护成本放在一起看，判断它是在服务真实市场，还是只是在批量铺页。再看哪些国家和语言贡献了主要访问。这个数据不能只停留在国家排名，还要回到前两步：这些国家的用户搜的是什么词，主要进入哪些页面，页面有没有对应的语言版本和内容。最后看最近几个月的流量是在增长、稳定还是下滑，确认这个需求有没有明显的季节性。</p>
+<p><strong>第四步：看产品策略有没有带动增长</strong></p>
+<p>产品本身也是获客渠道。看它是不是无需注册、免费使用、免费额度大、结果可下载，或者提供模板、批量处理和分享功能。</p>
+<p>要进一步判断：用户是不是因为“马上能用、不要钱、没有注册门槛”才进入；免费功能是否足够让用户感受到价值；产品有没有用文件大小、次数、页数、速度或高级功能来控制成本；完成任务后有没有自然地引导注册、分享或升级。</p>
+<p>这里的重点不是判断“免费好不好”，而是看<strong>免费策略有没有真正带来流量和转化</strong>。如果竞品的主要卖点就是免费，那你不能只复制免费，还要算清楚自己的成本和后续收费入口。</p>
+<p><strong>第五步：拆外部渠道和持续导流来源</strong></p>
+<p>把外部流量拆成几类看：外链、推荐、社媒、导航站、榜单、媒体、合作伙伴和广告。用 Ahrefs、Semrush、</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://sitedata.dev/">SiteData.dev</a></p>
+<p> 或 AITDK 看引荐域名、推荐来源、链接增长频率和流量占比，再点进去确认它是怎么被提到的。</p>
+<p>如果<strong>社媒流量</strong>比较高，就分别去看它在哪些平台经营：YouTube 是做教程、测评还是产品演示；Reddit 是参与讨论、回答问题还是发布产品；X 和 LinkedIn 是个人账号在更新，还是产品官方账号在运营。把它发过的内容、更新频率、互动情况和用户最常问的问题记下来。</p>
+<p>如果<strong>推荐流量</strong>比较高，就点开主要来源的网站，看它是怎么被提到的：是被导航站收录、被博客评测、被媒体报道，还是和其他产品做了合作。这里可以和外链分析结合起来，因为推荐链接很多时候也是外链的一部分。广告流量则要看广告文案、投放关键词和落地页，搞清楚它花钱买的是什么用户。</p>
+<p><strong>第六步：看GEO，AI 会不会提到它</strong></p>
+<p>GEO 可以理解成面向 AI 搜索和回答的品牌曝光。你要实际问 ChatGPT、Perplexity、Gemini 等工具几类问题：直接搜品牌词、搜核心功能词、搜“推荐一个工具”、搜具体场景。</p>
+<p>记录 AI 推荐的是品牌名、工具页、内容页、场景页还是博客；它引用的是官网、第三方评测、媒体还是社区讨论。还要看竞品是否有清晰的产品定位、FAQ、使用说明、结构化内容和大量可被引用的场景页。</p>
+<p>这一项不要把一次回答当成排名结论。它更像一个持续观察：<strong>用户问相关问题时，AI 有没有机会认识你、理解你、提到你。</strong> 如果完全没有提及，先检查品牌实体、核心页面和外部提及是否足够清楚。</p>
+<p><strong>最后：判断哪些增长动作能复制</strong></p>
+<p>六个维度看完，必须落到自己的判断：这条流量来源，你做不做得了？需要什么成本？多久可能见效？你能不能连续做三个月？</p>
+<p>这里有些增长动作，我直接给你了，是新手可以直接做的：</p>
+<ul>
+<li><strong>SEO 基本可以做：</strong> 核心关键词可以向竞品靠拢，页面标题、内容结构、场景页、长尾文章和内部链接，都可以按用户需求重新做一套；</li>
+<li><strong>多语言要挑市场做：</strong> 不要一开始翻译几十种语言，先选已经有搜索和访问信号的国家，做好一两个语言版本；</li>
+<li><strong>产品策略可以借鉴：</strong> 可以先做无需注册、有限额度的免费体验，但上线前先把单次成本和付费入口算清楚；</li>
+<li><strong>免费外链可以先做：</strong> 导航站、产品目录、个人博客、社区资料页和社媒主页，先把能提交的免费渠道提交起来；</li>
+<li><strong>有预算再做付费外链：</strong> 可以考虑基础导航站、客座博客或相关媒体合作，但不要一上来大量采购；</li>
+<li><strong>官方社媒主页应该建立：</strong> YouTube、Reddit、X、LinkedIn 等平台，能建产品主页就先建起来。它们既是运营阵地，也能作为品牌入口和外链来源；</li>
+<li><strong>投放要看资源：</strong> 竞品靠广告起量，但你烧不起钱，就不要把投放当作第一获客路径。</li>
+</ul>
+<h2 id="第三部分：商业化调研，它到底怎么挣钱"><a href="#第三部分：商业化调研，它到底怎么挣钱" class="headerlink" title="第三部分：商业化调研，它到底怎么挣钱"></a>第三部分：商业化调研，它到底怎么挣钱</h2><p>商业化调研要回答的是：<strong>竞品把什么东西卖给什么用户，又在哪一个节点让用户付钱。</strong> 这一部分不必把所有竞品都研究一遍，优先挑 3 到 5 个已经明确收费、价格体系比较完整、和你目标用户相近的产品。当然了，你也可以等有用户之后再考虑商业化，这个部分不急的。</p>
+<p>但是你调研的结果不能只是竞品 A 收 9.9 美刀，竞品 B 收 19 美刀。你最后要根据这些信息，写出自己的第一版定价，例如收什么模式、免费给多少、第一档卖什么、为什么这样定。</p>
+<p><strong>第一步：先挑值得研究的收费竞品</strong></p>
+<p>优先选择已经有免费版、订阅、按量付费或完整价格页的产品。它们不一定是功能最强的，但要能让你看清楚“功能—额度—价格”的关系。</p>
+<p><strong>第二步：把价格和功能放在一起看</strong></p>
+<p>先记录免费版、基础版、专业版、团队版或按量付费的价格，再把每一档开放的功能和额度记下来。重点找付费墙：用户在哪一步开始被要求升级？是文件大小限制、处理次数限制、导出限制、速度限制，还是某个高级功能限制？</p>
+<p>注意奥，最好把每个竞品的价格统一成同一个单位来比较：比如每月多少钱、每处理 100 页多少钱、每个文件多少钱。否则一个按月收费，一个按页收费，要不直接比较价格也没啥意义。</p>
+<p>这里提醒你注意几个问题：</p>
+<ul>
+<li><strong>它按什么收费：</strong> 功能、额度、页数、文件大小、速度、质量，还是团队协作？</li>
+<li><strong>它向谁收费：</strong> 偶尔使用的普通用户、高频使用的专业用户，还是团队和 API 用户？</li>
+<li><strong>它什么时候收费：</strong> 用户刚进来就收费，还是先让用户完成一次任务，看到结果后再收费？</li>
+<li><strong>免费版和付费版差在哪里：</strong> 免费版是让用户体验价值，还是已经能满足大多数需求？付费版有没有一个足够明确的升级理由？</li>
+</ul>
+<p><strong>第三步：亲自体验到付费墙</strong></p>
+<p>不要只截图价格页，最好亲自走一遍升级路径：注册、上传文件、完成一次任务，看到结果，再继续操作，直到系统要求你升级。记录付费墙出现在哪一步，以及它限制的到底是什么。价格页写的内容，和真实付款流程不一定完全一样。有些产品会按地区、活动或用户类型显示不同价格，也有些产品把真正的限制藏在使用过程中。</p>
+<p>这一轮体验完，你应该能得到一个结论：用户是因为用不够了才付费，还是因为需要更好的结果才付费。前者适合按额度、次数或页数收费，后者适合把更高质量、更快速度、更完整功能放进付费版。</p>
+<p><strong>第四步：用三个标准定出自己的第一版价格</strong></p>
+<p><strong>第一，看成本。</strong> 先估算一个付费用户每月会产生多少 API、存储、支付手续费和其他服务成本。价格不能长期低于单个用户带来的实际成本，不然用户越多，亏得越快。如果成本还算不清楚，先不要承诺无限使用，优先采用按量收费或设置明确额度。</p>
+<p><strong>第二，看价值。</strong> 用户付费买的不是“几个按钮”，而是节省时间、得到更好的结果，或者完成原本自己很难完成的任务。你的定价要围绕用户真正想要的结果，而不是围绕你写了多少功能。</p>
+<p><strong>第三，看市场。</strong> 把 3 到 5 个竞品统一单位后的价格放在一起，看大概的低位、中位和高位。新产品第一版没有品牌和信任积累，通常先从竞品中低位切入更容易获得第一次付费；如果你的成本更高，就不能盲目跟着低价，而要减少额度、改成按量收费，或者把更高价值的结果做成高价档。</p>
+<p>实际落地时，小白可以先用一个简单版本：<strong>一个有限额的免费版，加一个足够完成核心任务的付费版。</strong> 免费版让用户先感受到价值，但不要无限免费；付费版只放一个清晰的升级理由，不要一开始设计五六档复杂套餐。</p>
+<p>像是PDF Translator这个需求的话，如果成本主要随着页数增加，就可以先按页数或额度收费；如果用户是经常翻译论文、合同或资料，再考虑月度订阅。先选一个最符合使用频率和成本结构的方式，不要强行做订阅奥。</p>
+<p><strong>第五步：上线后用真实行为调整价格</strong></p>
+<p>这次定价只是第一版假设，还要迭代的。上线后重点看三个数据：有多少用户完成第一次核心任务，有多少用户碰到付费墙，有多少用户最终付款。</p>
+<p>举个例子，如果很多人完成任务，却没人愿意点付费，可能是付费价值不够清楚、价格太高，或者付费墙出现得太早；如果很多人碰到付费墙但没有付款，要继续看他们是嫌贵、额度不够，还是结果质量没有达到预期；如果用户很快用完额度，说明额度可能太小，也可能说明按量收费更适合。</p>
+<p>话又说回来了，不要因为一个人说太贵就立马降价，也不要因为一个人付费就认为价格正确。至少积累一批真实用户的使用和付款行为，再调整价格、额度和付费节点。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="第四部分：技术调研，只确认产品能不能落地"><a href="#第四部分：技术调研，只确认产品能不能落地" class="headerlink" title="第四部分：技术调研，只确认产品能不能落地"></a>第四部分：技术调研，只确认产品能不能落地</h2><p>这一部分我不想展开成开发教程。因为我自己更偏产品、运营和增长，不是靠写代码吃饭，所以技术调研对我来说只服务一个目的：<strong>确认这个产品不是停留在想法里，而是能用现成技术和合适的人做出来。</strong></p>
+<p><strong>第一步：确认核心功能有没有现成方案</strong></p>
+<p>小白先确认三件事：核心功能有没有现成 API、开源项目、无代码工具或 AI 辅助方案；每完成一次核心任务，大概会产生多少接口、存储和第三方服务成本；哪个功能最容易卡住，是否值得先做一个小实验，或者找开发者单独确认。</p>
+<p>比如 PDF Translator，不需要一开始研究竞品用了什么具体框架。你只需要先确认：文字型 PDF 能不能稳定提取和翻译，复杂排版会不会严重变形，文件处理成本能不能接受，用户上传的文件如何保存和删除。</p>
+<p><strong>第二步：把最容易失败的地方单独验证</strong></p>
+<p>如果核心功能涉及复杂 OCR、大文件处理、实时协作或高额接口成本，就不要只靠搜索资料判断。直接找一个懂这块的人做一次短咨询，或者先做一个最小技术实验。</p>
+<p>能把这些问题回答到“可以继续验证”的程度，就够进入下一步了。</p>
+<p><strong>第三步：用工具补足自己的技术理解</strong></p>
+<p>不做开发的人，可以先看竞品的帮助文档、API 文档、开发者博客、开源项目和社区讨论。看不懂的地方，让 AI 把技术方案翻译成产品语言。但 AI 只能帮你理解选项，不能替你决定产品方向，也不能把它的猜测当成竞品事实。</p>
+<p>如果想继续补这方面的认知，不建议一上来去看纯代码教程。可以看一些独立产品、SaaS 和产品验证的内容，重点学习别人怎么做判断：</p>
+<ul>
+<li><p>Pieter Levels：看他如何用简单技术快速做出产品、上线并验证市场，可以从 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://levels.io/how-to-build-bootstrapped-startup-without-funding">Bootstrapped Startup 方法总结</a></p>
+<p> 开始；</p>
+</li>
+<li><p>Indie Hackers：看独立开发者如何在写代码前验证需求，可以参考 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.indiehackers.com/post/how-i-validated-a-micro-saas-idea-in-48-hours-without-writing-a-single-line-of-code-2dce1c062b">不写代码验证 Micro-SaaS 想法的案例</a></p>
+<p>；</p>
+</li>
+<li><p>MicroConf：看 SaaS 产品验证、定价和早期经营，可以参考 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://microconf.com/on-air-episodes/validate-your-saas-idea-fast">Validate Your SaaS Idea FAST</a></p>
+<p>；</p>
+</li>
+<li><p>Arvid Kahl：重点看他如何描述用户问题、验证假设和安排产品优先级，不要只看收入故事。</p>
+</li>
+</ul>
+<p>这些内容不是为了教你写代码，而是让你知道：在技术投入之前，先把最贵、最容易失败的假设验证掉。</p>
+<h2 id="第五部分：用户反馈调研，用户真正关心什么"><a href="#第五部分：用户反馈调研，用户真正关心什么" class="headerlink" title="第五部分：用户反馈调研，用户真正关心什么"></a>第五部分：用户反馈调研，用户真正关心什么</h2><p>用户反馈调研不用一开始展开成复杂的访谈项目，先去用户真实出现的地方找原话。</p>
+<p>去哪些渠道找</p>
+<ul>
+<li><strong>评价和产品社区：</strong> Product Hunt 评论区、G2、Capterra、Chrome Web Store、App Store 等，看用户夸什么、骂什么、为什么给低分；</li>
+<li><strong>社媒和论坛：</strong> Reddit、X、LinkedIn、YouTube 评论区，以及目标用户所在的专业论坛和社群；</li>
+<li><strong>搜索替代方案：</strong> 搜竞品名加 review、alternative、problem、vs，也可以在 Reddit 里直接搜产品名和核心问题；</li>
+<li><strong>竞品自己的反馈入口：</strong> 帮助中心、Feature Request、Changelog、评论区和公开 Roadmap，看看用户提交过什么需求。</li>
+</ul>
+<p>如果能通过 X、LinkedIn、Reddit 等社媒找到真实用户，尽量约一次 coffee chat。不要问“如果我做一个这样的工具，你会不会用”，而是问他上一次什么时候遇到这个问题、当时怎么解决、花了多少时间和钱、为什么没有继续用原来的办法。</p>
+<p>反馈当然可以用 Feedlog 这类工具集中收集，现在有widget智能客服的能力了，可以承接用户的疑问和需求，后续把需求、Roadmap 和 Changelog 管起来，让用户知道哪些反馈已经被处理。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://feedlog.ai/">feedlog.ai</a></p>
+<h2 id="四、小白跟练：用-PDF-Translator-分析一次"><a href="#四、小白跟练：用-PDF-Translator-分析一次" class="headerlink" title="四、小白跟练：用 PDF Translator 分析一次"></a>四、小白跟练：用 PDF Translator 分析一次</h2><p>上一篇我们已经用 PDF Translator 这个方向走过了需求和关键词研究。现在按照上面的流程，我带你看看竞品调研咋做吧。（我不会拆的特别精细，要不这文章实在写不完了）</p>
+<h2 id="第一部分：功能调研"><a href="#第一部分：功能调研" class="headerlink" title="第一部分：功能调研"></a><strong>第一部分：功能调研</strong></h2><p><strong>第一步：先锁定 5 个竞品</strong></p>
+<p>先用 pdf translator 或 translate pdf 搜索 Google 前两三页。这里有一个小细节：热门词的首页往往会混进很多 Sponsored 或“广告”结果，尤其是大词，赞助商结果可能占掉很大一块位置。</p>
+<p>这些结果是花钱买来的广告位，不能直接当成自然排名。先把赞助商结果隐藏或排除，再看自然搜索结果里的产品：哪些排名靠前，哪些产品重复出现，哪些是真的在解决 PDF 翻译这个问题。</p>
+<p>这一轮先锁定 5 个功能竞品：<strong>iLovePDF、</strong></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pdftranslator.org/"><strong>PDFTranslator.org</strong></a></p>
+<p><strong>、Online Doc Translator、Smallpdf、DeepL</strong>。后面如果你实际搜索后发现某个产品并不相关，再替换成 PDF Simply、Soda PDF 等更匹配的结果。</p>
+<p><strong>第二步：把 5 个产品的核心体验一遍</strong></p>
+<p>每个竞品都至少实际走一遍上传、选择语言、翻译、预览和下载，不要只看首页的功能宣传。重点记录：</p>
+<ul>
+<li>页面结构和上手难度：第一次来的用户能不能马上明白怎么开始；</li>
+<li>功能和结果质量：翻译速度、准确度、排版保留、预览效果和下载结果怎么样；</li>
+<li>流程效率：从上传到拿到结果需要几步，哪个产品更简单，哪里需要反复跳转；</li>
+<li>服务是否闭环：它能不能把用户从上传文件一直服务到拿到可用结果，还是只解决了其中一小步；</li>
+<li>注册和付费节点：什么时候要求登录、注册或付款，免费额度和付费墙卡在哪里。</li>
+</ul>
+<p>把明显做得好的地方和明显不好的地方一起记下来。比如流程短、提示清楚、结果交付顺畅，是值得学习的地方；等待时间长、格式错乱、限制不透明，则可能是体验问题。</p>
+<p><strong>第三步：把功能 list 梳理出来，再判断优先级</strong></p>
+<p>体验完 5 个竞品后，不要只写“这个好、那个不好”，而是把它们出现过的功能全部列出来，再判断哪些功能是第一版必须做的，哪些可以晚点做，哪些可能成为自己的机会点，哪些需要先验证技术。</p>
+<p>下面这张表就是 PDF Translator 第一轮应该整理出的功能清单。实际调研时，把你看到的产品、截图和问题记在自己的调研笔记里：</p>
+<table>
+<thead>
+<tr>
+<th>功能项</th>
+<th>优先级</th>
+<th>判断标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上传 PDF、识别文件格式和大小</td>
+<td>MVP 必须有</td>
+<td>用户无法上传，就无法开始核心任务</td>
+</tr>
+<tr>
+<td>选择原文和目标语言</td>
+<td>MVP 必须有</td>
+<td>翻译前必须让用户明确处理方向</td>
+</tr>
+<tr>
+<td>提取 PDF 文字并完成翻译</td>
+<td>MVP 必须有</td>
+<td>这是产品最核心的结果</td>
+</tr>
+<tr>
+<td>基本排版保留和结果预览</td>
+<td>MVP 必须有</td>
+<td>用户需要先确认结果是否可用</td>
+</tr>
+<tr>
+<td>下载翻译后的文件</td>
+<td>MVP 必须有</td>
+<td>没有可交付文件，服务就没有闭环</td>
+</tr>
+<tr>
+<td>注册、免费额度和付费限制</td>
+<td>MVP 必须有</td>
+<td>关系到产品能不能实际运营和收费</td>
+</tr>
+<tr>
+<td>扫描件 OCR</td>
+<td>后续再做</td>
+<td>技术复杂度和处理成本更高，先确认需求比例</td>
+</tr>
+<tr>
+<td>批量翻译、大文件处理</td>
+<td>后续再做</td>
+<td>高频用户可能需要，但不一定是第一版必需</td>
+</tr>
+<tr>
+<td>术语表、翻译记忆和自定义规则</td>
+<td>差异点候选</td>
+<td>如果目标用户是专业用户，可能成为付费理由</td>
+</tr>
+<tr>
+<td>双栏对比、人工修改或二次编辑</td>
+<td>差异点候选</td>
+<td>看竞品是否普遍做得不好，用户是否真的在意</td>
+</tr>
+<tr>
+<td>复杂表格、双栏论文和特殊排版还原</td>
+<td>技术风险</td>
+<td>先做小实验，不要一开始就承诺全部支持</td>
+</tr>
+<tr>
+<td>文档对话、总结和问答</td>
+<td>后续再做</td>
+<td>属于扩展能力，先保证翻译结果可用</td>
+</tr>
+</tbody></table>
+<p>以 PDF Translator 为例，第一版先保证上传、选择语言、翻译、预览和下载能跑通。扫描件 OCR、复杂表格、术语表、文档对话和批量处理，不要一开始全部塞进去。</p>
+<p>“差异点”也不能简单理解为竞品没有的功能。先确认这个缺口是否影响用户拿到结果，是否在多个竞品和用户讨论里反复出现，再决定它是不是值得做成自己的机会点。</p>
+<h2 id="第二部分：增长调研"><a href="#第二部分：增长调研" class="headerlink" title="第二部分：增长调研"></a><strong>第二部分：增长调研</strong></h2><p>这一次我们换一个产品来看：<strong>BelinDoc</strong></p>
+<p>BelinDoc 是一个 AI 文档翻译工具，除了 PDF、Word、PPT、Excel，也已经扩展到漫画、视频、CAD 等翻译场景。</p>
+<p>目前月访问量约 <strong>24.6 万</strong>。2026 年 3 月前后，它的月访问量还只有约 9 万，之后最高接近 29 万，半年左右出现了一轮很明显的增长。流量里 <strong>51.1% 来自自然搜索，37.4% 来自 Direct</strong>，几乎没有付费投放；中国是第一大市场，占 20.6%，其次是印度、美国、巴西和俄罗斯。</p>
+<p>这个案例很适合拿来研究 SEO 增长哎，因为它不是靠某一次广告投放突然冲起来的，而是持续寻找新的翻译需求，再给每个需求做对应的页面和产品入口。</p>
+<p><strong>第一步：SEO 关键词怎么起量</strong></p>
+<p>BelinDoc 目前超过一半的流量来自自然搜索，Search Paid 为 0，基本可以判断它主要是在靠自然排名拿搜索用户。这里的关键词研究，看的不是某一个页面的文案，而是<strong>整个站有哪些自然关键词、哪些页面在拿排名、哪些页面正在贡献流量</strong>。</p>
+<p>它没有只做 Document Translator 这种大词，而是把“文档翻译”拆成了大量更具体的语言组合页面，例如 English to Japanese、Japanese to English、Korean to English、Chinese to English 等。这类词单独看，可能没有大词的搜索量，但搜索意图更明确、页面也更容易精准承接。大量语言组合叠加起来，就形成了一批稳定的搜索入口。结合它 51.1% 的自然搜索流量来看，<strong>SEO 是 BelinDoc 目前最核心的增长渠道。</strong></p>
+<p><strong>第二步：页面矩阵怎么铺</strong></p>
+<p>BelinDoc 的页面扩展，不只是把同一个产品翻译成不同语言，而是在不断寻找新的翻译需求。</p>
+<p>除了文档翻译，它已经做出了漫画翻译、Webtoon 翻译、视频翻译、EPUB 翻译、CAD 工程图翻译等独立产品页。这个动作的增长价值很直接：做一个 CAD Translator，就多了一批搜索 DWG 翻译、DXF 翻译 的用户；做一个 Webtoon Translator，就能承接漫画和网漫相关的翻译需求。真的方向做得很妙～！</p>
+<p>所以它扩展产品的意义，不只是功能变多，而是<strong>每新增一个明确的翻译场景，就新增了一组可以被搜索到的产品入口</strong>。这一步要用页面级数据继续确认：哪些新页面已经开始拿到排名，哪些只是刚上线还没有流量。</p>
+<p><strong>第三步：多语言 SEO 怎么做</strong></p>
+<p>BelinDoc 的多语言增长，不只是把首页翻译成不同语言，而是直接做不同语言组合的独立入口。它的第一大市场是中国，占 20.6%；印度、美国、巴西和俄罗斯也有比较明显的流量。</p>
+<p>翻译工具本身就是全球需求，所以它没有把增长押在单一英语市场上，而是让同一个产品去覆盖不同国家、不同语言组合的搜索需求。这里要继续看每个语言页面有没有独立 URL、TDK、正文、内部链接和真实流量，不能只看它支持多少语言。</p>
+<p>它给我们的启发是：多语言 SEO 不一定要先做一个很大的本地化网站，也可以先从有明确搜索需求的语言组合开始，逐个做成可以直接使用的产品入口。</p>
+<p><strong>第四步：产品策略有没有带动增长</strong></p>
+<p>BelinDoc 首页直接强调 <strong>免费、不用登录、可以直接翻译</strong>，用户从搜索结果进入后，就能上传文件开始处理。</p>
+<p>这和它 51.1% 的搜索流量是匹配的。很多人搜索“PDF 怎么翻译”“文档怎么翻译”，只是临时有一个文件要处理。如果进站之后还要注册、验证邮箱、绑卡，很容易直接离开。BelinDoc 的做法是：<strong>先让搜索进来的用户把事情做完，再考虑后面的付费和留存。</strong></p>
+<p>对小白来说，这里要看的是产品策略有没有帮助它承接搜索流量，而不是简单得出“免费一定好”。免费策略必须和成本、额度、后续付费入口放在一起判断。同时还要看流量趋势：它从 2026 年 3 月前后的约 9 万，半年左右增长到最高接近 29 万，说明这套“搜索入口 + 免费体验”的路径确实有增长信号。</p>
+<p><strong>第五步：外部渠道和持续导流</strong></p>
+<p>BelinDoc 的流量里，37.4% 来自 Direct，几乎没有付费投放，Search Paid 为 0。这里的 Direct 不等于社媒，也不等于推荐流量，它通常包括用户直接输入网址、收藏夹、已经熟悉品牌后再次访问等情况。所以这个案例不能简单总结成“它靠外部渠道增长”。目前更明确的判断是：<strong>它主要依靠自然搜索获取新用户，Direct 则说明有一部分用户已经记住了品牌，或者会重复访问。</strong></p>
+<p>如果继续往下查，就要用 AITDK、</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://sitedata.dev/">SiteData.dev</a></p>
+<p> 或 Ahrefs 看引荐域名和外链增长，再确认 Direct 背后有没有品牌传播、社媒分享或推荐访问。不能因为 Direct 占比高，就直接说它做了某种社媒打法。</p>
+<p><strong>第六步：GEO：AI 会不会提到它</strong></p>
+<p>这一轮提供的分析数据里，暂时没有 GEO 的验证结果，所以这里不强行给 BelinDoc 添加一个没有证据的结论。后续可以实际问 ChatGPT、Perplexity 或 Gemini：best document translator、AI tool for translating CAD drawings、how to translate a Korean webtoon 等问题，记录 AI 推荐的是 BelinDoc 的品牌、某个产品页，还是第三方内容。</p>
+<p>综合这六个维度，BelinDoc 最值得研究的不是某个具体关键词，而是<strong>不断拆分新的翻译需求，然后给每个需求做一个能被搜到、进来就能直接使用的产品入口</strong>。</p>
+<p>文档翻译太大，就拆成不同语言；PDF 翻译还不够，就继续拆漫画、Webtoon、CAD、EPUB、视频；产品页覆盖不完，再用 Blog 去接更细的问题。数据也在支持这条路线：<strong>51.1% 的流量来自自然搜索、几乎没有付费投放，同时月访问量从 2026 年 3 月前后的约 9 万，一度增长到接近 29 万。</strong></p>
+<h2 id="第三部分：商业化调研"><a href="#第三部分：商业化调研" class="headerlink" title="第三部分：商业化调研"></a><strong>第三部分：商业化调研</strong></h2><p>这一轮直接把 5 个产品的公开方案拆开看。这里先不替 PDF Translator 定价，只看它们怎样把“免费体验”切成“付费额度”。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>免费版</th>
+<th>付费版&#x2F;价格</th>
+<th>功能与额度</th>
+<th>付费触发点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pdftranslator.org/">PDFTranslator.org</a></td>
+<td>无需注册；每月免费 600 页；单文件最大 20MB；最多 3 个并行任务</td>
+<td>公开页面目前没有展示付费套餐</td>
+<td>PDF 翻译、100+ 语言、OCR、长 PDF、格式保留；另有 PDF 拆分、合并、压缩等工具</td>
+<td>目前不是用公开付费墙转化，而是先用免费额度获客；后续最自然的付费点是页数、文件大小、并发和 OCR</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.ilovepdf.com/pricing">iLovePDF</a></td>
+<td>可使用核心工具，但文件处理次数和部分工具有限；AI 工具受限</td>
+<td>Premium：$5&#x2F;月，按年计费 $60；包含无限文档处理、Web&#x2F;移动端&#x2F;桌面端、去广告、优先支持和 2,000 AI Credits</td>
+<td>PDF 翻译、压缩、转换、合并、编辑、签名、工作流；Premium 解除处理次数和批量限制</td>
+<td>用户频繁处理文件、需要 AI 翻译&#x2F;总结、批量处理，或不想看广告时升级</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener external nofollow noreferrer" href="https://smallpdf.com/pricing">Smallpdf</a></td>
+<td>30+ 工具，但下载次数、移动端和 AI 工具受限；AI 工具文件上限 50MB，文档字数约 25–35K</td>
+<td>Pro：官方价格页按月&#x2F;年切换；提供 7 天试用；解锁无限工具、下载、OCR、AI 和移动端</td>
+<td>Translate PDF、Chat with PDF、OCR、压缩、转换、编辑、签名等；Pro 的 AI 文档字数上限为 100K</td>
+<td>免费下载次数用完、需要 OCR&#x2F;AI&#x2F;批量处理，或需要解除每日任务限制时升级</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.onlinedoctranslator.com/">Online Doc Translator</a></td>
+<td>免费、无需注册；支持 109 种语言；上传文件后直接翻译并尽量保留原排版</td>
+<td>官网没有公开订阅或套餐价格</td>
+<td>支持 PDF、Word、Excel、PPT 等文档，底层使用 Google Translate；公开页面没有展示明确页数&#x2F;额度套餐</td>
+<td>它更像免费流量入口，公开页面没有明显付费墙；商业化价值需要从广告、合作或其他产品入口继续研究</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.deepl.com/en/pro?cta=character-limit">DeepL</a></td>
+<td>每月 1 个文件；单文件最大 5MB；每月 50,000 字符；1 个术语表、最多 5 个术语条目</td>
+<td>Individual：$8.74&#x2F;月，按年计费；每月 3 个文件、300,000 字符、30MB；Team：$28.74&#x2F;用户&#x2F;月，每月 20 个文件、1,000,000 字符；Business：$57.49&#x2F;用户&#x2F;月，每月 100 个文件</td>
+<td>高质量文本和文档翻译、术语表、批量翻译、团队管理；付费版支持更大的 PDF 和更多文件</td>
+<td>用户需要翻译第 2 个以上文件、超过免费字符数&#x2F;文件大小，或需要批量、术语表和团队功能时升级</td>
+</tr>
+</tbody></table>
+<p>这张表里最值得注意的不是价格高低，而是三种完全不同的收费思路：PDFTranslator.org 和 Online Doc Translator 先用免费体验抢用户；iLovePDF 和 Smallpdf 把大量 PDF 工具打包成订阅；DeepL 则直接围绕翻译质量、文件次数、字符数和团队能力收费。</p>
+<p>如果未来商业化，最容易接上的不是一上来做复杂订阅，而是先给 600 页免费额度，再卖一次性页数包，或者把 OCR、大文件、批量任务和更高并发放进付费版。这个结论来自它现在已经展示出来的额度结构，不是凭空设计一套价格。</p>
+<h2 id="第四部分：技术调研"><a href="#第四部分：技术调研" class="headerlink" title="第四部分：技术调研"></a><strong>第四部分：技术调研</strong></h2><p>这一部分至少按三个层次确认：</p>
+<ul>
+<li><strong>先拆核心链路：</strong> 文件上传、文字提取或 OCR、翻译、排版重建、预览和下载，每一环分别有没有现成 API、开源项目或成熟服务可接；</li>
+<li><strong>再找最容易失败的地方：</strong> 文字型 PDF、扫描件、双栏论文、表格和大文件分别测试一次，记录准确度、排版、速度、失败率和单次成本；</li>
+<li><strong>最后确认运营风险：</strong> 文件保存多久、什么时候删除，第三方接口是否会留存内容，成本是否会随着页数快速上升，用户失败后有没有重试或人工兜底方案。</li>
+</ul>
+<p>看不懂的地方先问 AI、查 API 文档和开发者文章。AI 可以帮你把技术方案翻译成产品语言，但不能替你决定产品方向。遇到 OCR、大文件、高成本等风险，就做一个最小技术实验，或找开发者做一次针对性确认，不需要一开始研究完整技术栈。</p>
+<h2 id="第五部分：用户反馈调研"><a href="#第五部分：用户反馈调研" class="headerlink" title="第五部分：用户反馈调研"></a><strong>第五部分：用户反馈调研</strong></h2><p>这次找到的竞品的真实反馈，基本都指向同一个问题：<strong>翻译质量和版式保留很难同时做好。</strong></p>
+<p>在 Reddit 的一条讨论 里，用户说 DeepL 的翻译很准确，但整份 PDF 翻译后排版变乱，所以不愿意购买；在 另一条讨论 里，用户提到表格错位、项目符号间距变化、图片漂移、部分内容没有被翻译，而且最终仍然需要人工清理。</p>
+<p>这说明用户真正愿意付费解决的，不是“再多支持几种语言”，而是<strong>拿到一个不用重新排版、可以直接交付的文件</strong>。对文档翻译这类需求来说，复杂表格、扫描件和多栏 PDF 的质量，才是最值得继续验证的机会点。</p>
+<h2 id="第六部分：如果现在就做，怎么落地"><a href="#第六部分：如果现在就做，怎么落地" class="headerlink" title="第六部分：如果现在就做，怎么落地"></a><strong>第六部分：如果现在就做，怎么落地</strong></h2><p>如果是我现在做 PDF Translator，不会一开始和 iLovePDF、Smallpdf 拼功能数量，而是先围绕“把 PDF 翻译好，并尽量保留原排版”做一个能跑通的版本。</p>
+<ul>
+<li><strong>功能：</strong> 先做上传、语言选择、文字型 PDF 翻译、基本排版保留、预览和下载；OCR、批量处理、术语表和复杂文档对话放到后面。</li>
+<li><strong>MVP：</strong> 先支持最常见的文字型 PDF，限制文件大小和页数，把速度、准确度和排版效果测清楚，再决定要不要扩展扫描件和复杂表格。</li>
+<li><strong>增长：</strong> 上线后先做三件事：提交核心工具页和场景页收录；围绕 pdf translator 及论文、手册、教材等场景做内容；同步提交免费导航站，建立 X、Reddit、YouTube 等产品主页。</li>
+<li><strong>商业化：</strong> 先保留有限免费额度，再按页数或额度收费；等真实用户出现后，再根据 API 成本和使用频率决定做月订阅，还是继续卖一次性额度包。</li>
+</ul>
+<p>这就是调研后的第一版结论：<strong>先把核心结果做稳，再用 SEO 获取搜索用户，最后根据真实使用量设计收费。</strong></p>
+<h2 id="五、复盘：竞品调研到底要得到什么"><a href="#五、复盘：竞品调研到底要得到什么" class="headerlink" title="五、复盘：竞品调研到底要得到什么"></a>五、复盘：竞品调研到底要得到什么</h2><p>我总结下，先看竞品怎么把用户的问题解决掉，再看它怎么获得用户、怎么收费；然后确认这个产品能不能用现成技术做出来，最后回到真实用户那里，看看哪些地方还没有被接住。</p>
+<p>我们复盘下这五个部分吧：</p>
+<ul>
+<li>功能调研：用户怎样拿到结果，哪些功能不能砍；</li>
+<li>增长调研：竞品从哪里获得用户，哪些渠道自己能做；</li>
+<li>商业化调研：用户为什么付费，第一版应该怎么收费；</li>
+<li>技术调研：这个想法能不能先做出来，哪里最容易卡住；</li>
+<li>用户反馈：用户真正抱怨什么，哪些问题值得继续做。</li>
+</ul>
+<p>最后，你应该能把结论压缩成一句话：<strong>我准备给谁做什么，先做哪些功能，不做哪些功能，准备从哪里获客，先靠什么方式收费。</strong> 如果这句话还说不清楚，就说明竞品调研还没有完成；如果已经说得清楚，就不要再无限调研，进入下一步验证。</p>
+<p>下一篇其实本来应该写怎么根据这些调研结果，做出一个最小可用的 MVP 版本，并找到第一批真实用户。</p>
+<p>但我觉得稳扎稳打一些，下一篇会出一个<strong>出海小白必备的出海工具包和使用方法</strong>，先教大家使用工具，然后再继续这个系列哈～！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/ddb65433/">https://macin.top/posts/ddb65433/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 已被墙，开代理访问</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Web%E5%87%BA%E6%B5%B7/">Web出海</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/22a5afd1/" title="lcayun 莱卡云加拿大高防 VPS 测评，原生 IP 解锁 TikTok/AI"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">lcayun 莱卡云加拿大高防 VPS 测评，原生 IP 解锁 TikTok/AI</div></div><div class="info-2"><div class="info-item-1">本文是lcayun/莱卡云的加拿大高防vps的详细测评数据分享，大致总结下：加拿大原生IP，解锁TikTok、ChatGPT、Claude、Gemini、AmazonPV等；</div></div></div></a><a class="pagination-related" href="/posts/ff3a7fbf/" title="住宅 IP 买好了还是卡？5 种中转方案"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">住宅 IP 买好了还是卡？5 种中转方案</div></div><div class="info-2"><div class="info-item-1">AI 对话卡不卡、TK 直播稳不稳，中转线路都会直接影响体验。尤其是买了住宅 IP 之后，很多人才发现：出口是自己想要的，连接却不一定顺。</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2837</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2800</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94"><span class="toc-number">1.</span> <span class="toc-text">一、为什么要做竞品调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94%E5%8F%AF%E4%B8%8D%E6%98%AF%E4%B8%BA%E4%BA%86%E6%8A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">竞品调研可不是为了抄功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">竞品调研的目标和作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%81%9A%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94%E5%89%8D%EF%BC%8C%E8%AE%A4%E8%AF%86%E8%BF%99%E4%BA%9B%E6%A6%82%E5%BF%B5%E5%92%8C%E5%B7%A5%E5%85%B7%EF%BC%88%E6%96%B0%E6%89%8B%E5%BE%80%E8%BF%99%E5%84%BF%E7%9C%8B%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">二、做竞品调研前，认识这些概念和工具（新手往这儿看）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%99%E7%82%B9%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF%EF%BC%9A%E7%9C%8B%E8%BF%99%E4%B8%AA%E7%BD%91%E7%AB%99%E7%A7%AF%E7%B4%AF%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">站点基本信息：看这个网站积累了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94%EF%BC%9A%E7%9C%8B%E7%94%A8%E6%88%B7%E6%80%8E%E4%B9%88%E5%AE%8C%E6%88%90%E4%BB%BB%E5%8A%A1"><span class="toc-number">6.</span> <span class="toc-text">功能调研：看用户怎么完成任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E9%95%BF%E5%92%8CSEO%E8%B0%83%E7%A0%94%EF%BC%9A%E7%94%A8%E6%88%B7%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="toc-number">7.</span> <span class="toc-text">增长和SEO调研：用户从哪里来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%86%E4%B8%9A%E5%8C%96%E8%B0%83%E7%A0%94%EF%BC%9A%E7%94%A8%E6%88%B7%E5%9C%A8%E5%93%AA%E4%B8%80%E6%AD%A5%E4%BB%98%E9%92%B1"><span class="toc-number">8.</span> <span class="toc-text">商业化调研：用户在哪一步付钱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E5%85%88%E5%88%97%E5%85%A5%E9%97%A8%E6%AC%BE%EF%BC%8C%E8%BF%99%E9%87%8C%E4%B8%8D%E5%B1%95%E5%BC%80"><span class="toc-number">9.</span> <span class="toc-text">工具先列入门款，这里不展开</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94%E5%85%A8%E6%B5%81%E7%A8%8B%E5%88%86%E4%BA%AB"><span class="toc-number">10.</span> <span class="toc-text">三、竞品调研全流程分享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94%EF%BC%8C%E7%9C%8B%E7%AB%9E%E5%93%81%E5%A6%82%E4%BD%95%E6%9C%8D%E5%8A%A1%E7%94%A8%E6%88%B7"><span class="toc-number">11.</span> <span class="toc-text">第一部分：功能调研，看竞品如何服务用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%A2%9E%E9%95%BF%E8%B0%83%E7%A0%94%EF%BC%8C%E7%AB%9E%E5%93%81%E7%9A%84%E7%94%A8%E6%88%B7%E5%88%B0%E5%BA%95%E4%BB%8E%E5%93%AA%E6%9D%A5%E7%9A%84"><span class="toc-number">12.</span> <span class="toc-text">第二部分：增长调研，竞品的用户到底从哪来的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E5%95%86%E4%B8%9A%E5%8C%96%E8%B0%83%E7%A0%94%EF%BC%8C%E5%AE%83%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E6%8C%A3%E9%92%B1"><span class="toc-number">13.</span> <span class="toc-text">第三部分：商业化调研，它到底怎么挣钱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">14.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E6%8A%80%E6%9C%AF%E8%B0%83%E7%A0%94%EF%BC%8C%E5%8F%AA%E7%A1%AE%E8%AE%A4%E4%BA%A7%E5%93%81%E8%83%BD%E4%B8%8D%E8%83%BD%E8%90%BD%E5%9C%B0"><span class="toc-number">15.</span> <span class="toc-text">第四部分：技术调研，只确认产品能不能落地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E9%83%A8%E5%88%86%EF%BC%9A%E7%94%A8%E6%88%B7%E5%8F%8D%E9%A6%88%E8%B0%83%E7%A0%94%EF%BC%8C%E7%94%A8%E6%88%B7%E7%9C%9F%E6%AD%A3%E5%85%B3%E5%BF%83%E4%BB%80%E4%B9%88"><span class="toc-number">16.</span> <span class="toc-text">第五部分：用户反馈调研，用户真正关心什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B0%8F%E7%99%BD%E8%B7%9F%E7%BB%83%EF%BC%9A%E7%94%A8-PDF-Translator-%E5%88%86%E6%9E%90%E4%B8%80%E6%AC%A1"><span class="toc-number">17.</span> <span class="toc-text">四、小白跟练：用 PDF Translator 分析一次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94"><span class="toc-number">18.</span> <span class="toc-text">第一部分：功能调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%A2%9E%E9%95%BF%E8%B0%83%E7%A0%94"><span class="toc-number">19.</span> <span class="toc-text">第二部分：增长调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E5%95%86%E4%B8%9A%E5%8C%96%E8%B0%83%E7%A0%94"><span class="toc-number">20.</span> <span class="toc-text">第三部分：商业化调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E6%8A%80%E6%9C%AF%E8%B0%83%E7%A0%94"><span class="toc-number">21.</span> <span class="toc-text">第四部分：技术调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E9%83%A8%E5%88%86%EF%BC%9A%E7%94%A8%E6%88%B7%E5%8F%8D%E9%A6%88%E8%B0%83%E7%A0%94"><span class="toc-number">22.</span> <span class="toc-text">第五部分：用户反馈调研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E9%83%A8%E5%88%86%EF%BC%9A%E5%A6%82%E6%9E%9C%E7%8E%B0%E5%9C%A8%E5%B0%B1%E5%81%9A%EF%BC%8C%E6%80%8E%E4%B9%88%E8%90%BD%E5%9C%B0"><span class="toc-number">23.</span> <span class="toc-text">第六部分：如果现在就做，怎么落地</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%A4%8D%E7%9B%98%EF%BC%9A%E7%AB%9E%E5%93%81%E8%B0%83%E7%A0%94%E5%88%B0%E5%BA%95%E8%A6%81%E5%BE%97%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">24.</span> <span class="toc-text">五、复盘：竞品调研到底要得到什么</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ea7e9c03/" title="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运"/></a><div class="content"><a class="title" href="/posts/ea7e9c03/" title="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运">注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运</a><time datetime="2026-09-23T14:37:56.000Z" title="发表于 2026-09-23 22:37:56">2026-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a023d381/" title="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连"/></a><div class="content"><a class="title" href="/posts/a023d381/" title="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连">DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连</a><time datetime="2026-09-22T15:40:02.000Z" title="发表于 2026-09-22 23:40:02">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0bc8287/" title="新人妻约会不完全指南"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="新人妻约会不完全指南"/></a><div class="content"><a class="title" href="/posts/b0bc8287/" title="新人妻约会不完全指南">新人妻约会不完全指南</a><time datetime="2026-09-22T15:38:34.000Z" title="发表于 2026-09-22 23:38:34">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/101d65d3/" title="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月"/></a><div class="content"><a class="title" href="/posts/101d65d3/" title="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月">华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月</a><time datetime="2026-09-22T15:37:33.000Z" title="发表于 2026-09-22 23:37:33">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/59f43517/" title="我们总想决定无法决定的，却把能决定的拱手相让"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="我们总想决定无法决定的，却把能决定的拱手相让"/></a><div class="content"><a class="title" href="/posts/59f43517/" title="我们总想决定无法决定的，却把能决定的拱手相让">我们总想决定无法决定的，却把能决定的拱手相让</a><time datetime="2026-09-22T15:36:49.000Z" title="发表于 2026-09-22 23:36:49">2026-09-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

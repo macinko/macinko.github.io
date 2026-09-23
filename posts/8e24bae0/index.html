@@ -1,0 +1,1227 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>会话管理（二）：持久化与恢复 | 极客的赛博空间 | 已被墙，开代理访问</title><meta name="author" content="Geek"><meta name="copyright" content="Geek"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="上一篇讲了为什么不同项目、不同任务之间需要进行会话隔离。这一篇继续解决另一个问题：Agent 被关闭或意外中断以后，如何恢复之前的工作？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="会话管理（二）：持久化与恢复">
+<meta property="og:url" content="https://macin.top/posts/8e24bae0/">
+<meta property="og:site_name" content="极客的赛博空间 | 已被墙，开代理访问">
+<meta property="og:description" content="上一篇讲了为什么不同项目、不同任务之间需要进行会话隔离。这一篇继续解决另一个问题：Agent 被关闭或意外中断以后，如何恢复之前的工作？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://macin.top/img/tool.webp">
+<meta property="article:published_time" content="2026-09-14T15:17:38.000Z">
+<meta property="article:modified_time" content="2026-09-23T15:17:04.213Z">
+<meta property="article:author" content="Geek">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="会话管理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://macin.top/img/tool.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "会话管理（二）：持久化与恢复",
+  "url": "https://macin.top/posts/8e24bae0/",
+  "image": "https://macin.top/img/tool.webp",
+  "datePublished": "2026-09-14T15:17:38.000Z",
+  "dateModified": "2026-09-23T15:17:04.213Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Geek",
+      "url": "https://macin.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/ast.webp"><link rel="canonical" href="https://macin.top/posts/8e24bae0/"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css?v=0.1.16" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=6.1.14" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '会话管理（二）：持久化与恢复',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="preload" as="image" href="/img/astronaut.webp"><link rel="stylesheet" href="/css/hebing.css"><script defer data-domain="macin.top" src="https://pl.2020620.xyz/js/script.js"></script><script src="/js/google-funding-choices.js"></script><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://pagead2.googlesyndication.com"><script async src="https://fundingchoicesmessages.google.com/i/pub-7304614629052385?ers=1"></script><script>
+  (function() {
+    function signalGooglefcPresent() {
+      if (!window.frames['googlefcPresent']) {
+        if (document.body) {
+          const iframe = document.createElement('iframe');
+          iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px; display: none;';
+          iframe.name = 'googlefcPresent';
+          document.body.appendChild(iframe);
+        } else {
+          setTimeout(signalGooglefcPresent, 0);
+        }
+      }
+    }
+    signalGooglefcPresent();
+  })();
+</script>
+<script defer src="https://www.googletagmanager.com/gtag/js?id=G-HVDT2NRNTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HVDT2NRNTQ');
+</script>
+<meta name="generator" content="Hexo 8.1.2"><link rel="alternate" href="/atom.xml" title="极客的赛博空间 | 已被墙，开代理访问" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="极客的赛博空间 | 已被墙，开代理访问" type="application/rss+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/astronaut.webp);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2837</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2800</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/tool.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">极客的赛博空间 | 已被墙，开代理访问</span></a><a class="nav-page-title" href="/"><span class="site-name">会话管理（二）：持久化与恢复</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-cloud"></i><span> 云服务</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://pl.2020620.xyz/share/macin.top?auth=87oy7bwoFAMjteu40vRpS"><span> 流量分析</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chatgpt.com/"><span> ChatGPT</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://grok.com/"><span> Grok</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://gemini.google.com/app"><span> Gemini</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.deepseek.com/"><span> DeepSeek</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://chat.qwen.ai/"><span> QWEN</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.doubao.com/chat"><span> 豆包</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipcheck.ing/#/"><span> IP查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipw.cn/ipv6/"><span> IPv6地址查询</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://test-ipv6.com/"><span> IPv6 连接测试</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://browserleaks.com/dns"><span> DNS泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://ipleak.net/"><span> IP泄漏检测</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.lu/crontab/"><span> crontab时间计算</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.textcomparer.net/"><span> 文字比较</span></a></li><li><a class="site-page child" target="_blank" rel="noopener external nofollow noreferrer" href="https://tool.chinaz.com/speedtest/macin.top"><span> 站长工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-earth"></i><span> 出海赚钱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/global/mailbox"><span> 教育邮箱</span></a></li><li><a class="site-page child" href="/categories/global/bank"><span> 银行开户</span></a></li><li><a class="site-page child" href="/categories/global/sim"><span> 手机号码</span></a></li><li><a class="site-page child" href="/categories/global/crypto"><span> Web3</span></a></li><li><a class="site-page child" href="/categories/global/vps"><span> VPS</span></a></li><li><a class="site-page child" href="/categories/global/invest"><span> 投资理财</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-gear"></i><span> 操作系统</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/os/ios"><span> iOS</span></a></li><li><a class="site-page child" href="/categories/os/android"><span> 安卓</span></a></li><li><a class="site-page child" href="/categories/os/windows"><span> Windows</span></a></li><li><a class="site-page child" href="/categories/os/macos"><span> macOS</span></a></li><li><a class="site-page child" href="/categories/os/ubuntu"><span> Ubuntu</span></a></li><li><a class="site-page child" href="/categories/os/debian"><span> Debian</span></a></li><li><a class="site-page child" href="/categories/os/armbian"><span> armbian</span></a></li><li><a class="site-page child" href="/categories/os/centos"><span> Centos</span></a></li><li><a class="site-page child" href="/categories/os/kali"><span> Kali</span></a></li><li><a class="site-page child" href="/categories/os/openwrt"><span> OpenWRT</span></a></li><li><a class="site-page child" href="/categories/os/ros"><span> ROS</span></a></li><li><a class="site-page child" href="/categories/os/qnap"><span> QNAP</span></a></li><li><a class="site-page child" href="/categories/os/omv"><span> OMV</span></a></li><li><a class="site-page child" href="/categories/os/pve"><span> PVE</span></a></li><li><a class="site-page child" href="/categories/os/truenasscale"><span> TrueNas Scale</span></a></li><li><a class="site-page child" href="/categories/os/fnos"><span> 飞牛OS</span></a></li><li><a class="site-page child" href="/categories/os/synology"><span> 群晖</span></a></li><li><a class="site-page child" href="/categories/os/unraid"><span> UNRAID</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-toolbox"></i><span> 百宝箱</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/tools/software"><span> 绿色软件</span></a></li><li><a class="site-page child" href="/categories/tools/git"><span> git</span></a></li><li><a class="site-page child" href="/categories/tools/npm"><span> npm</span></a></li><li><a class="site-page child" href="/categories/tools/qinglong"><span> 青龙面板</span></a></li><li><a class="site-page child" href="/categories/tools/office"><span> Office</span></a></li><li><a class="site-page child" href="/categories/tools/notion"><span> Notion</span></a></li><li><a class="site-page child" href="/categories/tools/photoshop"><span> Photoshop</span></a></li><li><a class="site-page child" href="/categories/tools/translate"><span> 外语翻译</span></a></li><li><a class="site-page child" href="/categories/tools/telegram"><span> Telegram</span></a></li><li><a class="site-page child" href="/categories/tools/database"><span> 数据库</span></a></li><li><a class="site-page child" href="/categories/tools/docker"><span> Docker</span></a></li><li><a class="site-page child" href="/categories/tools/awtrix"><span> awtrix</span></a></li><li><a class="site-page child" href="/categories/tools/onedrive"><span> onedrive</span></a></li><li><a class="site-page child" href="/categories/tools/xshell"><span> Xshell</span></a></li><li><a class="site-page child" href="/categories/tools/speedtest"><span> 测速</span></a></li><li><a class="site-page child" href="/categories/tools/nas"><span> NAS教程</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-robot"></i><span> AI</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/ai/claude"><span> Claude</span></a></li><li><a class="site-page child" href="/categories/ai/chatgpt"><span> ChatGPT</span></a></li><li><a class="site-page child" href="/categories/ai/gemini"><span> Gemini</span></a></li><li><a class="site-page child" href="/categories/ai/qwen"><span> Qwen</span></a></li><li><a class="site-page child" href="/categories/ai/deepseek"><span> DeepSeek</span></a></li><li><a class="site-page child" href="/categories/ai/kimi"><span> Kimi</span></a></li><li><a class="site-page child" href="/categories/ai/glm"><span> GLM</span></a></li><li><a class="site-page child" href="/categories/ai/minimax"><span> MiniMax</span></a></li><li><a class="site-page child" href="/categories/ai/agent"><span> AI智能体</span></a></li><li><a class="site-page child" href="/categories/ai/video"><span> AI视频</span></a></li><li><a class="site-page child" href="/categories/ai/pic"><span> AI图片</span></a></li><li><a class="site-page child" href="/categories/ai/audio"><span> AI音频</span></a></li><li><a class="site-page child" href="/categories/ai/tool"><span> AI工具</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-globe"></i><span> 互联网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/web/chrome"><span> Chrome</span></a></li><li><a class="site-page child" href="/categories/web/paas"><span> PaaS</span></a></li><li><a class="site-page child" href="/categories/web/cdn"><span> CDN</span></a></li><li><a class="site-page child" href="/categories/web/site"><span> 网站搭建</span></a></li><li><a class="site-page child" href="/categories/web/homeassistant"><span> Home Assistant</span></a></li><li><a class="site-page child" href="/categories/web/font"><span> 字体图标</span></a></li><li><a class="site-page child" href="/categories/web/wan"><span> 公网服务</span></a></li><li><a class="site-page child" href="/categories/web/cloud"><span> 网盘</span></a></li><li><a class="site-page child" href="/categories/web/download"><span> 下载工具</span></a></li><li><a class="site-page child" href="/categories/web/panel"><span> 服务器管理面板</span></a></li><li><a class="site-page child" href="/categories/web/nat"><span> 内网穿透</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-code"></i><span> 编程</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/coding/python3"><span> Python3</span></a></li><li><a class="site-page child" href="/categories/coding/javascript"><span> JavaScript</span></a></li></ul></div><div class="menus_item"><span class="site-page group hide"><i class="fa-fw fa-solid fa-paper-plane"></i><span> 科学上网</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/proxy/net"><span> 网络原理</span></a></li><li><a class="site-page child" href="/categories/proxy/warp"><span> WARP</span></a></li><li><a class="site-page child" href="/categories/proxy/wireguard"><span> Wireguard</span></a></li><li><a class="site-page child" href="/categories/proxy/clash"><span> Clash</span></a></li><li><a class="site-page child" href="/categories/proxy/shadowrocket"><span> Shadowrocket</span></a></li><li><a class="site-page child" href="/categories/proxy/xray"><span> Xray</span></a></li><li><a class="site-page child" href="/categories/proxy/trojan"><span> Trojan</span></a></li><li><a class="site-page child" href="/categories/proxy/hysteria"><span> Hysteria</span></a></li><li><a class="site-page child" href="/categories/proxy/v2ray"><span> V2Ray</span></a></li><li><a class="site-page child" href="/categories/proxy/tuic"><span> TUIC</span></a></li><li><a class="site-page child" href="/categories/proxy/edgetunnel"><span> Edge Tunnel</span></a></li><li><a class="site-page child" href="/categories/proxy/singbox"><span> sing-box</span></a></li><li><a class="site-page child" href="/categories/proxy/anytls"><span> AnyTLS</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/hack"><i class="fa-fw fa-solid fa-user-secret"></i><span> 网络安全</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa-solid fa-link"></i><span> 黑科技网站</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-circle-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">会话管理（二）：持久化与恢复</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon fas fa-history"></i><span class="post-meta-label">更新于</span><time datetime="2026-09-23T15:17:04.213Z" title="更新于 2026-09-23 23:17:04">2026-09-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/">ai</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ai/agent/">agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">14.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>52分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;本文已发布&quot;,&quot;messageNext&quot;:&quot;天，部分软件/网盘链接可能失效，请以最新评论或作者更新为准。&quot;,&quot;postUpdate&quot;:&quot;2026-09-23 23:17:04&quot;}" hidden></div><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一篇讲了为什么不同项目、不同任务之间需要进行会话隔离。这一篇继续解决另一个问题：Agent 被关闭或意外中断以后，如何恢复之前的工作？</p>
+<p>很多介绍会把这件事讲成“保存聊天记录，再把聊天记录读回来”。但 Agent 不只是聊天工具。它会读取和修改文件、执行命令、运行测试，甚至启动进程。因此，会话恢复至少要区分三件事：</p>
+<ul>
+<li>Agent 过去记录了什么；</li>
+<li>下一次调用模型时，需要把哪些内容发给模型；</li>
+<li>文件、Git、进程等外部环境现在是什么状态。</li>
+</ul>
+<p>这三件事不能混为一谈。下面从一个具体场景开始。</p>
+<h1 id="1-一个具体场景"><a href="#1-一个具体场景" class="headerlink" title="1. 一个具体场景"></a>1. 一个具体场景</h1><p>假设你在 &#x2F;project_A 中使用 Agent：</p>
+<p>你：帮我检查 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p> 为什么登录失败。</p>
+<p>Agent：我先读取 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p>。 Agent：这里可能有一个判断问题…… Agent：我再检查 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://auth.py/">auth.py</a></p>
+<p> …</p>
+<p>工作到一半，你按下 Ctrl+C，Agent 进程结束。</p>
+<p>程序都已经退出了，内存也已经释放。为什么第二天执行 resume，昨天的对话还能重新显示出来？</p>
+<p>原因其实很简单：这些内容在昨天运行的时候，就已经被不断写到了磁盘。</p>
+<p>例如用户发了一条消息，程序保存一条记录；模型产生回复，再保存一条记录；调用工具、工具返回结果，也继续保存。</p>
+<p>所以程序退出以后，虽然内存中的 Session 消失了，但磁盘中的 Session 记录还存在。</p>
+<p>第二天执行 Resume，只不过是：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">找到这个 Session</span><br><span class="line">    ↓</span><br><span class="line">从磁盘读取它之前保存的记录</span><br><span class="line">    ↓</span><br><span class="line">重新恢复聊天界面</span><br><span class="line">    ↓</span><br><span class="line">恢复工作目录、执行状态等信息</span><br><span class="line">    ↓</span><br><span class="line">等待用户继续</span><br></pre></td></tr></table></figure>
+
+<p>这就是“会话持久化”和“会话恢复”最基本的意义：持久化负责把内存中的重要状态保存下来；恢复负责在程序重新启动以后把这些状态读回来。</p>
+<p>考虑一种更麻烦的情况：你按下 Ctrl+C 时，Agent 正准备执行一次写文件操作。恢复会话以后，程序发现这次 ToolCall 有记录，却没有对应的 ToolResult。那么它怎么判断这次写入到底有没有成功？又应该如何安全地继续？</p>
+<h1 id="2-先分清会话、执行轮次、事件和上下文"><a href="#2-先分清会话、执行轮次、事件和上下文" class="headerlink" title="2. 先分清会话、执行轮次、事件和上下文"></a>2. 先分清会话、执行轮次、事件和上下文</h1><p>为了避免后面混乱，先区分四个概念：</p>
+<h2 id="2-1-Session：一项长期任务的容器"><a href="#2-1-Session：一项长期任务的容器" class="headerlink" title="2.1 Session：一项长期任务的容器"></a>2.1 Session：一项长期任务的容器</h2><p>Session 表示一段可以多次继续的任务或对话。例如，“修复 project_A 的登录问题”可以对应一个 Session。它通常保存：</p>
+<ul>
+<li>session_id：会话编号</li>
+<li>user_id：会话属于谁</li>
+<li>workspace：会话绑定的项目目录</li>
+<li>status：会话是否仍在使用</li>
+<li>created<em>at、updated</em>at：创建和更新时间</li>
+</ul>
+<p>会话的完整生命周期可以包含创建、运行、等待、完成、失败、取消和归档等状态。不过本地 Agent 的初版不必设计得过于复杂，通常只需要 active、completed、archived，再记录最近一次 Run 是执行中、成功、失败还是中断，我认为足够了。</p>
+<h2 id="2-2-Run：Session-中的一次执行"><a href="#2-2-Run：Session-中的一次执行" class="headerlink" title="2.2 Run：Session 中的一次执行"></a>2.2 Run：Session 中的一次执行</h2><p>同一个 Session 可以包含多次用户触发的执行：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Session S1：修复登录问题</span><br><span class="line">├── Run R1：先检查代码</span><br><span class="line">├── Run R2：继续修改</span><br><span class="line">└── Run R3：运行测试</span><br></pre></td></tr></table></figure>
+
+<p>用户每发送一次新要求，Agent 从接收要求到给出本轮结果，可以视为一次 Run。</p>
+<p>Run 通常记录 run<em>id、session</em>id、开始时间、结束时间、执行状态和错误信息。</p>
+<h2 id="2-3-Event：Run-中实际发生的一件事"><a href="#2-3-Event：Run-中实际发生的一件事" class="headerlink" title="2.3 Event：Run 中实际发生的一件事"></a>2.3 Event：Run 中实际发生的一件事</h2><p>一次 Run 内部会发生很多事件，例如：</p>
+<ul>
+<li>收到用户消息</li>
+<li>模型产生回复</li>
+<li>模型请求使用工具</li>
+<li>工具返回执行结果</li>
+<li>本轮执行结束</li>
+</ul>
+<p>这些按时间排列的记录就是事件流水。</p>
+<h2 id="2-4-Context：本次真正发给模型的内容"><a href="#2-4-Context：本次真正发给模型的内容" class="headerlink" title="2.4 Context：本次真正发给模型的内容"></a>2.4 Context：本次真正发给模型的内容</h2><p>Event 保存的是完整历史，Context 则是某一次调用模型前，从历史中挑选、整理出来的内容。</p>
+<p>例如，一个会话已经产生十万字的事件记录，但本次可能只发送：</p>
+<ul>
+<li>较早历史的摘要</li>
+<li>最近几轮消息</li>
+<li>当前任务进度</li>
+<li>本次确实需要的工具结果</li>
+</ul>
+<p>因此 Event Log 不等于模型上下文。读取历史是本地读文件，只有把选出的 Context 发给模型时才会消耗输入 Token。</p>
+<h2 id="3-为什么-Session-必须保存-workspace"><a href="#3-为什么-Session-必须保存-workspace" class="headerlink" title="3. 为什么 Session 必须保存 workspace"></a>3. 为什么 Session 必须保存 workspace</h2><p>workspace 不是提醒模型“你在哪个项目”，而是让 Agent 的运行框架把工具绑定到正确目录。如果恢复时直接使用当前终端目录：workspace &#x3D; os.getcwd()，那么你在 project<em>B 中恢复 project</em>A 的会话后，模型发出：read_file(“</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p>“)，工具可能实际读取 ~&#x2F;projects&#x2F;project_B&#x2F;login.py，这就导致串线了。</p>
+<p>Resume 时程序需要知道这个 Session 上一次在哪里工作，并据此决定本次应该继续在哪个目录工作。大致思路：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xyz123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cwd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/home/user/projects/project_A&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Resume:</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">session = load(<span class="string">&quot;xyz123&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(session.cwd)</span><br><span class="line"><span class="comment"># /home/user/projects/project_A</span></span><br></pre></td></tr></table></figure>
+
+<p>程序于是知道：这个 Session 上次是在 &#x2F;project_A。如果当前也在，那就直接继续。如果不在，就根据配置选择或者询问用户。</p>
+<p>随后，ReadFile、WriteFile、Bash 等工具都通过这个 tool_context 解析路径。</p>
+<p>也就是说，工具可以全局注册，但工具实际能访问哪个目录，应由当前 Session 的运行环境决定，不应该在全局工具注册表中永久写死 &#x2F;project_A。</p>
+<p>你可能会问，这不是很奇怪吗？为什么在 &#x2F;project_A 下的会话，可以在 &#x2F;project_B 中恢复？</p>
+<p>实际上这么做更好。因为用户完全有可能将 &#x2F;project_A 移动到其它目录下，如果仅仅因为 cwd 不同就拒绝 resume，那这个移动的 Session 就彻底废了。</p>
+<h2 id="4-Session、Run、Event-是否必须分成三个文件"><a href="#4-Session、Run、Event-是否必须分成三个文件" class="headerlink" title="4. Session、Run、Event 是否必须分成三个文件"></a>4. Session、Run、Event 是否必须分成三个文件</h2><p>不必须。Session、Run、Event 描述的是三种逻辑关系，不代表磁盘上必须存在 session.json、runs.jsonl、events.jsonl 三个文件。对于一个本地 Coding Agent，最简单的目录可以只有：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/.agent/sessions/</span><br><span class="line">└── s_001/</span><br><span class="line">    ├── session.json</span><br><span class="line">    └── events.jsonl</span><br></pre></td></tr></table></figure>
+
+<p>session.json 保存少量、经常查询的会话信息：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;s_001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;u_001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;workspace&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/home/user/projects/project_A&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;active&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;created_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;updated_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>events.jsonl 保存详细过程：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_started&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;user_message&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span><span class="string">&quot;检查登录问题&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span><span class="string">&quot;read_file&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;success&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_finished&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;success&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的 run_started 和 run_finished 已经标出了每个 Run 的边界，因此初版不需要单独建立 Run 文件。</p>
+<p>只有当需要频繁查询“最近一百次 Run”“所有失败的 Run”“平均运行时间”时，才值得在 SQLite 中单独建立 runs 表。此时 Run 表保存的是开始时间、结束时间、状态等索引信息，详细过程仍然由 Event 保存，两者并不冲突。</p>
+<h2 id="5-为什么不把所有内容都放进-session-json"><a href="#5-为什么不把所有内容都放进-session-json" class="headerlink" title="5. 为什么不把所有内容都放进 session.json"></a>5. 为什么不把所有内容都放进 session.json</h2><p>可以放，但运行时间越长，代价越明显。</p>
+<p>假设一个会话产生了数百条消息、几百次工具调用，以及大量日志和测试输出。如果全部放入一个大 JSON，每新增一条记录，都可能需要：</p>
+<ul>
+<li>读取整个文件</li>
+<li>解析整个 JSON</li>
+<li>添加一条记录</li>
+<li>重新写回整个文件</li>
+</ul>
+<p>因此更合理的做法是：</p>
+<ul>
+<li>session.json 保存体积小、需要快速读取的会话信息；</li>
+<li>events.jsonl 保存不断追加的详细历史。</li>
+</ul>
+<p>这样拆分并不会减少总数据量。Event 文件仍然可能很大。拆分的真正目的，是让“会话列表等高频信息”和“庞大的历史流水”分开读取。</p>
+<p>Event 文件变大以后，可以按需读取、分页、压缩、归档，也可以定期生成摘要。日常展示会话列表时，没有必要扫描几百 MB 的历史记录。</p>
+<h2 id="6-为什么事件流水适合-Agent"><a href="#6-为什么事件流水适合-Agent" class="headerlink" title="6. 为什么事件流水适合 Agent"></a>6. 为什么事件流水适合 Agent</h2><p>普通聊天通常只有用户消息和助手消息，而 Agent 的真实过程还包括工具调用、工具结果、状态变化和错误。例如：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bash&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pytest&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下一条事件可能是：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;failed&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exit_code&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>程序崩溃以后，运行框架可以根据事件流水判断：上一轮从哪里开始、执行过哪些工具、最后一项操作是否收到了结果。这里不需要模型猜测。事件由 Agent 运行框架在执行过程中记录。</p>
+<h1 id="7-持久化时机：不需要写很多-if-else"><a href="#7-持久化时机：不需要写很多-if-else" class="headerlink" title="7. 持久化时机：不需要写很多 if&#x2F;else"></a>7. 持久化时机：不需要写很多 if&#x2F;else</h1><p>不是让模型判断哪个事件关键，而是只要运行框架产生了需要记录的 Event，就通过统一入口立即追加到存储中。</p>
+<p>例如：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">emit</span>(<span class="params">event</span>):</span><br><span class="line">    event_store.append(event)</span><br><span class="line">    event_bus.publish(event)</span><br></pre></td></tr></table></figure>
+
+<p>这里 event_bus 解决的是：一个 Event 刚发生，现在程序内部有哪些模块需要马上知道？例如：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Agent Runtime</span><br><span class="line">    ↓</span><br><span class="line">产生 ToolCall</span><br><span class="line">    ↓</span><br><span class="line">EventBus</span><br><span class="line">    ├── UI：显示“正在读取文件”</span><br><span class="line">    ├── Logger：打印日志</span><br><span class="line">    ├── Telemetry：统计工具调用次数</span><br><span class="line">    └── SSE：推送给前端</span><br></pre></td></tr></table></figure>
+
+<p>收到用户消息时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emit(UserMessageReceived(...))</span><br></pre></td></tr></table></figure>
+
+<p>工具开始和结束时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">emit(ToolCallCreated(...))</span><br><span class="line">result = tool.execute(...)</span><br><span class="line">emit(ToolResultReceived(...))</span><br></pre></td></tr></table></figure>
+
+<p>本轮完成时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emit(RunCompleted(...))</span><br></pre></td></tr></table></figure>
+
+<p>所以，不是模型知道“现在发生了关键事件”，也不是在一个保存函数里堆许多 if&#x2F;else。而是程序中所有标准事件都走同一个 emit → append 通道。</p>
+<p>如果等整个 Run 结束后才统一保存，那么运行十分钟后在第九分钟崩溃，前面的记录可能全部丢失。逐条追加可以把损失缩小到最后一个尚未成功写入的事件。</p>
+<h1 id="8-为什么使用-JSONL-或-SQLite"><a href="#8-为什么使用-JSONL-或-SQLite" class="headerlink" title="8. 为什么使用 JSONL 或 SQLite"></a>8. 为什么使用 JSONL 或 SQLite</h1><p>JSONL 每行是一条独立 JSON，适合追加写：</p>
+<p>JSONL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;type&quot;:&quot;user_message&quot;, ...&#125;</span><br><span class="line">&#123;&quot;type&quot;:&quot;tool_call&quot;, ...&#125;</span><br><span class="line">&#123;&quot;type&quot;:&quot;tool_result&quot;, ...&#125;</span><br></pre></td></tr></table></figure>
+
+<p>新增事件时只需在文件末尾增加一行，不必重写整个历史文件，也方便开发者直接查看和调试。</p>
+<p>SQLite 则适合需要事务和查询的本地 Agent。可以建立 sessions、runs、events 等表，同时仍然只产生一个数据库文件。</p>
+<p>两者没有绝对高下：</p>
+<ul>
+<li>初版、重视简单和可读性：session.json + events.jsonl；</li>
+<li>需要条件查询、事务和统计：SQLite。</li>
+</ul>
+<p>当前 Codex CLI 会把 Session 的详细执行记录保存到：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~/.codex/sessions/</span><br><span class="line">    YYYY/</span><br><span class="line">        MM/</span><br><span class="line">            DD/</span><br><span class="line">                rollout-时间戳-SessionID.jsonl</span><br></pre></td></tr></table></figure>
+
+<p>我以我本地的 .jsonl 文件为例，挑一个较短的 JSON 字符串：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span><span class="string">&quot;2026-09-10T03:07:49.485Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ordinal&quot;</span><span class="punctuation">:</span><span class="number">326</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;response_item&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;payload&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;custom_tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;ctc_07319f63bba190c1016aa21f02720887d0a0c4edf1df53cf75&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;completed&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;call_JpARZq1RTScKdLZhRHt742Sz&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;exec&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span><span class="string">&quot;const r = await tools.exec_command(&#123;\n  cmd: \&quot;sed -n &#x27;316,352p&#x27; PRODUCT_SPEC.md\&quot;,\n  workdir: \&quot;/home/kevinbarrus/projects/coverbot\&quot;,\n  yield_time_ms: 10000,\n  max_output_tokens: 8000\n&#125;);\ntext(r.output);\n&quot;</span><span class="punctuation">,</span><span class="attr">&quot;internal_chat_message_metadata_passthrough&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;turn_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;01a08943-8768-7dc1-a0ce-ec38f0734c3a&quot;</span><span class="punctuation">,</span></span><br><span class="line">                        <span class="attr">&quot;create_time&quot;</span><span class="punctuation">:</span><span class="number">1789009663.883205</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>是的，这就是我本人真实电脑中的 JSONL 文件， rollout-xxx.jsonl 文件保存详细 Session 流水。</p>
+<p>你也可以去看看你的 codex 对话记录，看看有哪些字段，讲再多都不如自己去看一下 Codex 究竟具体是怎么存的。也可以看一下 state_5.sqlite 、session_index.jsonl 和 history.jsonl，其中 history 存了所有你在 Codex 中发送的消息，有一种看小时候照片的回忆感。</p>
+<p>我还是以我真实的 history.jsonl 文件内容作为例子，当时我尝试使用本地模型进行文章的批量翻译，但是效果不好，于是委托 gpt 进行翻译：</p>
+<p>JSONL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788442336,&quot;text&quot;:&quot;开始进行英文文章批量翻译。进行1：1翻译，翻译完之后你逐个进行检查&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788443559,&quot;text&quot;:&quot;那就你来执行吧。几篇几篇地翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444096,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444391,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444579,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444983,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788445742,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788445902,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446062,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446202,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446362,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446547,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446645,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446667,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788449845,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788449968,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788450492,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788450595,&quot;text&quot;:&quot;继续&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看吧，多么朴实无华的对话内容哈哈哈。</p>
+<p>这和我们说的 session metadata + event log 非常接近。</p>
+<p>也可以去看看 pi 的存储，内容在：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.pi/agent/sessions/</span><br><span class="line">    --home-user-project_A--/</span><br><span class="line">        timestamp_uuid.jsonl</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-恢复-Session"><a href="#9-恢复-Session" class="headerlink" title="9. 恢复 Session"></a>9. 恢复 Session</h1><p>恢复流程的主体是 Agent Harness，也就是我们编写的普通程序，而不是大语言模型。</p>
+<p>一个最小流程可以写成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">resume_session</span>(<span class="params">session_id</span>):</span><br><span class="line">    session = session_store.load(session_id)</span><br><span class="line"></span><br><span class="line">    workspace = Path(session.workspace)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> workspace.exists():</span><br><span class="line">        <span class="keyword">raise</span> WorkspaceNotFound()</span><br><span class="line"></span><br><span class="line">    events = event_store.load(session_id)</span><br><span class="line">    recover_interrupted_run(events)</span><br><span class="line"></span><br><span class="line">    context = context_builder.build(events)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> AgentRuntime(</span><br><span class="line">        session=session,</span><br><span class="line">        workspace=workspace,</span><br><span class="line">        events=events,</span><br><span class="line">        context=context,</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>“读取历史”和“把历史全部发送给模型”是两件不同的事。前者只是本地读文件，不消耗模型 Token；后者才会产生模型输入费用。</p>
+<h1 id="10-当前目标和任务进度从哪里来"><a href="#10-当前目标和任务进度从哪里来" class="headerlink" title="10. 当前目标和任务进度从哪里来"></a>10. 当前目标和任务进度从哪里来</h1><p>不是每个 Agent 都必须单独维护一份任务状态。对于简单任务，事件历史中已经记录了用户要求、工具调用和模型回复。恢复时选择必要历史作为 Context，通常就足够了。至于怎么选择，我们放在下一篇上下文管理当中再讲。</p>
+<p>对于步骤较多的任务，可以额外保存结构化任务状态：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;goal&quot;</span><span class="punctuation">:</span> <span class="string">&quot;修复登录问题&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;in_progress&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;completed_steps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;检查 login.py&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pending_steps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;修改代码&quot;</span><span class="punctuation">,</span> <span class="string">&quot;运行测试&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>它可能来自模型生成的计划，但生成后应由运行框架解析并保存。每完成一步，由任务管理代码更新对应步骤，不需要每轮都让模型重新总结全部历史。</p>
+<p>当历史过长时，也可以偶尔让模型生成一份阶段摘要或检查点，保存当前目标、重要发现、已完成工作和待办事项。下次恢复时直接加载这份摘要，而不是重新把完整历史交给模型压缩。</p>
+<p>所以，任务状态和摘要是长任务的优化手段，不是所有 Session 天然具备的内容。</p>
+<p>说到长任务，自然想到 Codex 的 &#x2F;goal，我们同样在 ~&#x2F;.codex 下看到关于 goal 的 sqlite 文件，我依然以我本地的真实文件的部分内容为例：</p>
+<p>SQL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> thread_goals (</span><br><span class="line">    thread_id TEXT <span class="keyword">PRIMARY KEY</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">    goal_id TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    objective TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    status TEXT <span class="keyword">NOT NULL</span> <span class="keyword">CHECK</span>(status <span class="keyword">IN</span> (</span><br><span class="line">        <span class="string">&#x27;active&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;paused&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;blocked&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;usage_limited&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;budget_limited&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;complete&#x27;</span></span><br><span class="line">    )),</span><br><span class="line">    token_budget <span class="type">INTEGER</span>,</span><br><span class="line">    tokens_used <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    time_used_seconds <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    created_at_ms <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">    updated_at_ms <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="11-如何判断上一-Run-被异常中断"><a href="#11-如何判断上一-Run-被异常中断" class="headerlink" title="11. 如何判断上一 Run 被异常中断"></a>11. 如何判断上一 Run 被异常中断</h1><p>假设事件流水最后只有：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_started&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_015&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>却没有对应的：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_finished&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_015&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当前程序又已经重新启动。在“同一 Session 同时只允许一个主要 Run”的本地设计中，新的运行框架可以直接判断：r_015 没有正常收尾，应标记为 interrupted。</p>
+<p>这仍然由普通程序完成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> last_run.status == <span class="string">&quot;running&quot;</span>:</span><br><span class="line">    last_run.status = <span class="string">&quot;interrupted&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在线系统中可能有多个工作进程，不能仅凭重新启动判断。此时可以为 Run 保存 worker_id、心跳或租约到期时间。超过期限仍未续约，才判断对应工作进程已经失联。</p>
+<p>无论哪种方式，都不需要模型检查操作系统进程，更不需要模型下令修改 Run 状态。</p>
+<h1 id="12-恢复内部记录，不等于扫描整个外部世界"><a href="#12-恢复内部记录，不等于扫描整个外部世界" class="headerlink" title="12. 恢复内部记录，不等于扫描整个外部世界"></a>12. 恢复内部记录，不等于扫描整个外部世界</h1><p>文件内容、Git 分支、后台进程、端口、部署状态都可能在 Agent 退出后发生变化。但这不意味着每次恢复会话，都要立刻扫描所有文件、进程、端口和外部服务。</p>
+<p>更合理的原则是，只在以下三种情况下查询当前状态：</p>
+<ul>
+<li>接下来要依赖它</li>
+<li>接下来要修改它</li>
+<li>上一次操作是否成功无法确定</li>
+</ul>
+<p>例如，Agent 接下来准备修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p>，就在修改前重新读取或校验该文件。准备继续使用某个后台服务时，再检查服务是否仍然可用。</p>
+<p>Session 恢复负责加载 Agent 的内部记录，工具负责在真正需要时观察外部世界。</p>
+<h1 id="13-ToolCall-有记录、ToolResult-没记录时怎么办"><a href="#13-ToolCall-有记录、ToolResult-没记录时怎么办" class="headerlink" title="13. ToolCall 有记录、ToolResult 没记录时怎么办"></a>13. ToolCall 有记录、ToolResult 没记录时怎么办</h1><p>假设崩溃前的 Event Log：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span><span class="string">&quot;write_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span><span class="string">&quot;main.py&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后你按下了 Ctrl+C，没有得到：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c123&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>存在两种可能：</p>
+<ul>
+<li>文件已经写成功，只是结果还没来得及持久化</li>
+<li>工具还没执行，程序就崩溃了</li>
+</ul>
+<p>那么恢复的时候可以做：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">calls = find_tool_calls(events)</span><br><span class="line">results = find_tool_results(events)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> call <span class="keyword">in</span> calls:</span><br><span class="line">    <span class="keyword">if</span> call.<span class="built_in">id</span> <span class="keyword">not</span> <span class="keyword">in</span> results:</span><br><span class="line">        unresolved.append(call)</span><br></pre></td></tr></table></figure>
+
+<p>此时不能直接重试，因为写文件、部署、创建 Issue 等操作都可能产生重复副作用。运行框架可以先把它记录为“结果不确定的操作”，等真正要处理它时，交给对应工具核对：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SessionManager</span><br><span class="line">    → 发现 c123 没有结果</span><br><span class="line">    → 标记为 uncertain</span><br><span class="line"></span><br><span class="line">WriteFileTool</span><br><span class="line">    → 根据目标内容或文件版本检查是否已写入</span><br></pre></td></tr></table></figure>
+
+<p>这里标记为 uncertain，是追加一条恢复事件：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_recovery&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;uncertain&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>SessionManager 怎么知道 c123 没有结果？</p>
+<p>这里隐含的第一步是：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">events = load_events(session_id)</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;events.jsonl&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">        event = json.loads(line)</span><br></pre></td></tr></table></figure>
+
+<p>但实际上没必要每次 Resume 都扫描几十万行。只需要找到最后一个 run_started，然后只分析它后面的 Event（当然如果只有一个 run 那实际上也还是要全部都扫描的）。或者你也可以维护一张运行状态表 runs 以及工具调用记录表 tool_calls，只需执行：</p>
+<p>SQL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> tool_calls</span><br><span class="line"><span class="keyword">WHERE</span> run_id <span class="operator">=</span> <span class="string">&#x27;R105&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;pending&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>避免重新扫描历史。</p>
+<p>那么 LLM 怎么知道有工具没有得到执行结果？</p>
+<p>这才是关键，你辛辛苦苦给领导的花浇了水，结果领导没看见，一切都无济于事。</p>
+<p>Harness 必须在构建下一次 Context 的时候告诉 LLM。大体流程是这样：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SessionManager</span><br><span class="line">发现 c123 没结果</span><br><span class="line">        ↓</span><br><span class="line">生成结构化 RecoveryState</span><br><span class="line">        ↓</span><br><span class="line">Context Builder</span><br><span class="line">把结构化状态转换成模型消息</span><br><span class="line">        ↓</span><br><span class="line">加入下一次 Context</span><br><span class="line">        ↓</span><br><span class="line">LLM 看见</span><br></pre></td></tr></table></figure>
+
+<p>例如 Harness 得到：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">recovery_state = <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;interrupted_run&quot;</span><span class="punctuation">:</span> <span class="string">&quot;R105&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;uncertain_calls&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span> <span class="string">&quot;write_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main.py&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Context Builder 可以把它格式化为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;recovery&gt;</span><br><span class="line">上一轮执行被意外中断。</span><br><span class="line"></span><br><span class="line">以下工具调用没有得到明确执行结果：</span><br><span class="line"></span><br><span class="line">- call_id: c123</span><br><span class="line">- tool: write_file</span><br><span class="line">- target: main.py</span><br><span class="line"></span><br><span class="line">不能确定该写入是否已经完成。</span><br><span class="line">在继续依赖 main.py 之前，请先确认文件当前状态。</span><br><span class="line">&lt;/recovery&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后放进下一次模型输入。所以类似于：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">上一轮执行被意外中断。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">以下操作结果未知：</span></span><br><span class="line"><span class="string">&#123;uncertain_operations&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">在继续依赖这些操作之前，请先确认当前真实状态。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">recovery_prompt = template.<span class="built_in">format</span>(</span><br><span class="line">    uncertain_operations=format_ops(ops)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="14-为什么-ToolCall-需要唯一编号"><a href="#14-为什么-ToolCall-需要唯一编号" class="headerlink" title="14. 为什么 ToolCall 需要唯一编号"></a>14. 为什么 ToolCall 需要唯一编号</h1><p>每次工具调用都应有唯一的 call_id：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ToolCall  call_123</span><br><span class="line">    ↓</span><br><span class="line">ToolResult call_123</span><br></pre></td></tr></table></figure>
+
+<p>恢复时，程序可以据此判断每个 ToolCall 是否找到了对应结果。</p>
+<p>对于会产生外部副作用的操作，还可以增加 operation<em>id。如果外部服务支持幂等请求，多次提交同一个 operation</em>id 只产生一次结果，可以进一步降低重复执行的风险。</p>
+<p>但 call<em>id 和 operation</em>id 作用不同：</p>
+<ul>
+<li>call_id 用来关联 Agent 内部的调用和结果</li>
+<li>operation_id 用来避免外部操作被重复执行</li>
+</ul>
+<h1 id="15-Agent-如何发现文件被手动修改"><a href="#15-Agent-如何发现文件被手动修改" class="headerlink" title="15. Agent 如何发现文件被手动修改"></a>15. Agent 如何发现文件被手动修改</h1><p>一个具体情景：</p>
+<p>10:00 read </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>10:05 用户手动修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>10:10 Agent 想修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>Agent 并不知道 10:05 发生了什么。</p>
+<p>常见做法有以下几种。</p>
+<h2 id="15-1-再次读取"><a href="#15-1-再次读取" class="headerlink" title="15.1 再次读取"></a>15.1 再次读取</h2><p>我们做一个约束：每次对文件执行写操作前，都必须要先读文件。</p>
+<p>这么一来，就不是“因为知道变了，所以重新读”，而是“因为我重新读了，所以我知道变了”。</p>
+<h2 id="15-2-版本校验"><a href="#15-2-版本校验" class="headerlink" title="15.2 版本校验"></a>15.2 版本校验</h2><p>读取文件时，工具同时返回内容哈希：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;abc123&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>写入时带上这个版本：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write_file(path=<span class="string">&quot;main.py&quot;</span>, expected_version=<span class="string">&quot;abc123&quot;</span>, ...)</span><br></pre></td></tr></table></figure>
+
+<p>工具执行时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">actual_hash = <span class="built_in">hash</span>(file)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> actual_hash != expected_hash:</span><br><span class="line">    <span class="keyword">return</span> FILE_CHANGED</span><br></pre></td></tr></table></figure>
+
+<p>因此完全不需要 LLM 主动想到“我要重新读”，而是工具直接防止覆盖旧版本。</p>
+<h2 id="15-3-补丁无法匹配"><a href="#15-3-补丁无法匹配" class="headerlink" title="15.3 补丁无法匹配"></a>15.3 补丁无法匹配</h2><p>补丁，顾名思义，找到一段旧内容，然后替换成新内容。</p>
+<p>假设原文件有这么一段内容：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> a - b</span><br></pre></td></tr></table></figure>
+
+<p>Agent 不重新覆盖整个文件，而是使用 apply_patch 工具修改文件：</p>
+<p>diff</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-    return a - b</span></span><br><span class="line"><span class="addition">+    return a + b</span></span><br></pre></td></tr></table></figure>
+
+<p>但如果用户已经手动改成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>([a, b])</span><br></pre></td></tr></table></figure>
+
+<p>原来的 return a - b 已经不存在了。那补丁工具就会：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Patch failed:</span><br><span class="line">old context not found</span><br></pre></td></tr></table></figure>
+
+<p>于是 Agent 才知道：我之前看到的文件已经不是现在这个样子了，然后重新读取。</p>
+<p>问题来了，补丁工具是怎么知道 Patch failed 的呢？实际上就是 apply_patch 读取磁盘里的文件，尝试找到 return a - b，但是此时用户已经修改了，所以它肯定找不到，无法确认这个 Patch 应该应用在哪里。流程为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Patch 中带了一小段“我认为文件现在长这样”的旧内容</span><br><span class="line">        ↓</span><br><span class="line">apply_patch 读取真实文件</span><br><span class="line">        ↓</span><br><span class="line">查找旧内容</span><br><span class="line">        ↓</span><br><span class="line">找到</span><br><span class="line">→ 应用修改</span><br><span class="line"></span><br><span class="line">没找到</span><br><span class="line">→ 拒绝修改</span><br></pre></td></tr></table></figure>
+
+<p>关于 apply_patch，后面再简单写一篇文章讲一讲，这里不展开。</p>
+<p>整个流程为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">模型之前读取 main.py</span><br><span class="line">        ↓</span><br><span class="line">基于当时内容生成 Patch</span><br><span class="line"></span><br><span class="line">-old code</span><br><span class="line">+new code</span><br><span class="line">        ↓</span><br><span class="line">调用 apply_patch</span><br><span class="line">        ↓</span><br><span class="line">apply_patch 重新读取当前 main.py</span><br><span class="line">        ↓</span><br><span class="line">寻找 Patch 中描述的旧代码和上下文</span><br><span class="line">        ↓</span><br><span class="line">┌───────────────┬────────────────┐</span><br><span class="line">│ 找得到        │ 找不到          │</span><br><span class="line">│               │                 │</span><br><span class="line">│ 应用 Patch    │ Patch failed    │</span><br><span class="line">└───────────────┴────────────────┘</span><br><span class="line">                        ↓</span><br><span class="line">                  告诉 LLM</span><br><span class="line">                        ↓</span><br><span class="line">                  重新读取文件</span><br></pre></td></tr></table></figure>
+
+<p>所以补丁不是提前发现修改，而是修改时发现“我准备修改的旧内容已经不存在了”。</p>
+<p>因此，Agent 在没有恢复会话的情况下也能发现脏文件，是因为它在正常运行时重新读取或校验了文件，而不是因为 Session 恢复机制检查了整个项目。</p>
+<h1 id="16-Git、进程和端口也按需检查"><a href="#16-Git、进程和端口也按需检查" class="headerlink" title="16. Git、进程和端口也按需检查"></a>16. Git、进程和端口也按需检查</h1><p>事件历史只能说明 Agent 过去观察到了什么。例如：</p>
+<p>10:30：Git 分支是 main 10:35：进程 1234 正在运行</p>
+<p>它不能证明这些状态现在仍然成立。</p>
+<p>当真正需要 Git 状态时，再执行：</p>
+<p>bash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status --porcelain</span><br><span class="line">git branch --show-current</span><br><span class="line">git rev-parse HEAD</span><br></pre></td></tr></table></figure>
+
+<p>只有当某个 Git 操作确实依赖某个前置状态时，才由该 Git 工具在执行前做必要检查。不是 Resume 时全量检查，也不是每轮强迫 LLM 执行一套 Git 命令，那是完全没必要的，浪费 token。</p>
+<p>当 Agent 真正需要某个进程时，由进程工具根据它保存的进程信息检查，而不是由 SessionManager 理解所有命令、目录和端口。</p>
+<p>也就是说，谁创建和管理某种外部资源，谁负责提供相应的检查逻辑。会话管理模块只负责保存引用和不确定状态，不需要变成一个认识所有外部系统的巨大判断器。</p>
+<h1 id="17-并发控制"><a href="#17-并发控制" class="headerlink" title="17. 并发控制"></a>17. 并发控制</h1><p>假设同一个 Session 中：</p>
+<ul>
+<li><p>Run A 正在修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+</li>
+<li><p>Run B 同时开始运行测试</p>
+</li>
+</ul>
+<p>Run B 可能测到只修改了一半的代码，两个 Run 也可能同时修改同一个文件。因此，本地 Agent 最简单可靠的策略是：一个 Session 同一时间只执行一个主要 Run。新输入进入队列，等当前 Run 结束后再处理，不同 Session 可以并行运行。</p>
+<p>这个约束也使中断判断更简单：新 Runtime 恢复会话时，如果发现上一个 Run 仍标记为 running，就能将其视为未正常结束。</p>
+<h1 id="18-本地-Agent-与在线服务的区别"><a href="#18-本地-Agent-与在线服务的区别" class="headerlink" title="18. 本地 Agent 与在线服务的区别"></a>18. 本地 Agent 与在线服务的区别</h1><p>本地 Agent 通常只有一个程序实例，session.json + events.jsonl 或 SQLite 已经足够。</p>
+<p>在线服务可能同时有多台服务器。用户第一次请求落在服务器 A，下一次请求可能落在服务器 B。因此 Session 不能只保存在某台服务器的本地磁盘中，而要放在各实例都能访问的持久化存储里。这就是经典的那一套后端工程了。常见分工是：</p>
+<ul>
+<li>数据库保存不能丢的 Session、Run 和 Event</li>
+<li>Redis 保存锁、短期缓存、正在运行的标记和在线状态等临时数据</li>
+</ul>
+<p>Redis 的重点是快速访问和多实例协调，数据库的重点是持久、可靠和可查询。不能把唯一一份完整会话只放在可能被淘汰的临时缓存中。</p>
+<h1 id="19-一套清晰的恢复流程"><a href="#19-一套清晰的恢复流程" class="headerlink" title="19. 一套清晰的恢复流程"></a>19. 一套清晰的恢复流程</h1><p>恢复会话时，可以采用下面的最小流程：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">用户执行：codex resume xyz123</span><br><span class="line">        ↓</span><br><span class="line">程序根据 xyz123 找到对应 Session</span><br><span class="line">        ↓</span><br><span class="line">读取 Session 信息：ID、原工作目录等</span><br><span class="line">        ↓</span><br><span class="line">如果当前目录与原目录不同决定本次使用哪个目录</span><br><span class="line">        ↓</span><br><span class="line">设置 Runtime 的 cwd </span><br><span class="line">以后 read_file(&quot;a.py&quot;)、bash(&quot;pytest&quot;)</span><br><span class="line">都以这个目录为默认工作目录</span><br><span class="line">        ↓</span><br><span class="line">读取 Session 历史文件</span><br><span class="line">        ↓</span><br><span class="line">把历史恢复到聊天界面</span><br><span class="line">        ↓</span><br><span class="line">读取最后一个 Run</span><br><span class="line">        ↓</span><br><span class="line">如果它没有正常结束</span><br><span class="line">标记为 interrupted</span><br><span class="line">        ↓</span><br><span class="line">检查这个 Run 中</span><br><span class="line">是否存在有 ToolCall、无 ToolResult</span><br><span class="line">        ↓</span><br><span class="line">如果存在</span><br><span class="line">记录为“结果未知”</span><br><span class="line">        ↓</span><br><span class="line">加载 Goal、摘要等额外状态</span><br><span class="line">        ↓</span><br><span class="line">Context Builder 准备：</span><br><span class="line">系统提示词</span><br><span class="line">+ 项目说明</span><br><span class="line">+ Skill</span><br><span class="line">+ Goal</span><br><span class="line">+ 历史摘要</span><br><span class="line">+ 最近消息</span><br><span class="line">+ 中断恢复信息</span><br><span class="line">        ↓</span><br><span class="line">Resume 完成</span><br><span class="line">        ↓</span><br><span class="line">等待用户下一条消息</span><br></pre></td></tr></table></figure>
+
+<p>放在整个 run 过程中，大概就是：</p>
+<p>上一篇讲了为什么不同项目、不同任务之间需要进行会话隔离。这一篇继续解决另一个问题：Coding Agent 被关闭或意外中断以后，如何恢复之前的工作？</p>
+<p>很多介绍会把这件事讲成“保存聊天记录，再把聊天记录读回来”。但 Coding Agent 不只是聊天工具。它会读取和修改文件、执行命令、运行测试，甚至启动进程。因此，会话恢复至少要区分三件事：</p>
+<p>Agent 过去记录了什么；</p>
+<p>下一次调用模型时，需要把哪些内容发给模型；</p>
+<p>文件、Git、进程等外部环境现在是什么状态。</p>
+<p>这三件事不能混为一谈。下面从一个具体场景开始。</p>
+<ol>
+<li>一个具体场景</li>
+</ol>
+<p>假设你在 &#x2F;project_A 中使用 Agent：</p>
+<p>你：帮我检查 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p> 为什么登录失败。</p>
+<p>Agent：我先读取 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p>。 Agent：这里可能有一个判断问题…… Agent：我再检查 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://auth.py/">auth.py</a></p>
+<p> …</p>
+<p>工作到一半，你按下 Ctrl+C，Agent 进程结束。</p>
+<p>程序都已经退出了，内存也已经释放。为什么第二天执行 resume，昨天的对话还能重新显示出来？</p>
+<p>原因其实很简单：这些内容在昨天运行的时候，就已经被不断写到了磁盘。</p>
+<p>例如用户发了一条消息，程序保存一条记录；模型产生回复，再保存一条记录；调用工具、工具返回结果，也继续保存。</p>
+<p>所以程序退出以后，虽然内存中的 Session 消失了，但磁盘中的 Session 记录还存在。</p>
+<p>第二天执行 Resume，只不过是：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">找到这个 Session</span><br><span class="line">    ↓</span><br><span class="line">从磁盘读取它之前保存的记录</span><br><span class="line">    ↓</span><br><span class="line">重新恢复聊天界面</span><br><span class="line">    ↓</span><br><span class="line">恢复工作目录、执行状态等信息</span><br><span class="line">    ↓</span><br><span class="line">等待用户继续</span><br></pre></td></tr></table></figure>
+
+<p>这就是“会话持久化”和“会话恢复”最基本的意义：持久化负责把内存中的重要状态保存下来；恢复负责在程序重新启动以后把这些状态读回来。</p>
+<p>考虑一种更麻烦的情况：你按下 Ctrl+C 时，Agent 正准备执行一次写文件操作。恢复会话以后，程序发现这次 ToolCall 有记录，却没有对应的 ToolResult。那么它怎么判断这次写入到底有没有成功？又应该如何安全地继续？</p>
+<ol>
+<li>先分清会话、执行轮次、事件和上下文</li>
+</ol>
+<p>为了避免后面混乱，先区分四个概念：</p>
+<p>2.1 Session：一项长期任务的容器</p>
+<p>Session 表示一段可以多次继续的任务或对话。例如，“修复 project_A 的登录问题”可以对应一个 Session。它通常保存：</p>
+<p>session_id：会话编号</p>
+<p>user_id：会话属于谁</p>
+<p>workspace：会话绑定的项目目录</p>
+<p>status：会话是否仍在使用</p>
+<p>createdat、updatedat：创建和更新时间</p>
+<p>会话的完整生命周期可以包含创建、运行、等待、完成、失败、取消和归档等状态。不过本地 Agent 的初版不必设计得过于复杂，通常只需要 active、completed、archived，再记录最近一次 Run 是执行中、成功、失败还是中断，我认为足够了。</p>
+<p>2.2 Run：Session 中的一次执行</p>
+<p>同一个 Session 可以包含多次用户触发的执行：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Session S1：修复登录问题</span><br><span class="line">├── Run R1：先检查代码</span><br><span class="line">├── Run R2：继续修改</span><br><span class="line">└── Run R3：运行测试</span><br></pre></td></tr></table></figure>
+
+<p>用户每发送一次新要求，Agent 从接收要求到给出本轮结果，可以视为一次 Run。</p>
+<p>Run 通常记录 runid、sessionid、开始时间、结束时间、执行状态和错误信息。</p>
+<p>2.3 Event：Run 中实际发生的一件事</p>
+<p>一次 Run 内部会发生很多事件，例如：</p>
+<p>收到用户消息</p>
+<p>模型产生回复</p>
+<p>模型请求使用工具</p>
+<p>工具返回执行结果</p>
+<p>本轮执行结束</p>
+<p>这些按时间排列的记录就是事件流水。</p>
+<p>2.4 Context：本次真正发给模型的内容</p>
+<p>Event 保存的是完整历史，Context 则是某一次调用模型前，从历史中挑选、整理出来的内容。</p>
+<p>例如，一个会话已经产生十万字的事件记录，但本次可能只发送：</p>
+<p>较早历史的摘要</p>
+<p>最近几轮消息</p>
+<p>当前任务进度</p>
+<p>本次确实需要的工具结果</p>
+<p>因此 Event Log 不等于模型上下文。读取历史是本地读文件，只有把选出的 Context 发给模型时才会消耗输入 Token。</p>
+<ol>
+<li>为什么 Session 必须保存 workspace</li>
+</ol>
+<p>workspace 不是提醒模型“你在哪个项目”，而是让 Agent 的运行框架把工具绑定到正确目录。如果恢复时直接使用当前终端目录：workspace &#x3D; os.getcwd()，那么你在 projectB 中恢复 projectA 的会话后，模型发出：read<em>file(“</em></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/"><em>login.py</em></a></p>
+<p><em>“)，工具可能实际读取 ~&#x2F;projects&#x2F;project</em>B&#x2F;login.py，这就导致串线了。</p>
+<p>Resume 时程序需要知道这个 Session 上一次在哪里工作，并据此决定本次应该继续在哪个目录工作。大致思路：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xyz123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cwd&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/home/user/projects/project_A&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Resume:</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">session = load(<span class="string">&quot;xyz123&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(session.cwd)</span><br><span class="line"><span class="comment"># /home/user/projects/project_A</span></span><br></pre></td></tr></table></figure>
+
+<p>程序于是知道：这个 Session 上次是在 &#x2F;project_A。如果当前也在，那就直接继续。如果不在，就根据配置选择或者询问用户。</p>
+<p>随后，ReadFile、WriteFile、Bash 等工具都通过这个 tool_context 解析路径。</p>
+<p>也就是说，工具可以全局注册，但工具实际能访问哪个目录，应由当前 Session 的运行环境决定，不应该在全局工具注册表中永久写死 &#x2F;project_A。</p>
+<p>你可能会问，这不是很奇怪吗？为什么在 &#x2F;project<em>A 下的会话，可以在 &#x2F;project</em>B 中恢复？</p>
+<p>实际上这么做更好。因为用户完全有可能将 &#x2F;project_A 移动到其它目录下，如果仅仅因为 cwd 不同就拒绝 resume，那这个移动的 Session 就彻底废了。</p>
+<ol>
+<li>Session、Run、Event 是否必须分成三个文件</li>
+</ol>
+<p>不必须。Session、Run、Event 描述的是三种逻辑关系，不代表磁盘上必须存在 session.json、runs.jsonl、events.jsonl 三个文件。对于一个本地 Coding Agent，最简单的目录可以只有：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/.agent/sessions/</span><br><span class="line">└── s_001/</span><br><span class="line">    ├── session.json</span><br><span class="line">    └── events.jsonl</span><br></pre></td></tr></table></figure>
+
+<p>session.json 保存少量、经常查询的会话信息：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;s_001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;u_001&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;workspace&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/home/user/projects/project_A&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;active&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;created_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;updated_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>events.jsonl 保存详细过程：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_started&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;user_message&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span><span class="string">&quot;检查登录问题&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span><span class="string">&quot;read_file&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;success&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_finished&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_001&quot;</span><span class="punctuation">,</span><span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;success&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的 run<em>started 和 run</em>finished 已经标出了每个 Run 的边界，因此初版不需要单独建立 Run 文件。</p>
+<p>只有当需要频繁查询“最近一百次 Run”“所有失败的 Run”“平均运行时间”时，才值得在 SQLite 中单独建立 runs 表。此时 Run 表保存的是开始时间、结束时间、状态等索引信息，详细过程仍然由 Event 保存，两者并不冲突。</p>
+<ol>
+<li>为什么不把所有内容都放进 session.json</li>
+</ol>
+<p>可以放，但运行时间越长，代价越明显。</p>
+<p>假设一个会话产生了数百条消息、几百次工具调用，以及大量日志和测试输出。如果全部放入一个大 JSON，每新增一条记录，都可能需要：</p>
+<p>读取整个文件</p>
+<p>解析整个 JSON</p>
+<p>添加一条记录</p>
+<p>重新写回整个文件</p>
+<p>因此更合理的做法是：</p>
+<p>session.json 保存体积小、需要快速读取的会话信息；</p>
+<p>events.jsonl 保存不断追加的详细历史。</p>
+<p>这样拆分并不会减少总数据量。Event 文件仍然可能很大。拆分的真正目的，是让“会话列表等高频信息”和“庞大的历史流水”分开读取。</p>
+<p>Event 文件变大以后，可以按需读取、分页、压缩、归档，也可以定期生成摘要。日常展示会话列表时，没有必要扫描几百 MB 的历史记录。</p>
+<ol>
+<li>为什么事件流水适合 Agent</li>
+</ol>
+<p>普通聊天通常只有用户消息和助手消息，而 Agent 的真实过程还包括工具调用、工具结果、状态变化和错误。例如：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bash&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pytest&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下一条事件可能是：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;failed&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exit_code&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>程序崩溃以后，运行框架可以根据事件流水判断：上一轮从哪里开始、执行过哪些工具、最后一项操作是否收到了结果。这里不需要模型猜测。事件由 Agent 运行框架在执行过程中记录。</p>
+<ol>
+<li>持久化时机：不需要写很多 if&#x2F;else</li>
+</ol>
+<p>不是让模型判断哪个事件关键，而是只要运行框架产生了需要记录的 Event，就通过统一入口立即追加到存储中。</p>
+<p>例如：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">emit</span>(<span class="params">event</span>):</span><br><span class="line">    event_store.append(event)</span><br><span class="line">    event_bus.publish(event)</span><br></pre></td></tr></table></figure>
+
+<p>这里 event_bus 解决的是：一个 Event 刚发生，现在程序内部有哪些模块需要马上知道？例如：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Agent Runtime</span><br><span class="line">    ↓</span><br><span class="line">产生 ToolCall</span><br><span class="line">    ↓</span><br><span class="line">EventBus</span><br><span class="line">    ├── UI：显示“正在读取文件”</span><br><span class="line">    ├── Logger：打印日志</span><br><span class="line">    ├── Telemetry：统计工具调用次数</span><br><span class="line">    └── SSE：推送给前端</span><br></pre></td></tr></table></figure>
+
+<p>收到用户消息时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emit(UserMessageReceived(...))</span><br></pre></td></tr></table></figure>
+
+<p>工具开始和结束时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">emit(ToolCallCreated(...))</span><br><span class="line">result = tool.execute(...)</span><br><span class="line">emit(ToolResultReceived(...))</span><br></pre></td></tr></table></figure>
+
+<p>本轮完成时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emit(RunCompleted(...))</span><br></pre></td></tr></table></figure>
+
+<p>所以，不是模型知道“现在发生了关键事件”，也不是在一个保存函数里堆许多 if&#x2F;else。而是程序中所有标准事件都走同一个 emit → append 通道。</p>
+<p>如果等整个 Run 结束后才统一保存，那么运行十分钟后在第九分钟崩溃，前面的记录可能全部丢失。逐条追加可以把损失缩小到最后一个尚未成功写入的事件。</p>
+<ol>
+<li>为什么使用 JSONL 或 SQLite</li>
+</ol>
+<p>JSONL 每行是一条独立 JSON，适合追加写：</p>
+<p>JSONL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;type&quot;:&quot;user_message&quot;, ...&#125;</span><br><span class="line">&#123;&quot;type&quot;:&quot;tool_call&quot;, ...&#125;</span><br><span class="line">&#123;&quot;type&quot;:&quot;tool_result&quot;, ...&#125;</span><br></pre></td></tr></table></figure>
+
+<p>新增事件时只需在文件末尾增加一行，不必重写整个历史文件，也方便开发者直接查看和调试。</p>
+<p>SQLite 则适合需要事务和查询的本地 Agent。可以建立 sessions、runs、events 等表，同时仍然只产生一个数据库文件。</p>
+<p>两者没有绝对高下：</p>
+<p>初版、重视简单和可读性：session.json + events.jsonl；</p>
+<p>需要条件查询、事务和统计：SQLite。</p>
+<p>当前 Codex CLI 会把 Session 的详细执行记录保存到：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~/.codex/sessions/</span><br><span class="line">    YYYY/</span><br><span class="line">        MM/</span><br><span class="line">            DD/</span><br><span class="line">                rollout-时间戳-SessionID.jsonl</span><br></pre></td></tr></table></figure>
+
+<p>我以我本地的 .jsonl 文件为例，挑一个较短的 JSON 字符串：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span><span class="string">&quot;2026-09-10T03:07:49.485Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ordinal&quot;</span><span class="punctuation">:</span><span class="number">326</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;response_item&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;payload&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;custom_tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;ctc_07319f63bba190c1016aa21f02720887d0a0c4edf1df53cf75&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;completed&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;call_JpARZq1RTScKdLZhRHt742Sz&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;exec&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span><span class="string">&quot;const r = await tools.exec_command(&#123;\n  cmd: \&quot;sed -n &#x27;316,352p&#x27; PRODUCT_SPEC.md\&quot;,\n  workdir: \&quot;/home/kevinbarrus/projects/coverbot\&quot;,\n  yield_time_ms: 10000,\n  max_output_tokens: 8000\n&#125;);\ntext(r.output);\n&quot;</span><span class="punctuation">,</span><span class="attr">&quot;internal_chat_message_metadata_passthrough&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;turn_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;01a08943-8768-7dc1-a0ce-ec38f0734c3a&quot;</span><span class="punctuation">,</span></span><br><span class="line">                        <span class="attr">&quot;create_time&quot;</span><span class="punctuation">:</span><span class="number">1789009663.883205</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>是的，这就是我本人真实电脑中的 JSONL 文件， rollout-xxx.jsonl 文件保存详细 Session 流水。</p>
+<p>你也可以去看看你的 codex 对话记录，看看有哪些字段，讲再多都不如自己去看一下 Codex 究竟具体是怎么存的。也可以看一下 state<em>5.sqlite 、session</em>index.jsonl 和 history.jsonl，其中 history 存了所有你在 Codex 中发送的消息，有一种看小时候照片的回忆感。</p>
+<p>我还是以我真实的 history.jsonl 文件内容作为例子，当时我尝试使用本地模型进行文章的批量翻译，但是效果不好，于是委托 gpt 进行翻译：</p>
+<p>JSONL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788442336,&quot;text&quot;:&quot;开始进行英文文章批量翻译。进行1：1翻译，翻译完之后你逐个进行检查&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788443559,&quot;text&quot;:&quot;那就你来执行吧。几篇几篇地翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444096,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444391,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444579,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788444983,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788445742,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788445902,&quot;text&quot;:&quot;继续翻译&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446062,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446202,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446362,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446547,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446645,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788446667,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788449845,&quot;text&quot;:&quot;继续被中断的任务&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788449968,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788450492,&quot;text&quot;:&quot;继续&quot;&#125;</span><br><span class="line">&#123;&quot;session_id&quot;:&quot;01a0481a-c49d-72d3-b3a6-36c9fb4dcd8f&quot;,&quot;ts&quot;:1788450595,&quot;text&quot;:&quot;继续&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看吧，多么朴实无华的对话内容哈哈哈。</p>
+<p>这和我们说的 session metadata + event log 非常接近。</p>
+<p>也可以去看看 pi 的存储，内容在：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.pi/agent/sessions/</span><br><span class="line">    --home-user-project_A--/</span><br><span class="line">        timestamp_uuid.jsonl</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>恢复 Session</li>
+</ol>
+<p>恢复流程的主体是 Agent Harness，也就是我们编写的普通程序，而不是大语言模型。</p>
+<p>一个最小流程可以写成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">resume_session</span>(<span class="params">session_id</span>):</span><br><span class="line">    session = session_store.load(session_id)</span><br><span class="line"></span><br><span class="line">    workspace = Path(session.workspace)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> workspace.exists():</span><br><span class="line">        <span class="keyword">raise</span> WorkspaceNotFound()</span><br><span class="line"></span><br><span class="line">    events = event_store.load(session_id)</span><br><span class="line">    recover_interrupted_run(events)</span><br><span class="line"></span><br><span class="line">    context = context_builder.build(events)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> AgentRuntime(</span><br><span class="line">        session=session,</span><br><span class="line">        workspace=workspace,</span><br><span class="line">        events=events,</span><br><span class="line">        context=context,</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>“读取历史”和“把历史全部发送给模型”是两件不同的事。前者只是本地读文件，不消耗模型 Token；后者才会产生模型输入费用。</p>
+<ol>
+<li>当前目标和任务进度从哪里来</li>
+</ol>
+<p>不是每个 Agent 都必须单独维护一份任务状态。对于简单任务，事件历史中已经记录了用户要求、工具调用和模型回复。恢复时选择必要历史作为 Context，通常就足够了。至于怎么选择，我们放在下一篇上下文管理当中再讲。</p>
+<p>对于步骤较多的任务，可以额外保存结构化任务状态：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;goal&quot;</span><span class="punctuation">:</span> <span class="string">&quot;修复登录问题&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;in_progress&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;completed_steps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;检查 login.py&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pending_steps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;修改代码&quot;</span><span class="punctuation">,</span> <span class="string">&quot;运行测试&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>它可能来自模型生成的计划，但生成后应由运行框架解析并保存。每完成一步，由任务管理代码更新对应步骤，不需要每轮都让模型重新总结全部历史。</p>
+<p>当历史过长时，也可以偶尔让模型生成一份阶段摘要或检查点，保存当前目标、重要发现、已完成工作和待办事项。下次恢复时直接加载这份摘要，而不是重新把完整历史交给模型压缩。</p>
+<p>所以，任务状态和摘要是长任务的优化手段，不是所有 Session 天然具备的内容。</p>
+<p>说到长任务，自然想到 Codex 的 &#x2F;goal，我们同样在 ~&#x2F;.codex 下看到关于 goal 的 sqlite 文件，我依然以我本地的真实文件的部分内容为例：</p>
+<p>SQL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> thread_goals (</span><br><span class="line">    thread_id TEXT <span class="keyword">PRIMARY KEY</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">    goal_id TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    objective TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    status TEXT <span class="keyword">NOT NULL</span> <span class="keyword">CHECK</span>(status <span class="keyword">IN</span> (</span><br><span class="line">        <span class="string">&#x27;active&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;paused&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;blocked&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;usage_limited&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;budget_limited&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;complete&#x27;</span></span><br><span class="line">    )),</span><br><span class="line">    token_budget <span class="type">INTEGER</span>,</span><br><span class="line">    tokens_used <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    time_used_seconds <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">    created_at_ms <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">    updated_at_ms <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>如何判断上一 Run 被异常中断</li>
+</ol>
+<p>假设事件流水最后只有：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_started&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_015&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>却没有对应的：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;run_finished&quot;</span><span class="punctuation">,</span><span class="attr">&quot;run_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;r_015&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当前程序又已经重新启动。在“同一 Session 同时只允许一个主要 Run”的本地设计中，新的运行框架可以直接判断：r_015 没有正常收尾，应标记为 interrupted。</p>
+<p>这仍然由普通程序完成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> last_run.status == <span class="string">&quot;running&quot;</span>:</span><br><span class="line">    last_run.status = <span class="string">&quot;interrupted&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在线系统中可能有多个工作进程，不能仅凭重新启动判断。此时可以为 Run 保存 worker_id、心跳或租约到期时间。超过期限仍未续约，才判断对应工作进程已经失联。</p>
+<p>无论哪种方式，都不需要模型检查操作系统进程，更不需要模型下令修改 Run 状态。</p>
+<ol>
+<li>恢复内部记录，不等于扫描整个外部世界</li>
+</ol>
+<p>文件内容、Git 分支、后台进程、端口、部署状态都可能在 Agent 退出后发生变化。但这不意味着每次恢复会话，都要立刻扫描所有文件、进程、端口和外部服务。</p>
+<p>更合理的原则是，只在以下三种情况下查询当前状态：</p>
+<p>接下来要依赖它</p>
+<p>接下来要修改它</p>
+<p>上一次操作是否成功无法确定</p>
+<p>例如，Agent 接下来准备修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://login.py/">login.py</a></p>
+<p>，就在修改前重新读取或校验该文件。准备继续使用某个后台服务时，再检查服务是否仍然可用。</p>
+<p>Session 恢复负责加载 Agent 的内部记录，工具负责在真正需要时观察外部世界。</p>
+<ol>
+<li>ToolCall 有记录、ToolResult 没记录时怎么办</li>
+</ol>
+<p>假设崩溃前的 Event Log：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_call&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span><span class="string">&quot;write_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span><span class="string">&quot;main.py&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后你按下了 Ctrl+C，没有得到：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;tool_result&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;c123&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>存在两种可能：</p>
+<p>文件已经写成功，只是结果还没来得及持久化</p>
+<p>工具还没执行，程序就崩溃了</p>
+<p>那么恢复的时候可以做：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">calls = find_tool_calls(events)</span><br><span class="line">results = find_tool_results(events)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> call <span class="keyword">in</span> calls:</span><br><span class="line">    <span class="keyword">if</span> call.<span class="built_in">id</span> <span class="keyword">not</span> <span class="keyword">in</span> results:</span><br><span class="line">        unresolved.append(call)</span><br></pre></td></tr></table></figure>
+
+<p>此时不能直接重试，因为写文件、部署、创建 Issue 等操作都可能产生重复副作用。运行框架可以先把它记录为“结果不确定的操作”，等真正要处理它时，交给对应工具核对：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SessionManager</span><br><span class="line">    → 发现 c123 没有结果</span><br><span class="line">    → 标记为 uncertain</span><br><span class="line"></span><br><span class="line">WriteFileTool</span><br><span class="line">    → 根据目标内容或文件版本检查是否已写入</span><br></pre></td></tr></table></figure>
+
+<p>这里标记为 uncertain，是追加一条恢复事件：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_recovery&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;uncertain&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>SessionManager 怎么知道 c123 没有结果？</p>
+<p>这里隐含的第一步是：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">events = load_events(session_id)</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;events.jsonl&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">        event = json.loads(line)</span><br></pre></td></tr></table></figure>
+
+<p>但实际上没必要每次 Resume 都扫描几十万行。只需要找到最后一个 run<em>started，然后只分析它后面的 Event（当然如果只有一个 run 那实际上也还是要全部都扫描的）。或者你也可以维护一张运行状态表 runs 以及工具调用记录表 tool</em>calls，只需执行：</p>
+<p>SQL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> tool_calls</span><br><span class="line"><span class="keyword">WHERE</span> run_id <span class="operator">=</span> <span class="string">&#x27;R105&#x27;</span></span><br><span class="line"><span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;pending&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>避免重新扫描历史。</p>
+<p>那么 LLM 怎么知道有工具没有得到执行结果？</p>
+<p>这才是关键，你辛辛苦苦给领导的花浇了水，结果领导没看见，一切都无济于事。</p>
+<p>Harness 必须在构建下一次 Context 的时候告诉 LLM。大体流程是这样：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SessionManager</span><br><span class="line">发现 c123 没结果</span><br><span class="line">        ↓</span><br><span class="line">生成结构化 RecoveryState</span><br><span class="line">        ↓</span><br><span class="line">Context Builder</span><br><span class="line">把结构化状态转换成模型消息</span><br><span class="line">        ↓</span><br><span class="line">加入下一次 Context</span><br><span class="line">        ↓</span><br><span class="line">LLM 看见</span><br></pre></td></tr></table></figure>
+
+<p>例如 Harness 得到：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">recovery_state = <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;interrupted_run&quot;</span><span class="punctuation">:</span> <span class="string">&quot;R105&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;uncertain_calls&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c123&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;tool&quot;</span><span class="punctuation">:</span> <span class="string">&quot;write_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main.py&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Context Builder 可以把它格式化为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;recovery&gt;</span><br><span class="line">上一轮执行被意外中断。</span><br><span class="line"></span><br><span class="line">以下工具调用没有得到明确执行结果：</span><br><span class="line"></span><br><span class="line">- call_id: c123</span><br><span class="line">- tool: write_file</span><br><span class="line">- target: main.py</span><br><span class="line"></span><br><span class="line">不能确定该写入是否已经完成。</span><br><span class="line">在继续依赖 main.py 之前，请先确认文件当前状态。</span><br><span class="line">&lt;/recovery&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后放进下一次模型输入。所以类似于：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">template = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">上一轮执行被意外中断。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">以下操作结果未知：</span></span><br><span class="line"><span class="string">&#123;uncertain_operations&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">在继续依赖这些操作之前，请先确认当前真实状态。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">recovery_prompt = template.<span class="built_in">format</span>(</span><br><span class="line">    uncertain_operations=format_ops(ops)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>为什么 ToolCall 需要唯一编号</li>
+</ol>
+<p>每次工具调用都应有唯一的 call_id：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ToolCall  call_123</span><br><span class="line">    ↓</span><br><span class="line">ToolResult call_123</span><br></pre></td></tr></table></figure>
+
+<p>恢复时，程序可以据此判断每个 ToolCall 是否找到了对应结果。</p>
+<p>对于会产生外部副作用的操作，还可以增加 operationid。如果外部服务支持幂等请求，多次提交同一个 operationid 只产生一次结果，可以进一步降低重复执行的风险。</p>
+<p>但 callid 和 operationid 作用不同：</p>
+<p>call_id 用来关联 Agent 内部的调用和结果</p>
+<p>operation_id 用来避免外部操作被重复执行</p>
+<ol>
+<li>Agent 如何发现文件被手动修改</li>
+</ol>
+<p>一个具体情景：</p>
+<p>10:00 read </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>10:05 用户手动修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>10:10 Agent 想修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>Agent 并不知道 10:05 发生了什么。</p>
+<p>常见做法有以下几种。</p>
+<p>15.1 再次读取</p>
+<p>我们做一个约束：每次对文件执行写操作前，都必须要先读文件。</p>
+<p>这么一来，就不是“因为知道变了，所以重新读”，而是“因为我重新读了，所以我知道变了”。</p>
+<p>15.2 版本校验</p>
+<p>读取文件时，工具同时返回内容哈希：</p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;abc123&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>写入时带上这个版本：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write_file(path=<span class="string">&quot;main.py&quot;</span>, expected_version=<span class="string">&quot;abc123&quot;</span>, ...)</span><br></pre></td></tr></table></figure>
+
+<p>工具执行时：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">actual_hash = <span class="built_in">hash</span>(file)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> actual_hash != expected_hash:</span><br><span class="line">    <span class="keyword">return</span> FILE_CHANGED</span><br></pre></td></tr></table></figure>
+
+<p>因此完全不需要 LLM 主动想到“我要重新读”，而是工具直接防止覆盖旧版本。</p>
+<p>15.3 补丁无法匹配</p>
+<p>补丁，顾名思义，找到一段旧内容，然后替换成新内容。</p>
+<p>假设原文件有这么一段内容：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> a - b</span><br></pre></td></tr></table></figure>
+
+<p>Agent 不重新覆盖整个文件，而是使用 apply_patch 工具修改文件：</p>
+<p>diff</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-    return a - b</span></span><br><span class="line"><span class="addition">+    return a + b</span></span><br></pre></td></tr></table></figure>
+
+<p>但如果用户已经手动改成：</p>
+<p>python</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>([a, b])</span><br></pre></td></tr></table></figure>
+
+<p>原来的 return a - b 已经不存在了。那补丁工具就会：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Patch failed:</span><br><span class="line">old context not found</span><br></pre></td></tr></table></figure>
+
+<p>于是 Agent 才知道：我之前看到的文件已经不是现在这个样子了，然后重新读取。</p>
+<p>问题来了，补丁工具是怎么知道 Patch failed 的呢？实际上就是 apply_patch 读取磁盘里的文件，尝试找到 return a - b，但是此时用户已经修改了，所以它肯定找不到，无法确认这个 Patch 应该应用在哪里。流程为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Patch 中带了一小段“我认为文件现在长这样”的旧内容</span><br><span class="line">        ↓</span><br><span class="line">apply_patch 读取真实文件</span><br><span class="line">        ↓</span><br><span class="line">查找旧内容</span><br><span class="line">        ↓</span><br><span class="line">找到</span><br><span class="line">→ 应用修改</span><br><span class="line"></span><br><span class="line">没找到</span><br><span class="line">→ 拒绝修改</span><br></pre></td></tr></table></figure>
+
+<p>关于 apply_patch，后面再简单写一篇文章讲一讲，这里不展开。</p>
+<p>整个流程为：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">模型之前读取 main.py</span><br><span class="line">        ↓</span><br><span class="line">基于当时内容生成 Patch</span><br><span class="line"></span><br><span class="line">-old code</span><br><span class="line">+new code</span><br><span class="line">        ↓</span><br><span class="line">调用 apply_patch</span><br><span class="line">        ↓</span><br><span class="line">apply_patch 重新读取当前 main.py</span><br><span class="line">        ↓</span><br><span class="line">寻找 Patch 中描述的旧代码和上下文</span><br><span class="line">        ↓</span><br><span class="line">┌───────────────┬────────────────┐</span><br><span class="line">│ 找得到        │ 找不到          │</span><br><span class="line">│               │                 │</span><br><span class="line">│ 应用 Patch    │ Patch failed    │</span><br><span class="line">└───────────────┴────────────────┘</span><br><span class="line">                        ↓</span><br><span class="line">                  告诉 LLM</span><br><span class="line">                        ↓</span><br><span class="line">                  重新读取文件</span><br></pre></td></tr></table></figure>
+
+<p>所以补丁不是提前发现修改，而是修改时发现“我准备修改的旧内容已经不存在了”。</p>
+<p>因此，Agent 在没有恢复会话的情况下也能发现脏文件，是因为它在正常运行时重新读取或校验了文件，而不是因为 Session 恢复机制检查了整个项目。</p>
+<ol>
+<li>Git、进程和端口也按需检查</li>
+</ol>
+<p>事件历史只能说明 Agent 过去观察到了什么。例如：</p>
+<p>10:30：Git 分支是 main 10:35：进程 1234 正在运行</p>
+<p>它不能证明这些状态现在仍然成立。</p>
+<p>当真正需要 Git 状态时，再执行：</p>
+<p>bash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status --porcelain</span><br><span class="line">git branch --show-current</span><br><span class="line">git rev-parse HEAD</span><br></pre></td></tr></table></figure>
+
+<p>只有当某个 Git 操作确实依赖某个前置状态时，才由该 Git 工具在执行前做必要检查。不是 Resume 时全量检查，也不是每轮强迫 LLM 执行一套 Git 命令，那是完全没必要的，浪费 token。</p>
+<p>当 Agent 真正需要某个进程时，由进程工具根据它保存的进程信息检查，而不是由 SessionManager 理解所有命令、目录和端口。</p>
+<p>也就是说，谁创建和管理某种外部资源，谁负责提供相应的检查逻辑。会话管理模块只负责保存引用和不确定状态，不需要变成一个认识所有外部系统的巨大判断器。</p>
+<ol>
+<li>并发控制</li>
+</ol>
+<p>假设同一个 Session 中：</p>
+<p>Run A 正在修改 </p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://main.py/">main.py</a></p>
+<p>Run B 同时开始运行测试</p>
+<p>Run B 可能测到只修改了一半的代码，两个 Run 也可能同时修改同一个文件。因此，本地 Agent 最简单可靠的策略是：一个 Session 同一时间只执行一个主要 Run。新输入进入队列，等当前 Run 结束后再处理，不同 Session 可以并行运行。</p>
+<p>这个约束也使中断判断更简单：新 Runtime 恢复会话时，如果发现上一个 Run 仍标记为 running，就能将其视为未正常结束。</p>
+<ol>
+<li>本地 Agent 与在线服务的区别</li>
+</ol>
+<p>本地 Agent 通常只有一个程序实例，session.json + events.jsonl 或 SQLite 已经足够。</p>
+<p>在线服务可能同时有多台服务器。用户第一次请求落在服务器 A，下一次请求可能落在服务器 B。因此 Session 不能只保存在某台服务器的本地磁盘中，而要放在各实例都能访问的持久化存储里。这就是经典的那一套后端工程了。常见分工是：</p>
+<p>数据库保存不能丢的 Session、Run 和 Event</p>
+<p>Redis 保存锁、短期缓存、正在运行的标记和在线状态等临时数据</p>
+<p>Redis 的重点是快速访问和多实例协调，数据库的重点是持久、可靠和可查询。不能把唯一一份完整会话只放在可能被淘汰的临时缓存中。</p>
+<ol>
+<li>一套清晰的恢复流程</li>
+</ol>
+<p>恢复会话时，可以采用下面的最小流程：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">用户执行：codex resume xyz123</span><br><span class="line">        ↓</span><br><span class="line">程序根据 xyz123 找到对应 Session</span><br><span class="line">        ↓</span><br><span class="line">读取 Session 信息：ID、原工作目录等</span><br><span class="line">        ↓</span><br><span class="line">如果当前目录与原目录不同决定本次使用哪个目录</span><br><span class="line">        ↓</span><br><span class="line">设置 Runtime 的 cwd </span><br><span class="line">以后 read_file(&quot;a.py&quot;)、bash(&quot;pytest&quot;)</span><br><span class="line">都以这个目录为默认工作目录</span><br><span class="line">        ↓</span><br><span class="line">读取 Session 历史文件</span><br><span class="line">        ↓</span><br><span class="line">把历史恢复到聊天界面</span><br><span class="line">        ↓</span><br><span class="line">读取最后一个 Run</span><br><span class="line">        ↓</span><br><span class="line">如果它没有正常结束</span><br><span class="line">标记为 interrupted</span><br><span class="line">        ↓</span><br><span class="line">检查这个 Run 中</span><br><span class="line">是否存在有 ToolCall、无 ToolResult</span><br><span class="line">        ↓</span><br><span class="line">如果存在</span><br><span class="line">记录为“结果未知”</span><br><span class="line">        ↓</span><br><span class="line">加载 Goal、摘要等额外状态</span><br><span class="line">        ↓</span><br><span class="line">Context Builder 准备：</span><br><span class="line">系统提示词</span><br><span class="line">+ 项目说明</span><br><span class="line">+ Skill</span><br><span class="line">+ Goal</span><br><span class="line">+ 历史摘要</span><br><span class="line">+ 最近消息</span><br><span class="line">+ 中断恢复信息</span><br><span class="line">        ↓</span><br><span class="line">Resume 完成</span><br><span class="line">        ↓</span><br><span class="line">等待用户下一条消息</span><br></pre></td></tr></table></figure>
+
+<p>放在整个 run 过程中，大概就是：</p>
+<p>text</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">磁盘中的 Session/Event</span><br><span class="line">        ↓</span><br><span class="line">Harness 恢复</span><br><span class="line">        ↓</span><br><span class="line">内部 Session State</span><br><span class="line">        ↓</span><br><span class="line">Context Builder</span><br><span class="line">        ↓</span><br><span class="line">LLM</span><br><span class="line">        ↓</span><br><span class="line">ToolCall</span><br><span class="line">        ↓</span><br><span class="line">Tool 查询真实世界</span><br><span class="line">        ↓</span><br><span class="line">ToolResult</span><br><span class="line">        ↓</span><br><span class="line">Event Store</span><br><span class="line">        ↓</span><br><span class="line">再进入下一次 Context</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://macin.top">Geek</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://macin.top/posts/8e24bae0/">https://macin.top/posts/8e24bae0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://macin.top" target="_blank">极客的赛博空间 | 已被墙，开代理访问</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Agent/">Agent</a><a class="post-meta__tags" href="/tags/%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86/">会话管理</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_facebook"></a><a class="a2a_button_x"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_facebook_messenger"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/81c34d6d/" title="AgentHarness 会话管理（一）：会话隔离"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">AgentHarness 会话管理（一）：会话隔离</div></div><div class="info-2"><div class="info-item-1">一个真正能运行多任务的 Agent 系统至少要知道：这是哪个 Session、这个 Session 属于哪个工作区、能调用哪些工具、保存哪些历史。</div></div></div></a><a class="pagination-related" href="/posts/f15f5bd6/" title="Vmiss 便宜 VPS，9 折优惠，低至 11 元/月"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="onerror=null;src='/img/404.webp'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Vmiss 便宜 VPS，9 折优惠，低至 11 元/月</div></div><div class="info-2"><div class="info-item-1">VPS特征：KVM虚拟，宿主机CPU为2 E5-2696 v3，纯SSD阵列，5001000M带宽，自带一个IPv4，日本大阪iij网络！</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/6f671d0c/" title="卷出开源新高度！DeepSeek-V4 正式发布：百万上下文 + 工程级"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-23</div><div class="info-item-2">卷出开源新高度！DeepSeek-V4 正式发布：百万上下文 + 工程级</div></div><div class="info-2"><div class="info-item-1">DeepSeek V4 正式发布：一口气发布 Flash 轻量与 Pro 满血 4 个版本，完全开源支持商用、百万上下文，把开源模型能力上限拉到商用工程级。</div></div></div></a><a class="pagination-related" href="/posts/4bc8b33b/" title="CLAUDE.md 越写越长，Agent 还是会忘：该把哪些规则变成代码？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/claude.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-11</div><div class="info-item-2">CLAUDE.md 越写越长，Agent 还是会忘：该把哪些规则变成代码？</div></div><div class="info-2"><div class="info-item-1">第一次数据库迁移出错，加一条规则；第二次忘了测试，再补一条；第三次乱改共享类型，把“禁止”加粗。文件越来越厚，下一次 Agent 还是可能照犯。</div></div></div></a><a class="pagination-related" href="/posts/d6ef9034/" title="Kun 是一个本地优先的 AI Agent 工作台：AI 落地实操"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">Kun 是一个本地优先的 AI Agent 工作台：AI 落地实操</div></div><div class="info-2"><div class="info-item-1">Kun 是一个本地优先的 AI Agent 工作台，支持桌面 GUI 和终端 TUI 两种使用方式，并且两者共享同一个本地运行时。</div></div></div></a><a class="pagination-related" href="/posts/f1016e66/" title="设计师 AI 工作流：用 DESIGN.md + CSS，管住 Agent 的版式"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-02</div><div class="info-item-2">设计师 AI 工作流：用 DESIGN.md + CSS，管住 Agent 的版式</div></div><div class="info-2"><div class="info-item-1">管住 Agent，靠的不是再补一句「做得高级一点」，而是把设计判断写成文件，把可重复的版式交给 CSS，把返工变成下一轮规则。</div></div></div></a><a class="pagination-related" href="/posts/a85a29de/" title="OpenAI 已经用上 WebMCP：Browser Agent 要变天了"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/chatgpt.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-31</div><div class="info-item-2">OpenAI 已经用上 WebMCP：Browser Agent 要变天了</div></div><div class="info-2"><div class="info-item-1">WebMCP 目前是在 W3C Web Machine Learning Community Group 中推进的提案。</div></div></div></a><a class="pagination-related" href="/posts/35ae15e1/" title="KV Cache--DS V4.1-Flash 的制胜秘密"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/deepseek.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-14</div><div class="info-item-2">KV Cache--DS V4.1-Flash 的制胜秘密</div></div><div class="info-2"><div class="info-item-1">今天跑一个长上下文的 agent，比如让模型读完一个百万 token 的代码仓库再干活，显存里最占地方的并非模型权重，而是 KV Cache。权重是固定的，几百 GB 就几百 GB；</div></div></div></a><a class="pagination-related" href="/posts/26068abe/" title="深度拆解 | FDE 小团队是如何搭建项目管理 Agent 的？"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-04</div><div class="info-item-2">深度拆解 | FDE 小团队是如何搭建项目管理 Agent 的？</div></div><div class="info-2"><div class="info-item-1">我们搭建的项目经理Agent，是为了把散落在沟通里的信息自动整理成可以持续追踪的项目记录，同时给轻量任务提供一个统一、低摩擦的入口。项目是否应该继续，仍然由人判断。</div></div></div></a><a class="pagination-related" href="/posts/3049d5e/" title="QM 是一个为团队设计的多人 Agent 框架"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-12</div><div class="info-item-2">QM 是一个为团队设计的多人 Agent 框架</div></div><div class="info-2"><div class="info-item-1">QM 是一个为团队设计的多人 Agent 框架，部署方式比较特别：它不是一个“一键部署”的简单应用，而是一套需要你用自己的云账号来托管的组织级基础设施。</div></div></div></a><a class="pagination-related" href="/posts/45403d02/" title="一文弄懂 Agent Harness 与 Agent Runtime 的区别"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-30</div><div class="info-item-2">一文弄懂 Agent Harness 与 Agent Runtime 的区别</div></div><div class="info-2"><div class="info-item-1">本文深入探讨了 AI 智能体 (Agent) 的两个关键组成层面：Agent Harness（智能体驱动程序）与 Agent Runtime（智能体运行时环境）的区别。简单来说，智能体 Harness…</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/ast.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Geek</div><div class="author-info-description">分享 AI 应用、Web3 趋势、VPS 搭建、计算机软硬件及网络技术教程，提供高质量的技术干货。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2837</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2800</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">169</div></a></div><a id="card-info-btn" href="/atom.xml"><i class="fa-solid fa-rss"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://t.me/geekchatroom" rel="external nofollow noreferrer" target="_blank" title="Telegram"><i class="fa-brands fa-telegram" style="color: #0088cc;"></i></a><a class="social-icon" href="https://www.facebook.com/Geek-Page-104853555514498" rel="external nofollow noreferrer" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a><a class="social-icon" href="https://www.instagram.com/geek_ig" rel="external nofollow noreferrer" target="_blank" title="Instagram"><i class="fa-brands fa-instagram" style="color: #E4405F;"></i></a><a class="social-icon" href="https://x.com/alpinekaka" rel="external nofollow noreferrer" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter" style="color: #535353;"></i></a><a class="social-icon" href="https://www.youtube.com/@geek_park" rel="external nofollow noreferrer" target="_blank" title="YouTube"><i class="fa-brands fa-youtube" style="color: #FF0000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">联系方式：alpineba@gmail.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">1. 一个具体场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%85%88%E5%88%86%E6%B8%85%E4%BC%9A%E8%AF%9D%E3%80%81%E6%89%A7%E8%A1%8C%E8%BD%AE%E6%AC%A1%E3%80%81%E4%BA%8B%E4%BB%B6%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">3.</span> <span class="toc-text">2. 先分清会话、执行轮次、事件和上下文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Session%EF%BC%9A%E4%B8%80%E9%A1%B9%E9%95%BF%E6%9C%9F%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 Session：一项长期任务的容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Run%EF%BC%9ASession-%E4%B8%AD%E7%9A%84%E4%B8%80%E6%AC%A1%E6%89%A7%E8%A1%8C"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 Run：Session 中的一次执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Event%EF%BC%9ARun-%E4%B8%AD%E5%AE%9E%E9%99%85%E5%8F%91%E7%94%9F%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 Event：Run 中实际发生的一件事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Context%EF%BC%9A%E6%9C%AC%E6%AC%A1%E7%9C%9F%E6%AD%A3%E5%8F%91%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 Context：本次真正发给模型的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88-Session-%E5%BF%85%E9%A1%BB%E4%BF%9D%E5%AD%98-workspace"><span class="toc-number">3.5.</span> <span class="toc-text">3. 为什么 Session 必须保存 workspace</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Session%E3%80%81Run%E3%80%81Event-%E6%98%AF%E5%90%A6%E5%BF%85%E9%A1%BB%E5%88%86%E6%88%90%E4%B8%89%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.</span> <span class="toc-text">4. Session、Run、Event 是否必须分成三个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%8A%8A%E6%89%80%E6%9C%89%E5%86%85%E5%AE%B9%E9%83%BD%E6%94%BE%E8%BF%9B-session-json"><span class="toc-number">3.7.</span> <span class="toc-text">5. 为什么不把所有内容都放进 session.json</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BA%8B%E4%BB%B6%E6%B5%81%E6%B0%B4%E9%80%82%E5%90%88-Agent"><span class="toc-number">3.8.</span> <span class="toc-text">6. 为什么事件流水适合 Agent</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E6%8C%81%E4%B9%85%E5%8C%96%E6%97%B6%E6%9C%BA%EF%BC%9A%E4%B8%8D%E9%9C%80%E8%A6%81%E5%86%99%E5%BE%88%E5%A4%9A-if-else"><span class="toc-number">4.</span> <span class="toc-text">7. 持久化时机：不需要写很多 if&#x2F;else</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-JSONL-%E6%88%96-SQLite"><span class="toc-number">5.</span> <span class="toc-text">8. 为什么使用 JSONL 或 SQLite</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-%E6%81%A2%E5%A4%8D-Session"><span class="toc-number">6.</span> <span class="toc-text">9. 恢复 Session</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-%E5%BD%93%E5%89%8D%E7%9B%AE%E6%A0%87%E5%92%8C%E4%BB%BB%E5%8A%A1%E8%BF%9B%E5%BA%A6%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="toc-number">7.</span> <span class="toc-text">10. 当前目标和任务进度从哪里来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%B8%8A%E4%B8%80-Run-%E8%A2%AB%E5%BC%82%E5%B8%B8%E4%B8%AD%E6%96%AD"><span class="toc-number">8.</span> <span class="toc-text">11. 如何判断上一 Run 被异常中断</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12-%E6%81%A2%E5%A4%8D%E5%86%85%E9%83%A8%E8%AE%B0%E5%BD%95%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%89%AB%E6%8F%8F%E6%95%B4%E4%B8%AA%E5%A4%96%E9%83%A8%E4%B8%96%E7%95%8C"><span class="toc-number">9.</span> <span class="toc-text">12. 恢复内部记录，不等于扫描整个外部世界</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#13-ToolCall-%E6%9C%89%E8%AE%B0%E5%BD%95%E3%80%81ToolResult-%E6%B2%A1%E8%AE%B0%E5%BD%95%E6%97%B6%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">10.</span> <span class="toc-text">13. ToolCall 有记录、ToolResult 没记录时怎么办</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#14-%E4%B8%BA%E4%BB%80%E4%B9%88-ToolCall-%E9%9C%80%E8%A6%81%E5%94%AF%E4%B8%80%E7%BC%96%E5%8F%B7"><span class="toc-number">11.</span> <span class="toc-text">14. 为什么 ToolCall 需要唯一编号</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15-Agent-%E5%A6%82%E4%BD%95%E5%8F%91%E7%8E%B0%E6%96%87%E4%BB%B6%E8%A2%AB%E6%89%8B%E5%8A%A8%E4%BF%AE%E6%94%B9"><span class="toc-number">12.</span> <span class="toc-text">15. Agent 如何发现文件被手动修改</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#15-1-%E5%86%8D%E6%AC%A1%E8%AF%BB%E5%8F%96"><span class="toc-number">12.1.</span> <span class="toc-text">15.1 再次读取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-2-%E7%89%88%E6%9C%AC%E6%A0%A1%E9%AA%8C"><span class="toc-number">12.2.</span> <span class="toc-text">15.2 版本校验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-3-%E8%A1%A5%E4%B8%81%E6%97%A0%E6%B3%95%E5%8C%B9%E9%85%8D"><span class="toc-number">12.3.</span> <span class="toc-text">15.3 补丁无法匹配</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#16-Git%E3%80%81%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%AB%AF%E5%8F%A3%E4%B9%9F%E6%8C%89%E9%9C%80%E6%A3%80%E6%9F%A5"><span class="toc-number">13.</span> <span class="toc-text">16. Git、进程和端口也按需检查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17-%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6"><span class="toc-number">14.</span> <span class="toc-text">17. 并发控制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#18-%E6%9C%AC%E5%9C%B0-Agent-%E4%B8%8E%E5%9C%A8%E7%BA%BF%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">15.</span> <span class="toc-text">18. 本地 Agent 与在线服务的区别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#19-%E4%B8%80%E5%A5%97%E6%B8%85%E6%99%B0%E7%9A%84%E6%81%A2%E5%A4%8D%E6%B5%81%E7%A8%8B"><span class="toc-number">16.</span> <span class="toc-text">19. 一套清晰的恢复流程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/ea7e9c03/" title="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运"/></a><div class="content"><a class="title" href="/posts/ea7e9c03/" title="注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运">注册了一大堆英国金融平台，实体卡怎么寄回国内？UK Postbox 海外地址与转运</a><time datetime="2026-09-23T14:37:56.000Z" title="发表于 2026-09-23 22:37:56">2026-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a023d381/" title="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连"/></a><div class="content"><a class="title" href="/posts/a023d381/" title="DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连">DMIT：香港VPS，$36.9/年起，可选CN2 GIA/国际BGP/三网直连</a><time datetime="2026-09-22T15:40:02.000Z" title="发表于 2026-09-22 23:40:02">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b0bc8287/" title="新人妻约会不完全指南"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="新人妻约会不完全指南"/></a><div class="content"><a class="title" href="/posts/b0bc8287/" title="新人妻约会不完全指南">新人妻约会不完全指南</a><time datetime="2026-09-22T15:38:34.000Z" title="发表于 2026-09-22 23:38:34">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/101d65d3/" title="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/vps.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月"/></a><div class="content"><a class="title" href="/posts/101d65d3/" title="华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月">华纳云测评：日本服务器推荐-CN2直连优化线路-低至799元/月</a><time datetime="2026-09-22T15:37:33.000Z" title="发表于 2026-09-22 23:37:33">2026-09-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/59f43517/" title="我们总想决定无法决定的，却把能决定的拱手相让"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/tool.webp" onerror="this.onerror=null;this.src='/img/404.webp'" alt="我们总想决定无法决定的，却把能决定的拱手相让"/></a><div class="content"><a class="title" href="/posts/59f43517/" title="我们总想决定无法决定的，却把能决定的拱手相让">我们总想决定无法决定的，却把能决定的拱手相让</a><time datetime="2026-09-22T15:36:49.000Z" title="发表于 2026-09-22 23:36:49">2026-09-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><script src="/js/tw_cn.js?v=5.7.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=6.1.14"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=19.1.3"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo-two-rouge.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'data-lazy-src'
+          const lazyloadNative = ''
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}" ${lazyloadNative}></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '暂无评论'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-two-rouge.vercel.app/',
+        region: '',
+        pageSize: 3,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js?v=1.7.15').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><script defer src="/js/redirecturl.js"></script><script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7304614629052385" crossorigin="anonymous"></script><script src="/pluginsSrc/pjax/pjax.min.js?v=0.2.8" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([data-fancybox]):not([href="/music/"]):not([href="/no-pjax/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      if (!item.parentNode) return
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || ''
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    const responseURL = e.request && e.request.responseURL
+    if (e.request && e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/404')
+        : responseURL && (window.location.href = responseURL)
+    } else if (responseURL) {
+      window.location.href = responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div><script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>
